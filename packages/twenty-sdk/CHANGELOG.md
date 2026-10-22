@@ -8,6 +8,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Breaking Changes
 
+- **Command menu item manifests carry `conditionalAvailability` and `conditionalPinned` trees instead of expression strings.** Keep writing `conditionalAvailabilityExpression` and `conditionalPinnedExpression` in `defineCommandMenuItem()` exactly as before: the build compiles each expression into a condition tree and writes only the tree to the manifest. An expression the compiler cannot map fails the build with the file, the config key and the unsupported part. Twenty servers refuse to install a manifest that still declares `conditionalAvailabilityExpression` or `conditionalPinnedExpression`, so rebuild apps built with an older SDK before deploying them.
+
 - **`MetadataApiClient.uploadFile` in `twenty-client-sdk` takes one object and no longer accepts a content type.** The file now goes straight to Twenty's file storage (the API issues an upload target, the client sends the bytes there, then the API confirms the upload) instead of being streamed through the GraphQL API, and the MIME type is detected from the bytes on completion. Update every call:
 
   ```diff

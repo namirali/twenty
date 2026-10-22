@@ -2,7 +2,8 @@ import { type CommandMenuItemManifest } from 'twenty-shared/application';
 
 export type CommandMenuItemConfig = Omit<
   CommandMenuItemManifest,
-  'conditionalAvailabilityExpression'
+  'conditionalAvailability' | 'conditionalPinned'
 > & {
   conditionalAvailabilityExpression?: boolean | string;
+  conditionalPinnedExpression?: string;
 };

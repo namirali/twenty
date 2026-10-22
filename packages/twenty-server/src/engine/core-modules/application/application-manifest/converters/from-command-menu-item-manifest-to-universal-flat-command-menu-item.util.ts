@@ -14,14 +14,17 @@ import { type UniversalFlatCommandMenuItem } from 'src/engine/workspace-manager/
 const throwIfCommandMenuItemManifestHasExpressions = (
   commandMenuItemManifest: CommandMenuItemManifest,
 ): void => {
-  if (isDefined(commandMenuItemManifest.conditionalAvailabilityExpression)) {
+  const rawCommandMenuItemManifest: Record<string, unknown> =
+    commandMenuItemManifest;
+
+  if (isDefined(rawCommandMenuItemManifest.conditionalAvailabilityExpression)) {
     throw new ApplicationException(
       `Command menu item "${commandMenuItemManifest.label}" declares the unsupported conditionalAvailabilityExpression, declare a conditionalAvailability tree instead`,
       ApplicationExceptionCode.INVALID_INPUT,
     );
   }
 
-  if (isDefined(commandMenuItemManifest.conditionalPinnedExpression)) {
+  if (isDefined(rawCommandMenuItemManifest.conditionalPinnedExpression)) {
     throw new ApplicationException(
       `Command menu item "${commandMenuItemManifest.label}" declares the unsupported conditionalPinnedExpression, declare a conditionalPinned tree instead`,
       ApplicationExceptionCode.INVALID_INPUT,

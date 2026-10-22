@@ -7,6 +7,7 @@ import {
 } from '@/cli/utilities/build/manifest/manifest-extract-config';
 import { extractManifestFromFile } from '@/cli/utilities/build/manifest/manifest-extract-config-from-file';
 import { addMissingFieldOptionIds } from '@/cli/utilities/build/manifest/utils/add-missing-field-option-ids';
+import { fromCommandMenuItemConfigToCommandMenuItemManifest } from '@/cli/utilities/build/manifest/utils/from-command-menu-item-config-to-command-menu-item-manifest';
 import { fromRoleConfigToRoleManifest } from '@/cli/utilities/build/manifest/utils/from-role-config-to-role-manifest';
 import { getDefaultFieldsInObjectFields } from '@/cli/utilities/build/manifest/utils/get-default-fields-in-object-fields';
 import { extractFrontComponentSharedDependencies } from '@/cli/utilities/build/manifest/utils/extract-front-component-shared-dependencies';
@@ -533,10 +534,17 @@ export const buildManifest = async (
           filePath,
         });
 
-        commandMenuItems.push(
-          extract.config as unknown as CommandMenuItemManifest,
-        );
+        const {
+          commandMenuItemManifest,
+          errors: commandMenuItemManifestErrors,
+        } = fromCommandMenuItemConfigToCommandMenuItemManifest({
+          commandMenuItemConfig: extract.config,
+          relativePath,
+        });
+
+        commandMenuItems.push(commandMenuItemManifest);
         errors.push(...extract.errors);
+        errors.push(...commandMenuItemManifestErrors);
         warnings.push(...(extract.warnings ?? []));
         commandMenuItemsFilePaths.push(relativePath);
         break;
