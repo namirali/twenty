@@ -30,7 +30,7 @@ export type CreateStandardPageLayoutWidgetContext = {
   objectMetadataId: string | null;
   conditionalDisplay: ConditionalDisplay | null;
   universalConditionalDisplay: MetadataUniversalFlatEntity<'pageLayoutWidget'>['universalConditionalDisplay'];
-  conditionalAvailabilityExpression?: string;
+  conditionalAvailabilityExpression: string | null;
   conditionalAvailability: ConditionalDisplay | null;
   universalConditionalAvailability: MetadataUniversalFlatEntity<'pageLayoutWidget'>['universalConditionalAvailability'];
 };

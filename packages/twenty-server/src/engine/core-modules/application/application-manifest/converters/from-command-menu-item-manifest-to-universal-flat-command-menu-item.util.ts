@@ -51,6 +51,8 @@ export const fromCommandMenuItemManifestToUniversalFlatCommandMenuItem = ({
     availabilityType:
       commandMenuItemManifest.availabilityType ??
       CommandMenuItemAvailabilityType.GLOBAL,
+    conditionalAvailabilityExpression: null,
+    conditionalPinnedExpression: null,
     universalConditionalDisplay: normalizeConditionalDisplay(
       commandMenuItemManifest.conditionalDisplay,
     ),

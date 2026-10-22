@@ -36,6 +36,7 @@ export type PageLayoutWidgetOverrides = {
   title?: string;
   position?: PageLayoutWidgetPosition | null;
   conditionalDisplay?: ConditionalDisplay | null;
+  conditionalAvailabilityExpression?: string | null;
   pageLayoutTabId?: SerializedRelation;
 };
 
@@ -99,7 +100,7 @@ export class PageLayoutWidgetEntity<
   conditionalAvailability: JsonbProperty<ConditionalDisplay | null>;
 
   @Column({ type: 'varchar', nullable: true })
-  conditionalAvailabilityExpression: WasRemovedInUpgrade<string | null>;
+  conditionalAvailabilityExpression: string | null;
 
   @Column({ type: 'jsonb', nullable: false })
   gridPosition: WasRemovedInUpgrade<JsonbProperty<GridPosition>>;
