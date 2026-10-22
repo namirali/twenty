@@ -185,6 +185,7 @@ describe('revertWidgetDeviceVisibility', () => {
             revertedWidgetVisibility.conditionalDisplay,
           universalOverrides: revertedWidgetVisibility.overrides,
         },
+        property: 'conditionalDisplay',
         surface: 'pageLayoutWidget',
         objectMetadataUniversalIdentifier: null,
         invalidDataCode: 'INVALID_PAGE_LAYOUT_WIDGET_DATA',
