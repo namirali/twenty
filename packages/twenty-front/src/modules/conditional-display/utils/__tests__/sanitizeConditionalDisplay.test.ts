@@ -1,7 +1,7 @@
-import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { sanitizeConditionalDisplay } from '@/conditional-display/utils/sanitizeConditionalDisplay';
 import { type PersistedRecordFilter } from '@/object-record/record-filter/types/PersistedRecordFilter';
 import {
+  type ConditionalDisplayAdminContextKey,
   RecordFilterGroupLogicalOperator,
   ViewFilterOperand,
 } from 'twenty-shared/types';

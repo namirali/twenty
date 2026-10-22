@@ -1,4 +1,4 @@
-import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
+import { type ConditionalDisplayAdminContextKey } from 'twenty-shared/types';
 import { assertUnreachable } from 'twenty-shared/utils';
 import {
   type IconComponent,

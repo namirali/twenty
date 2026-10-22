@@ -18,6 +18,7 @@ import { ViewFilterOperand } from '@/types/ViewFilterOperand';
 import { conditionalAvailabilityParser } from '@/utils/command-menu-items/conditionalAvailabilityParser';
 import { buildConditionalDisplayFromConditionNode } from '@/utils/conditional-display/buildConditionalDisplayFromConditionNode';
 import { groupConditionalDisplayConditionNodes } from '@/utils/conditional-display/groupConditionalDisplayConditionNodes';
+import { isConditionalDisplayAdminContextKey } from '@/utils/conditional-display/isConditionalDisplayAdminContextKey';
 import { isConditionalDisplayContextKey } from '@/utils/conditional-display/isConditionalDisplayContextKey';
 import { negateConditionalDisplayConditionNode } from '@/utils/conditional-display/negateConditionalDisplayConditionNode';
 import { isDefined } from '@/utils/validation/isDefined';
@@ -720,7 +721,7 @@ const compileTokens = ({
 
         if (
           isConditionalDisplayContextKey(token.value) &&
-          CONDITIONAL_DISPLAY_CONTEXT_KEYS[token.value].owner === 'admin'
+          isConditionalDisplayAdminContextKey(token.value)
         ) {
           throw buildCompilationError({
             expression,

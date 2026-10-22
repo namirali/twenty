@@ -1,21 +1,6 @@
+import { type ConditionalDisplayAdminContextKey } from '@/types/conditional-display/ConditionalDisplayAdminContextKey';
+import { type ConditionalDisplayEngineContextKey } from '@/types/conditional-display/ConditionalDisplayEngineContextKey';
+
 export type ConditionalDisplayContextKey =
-  | 'currentRoleId'
-  | 'currentWorkspaceMemberId'
-  | 'device'
-  | 'pageType'
-  | 'isInSidePanel'
-  | 'isDashboardPageLayoutInEditMode'
-  | 'isLayoutCustomizationModeEnabled'
-  | 'isSelectAll'
-  | 'hasAnySoftDeleteFilterOnView'
-  | 'numberOfSelectedRecords'
-  | 'canImpersonate'
-  | 'canAccessFullAdminPanel'
-  | 'areAllSelectedRecordsFavorites'
-  | 'featureFlags'
-  | 'permissionFlags'
-  | 'objectPermissions'
-  | 'targetObjectReadPermissions'
-  | 'targetObjectWritePermissions'
-  | 'objectMetadataItem'
-  | 'selectedRecords';
+  | ConditionalDisplayAdminContextKey
+  | ConditionalDisplayEngineContextKey;

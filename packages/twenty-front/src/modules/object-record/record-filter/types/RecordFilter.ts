@@ -1,6 +1,6 @@
-import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { type CompositeFieldSubFieldName } from '@/settings/data-model/types/CompositeFieldSubFieldName';
 import {
+  type ConditionalDisplayAdminContextKey,
   type FilterableAndTSVectorFieldType,
   type ViewFilterOperand,
 } from 'twenty-shared/types';

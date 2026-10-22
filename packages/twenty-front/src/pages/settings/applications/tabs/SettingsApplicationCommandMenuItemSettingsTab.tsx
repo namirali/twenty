@@ -1,5 +1,5 @@
 import { ConditionalDisplaySettings } from '@/conditional-display/components/ConditionalDisplaySettings';
-import { getConditionalDisplaySummaryLabel } from '@/conditional-display/utils/getConditionalDisplaySummaryLabel';
+import { getConditionalAvailabilitySummaryLabel } from '@/conditional-display/utils/getConditionalAvailabilitySummaryLabel';
 import { Table } from '@/ui/layout/table/components/Table';
 import { TableCell } from '@/ui/layout/table/components/TableCell';
 import { TableHeader } from '@/ui/layout/table/components/TableHeader';
@@ -91,7 +91,7 @@ export const SettingsApplicationCommandMenuItemSettingsTab = ({
     {
       key: 'conditionalAvailability',
       label: t`Conditional availability`,
-      value: getConditionalDisplaySummaryLabel(conditionalAvailability),
+      value: getConditionalAvailabilitySummaryLabel(conditionalAvailability),
     },
     {
       key: 'conditionalDisplay',

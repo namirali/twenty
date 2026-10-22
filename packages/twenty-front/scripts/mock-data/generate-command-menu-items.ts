@@ -28,6 +28,7 @@ const FIND_MANY_COMMAND_MENU_ITEMS_QUERY = `
       }
       hotKeys
       conditionalAvailability
+      conditionalPinned
       availabilityType
       availabilityObjectMetadataId
       navigationTargetObjectMetadataId

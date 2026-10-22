@@ -1,4 +1,3 @@
-import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { hasConditionalDisplayContextRecordFilterValue } from '@/conditional-display/utils/hasConditionalDisplayContextRecordFilterValue';
 import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
 import { type RecordFilterGroup } from '@/object-record/record-filter-group/types/RecordFilterGroup';
@@ -6,6 +5,7 @@ import { type PersistedRecordFilter } from '@/object-record/record-filter/types/
 import { sanitizeChartRecordFilters } from '@/side-panel/pages/page-layout/utils/sanitizeChartRecordFilters';
 import {
   type ConditionalDisplay,
+  type ConditionalDisplayAdminContextKey,
   type ConditionalDisplayQuantifier,
   type ConditionalDisplayRecordFilter,
 } from 'twenty-shared/types';

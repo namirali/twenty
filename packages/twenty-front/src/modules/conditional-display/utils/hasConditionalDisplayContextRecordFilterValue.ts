@@ -1,5 +1,5 @@
-import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { isNonEmptyString } from '@sniptt/guards';
+import { type ConditionalDisplayAdminContextKey } from 'twenty-shared/types';
 import {
   assertUnreachable,
   isNonEmptyArray,

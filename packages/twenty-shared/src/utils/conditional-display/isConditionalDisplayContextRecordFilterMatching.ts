@@ -5,6 +5,7 @@ import { type ConditionalDisplayEvaluationContext } from '@/types/conditional-di
 import { type ConditionalDisplayRecordFilter } from '@/types/conditional-display/ConditionalDisplayRecordFilter';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
 import { safeGetNestedProperty } from '@/utils/command-menu-items/safeGetNestedProperty';
+import { isConditionalDisplayContextKey } from '@/utils/conditional-display/isConditionalDisplayContextKey';
 import { isEmptinessOperand } from '@/utils/filter/isEmptinessOperand';
 import { jsonRelationFilterValueSchema } from '@/utils/filter/utils/validation-schemas/jsonRelationFilterValueSchema';
 import { parseJson } from '@/utils/parseJson';
@@ -92,7 +93,7 @@ export const isConditionalDisplayContextRecordFilterMatching = ({
 }): boolean => {
   const { contextKey, subFieldName } = recordFilter;
 
-  if (!isDefined(contextKey)) {
+  if (!isDefined(contextKey) || !isConditionalDisplayContextKey(contextKey)) {
     return false;
   }
 

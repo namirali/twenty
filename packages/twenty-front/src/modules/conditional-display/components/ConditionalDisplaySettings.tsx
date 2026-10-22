@@ -3,7 +3,6 @@ import { ConditionalDisplayVisibilityModeSelect } from '@/conditional-display/co
 import { type ConditionalDisplayVisibilityMode } from '@/conditional-display/types/ConditionalDisplayVisibilityMode';
 import { getConditionalDisplaySettingsLabel } from '@/conditional-display/utils/getConditionalDisplaySettingsLabel';
 import { hasConditionalDisplayRule } from '@/conditional-display/utils/hasConditionalDisplayRule';
-import { isConditionalDisplayAdminContextKey } from '@/conditional-display/utils/isConditionalDisplayAdminContextKey';
 import { mapConditionalDisplayToPersistedRecordFilters } from '@/conditional-display/utils/mapConditionalDisplayToPersistedRecordFilters';
 import { sanitizeConditionalDisplay } from '@/conditional-display/utils/sanitizeConditionalDisplay';
 import { objectMetadataItemsSelector } from '@/object-metadata/states/objectMetadataItemsSelector';
@@ -31,7 +30,11 @@ import {
   type ConditionalDisplayContextKey,
   type ConditionalDisplaySurface,
 } from 'twenty-shared/types';
-import { isDefined, isNonEmptyArray } from 'twenty-shared/utils';
+import {
+  isConditionalDisplayAdminContextKey,
+  isDefined,
+  isNonEmptyArray,
+} from 'twenty-shared/utils';
 import { themeCssVariables } from 'twenty-ui/theme';
 
 const StyledConditionalDisplaySettingsContainer = styled.div`

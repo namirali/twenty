@@ -6,7 +6,6 @@ import {
 } from 'twenty-shared/types';
 import {
   evaluateConditionalDisplay as evaluateConditionalDisplayTree,
-  isConditionalDisplayContextKey,
   isConditionalDisplayContextRecordFilterMatching,
   isDefined,
 } from 'twenty-shared/utils';
@@ -48,14 +47,11 @@ export const evaluateConditionalDisplay = ({
         });
       }
 
-      return (
-        isConditionalDisplayContextKey(recordFilter.contextKey) &&
-        isConditionalDisplayContextRecordFilterMatching({
-          recordFilter,
-          context,
-          record,
-        })
-      );
+      return isConditionalDisplayContextRecordFilterMatching({
+        recordFilter,
+        context,
+        record,
+      });
     },
   });
 };

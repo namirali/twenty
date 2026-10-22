@@ -1,26 +1,35 @@
 import { CONDITIONAL_DISPLAY_DEVICES } from '@/constants/ConditionalDisplayDevices';
-import { type ConditionalDisplayContextKey } from '@/types/conditional-display/ConditionalDisplayContextKey';
+import { type ConditionalDisplayAdminContextKey } from '@/types/conditional-display/ConditionalDisplayAdminContextKey';
+import { type ConditionalDisplayEngineContextKey } from '@/types/conditional-display/ConditionalDisplayEngineContextKey';
 import { type ConditionalDisplayOwner } from '@/types/conditional-display/ConditionalDisplayOwner';
 import { type ConditionalDisplaySurface } from '@/types/conditional-display/ConditionalDisplaySurface';
 import { ContextStorePageType } from '@/types/ContextStorePageType';
 
-export const CONDITIONAL_DISPLAY_CONTEXT_KEYS: Record<
-  ConditionalDisplayContextKey,
-  {
-    owner: ConditionalDisplayOwner;
-    valueKind:
-      | 'ROLE_IDS'
-      | 'WORKSPACE_MEMBER'
-      | 'DEVICE'
-      | 'BOOLEAN'
-      | 'NUMBER'
-      | 'PAGE_TYPE'
-      | 'MAP_ENTRY'
-      | 'RECORD_PATH';
-    surfaces: ConditionalDisplaySurface[];
-    allowedValues?: readonly string[];
-  }
+type ConditionalDisplayContextKeyDefinition<
+  TOwner extends ConditionalDisplayOwner,
 > = {
+  owner: TOwner;
+  valueKind:
+    | 'ROLE_IDS'
+    | 'WORKSPACE_MEMBER'
+    | 'DEVICE'
+    | 'BOOLEAN'
+    | 'NUMBER'
+    | 'PAGE_TYPE'
+    | 'MAP_ENTRY'
+    | 'RECORD_PATH';
+  surfaces: ConditionalDisplaySurface[];
+  allowedValues?: readonly string[];
+};
+
+export const CONDITIONAL_DISPLAY_CONTEXT_KEYS: Record<
+  ConditionalDisplayAdminContextKey,
+  ConditionalDisplayContextKeyDefinition<'admin'>
+> &
+  Record<
+    ConditionalDisplayEngineContextKey,
+    ConditionalDisplayContextKeyDefinition<'engine'>
+  > = {
   currentRoleId: {
     owner: 'admin',
     valueKind: 'ROLE_IDS',

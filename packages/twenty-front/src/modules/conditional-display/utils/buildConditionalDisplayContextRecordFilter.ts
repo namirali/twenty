@@ -1,7 +1,9 @@
-import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { getConditionalDisplayContextRecordFilterType } from '@/conditional-display/utils/getConditionalDisplayContextRecordFilterType';
 import { type RecordFilter } from '@/object-record/record-filter/types/RecordFilter';
-import { ViewFilterOperand } from 'twenty-shared/types';
+import {
+  type ConditionalDisplayAdminContextKey,
+  ViewFilterOperand,
+} from 'twenty-shared/types';
 
 export const buildConditionalDisplayContextRecordFilter = ({
   id,

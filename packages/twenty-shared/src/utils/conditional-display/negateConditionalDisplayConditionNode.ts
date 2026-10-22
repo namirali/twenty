@@ -4,6 +4,7 @@ import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from '@/constants/ConditionalDisplay
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
 import { RecordFilterGroupLogicalOperator } from '@/types/RecordFilterGroupLogicalOperator';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
+import { isConditionalDisplayAdminContextKey } from '@/utils/conditional-display/isConditionalDisplayAdminContextKey';
 import { parseJson } from '@/utils/parseJson';
 import { isDefined } from '@/utils/validation/isDefined';
 
@@ -46,8 +47,7 @@ const negateRecordFilter = (
   if (
     isDefined(recordFilter.contextKey) &&
     (recordFilter.contextKey === 'selectedRecords' ||
-      CONDITIONAL_DISPLAY_CONTEXT_KEYS[recordFilter.contextKey].owner ===
-        'admin')
+      isConditionalDisplayAdminContextKey(recordFilter.contextKey))
   ) {
     return undefined;
   }
