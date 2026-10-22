@@ -33,6 +33,9 @@ type JsonLogicLiteral = string | number | boolean;
 const SELECTED_RECORD_FIELD_VARIABLE_PATTERN =
   /^selectedRecords\.0\.([a-zA-Z_][a-zA-Z0-9_]*)$/;
 
+const isConditionalDisplay = (value: unknown): value is ConditionalDisplay =>
+  isPlainObject(value) && isArray(value.recordFilters);
+
 const getSingleEntry = (node: unknown): [string, unknown] | undefined => {
   if (!isPlainObject(node)) {
     return undefined;
@@ -149,15 +152,6 @@ const compileSelectedRecordFieldInclusion = ({
           value: JSON.stringify([literal]),
         },
       };
-    case FieldMetadataType.TEXT:
-      return {
-        kind: 'recordFilter',
-        recordFilter: {
-          fieldMetadataId: field.fieldMetadataId,
-          operand: ViewFilterOperand.CONTAINS,
-          value: literal,
-        },
-      };
     default:
       return undefined;
   }
@@ -170,6 +164,16 @@ export const compileLegacyWidgetJsonLogic = ({
   jsonLogic: unknown;
   resolveField: (fieldName: string) => LegacyWidgetJsonLogicField | undefined;
 }): ConditionalDisplay => {
+  const deviceConditionalDisplay =
+    rewriteLegacyDeviceConditionalDisplay(jsonLogic);
+
+  if (
+    deviceConditionalDisplay !== jsonLogic &&
+    isConditionalDisplay(deviceConditionalDisplay)
+  ) {
+    return deviceConditionalDisplay;
+  }
+
   const buildConversionError = (reason: string) =>
     new Error(
       `Cannot convert legacy widget json-logic ${JSON.stringify(jsonLogic)}: ${reason}`,

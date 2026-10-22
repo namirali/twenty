@@ -17,6 +17,7 @@ import { ViewFilterOperand } from '@/types/ViewFilterOperand';
 import { conditionalAvailabilityParser } from '@/utils/command-menu-items/conditionalAvailabilityParser';
 import { buildConditionalDisplayFromConditionNode } from '@/utils/conditional-display/buildConditionalDisplayFromConditionNode';
 import { groupConditionalDisplayConditionNodes } from '@/utils/conditional-display/groupConditionalDisplayConditionNodes';
+import { isConditionalDisplayContextKey } from '@/utils/conditional-display/isConditionalDisplayContextKey';
 import { negateConditionalDisplayConditionNode } from '@/utils/conditional-display/negateConditionalDisplayConditionNode';
 import { isDefined } from '@/utils/validation/isDefined';
 
@@ -45,6 +46,8 @@ type RecordFilterConditionNode = Extract<
 
 const BOOLEAN_RECORD_PATHS = ['canChangeVisibility', 'inboxStatus.isUnread'];
 
+const IDENTIFIER_RECORD_PATHS = ['lastPublishedVersionId'];
+
 const LENGTH_PATH_SUFFIX = '.length';
 
 const buildCompilationError = ({
@@ -66,11 +69,6 @@ const isExpressionToken = (value: unknown): value is ExpressionToken =>
 
 const isExpressionLiteral = (value: unknown): value is ExpressionLiteral =>
   isString(value) || isNumber(value) || isBoolean(value);
-
-const isConditionalDisplayContextKey = (
-  name: string,
-): name is ConditionalDisplayContextKey =>
-  Object.keys(CONDITIONAL_DISPLAY_CONTEXT_KEYS).includes(name);
 
 const describeStackItem = (stackItem: CompilationStackItem): string => {
   switch (stackItem.kind) {
@@ -310,16 +308,6 @@ const compileContextComparison = ({
     CONDITIONAL_DISPLAY_CONTEXT_KEYS[left.name];
 
   switch (valueKind) {
-    case 'DEVICE':
-      return operator === '==' &&
-        isString(literal) &&
-        allowedValues.includes(literal)
-        ? buildContextConditionNode({
-            contextKey: left.name,
-            operand: ViewFilterOperand.IS,
-            value: JSON.stringify([literal]),
-          })
-        : undefined;
     case 'BOOLEAN':
       return isDefined(equalityOperand) && isBoolean(literal)
         ? buildContextConditionNode({
@@ -461,10 +449,12 @@ const compileRecordTruthiness = ({
   path,
   quantifier,
   isNegated,
+  expression,
 }: {
   path: string;
   quantifier: ConditionalDisplayQuantifier;
   isNegated: boolean;
+  expression: string;
 }): ConditionalDisplayConditionNode => {
   if (path.endsWith(LENGTH_PATH_SUFFIX)) {
     return buildContextConditionNode({
@@ -487,13 +477,20 @@ const compileRecordTruthiness = ({
     });
   }
 
-  return buildContextConditionNode({
-    contextKey: 'selectedRecords',
-    subFieldName: path,
-    operand: isNegated
-      ? ViewFilterOperand.IS_EMPTY
-      : ViewFilterOperand.IS_NOT_EMPTY,
-    quantifier,
+  if (IDENTIFIER_RECORD_PATHS.includes(path)) {
+    return buildContextConditionNode({
+      contextKey: 'selectedRecords',
+      subFieldName: path,
+      operand: isNegated
+        ? ViewFilterOperand.IS_EMPTY
+        : ViewFilterOperand.IS_NOT_EMPTY,
+      quantifier,
+    });
+  }
+
+  throw buildCompilationError({
+    expression,
+    offendingToken: `truthiness of record path "${path}": every, some and none accept a path ending in "${LENGTH_PATH_SUFFIX}", a boolean path (${BOOLEAN_RECORD_PATHS.join(', ')}) or an identifier path (${IDENTIFIER_RECORD_PATHS.join(', ')})`,
   });
 };
 
@@ -502,11 +499,13 @@ const compileRecordFunctionCall = ({
   path,
   literal,
   argumentCount,
+  expression,
 }: {
   functionName: string;
   path: string;
   literal: ExpressionLiteral | undefined;
   argumentCount: number;
+  expression: string;
 }): ConditionalDisplayConditionNode | undefined => {
   const buildRecordPathConditionNode = ({
     quantifier,
@@ -549,7 +548,7 @@ const compileRecordFunctionCall = ({
     isNegated: boolean;
   }) =>
     argumentCount === 2
-      ? compileRecordTruthiness({ path, quantifier, isNegated })
+      ? compileRecordTruthiness({ path, quantifier, isNegated, expression })
       : undefined;
 
   switch (functionName) {
@@ -622,9 +621,11 @@ const compileRecordFunctionCall = ({
 const compileFunctionCall = ({
   functionItem,
   functionArguments,
+  expression,
 }: {
   functionItem: CompilationStackItem;
   functionArguments: CompilationStackItem[];
+  expression: string;
 }): CompilationStackItem | undefined => {
   if (functionItem.kind !== 'variable') {
     return undefined;
@@ -673,6 +674,7 @@ const compileFunctionCall = ({
     path: secondArgument.value,
     literal,
     argumentCount: functionArguments.length,
+    expression,
   });
 
   return isDefined(conditionNode)
@@ -712,6 +714,16 @@ const compileTokens = ({
           throw buildCompilationError({
             expression,
             offendingToken: `variable ${JSON.stringify(token.value)}`,
+          });
+        }
+
+        if (
+          isConditionalDisplayContextKey(token.value) &&
+          CONDITIONAL_DISPLAY_CONTEXT_KEYS[token.value].owner === 'admin'
+        ) {
+          throw buildCompilationError({
+            expression,
+            offendingToken: `admin subject "${token.value}": engine conditions cannot carry admin subjects`,
           });
         }
 
@@ -766,6 +778,7 @@ const compileTokens = ({
         const functionCallResult = compileFunctionCall({
           functionItem,
           functionArguments,
+          expression,
         });
 
         if (!isDefined(functionCallResult)) {
@@ -897,7 +910,7 @@ export const compileConditionalAvailabilityExpression = (
   if (isDefined(nonDistributingLogicalOperator)) {
     throw buildCompilationError({
       expression,
-      offendingToken: `"${nonDistributingLogicalOperator.toLowerCase()}" between record functions over several selected records`,
+      offendingToken: `"${nonDistributingLogicalOperator.toLowerCase()}" between record functions over several selected records; guard the formula with \`numberOfSelectedRecords == 1\` at the top level, or express it as a single every/some over one path`,
     });
   }
 

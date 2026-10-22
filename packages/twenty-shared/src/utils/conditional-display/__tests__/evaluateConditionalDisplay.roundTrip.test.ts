@@ -1,28 +1,39 @@
-import { isArray, isBoolean, isString } from '@sniptt/guards';
+import { isBoolean, isNumber, isString } from '@sniptt/guards';
 
 import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from '@/constants/ConditionalDisplayContextKeys';
+import { type ConditionalDisplay } from '@/types/conditional-display/ConditionalDisplay';
 import { type ConditionalDisplayEvaluationContext } from '@/types/conditional-display/ConditionalDisplayEvaluationContext';
 import { type ConditionalDisplayRecordFilter } from '@/types/conditional-display/ConditionalDisplayRecordFilter';
 import { ContextStorePageType } from '@/types/ContextStorePageType';
 import { type ObjectRecord } from '@/types/ObjectRecord';
+import { RecordFilterGroupLogicalOperator } from '@/types/RecordFilterGroupLogicalOperator';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
 import { evaluateConditionalAvailabilityExpression } from '@/utils/command-menu-items/evaluateConditionalAvailabilityExpression';
 import { compileConditionalAvailabilityExpression } from '@/utils/conditional-display/compileConditionalAvailabilityExpression';
 import { evaluateConditionalDisplay } from '@/utils/conditional-display/evaluateConditionalDisplay';
 import { isConditionalDisplayContextRecordFilterMatching } from '@/utils/conditional-display/isConditionalDisplayContextRecordFilterMatching';
 import { parseJson } from '@/utils/parseJson';
+import { removePropertiesFromRecord } from '@/utils/removePropertiesFromRecord';
 import { isPlainObject } from '@/utils/typeguard/isPlainObject';
 import { isDefined } from '@/utils/validation/isDefined';
 
 import { CONDITIONAL_AVAILABILITY_EXPRESSION_CORPUS } from './conditionalAvailabilityExpressionCorpus.fixture';
 
-type RoundTripContext = ConditionalDisplayEvaluationContext & {
-  device: string;
-};
+type RoundTripContext = ConditionalDisplayEvaluationContext;
 
 type MatrixSubject = {
   name: string;
   values: unknown[];
+};
+
+type DeletableContextKeys = {
+  contextKeys: (keyof RoundTripContext)[];
+  isTopLevelConjunct: boolean;
+};
+
+type FailClosedViolation = {
+  deletedContextKeys: (keyof RoundTripContext)[];
+  context: RoundTripContext;
 };
 
 const MAXIMUM_COMBINATIONS_PER_SELECTION_SIZE = 10000;
@@ -173,13 +184,6 @@ const getMatrixSubjects = ({
         contextSubjects.push({
           name: subjectName,
           values: Object.values(ContextStorePageType),
-        });
-
-        return;
-      case 'DEVICE':
-        contextSubjects.push({
-          name: subjectName,
-          values: ['MOBILE', 'DESKTOP'],
         });
 
         return;
@@ -359,8 +363,6 @@ const buildRoundTripContext = ({
       contextStorePageType === assignments.get('pageType'),
   );
 
-  const device = assignments.get('device');
-
   return {
     pageType: pageType ?? ContextStorePageType.Index,
     isInSidePanel: readBoolean('isInSidePanel'),
@@ -395,30 +397,58 @@ const buildRoundTripContext = ({
     objectMetadataLabel: '',
     areAllSelectedRecordsFavorites:
       favoriteRecordIds.length === numberOfSelectedRecords,
-    device: isString(device) ? device : 'DESKTOP',
   };
 };
 
-const isRoundTripRecordFilterMatching = ({
-  recordFilter,
-  record,
+const evaluateTree = ({
+  conditionalDisplay,
   context,
 }: {
-  recordFilter: ConditionalDisplayRecordFilter;
-  record: ObjectRecord | undefined;
+  conditionalDisplay: ConditionalDisplay;
   context: RoundTripContext;
-}): boolean => {
-  if (recordFilter.contextKey !== 'device') {
-    return isConditionalDisplayContextRecordFilterMatching({
-      recordFilter,
-      context,
-      record,
-    });
-  }
+}): boolean =>
+  evaluateConditionalDisplay({
+    conditionalDisplay,
+    records: context.selectedRecords,
+    isRecordFilterMatching: ({ recordFilter, record }) =>
+      isConditionalDisplayContextRecordFilterMatching({
+        recordFilter,
+        context,
+        record,
+      }),
+  });
 
-  const devices = parseJson<unknown>(recordFilter.value);
+const getDeletableContextKeys = (
+  conditionalDisplay: ConditionalDisplay,
+): DeletableContextKeys[] => {
+  const recordFilters = conditionalDisplay.recordFilters ?? [];
 
-  return isArray(devices) && devices.includes(context.device);
+  const rootConjunctionRecordFilterGroupId =
+    conditionalDisplay.recordFilterGroups?.find(
+      ({ parentRecordFilterGroupId, logicalOperator }) =>
+        !isDefined(parentRecordFilterGroupId) &&
+        logicalOperator === RecordFilterGroupLogicalOperator.AND,
+    )?.id;
+
+  const contextKeys = [
+    ...new Set(recordFilters.map(({ contextKey }) => contextKey)),
+  ].filter(isDefined);
+
+  return contextKeys
+    .filter((contextKey) => contextKey !== 'selectedRecords')
+    .map((contextKey) => ({
+      contextKeys:
+        contextKey === 'areAllSelectedRecordsFavorites'
+          ? [contextKey, 'favoriteRecordIds']
+          : [contextKey],
+      isTopLevelConjunct: recordFilters
+        .filter((recordFilter) => recordFilter.contextKey === contextKey)
+        .every(
+          ({ recordFilterGroupId }) =>
+            !isDefined(recordFilterGroupId) ||
+            recordFilterGroupId === rootConjunctionRecordFilterGroupId,
+        ),
+    }));
 };
 
 const runRoundTrip = (expression: string) => {
@@ -445,9 +475,13 @@ const runRoundTrip = (expression: string) => {
         ? SELECTION_SIZES_WITHOUT_RECORDS
         : [0];
 
+  const deletableContextKeys = getDeletableContextKeys(conditionalDisplay);
+
   const outcomes = new Set<boolean>();
   let evaluatedContextCount = 0;
+  let evaluatedDeletionCount = 0;
   let mismatchingContext: RoundTripContext | undefined;
+  let failClosedViolation: FailClosedViolation | undefined;
 
   selectionSizes.forEach((selectionSize) => {
     const recordCount = recordPathSubjects.length > 0 ? selectionSize : 0;
@@ -504,20 +538,16 @@ const runRoundTrip = (expression: string) => {
         assignments,
         selectedRecords,
         numberOfSelectedRecords: selectionSize,
-        favoriteRecordCount:
-          typeof favoriteRecordCount === 'number' ? favoriteRecordCount : 0,
+        favoriteRecordCount: isNumber(favoriteRecordCount)
+          ? favoriteRecordCount
+          : 0,
       });
 
       const expressionOutcome = evaluateConditionalAvailabilityExpression(
         expression,
         context,
       );
-      const treeOutcome = evaluateConditionalDisplay({
-        conditionalDisplay,
-        records: context.selectedRecords,
-        isRecordFilterMatching: ({ recordFilter, record }) =>
-          isRoundTripRecordFilterMatching({ recordFilter, record, context }),
-      });
+      const treeOutcome = evaluateTree({ conditionalDisplay, context });
 
       evaluatedContextCount += 1;
       outcomes.add(expressionOutcome);
@@ -525,25 +555,89 @@ const runRoundTrip = (expression: string) => {
       if (expressionOutcome !== treeOutcome) {
         mismatchingContext = context;
       }
+
+      deletableContextKeys.forEach(({ contextKeys, isTopLevelConjunct }) => {
+        if (isDefined(failClosedViolation)) {
+          return;
+        }
+
+        const contextWithoutKeys = removePropertiesFromRecord(
+          context,
+          contextKeys,
+        );
+
+        const expressionOutcomeWithoutKeys =
+          evaluateConditionalAvailabilityExpression(
+            expression,
+            contextWithoutKeys,
+          );
+        const treeOutcomeWithoutKeys = evaluateTree({
+          conditionalDisplay,
+          context: contextWithoutKeys,
+        });
+
+        evaluatedDeletionCount += 1;
+
+        const isFailingClosed = isTopLevelConjunct
+          ? treeOutcomeWithoutKeys === expressionOutcomeWithoutKeys
+          : !treeOutcomeWithoutKeys || expressionOutcome;
+
+        if (!isFailingClosed) {
+          failClosedViolation = { deletedContextKeys: contextKeys, context };
+        }
+      });
     });
   });
 
-  return { evaluatedContextCount, outcomes, mismatchingContext };
+  return {
+    evaluatedContextCount,
+    evaluatedDeletionCount,
+    outcomes,
+    mismatchingContext,
+    failClosedViolation,
+  };
 };
 
 describe('evaluateConditionalDisplay round trip', () => {
   it.each(DISTINCT_CORPUS_EXPRESSIONS)(
     'should evaluate the compiled tree like the expression %s',
     (expression) => {
-      const { evaluatedContextCount, outcomes, mismatchingContext } =
-        runRoundTrip(expression);
+      const {
+        evaluatedContextCount,
+        outcomes,
+        mismatchingContext,
+        failClosedViolation,
+      } = runRoundTrip(expression);
 
-      expect({ expression, mismatchingContext }).toEqual({
+      expect({ expression, mismatchingContext, failClosedViolation }).toEqual({
         expression,
         mismatchingContext: undefined,
+        failClosedViolation: undefined,
       });
       expect(evaluatedContextCount).toBeGreaterThan(0);
       expect([...outcomes].sort()).toEqual([false, true]);
     },
   );
+
+  it('should keep a single-record guard false when no record is loaded', () => {
+    const expression =
+      'numberOfSelectedRecords == 1 and (everyEquals(selectedRecords, "status", "DRAFT") or everyEquals(selectedRecords, "status", "SCHEDULED"))';
+    const context = buildRoundTripContext({
+      assignments: new Map(),
+      selectedRecords: [],
+      numberOfSelectedRecords: 1,
+      favoriteRecordCount: 0,
+    });
+
+    expect(evaluateConditionalAvailabilityExpression(expression, context)).toBe(
+      false,
+    );
+    expect(
+      evaluateTree({
+        conditionalDisplay:
+          compileConditionalAvailabilityExpression(expression),
+        context,
+      }),
+    ).toBe(false);
+  });
 });

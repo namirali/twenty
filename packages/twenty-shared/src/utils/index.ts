@@ -34,6 +34,7 @@ export { buildConditionalDisplayFromConditionNode } from './conditional-display/
 export { compileConditionalAvailabilityExpression } from './conditional-display/compileConditionalAvailabilityExpression';
 export { evaluateConditionalDisplay } from './conditional-display/evaluateConditionalDisplay';
 export { groupConditionalDisplayConditionNodes } from './conditional-display/groupConditionalDisplayConditionNodes';
+export { isConditionalDisplayContextKey } from './conditional-display/isConditionalDisplayContextKey';
 export { isConditionalDisplayContextRecordFilterMatching } from './conditional-display/isConditionalDisplayContextRecordFilterMatching';
 export { negateConditionalDisplayConditionNode } from './conditional-display/negateConditionalDisplayConditionNode';
 export { formatValueForCSV } from './csv/formatValueForCSV';

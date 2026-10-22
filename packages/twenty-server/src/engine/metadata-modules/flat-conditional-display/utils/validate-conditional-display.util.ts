@@ -6,13 +6,13 @@ import {
   CONDITIONAL_DISPLAY_PROPERTIES,
 } from 'twenty-shared/constants';
 import {
-  type ConditionalDisplayContextKey,
   type ConditionalDisplayProperty,
   type ConditionalDisplaySurface,
   RecordFilterGroupLogicalOperator,
   type UniversalConditionalDisplay,
 } from 'twenty-shared/types';
 import {
+  isConditionalDisplayContextKey,
   isDefined,
   isNonEmptyArray,
   isPlainObject,
@@ -46,11 +46,6 @@ type ValidateConditionalDisplayContext = {
 };
 
 const SINGLE_DEVICE_SCHEMA = z.tuple([z.enum(CONDITIONAL_DISPLAY_DEVICES)]);
-
-const isConditionalDisplayContextKey = (
-  contextKey: string,
-): contextKey is ConditionalDisplayContextKey =>
-  Object.keys(CONDITIONAL_DISPLAY_CONTEXT_KEYS).includes(contextKey);
 
 const isRecordFilterGroupLogicalOperator = (
   logicalOperator: unknown,

@@ -248,19 +248,14 @@ describe('compileConditionalAvailabilityExpression', () => {
     ]);
   });
 
-  it('should compile a device comparison into the device rule', () => {
-    expect(
-      compileConditionalAvailabilityExpression('device == "MOBILE"'),
-    ).toEqual({
-      recordFilters: [
-        {
-          id: expect.any(String),
-          contextKey: 'device',
-          operand: ViewFilterOperand.IS,
-          value: '["MOBILE"]',
-        },
-      ],
-    });
+  it.each([
+    'device == "MOBILE"',
+    'pageType == "RECORD_PAGE" and currentRoleId == "role"',
+    'currentWorkspaceMemberId != "member"',
+  ])('should throw on the admin subject in %s', (expression) => {
+    expect(() => compileConditionalAvailabilityExpression(expression)).toThrow(
+      'engine conditions cannot carry admin subjects',
+    );
   });
 
   it('should compile the same expression to the same tree', () => {
@@ -306,7 +301,9 @@ describe('compileConditionalAvailabilityExpression', () => {
       compileConditionalAvailabilityExpression(
         'everyEquals(selectedRecords, "status", "DRAFT") or everyEquals(selectedRecords, "status", "SCHEDULED")',
       ),
-    ).toThrow('"or" between record functions over several selected records');
+    ).toThrow(
+      '"or" between record functions over several selected records; guard the formula with `numberOfSelectedRecords == 1` at the top level, or express it as a single every/some over one path',
+    );
   });
 
   it('should throw on the negation of a record function', () => {
@@ -317,11 +314,13 @@ describe('compileConditionalAvailabilityExpression', () => {
     ).toThrow('operator "not"');
   });
 
-  it('should throw on the duplicateMessageCampaign formula missing its and', () => {
+  it('should throw on the truthiness of a record path outside the accepted forms', () => {
     expect(() =>
       compileConditionalAvailabilityExpression(
-        'featureFlags.IS_MESSAGE_CAMPAIGN_ENABLEDeveryEquals(selectedRecords, "status", "SENT")',
+        'every(selectedRecords, "isActive")',
       ),
-    ).toThrow('IS_MESSAGE_CAMPAIGN_ENABLEDeveryEquals');
+    ).toThrow(
+      'truthiness of record path "isActive": every, some and none accept a path ending in ".length", a boolean path (canChangeVisibility, inboxStatus.isUnread) or an identifier path (lastPublishedVersionId)',
+    );
   });
 });

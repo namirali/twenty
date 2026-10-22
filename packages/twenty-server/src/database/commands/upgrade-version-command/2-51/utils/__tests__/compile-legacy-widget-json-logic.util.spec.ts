@@ -8,6 +8,7 @@ import { isDefined } from 'twenty-shared/utils';
 
 import { LEGACY_WIDGET_JSON_LOGIC_CORPUS } from 'src/database/commands/upgrade-version-command/2-51/utils/__tests__/legacy-widget-json-logic-corpus.fixture';
 import { compileLegacyWidgetJsonLogic } from 'src/database/commands/upgrade-version-command/2-51/utils/compile-legacy-widget-json-logic.util';
+import { rewriteLegacyDeviceConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/rewrite-legacy-device-conditional-display.util';
 import { validateConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-conditional-display.util';
 import { createEmptyFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/constant/create-empty-flat-entity-maps.constant';
 import { type MetadataUniversalFlatEntityMaps } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/types/metadata-universal-flat-entity-maps.type';
@@ -15,6 +16,7 @@ import { type MetadataUniversalFlatEntityMaps } from 'src/engine/workspace-manag
 const OBJECT_UNIVERSAL_IDENTIFIER = '20202020-0000-4000-8000-000000000000';
 const MULTI_SELECT_FIELD_ID = '20202020-1111-4111-8111-000000000001';
 const SELECT_FIELD_ID = '20202020-1111-4111-8111-000000000002';
+const TEXT_FIELD_ID = '20202020-1111-4111-8111-000000000003';
 
 const FIELDS_BY_NAME: Record<
   string,
@@ -27,6 +29,10 @@ const FIELDS_BY_NAME: Record<
   selectField: {
     fieldMetadataId: SELECT_FIELD_ID,
     type: FieldMetadataType.SELECT,
+  },
+  textField: {
+    fieldMetadataId: TEXT_FIELD_ID,
+    type: FieldMetadataType.TEXT,
   },
 };
 
@@ -108,22 +114,36 @@ describe('compileLegacyWidgetJsonLogic', () => {
     });
   });
 
-  it('should turn a device comparison into the device rule', () => {
-    expect(
-      compileLegacyWidgetJsonLogic({
-        jsonLogic: { and: [{ '===': [{ var: 'device' }, 'MOBILE'] }] },
-        resolveField,
-      }),
-    ).toEqual({
+  it('should return the standard device rule for a device comparison', () => {
+    const jsonLogic = { and: [{ '===': [{ var: 'device' }, 'MOBILE'] }] };
+
+    const conditionalDisplay = compileLegacyWidgetJsonLogic({
+      jsonLogic,
+      resolveField,
+    });
+
+    expect(conditionalDisplay).toBe(
+      rewriteLegacyDeviceConditionalDisplay(jsonLogic),
+    );
+    expect(conditionalDisplay).toEqual({
       recordFilters: [
         {
-          id: expect.any(String),
+          id: '0',
           contextKey: 'device',
           operand: ViewFilterOperand.IS,
           value: '["MOBILE"]',
         },
       ],
     });
+  });
+
+  it('should throw on an inclusion in a text field', () => {
+    expect(() =>
+      compileLegacyWidgetJsonLogic({
+        jsonLogic: { in: ['VALUE_1', { var: 'selectedRecords.0.textField' }] },
+        resolveField,
+      }),
+    ).toThrow('Cannot convert legacy widget json-logic');
   });
 
   it('should turn select comparisons into select rows grouped by their operator', () => {
