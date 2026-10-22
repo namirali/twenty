@@ -1,14 +1,19 @@
-import { type ConditionalDisplaySurface } from 'twenty-shared/types';
+import {
+  type ConditionalDisplayProperty,
+  type ConditionalDisplaySurface,
+} from 'twenty-shared/types';
 import { isPlainObject } from 'twenty-shared/utils';
 
 import { isLegacyNonAuthoredOverride } from 'src/engine/metadata-modules/overrides/utils/is-legacy-non-authored-override.util';
 
 export const getUniversalFlatEntityConditionalDisplays = ({
   metadataName,
+  property,
   universalConditionalDisplay,
   universalOverrides,
 }: {
   metadataName: ConditionalDisplaySurface;
+  property: ConditionalDisplayProperty;
   universalConditionalDisplay: unknown;
   universalOverrides?: unknown;
 }): unknown[] => {
@@ -27,6 +32,6 @@ export const getUniversalFlatEntityConditionalDisplays = ({
     universalConditionalDisplay,
     ...overrideEntries
       .filter(isPlainObject)
-      .map((overrideEntry) => overrideEntry.conditionalDisplay),
+      .map((overrideEntry) => overrideEntry[property]),
   ];
 };

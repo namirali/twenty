@@ -3,22 +3,25 @@ import { isArray, isNonEmptyString, isString } from '@sniptt/guards';
 import {
   CONDITIONAL_DISPLAY_CONTEXT_KEYS,
   CONDITIONAL_DISPLAY_DEVICES,
+  CONDITIONAL_DISPLAY_PROPERTIES,
 } from 'twenty-shared/constants';
 import {
   type ConditionalDisplayContextKey,
+  type ConditionalDisplayProperty,
   type ConditionalDisplaySurface,
   RecordFilterGroupLogicalOperator,
   type UniversalConditionalDisplay,
-  ViewFilterOperand,
 } from 'twenty-shared/types';
 import {
   isDefined,
+  isNonEmptyArray,
   isPlainObject,
   jsonRelationFilterValueSchema,
   parseJson,
 } from 'twenty-shared/utils';
 import { z } from 'zod';
 
+import { validateConditionalDisplayContextLeaf } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-conditional-display-context-leaf.util';
 import { parseConditionalDisplayRoleIds } from 'src/engine/metadata-modules/flat-conditional-display/utils/parse-conditional-display-role-ids.util';
 import { findFlatEntityByUniversalIdentifier } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-universal-identifier.util';
 import { validateRecordFilterFieldLeaf } from 'src/engine/metadata-modules/flat-field-metadata/utils/validate-record-filter-field-leaf.util';
@@ -34,6 +37,7 @@ type UniversalConditionalDisplayRecordFilterGroup = NonNullable<
 >[number];
 
 type ValidateConditionalDisplayContext = {
+  property: ConditionalDisplayProperty;
   surface: ConditionalDisplaySurface;
   objectMetadataUniversalIdentifier: string | null;
   invalidDataCode: string;
@@ -58,6 +62,7 @@ const isRecordFilterGroupLogicalOperator = (
 const validateContextRecordFilter = ({
   recordFilter,
   contextKey,
+  property,
   surface,
   invalidDataCode,
   flatRoleMaps,
@@ -66,7 +71,7 @@ const validateContextRecordFilter = ({
   contextKey: string;
 } & Pick<
   ValidateConditionalDisplayContext,
-  'surface' | 'invalidDataCode' | 'flatRoleMaps'
+  'property' | 'surface' | 'invalidDataCode' | 'flatRoleMaps'
 >): FlatEntityValidationError[] => {
   if (!isConditionalDisplayContextKey(contextKey)) {
     return [
@@ -79,7 +84,19 @@ const validateContextRecordFilter = ({
     ];
   }
 
-  const { valueKind, surfaces } = CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey];
+  const { owner, valueKind, surfaces } =
+    CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey];
+
+  if (owner !== CONDITIONAL_DISPLAY_PROPERTIES[property].owner) {
+    return [
+      {
+        code: invalidDataCode,
+        message: t`Conditional display context key "${contextKey}" is not allowed in ${property}`,
+        userFriendlyMessage: msg`Conditional display rule uses a subject that is not allowed in this condition`,
+        value: contextKey,
+      },
+    ];
+  }
 
   if (!surfaces.includes(surface)) {
     return [
@@ -92,17 +109,14 @@ const validateContextRecordFilter = ({
     ];
   }
 
-  const operand = recordFilter.operand;
+  const leafErrors = validateConditionalDisplayContextLeaf({
+    recordFilter,
+    contextKey,
+    invalidDataCode,
+  });
 
-  if (operand !== ViewFilterOperand.IS) {
-    return [
-      {
-        code: invalidDataCode,
-        message: t`Operand "${operand}" is not supported on conditional display context key "${contextKey}"`,
-        userFriendlyMessage: msg`Conditional display rule operand is not supported`,
-        value: operand,
-      },
-    ];
+  if (isNonEmptyArray(leafErrors)) {
+    return leafErrors;
   }
 
   const value = recordFilter.value ?? '';
@@ -169,6 +183,12 @@ const validateContextRecordFilter = ({
         },
       ];
     }
+    case 'BOOLEAN':
+    case 'NUMBER':
+    case 'PAGE_TYPE':
+    case 'MAP_ENTRY':
+    case 'RECORD_PATH':
+      return [];
   }
 };
 
@@ -176,6 +196,7 @@ const validateFieldRecordFilter = ({
   recordFilter,
   fieldMetadataUniversalIdentifier,
   objectMetadataUniversalIdentifier,
+  property,
   surface,
   invalidDataCode,
   flatFieldMetadataMaps,
@@ -185,10 +206,22 @@ const validateFieldRecordFilter = ({
 } & Pick<
   ValidateConditionalDisplayContext,
   | 'objectMetadataUniversalIdentifier'
+  | 'property'
   | 'surface'
   | 'invalidDataCode'
   | 'flatFieldMetadataMaps'
 >): FlatEntityValidationError[] => {
+  if (CONDITIONAL_DISPLAY_PROPERTIES[property].owner === 'engine') {
+    return [
+      {
+        code: invalidDataCode,
+        message: t`Conditional display rules in ${property} cannot reference a record field`,
+        userFriendlyMessage: msg`Conditional display rule cannot use a record field in this condition`,
+        value: fieldMetadataUniversalIdentifier,
+      },
+    ];
+  }
+
   if (!isDefined(objectMetadataUniversalIdentifier)) {
     return [
       {
@@ -408,7 +441,7 @@ export const validateConditionalDisplay = ({
     return [];
   }
 
-  const { surface, invalidDataCode } = context;
+  const { property, surface, invalidDataCode } = context;
 
   const formatError: FlatEntityValidationError = {
     code: invalidDataCode,
@@ -445,11 +478,18 @@ export const validateConditionalDisplay = ({
 
   const errors: FlatEntityValidationError[] = [];
 
+  const isQuantifierAllowed =
+    surface === 'commandMenuItem' ||
+    (CONDITIONAL_DISPLAY_PROPERTIES[property].owner === 'engine' &&
+      CONDITIONAL_DISPLAY_CONTEXT_KEYS.selectedRecords.surfaces.includes(
+        surface,
+      ));
+
   if (isDefined(quantifier)) {
-    if (surface !== 'commandMenuItem') {
+    if (!isQuantifierAllowed) {
       errors.push({
         code: invalidDataCode,
-        message: t`Conditional display quantifier is only supported on command menu items`,
+        message: t`Conditional display quantifier is not supported in ${property} on ${surface}`,
         userFriendlyMessage: msg`Conditional display quantifier is not available here`,
         value: quantifier,
       });

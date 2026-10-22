@@ -116,6 +116,16 @@ export class CommandMenuItemDTO {
   @Field(() => GraphQLJSON, { nullable: true })
   conditionalDisplay?: ConditionalDisplay | null;
 
+  @IsObject()
+  @IsOptional()
+  @Field(() => GraphQLJSON, { nullable: true })
+  conditionalAvailability?: ConditionalDisplay | null;
+
+  @IsObject()
+  @IsOptional()
+  @Field(() => GraphQLJSON, { nullable: true })
+  conditionalPinned?: ConditionalDisplay | null;
+
   @IsUUID()
   @IsOptional()
   @Field(() => UUIDScalarType, { nullable: true })

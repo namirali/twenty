@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 
 import { msg, t } from '@lingui/core/macro';
 import { isNonEmptyString } from '@sniptt/guards';
+import { CONDITIONAL_DISPLAY_PROPERTIES } from 'twenty-shared/constants';
 import { ALL_METADATA_NAME } from 'twenty-shared/metadata';
-import { isDefined } from 'twenty-shared/utils';
+import { isDefined, typedObjectEntries } from 'twenty-shared/utils';
 
 import { CommandMenuItemExceptionCode } from 'src/engine/metadata-modules/command-menu-item/command-menu-item.exception';
 import { isObjectMetadataCommandMenuItemPayload } from 'src/engine/metadata-modules/command-menu-item/utils/is-object-metadata-command-menu-item-payload.util';
@@ -235,16 +236,21 @@ export class FlatCommandMenuItemValidatorService {
     flatFieldMetadataMaps: MetadataUniversalFlatEntityMaps<'fieldMetadata'>;
     flatRoleMaps: MetadataUniversalFlatEntityMaps<'role'>;
   }): FlatEntityValidationError[] {
-    return validateUniversalFlatEntityConditionalDisplays({
-      flatEntity: flatCommandMenuItem,
-      surface: 'commandMenuItem',
-      objectMetadataUniversalIdentifier:
-        flatCommandMenuItem.availabilityObjectMetadataUniversalIdentifier,
-      invalidDataCode:
-        CommandMenuItemExceptionCode.INVALID_COMMAND_MENU_ITEM_INPUT,
-      flatFieldMetadataMaps,
-      flatRoleMaps,
-    });
+    return typedObjectEntries(CONDITIONAL_DISPLAY_PROPERTIES)
+      .filter(([, { surfaces }]) => surfaces.includes('commandMenuItem'))
+      .flatMap(([property]) =>
+        validateUniversalFlatEntityConditionalDisplays({
+          flatEntity: flatCommandMenuItem,
+          property,
+          surface: 'commandMenuItem',
+          objectMetadataUniversalIdentifier:
+            flatCommandMenuItem.availabilityObjectMetadataUniversalIdentifier,
+          invalidDataCode:
+            CommandMenuItemExceptionCode.INVALID_COMMAND_MENU_ITEM_INPUT,
+          flatFieldMetadataMaps,
+          flatRoleMaps,
+        }),
+      );
   }
 
   private validateNavigationTarget({

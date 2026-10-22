@@ -44,6 +44,20 @@ export const fromCommandMenuItemEntityToFlatCommandMenuItem = (
       roleUniversalIdentifierById,
     });
 
+  const universalConditionalAvailability =
+    fromConditionalDisplayToUniversalConditionalDisplay({
+      conditionalDisplay: commandMenuItemScalarEntity.conditionalAvailability,
+      fieldMetadataUniversalIdentifierById,
+      roleUniversalIdentifierById,
+    });
+
+  const universalConditionalPinned =
+    fromConditionalDisplayToUniversalConditionalDisplay({
+      conditionalDisplay: commandMenuItemScalarEntity.conditionalPinned,
+      fieldMetadataUniversalIdentifierById,
+      roleUniversalIdentifierById,
+    });
+
   const universalOverrides = isDefined(commandMenuItemEntity.overrides)
     ? fromCommandMenuItemOverridesToUniversalOverrides({
         overrides: commandMenuItemEntity.overrides,
@@ -59,6 +73,8 @@ export const fromCommandMenuItemEntityToFlatCommandMenuItem = (
     ...commandMenuItemScalarEntity,
     ...relationUniversalIdentifiers,
     universalConditionalDisplay,
+    universalConditionalAvailability,
+    universalConditionalPinned,
     universalOverrides,
   };
 };

@@ -39,6 +39,10 @@ export const fromFlatCommandMenuItemToCommandMenuItemDto = (
       effectiveFlatCommandMenuItem.conditionalPinnedExpression ?? undefined,
     conditionalDisplay:
       effectiveFlatCommandMenuItem.conditionalDisplay ?? undefined,
+    conditionalAvailability:
+      effectiveFlatCommandMenuItem.conditionalAvailability ?? undefined,
+    conditionalPinned:
+      effectiveFlatCommandMenuItem.conditionalPinned ?? undefined,
     availabilityObjectMetadataId:
       effectiveFlatCommandMenuItem.availabilityObjectMetadataId ?? undefined,
     navigationTargetObjectMetadataId:

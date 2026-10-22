@@ -32,6 +32,12 @@ export const fromCommandMenuItemManifestToUniversalFlatCommandMenuItem = ({
     universalConditionalDisplay: normalizeConditionalDisplay(
       commandMenuItemManifest.conditionalDisplay,
     ),
+    universalConditionalAvailability: normalizeConditionalDisplay(
+      commandMenuItemManifest.conditionalAvailability,
+    ),
+    universalConditionalPinned: normalizeConditionalDisplay(
+      commandMenuItemManifest.conditionalPinned,
+    ),
     frontComponentUniversalIdentifier:
       commandMenuItemManifest.frontComponentUniversalIdentifier,
     availabilityObjectMetadataUniversalIdentifier:

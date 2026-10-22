@@ -113,6 +113,8 @@ export const createStandardPageLayoutWidgetFlatMetadata = ({
     deletedAt: null,
     conditionalDisplay: conditionalDisplay ?? null,
     universalConditionalDisplay,
+    conditionalAvailability: null,
+    universalConditionalAvailability: null,
     conditionalAvailabilityExpression:
       conditionalAvailabilityExpression ?? null,
     overrides: null,

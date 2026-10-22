@@ -70,6 +70,8 @@ export type { CompositeFieldSubFieldName } from './CompositeFieldSubFieldNameTyp
 export type { ConditionalDisplay } from './conditional-display/ConditionalDisplay';
 export type { ConditionalDisplayContextKey } from './conditional-display/ConditionalDisplayContextKey';
 export type { ConditionalDisplayDevice } from './conditional-display/ConditionalDisplayDevice';
+export type { ConditionalDisplayOwner } from './conditional-display/ConditionalDisplayOwner';
+export type { ConditionalDisplayProperty } from './conditional-display/ConditionalDisplayProperty';
 export type { ConditionalDisplayQuantifier } from './conditional-display/ConditionalDisplayQuantifier';
 export type { ConditionalDisplayRecordFilter } from './conditional-display/ConditionalDisplayRecordFilter';
 export type { ConditionalDisplayRecordFilterGroup } from './conditional-display/ConditionalDisplayRecordFilterGroup';
@@ -278,6 +280,8 @@ export type {
   FloatFilter,
   DateFilter,
   DateTimeFilter,
+  FieldReferenceFilterOperator,
+  FieldReferenceFilter,
   CurrencyFilter,
   UrlFilter,
   FullNameFilter,

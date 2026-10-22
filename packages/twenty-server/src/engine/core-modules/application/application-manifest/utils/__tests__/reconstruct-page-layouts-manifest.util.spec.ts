@@ -9,6 +9,7 @@ import {
   FieldMetadataType,
   PageLayoutTabLayoutMode,
   PageLayoutType,
+  ViewFilterOperand,
   WidgetType,
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
@@ -259,6 +260,7 @@ const buildFlatPageLayoutWidget = ({
   objectMetadataId: null,
   configuration: { configurationType: WidgetConfigurationType.NOTES },
   conditionalDisplay: null,
+  conditionalAvailability: null,
   overrides: null,
   ...flatPageLayoutWidgetProperties,
 });
@@ -897,6 +899,23 @@ describe('reconstructPageLayoutsManifest', () => {
             conditionalAvailabilityExpression: 'device === "mobile"',
           }),
           buildFlatPageLayoutWidget({
+            pageLayoutWidgetManifest: buildNotesWidgetManifest(
+              'conditional-availability-widget',
+            ),
+            pageLayoutTabUniversalIdentifier: OVERVIEW_TAB_UID,
+            universalConditionalAvailability: {
+              recordFilters: [
+                {
+                  id: 'feature-flag-filter',
+                  contextKey: 'featureFlags',
+                  subFieldName: 'IS_AI_ENABLED',
+                  operand: ViewFilterOperand.IS,
+                  value: 'true',
+                },
+              ],
+            },
+          }),
+          buildFlatPageLayoutWidget({
             pageLayoutWidgetManifest: {
               ...buildNotesWidgetManifest('missing-object-widget'),
               objectUniversalIdentifier: MISSING_UID,
@@ -1005,6 +1024,9 @@ describe('reconstructPageLayoutsManifest', () => {
     );
     expect(reasonOf(coverage, 'conditional-widget')).toBe(
       'page layout widget with a conditional availability expression',
+    );
+    expect(reasonOf(coverage, 'conditional-availability-widget')).toBe(
+      'page layout widget with a conditional availability',
     );
     expect(reasonOf(coverage, 'missing-object-widget')).toBe(
       'page layout widget on an object that does not exist',
