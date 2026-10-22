@@ -203,6 +203,10 @@ export const getUnsupportedPageLayoutWidgetReason = ({
     return 'page layout widget with a conditional availability expression';
   }
 
+  if (isDefined(flatPageLayoutWidget.universalConditionalAvailability)) {
+    return 'page layout widget with a conditional availability';
+  }
+
   const unsupportedConditionalDisplayReason =
     getUnsupportedConditionalDisplayReason({
       entityLabel: 'page layout widget',

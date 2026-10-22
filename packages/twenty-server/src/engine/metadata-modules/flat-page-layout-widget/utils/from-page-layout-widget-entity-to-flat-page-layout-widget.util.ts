@@ -58,6 +58,13 @@ export const fromPageLayoutWidgetEntityToFlatPageLayoutWidget = (
       roleUniversalIdentifierById,
     });
 
+  const universalConditionalAvailability =
+    fromConditionalDisplayToUniversalConditionalDisplay({
+      conditionalDisplay: pageLayoutWidgetScalarEntity.conditionalAvailability,
+      fieldMetadataUniversalIdentifierById,
+      roleUniversalIdentifierById,
+    });
+
   const universalOverrides = isDefined(pageLayoutWidgetEntity.overrides)
     ? fromPageLayoutWidgetOverridesToUniversalOverrides({
         overrides: pageLayoutWidgetEntity.overrides,
@@ -73,6 +80,7 @@ export const fromPageLayoutWidgetEntityToFlatPageLayoutWidget = (
     ...relationUniversalIdentifiers,
     universalConfiguration: configurationWithUniversalIdentifiers,
     universalConditionalDisplay,
+    universalConditionalAvailability,
     universalOverrides,
   };
 };

@@ -92,6 +92,8 @@ const persisted = ({ workflow, version }: ReturnType<typeof convert>) => {
       applicationId: APPLICATION_ID,
       overrides: null,
       conditionalDisplay: null,
+      conditionalAvailability: null,
+      conditionalPinned: null,
       frontComponentId: null,
       availabilityObjectMetadataId: null,
       navigationTargetObjectMetadataId: null,

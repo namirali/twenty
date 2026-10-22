@@ -687,6 +687,8 @@ export class PageLayoutUpdateService {
                 flatFieldMetadataMaps.universalIdentifierById,
               roleUniversalIdentifierById: flatRoleMaps.universalIdentifierById,
             }),
+          conditionalAvailability: null,
+          universalConditionalAvailability: null,
           conditionalAvailabilityExpression:
             widgetInput.conditionalAvailabilityExpression ?? null,
           overrides: null,

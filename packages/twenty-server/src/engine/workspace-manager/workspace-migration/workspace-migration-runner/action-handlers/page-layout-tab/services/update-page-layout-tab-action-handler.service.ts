@@ -14,7 +14,7 @@ import {
   WorkspaceMigrationActionRunnerArgs,
   WorkspaceMigrationActionRunnerContext,
 } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/types/workspace-migration-action-runner-args.type';
-import { resolveUpdateConditionalDisplay } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/resolve-update-conditional-display.util';
+import { resolveUpdateConditionalDisplayProperties } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/resolve-update-conditional-display-properties.util';
 
 @Injectable()
 export class UpdatePageLayoutTabActionHandlerService extends WorkspaceMigrationRunnerActionHandler(
@@ -38,11 +38,13 @@ export class UpdatePageLayoutTabActionHandlerService extends WorkspaceMigrationR
         allFlatEntityMaps,
       });
 
-    const updateWithConditionalDisplay = resolveUpdateConditionalDisplay({
-      update: updateWithResolvedForeignKeys,
-      flatFieldMetadataMaps: allFlatEntityMaps.flatFieldMetadataMaps,
-      flatRoleMaps: allFlatEntityMaps.flatRoleMaps,
-    });
+    const updateWithConditionalDisplay =
+      resolveUpdateConditionalDisplayProperties({
+        update: updateWithResolvedForeignKeys,
+        metadataName: 'pageLayoutTab',
+        flatFieldMetadataMaps: allFlatEntityMaps.flatFieldMetadataMaps,
+        flatRoleMaps: allFlatEntityMaps.flatRoleMaps,
+      });
 
     const update =
       universalOverrides === undefined

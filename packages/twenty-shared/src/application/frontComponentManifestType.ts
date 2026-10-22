@@ -17,6 +17,8 @@ export type CommandMenuItemManifest = SyncableEntityOptions & {
   frontComponentUniversalIdentifier: string;
   conditionalAvailabilityExpression?: string;
   conditionalPinnedExpression?: string;
+  conditionalAvailability?: UniversalConditionalDisplay;
+  conditionalPinned?: UniversalConditionalDisplay;
   conditionalDisplay?: UniversalConditionalDisplay;
 };
 

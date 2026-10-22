@@ -1,4 +1,21 @@
 export type ConditionalDisplayContextKey =
   | 'currentRoleId'
   | 'currentWorkspaceMemberId'
-  | 'device';
+  | 'device'
+  | 'pageType'
+  | 'isInSidePanel'
+  | 'isDashboardPageLayoutInEditMode'
+  | 'isLayoutCustomizationModeEnabled'
+  | 'isSelectAll'
+  | 'hasAnySoftDeleteFilterOnView'
+  | 'numberOfSelectedRecords'
+  | 'canImpersonate'
+  | 'canAccessFullAdminPanel'
+  | 'areAllSelectedRecordsFavorites'
+  | 'featureFlags'
+  | 'permissionFlags'
+  | 'objectPermissions'
+  | 'targetObjectReadPermissions'
+  | 'targetObjectWritePermissions'
+  | 'objectMetadataItem'
+  | 'selectedRecords';

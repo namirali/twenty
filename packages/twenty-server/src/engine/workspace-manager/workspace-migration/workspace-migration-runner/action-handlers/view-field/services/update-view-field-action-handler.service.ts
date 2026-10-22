@@ -14,7 +14,7 @@ import {
   WorkspaceMigrationActionRunnerArgs,
   WorkspaceMigrationActionRunnerContext,
 } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/types/workspace-migration-action-runner-args.type';
-import { resolveUpdateConditionalDisplay } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/resolve-update-conditional-display.util';
+import { resolveUpdateConditionalDisplayProperties } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/resolve-update-conditional-display-properties.util';
 
 @Injectable()
 export class UpdateViewFieldActionHandlerService extends WorkspaceMigrationRunnerActionHandler(
@@ -42,11 +42,13 @@ export class UpdateViewFieldActionHandlerService extends WorkspaceMigrationRunne
         allFlatEntityMaps,
       });
 
-    const updateWithConditionalDisplay = resolveUpdateConditionalDisplay({
-      update: updateWithResolvedForeignKeys,
-      flatFieldMetadataMaps: allFlatEntityMaps.flatFieldMetadataMaps,
-      flatRoleMaps: allFlatEntityMaps.flatRoleMaps,
-    });
+    const updateWithConditionalDisplay =
+      resolveUpdateConditionalDisplayProperties({
+        update: updateWithResolvedForeignKeys,
+        metadataName: 'viewField',
+        flatFieldMetadataMaps: allFlatEntityMaps.flatFieldMetadataMaps,
+        flatRoleMaps: allFlatEntityMaps.flatRoleMaps,
+      });
 
     const update =
       universalOverrides === undefined

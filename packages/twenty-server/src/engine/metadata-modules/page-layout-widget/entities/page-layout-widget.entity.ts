@@ -21,6 +21,7 @@ import {
 } from 'typeorm';
 
 import { ADD_IS_SYSTEM_SIDE_EFFECT_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-15/is-system-side-effect-upgrade-command-name.constant';
+import { ADD_CONDITIONAL_DISPLAY_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-51/constants/add-conditional-display-upgrade-command-name.constant';
 import { WasIntroducedInUpgrade } from 'src/engine/core-modules/upgrade/decorators/was-introduced-in-upgrade.decorator';
 import { type WasRemovedInUpgrade } from 'src/engine/core-modules/upgrade/decorators/was-removed-in-upgrade.decorator';
 import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
@@ -91,6 +92,12 @@ export class PageLayoutWidgetEntity<
 
   @Column({ type: 'jsonb', nullable: true })
   conditionalDisplay: JsonbProperty<ConditionalDisplay | null>;
+
+  @WasIntroducedInUpgrade({
+    upgradeCommandName: ADD_CONDITIONAL_DISPLAY_UPGRADE_COMMAND_NAME,
+  })
+  @Column({ type: 'jsonb', nullable: true })
+  conditionalAvailability: JsonbProperty<ConditionalDisplay | null>;
 
   @Column({ type: 'varchar', nullable: true })
   conditionalAvailabilityExpression: string | null;
