@@ -52,6 +52,22 @@ export class CreateCommandMenuItemActionHandlerService extends WorkspaceMigratio
         flatRoleMaps: allFlatEntityMaps.flatRoleMaps,
       });
 
+    const conditionalAvailability =
+      fromUniversalConditionalDisplayToConditionalDisplay({
+        universalConditionalDisplay:
+          action.flatEntity.universalConditionalAvailability,
+        flatFieldMetadataMaps: allFlatEntityMaps.flatFieldMetadataMaps,
+        flatRoleMaps: allFlatEntityMaps.flatRoleMaps,
+      });
+
+    const conditionalPinned =
+      fromUniversalConditionalDisplayToConditionalDisplay({
+        universalConditionalDisplay:
+          action.flatEntity.universalConditionalPinned,
+        flatFieldMetadataMaps: allFlatEntityMaps.flatFieldMetadataMaps,
+        flatRoleMaps: allFlatEntityMaps.flatRoleMaps,
+      });
+
     const overrides = isDefined(action.flatEntity.universalOverrides)
       ? fromUniversalOverridesToCommandMenuItemOverrides({
           universalOverrides: action.flatEntity.universalOverrides,
@@ -76,6 +92,8 @@ export class CreateCommandMenuItemActionHandlerService extends WorkspaceMigratio
         pageLayoutId,
         navigationTargetObjectMetadataId,
         conditionalDisplay,
+        conditionalAvailability,
+        conditionalPinned,
         overrides,
         applicationId: flatApplication.id,
         id: action.id ?? v4(),

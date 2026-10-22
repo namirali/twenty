@@ -15,7 +15,7 @@ import {
   WorkspaceMigrationActionRunnerArgs,
   WorkspaceMigrationActionRunnerContext,
 } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/types/workspace-migration-action-runner-args.type';
-import { resolveUpdateConditionalDisplay } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/resolve-update-conditional-display.util';
+import { resolveUpdateConditionalDisplayProperties } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/resolve-update-conditional-display-properties.util';
 
 @Injectable()
 export class UpdatePageLayoutWidgetActionHandlerService extends WorkspaceMigrationRunnerActionHandler(
@@ -63,19 +63,21 @@ export class UpdatePageLayoutWidgetActionHandlerService extends WorkspaceMigrati
               }),
           };
 
-    const updateWithConditionalDisplay = resolveUpdateConditionalDisplay({
-      update: updateWithConfiguration,
-      flatFieldMetadataMaps: allFlatEntityMaps.flatFieldMetadataMaps,
-      flatRoleMaps: allFlatEntityMaps.flatRoleMaps,
-    });
+    const updateWithConditionalDisplays =
+      resolveUpdateConditionalDisplayProperties({
+        update: updateWithConfiguration,
+        metadataName: 'pageLayoutWidget',
+        flatFieldMetadataMaps: allFlatEntityMaps.flatFieldMetadataMaps,
+        flatRoleMaps: allFlatEntityMaps.flatRoleMaps,
+      });
 
     const update =
       universalOverrides === undefined
-        ? updateWithConditionalDisplay
+        ? updateWithConditionalDisplays
         : universalOverrides === null
-          ? { ...updateWithConditionalDisplay, overrides: null }
+          ? { ...updateWithConditionalDisplays, overrides: null }
           : {
-              ...updateWithConditionalDisplay,
+              ...updateWithConditionalDisplays,
               overrides: fromUniversalOverridesToPageLayoutWidgetOverrides({
                 universalOverrides,
                 flatPageLayoutTabMaps: allFlatEntityMaps.flatPageLayoutTabMaps,

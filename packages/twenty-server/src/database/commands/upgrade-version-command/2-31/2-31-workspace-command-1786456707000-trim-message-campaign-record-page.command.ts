@@ -95,7 +95,7 @@ export class TrimMessageCampaignRecordPageCommand extends ProvisionedWorkspaceCo
     ).filter((widget): widget is FlatPageLayoutWidget => isDefined(widget));
 
     const pageLayoutWidgetsToUpdate = SENT_ONLY_WIDGET_UNIVERSAL_IDENTIFIERS.map(
-      (universalIdentifier) => {
+      (universalIdentifier): FlatPageLayoutWidget | null => {
         const existingWidget =
           flatPageLayoutWidgetMaps.byUniversalIdentifier[universalIdentifier];
         const standardWidget =

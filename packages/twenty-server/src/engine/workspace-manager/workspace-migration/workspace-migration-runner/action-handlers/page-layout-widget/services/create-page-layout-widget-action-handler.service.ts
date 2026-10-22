@@ -69,6 +69,14 @@ export class CreatePageLayoutWidgetActionHandlerService extends WorkspaceMigrati
         flatRoleMaps: allFlatEntityMaps.flatRoleMaps,
       });
 
+    const conditionalAvailability =
+      fromUniversalConditionalDisplayToConditionalDisplay({
+        universalConditionalDisplay:
+          action.flatEntity.universalConditionalAvailability,
+        flatFieldMetadataMaps: allFlatEntityMaps.flatFieldMetadataMaps,
+        flatRoleMaps: allFlatEntityMaps.flatRoleMaps,
+      });
+
     const overrides = isDefined(action.flatEntity.universalOverrides)
       ? fromUniversalOverridesToPageLayoutWidgetOverrides({
           universalOverrides: action.flatEntity.universalOverrides,
@@ -89,6 +97,7 @@ export class CreatePageLayoutWidgetActionHandlerService extends WorkspaceMigrati
         ...action.flatEntity,
         configuration,
         conditionalDisplay,
+        conditionalAvailability,
         overrides,
         pageLayoutTabId,
         objectMetadataId,

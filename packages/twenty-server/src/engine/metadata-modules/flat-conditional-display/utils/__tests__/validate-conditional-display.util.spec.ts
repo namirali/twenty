@@ -1,4 +1,5 @@
 import {
+  type ConditionalDisplayProperty,
   type ConditionalDisplaySurface,
   FieldMetadataType,
   ViewFilterOperand,
@@ -43,15 +44,18 @@ const flatRoleMaps = {
 
 const validate = ({
   conditionalDisplay,
+  property = 'conditionalDisplay',
   surface = 'pageLayoutWidget',
   objectMetadataUniversalIdentifier = OBJECT_UNIVERSAL_IDENTIFIER,
 }: {
   conditionalDisplay: unknown;
+  property?: ConditionalDisplayProperty;
   surface?: ConditionalDisplaySurface;
   objectMetadataUniversalIdentifier?: string | null;
 }) =>
   validateConditionalDisplay({
     conditionalDisplay,
+    property,
     surface,
     objectMetadataUniversalIdentifier,
     invalidDataCode: INVALID_DATA_CODE,
@@ -65,6 +69,50 @@ const DEVICE_LEAF = {
   operand: ViewFilterOperand.IS,
   value: '["MOBILE"]',
 };
+
+const IS_SELECT_ALL_LEAF = {
+  id: '0',
+  contextKey: 'isSelectAll',
+  operand: ViewFilterOperand.IS,
+  value: 'true',
+};
+
+const NUMBER_OF_SELECTED_RECORDS_LEAF = {
+  id: '0',
+  contextKey: 'numberOfSelectedRecords',
+  operand: ViewFilterOperand.IS,
+  value: '1',
+};
+
+const PAGE_TYPE_LEAF = {
+  id: '0',
+  contextKey: 'pageType',
+  operand: ViewFilterOperand.IS,
+  value: '"RECORD_PAGE"',
+};
+
+const FEATURE_FLAG_LEAF = {
+  id: '0',
+  contextKey: 'featureFlags',
+  subFieldName: 'IS_AI_ENABLED',
+  operand: ViewFilterOperand.IS,
+  value: 'true',
+};
+
+const SELECTED_RECORDS_LEAF = {
+  id: '0',
+  contextKey: 'selectedRecords',
+  subFieldName: 'inboxStatus.isUnread',
+  operand: ViewFilterOperand.IS,
+  value: 'true',
+};
+
+const validateCommandAvailability = (recordFilter: object) =>
+  validate({
+    conditionalDisplay: { recordFilters: [recordFilter] },
+    property: 'conditionalAvailability',
+    surface: 'commandMenuItem',
+  });
 
 describe('validateConditionalDisplay', () => {
   it('should accept a device rule on a widget', () => {
@@ -251,15 +299,48 @@ describe('validateConditionalDisplay', () => {
     ]);
   });
 
-  it('should reject a quantifier on a widget', () => {
+  it('should reject a quantifier in the display of a widget', () => {
     expect(
       validate({
         conditionalDisplay: {
           recordFilters: [DEVICE_LEAF],
           quantifier: 'SOME',
         },
+        property: 'conditionalDisplay',
       }),
     ).toEqual([expect.objectContaining({ value: 'SOME' })]);
+  });
+
+  it('should accept a quantified selected records rule in the availability of a widget', () => {
+    expect(
+      validate({
+        conditionalDisplay: {
+          recordFilters: [
+            {
+              ...SELECTED_RECORDS_LEAF,
+              subFieldName: 'status',
+              operand: ViewFilterOperand.IS_NOT,
+              value: '"DRAFT"',
+            },
+          ],
+          quantifier: 'EVERY',
+        },
+        property: 'conditionalAvailability',
+      }),
+    ).toEqual([]);
+  });
+
+  it('should accept a quantified selected records rule in the pinned condition of a command menu item', () => {
+    expect(
+      validate({
+        conditionalDisplay: {
+          recordFilters: [SELECTED_RECORDS_LEAF],
+          quantifier: 'EVERY',
+        },
+        property: 'conditionalPinned',
+        surface: 'commandMenuItem',
+      }),
+    ).toEqual([]);
   });
 
   it('should accept a quantifier on a command menu item', () => {
@@ -361,6 +442,299 @@ describe('validateConditionalDisplay', () => {
       validate({ conditionalDisplay: jsonLogicConditionalDisplay }),
     ).toEqual([
       expect.objectContaining({ value: jsonLogicConditionalDisplay }),
+    ]);
+  });
+
+  it('should accept an engine key in the availability of a command menu item', () => {
+    expect(validateCommandAvailability(IS_SELECT_ALL_LEAF)).toEqual([]);
+  });
+
+  it('should reject an engine key in the display of a command menu item', () => {
+    expect(
+      validate({
+        conditionalDisplay: { recordFilters: [IS_SELECT_ALL_LEAF] },
+        surface: 'commandMenuItem',
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        code: INVALID_DATA_CODE,
+        message:
+          'Conditional display context key "isSelectAll" is not allowed in conditionalDisplay',
+      }),
+    ]);
+  });
+
+  it('should reject an admin key in the pinned condition of a command menu item', () => {
+    expect(
+      validate({
+        conditionalDisplay: {
+          recordFilters: [
+            {
+              id: '0',
+              contextKey: 'currentRoleId',
+              operand: ViewFilterOperand.IS,
+              value: JSON.stringify([ROLE_UNIVERSAL_IDENTIFIER]),
+            },
+          ],
+        },
+        property: 'conditionalPinned',
+        surface: 'commandMenuItem',
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        message:
+          'Conditional display context key "currentRoleId" is not allowed in conditionalPinned',
+      }),
+    ]);
+  });
+
+  it('should accept a feature flag rule in the availability of a widget', () => {
+    expect(
+      validate({
+        conditionalDisplay: { recordFilters: [FEATURE_FLAG_LEAF] },
+        property: 'conditionalAvailability',
+      }),
+    ).toEqual([]);
+  });
+
+  it('should reject an engine key not available on widgets in the availability of a widget', () => {
+    expect(
+      validate({
+        conditionalDisplay: { recordFilters: [PAGE_TYPE_LEAF] },
+        property: 'conditionalAvailability',
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        message:
+          'Conditional display context key "pageType" is not allowed on pageLayoutWidget',
+      }),
+    ]);
+  });
+
+  it('should reject a field rule in the availability of a widget', () => {
+    expect(
+      validate({
+        conditionalDisplay: {
+          recordFilters: [
+            {
+              id: '0',
+              fieldMetadataUniversalIdentifier: TEXT_FIELD_UNIVERSAL_IDENTIFIER,
+              operand: ViewFilterOperand.IS_NOT_EMPTY,
+              value: '',
+            },
+          ],
+        },
+        property: 'conditionalAvailability',
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        message:
+          'Conditional display rules in conditionalAvailability cannot reference a record field',
+        value: TEXT_FIELD_UNIVERSAL_IDENTIFIER,
+      }),
+    ]);
+  });
+
+  it('should reject a map key rule without a sub field name', () => {
+    expect(
+      validateCommandAvailability({
+        ...FEATURE_FLAG_LEAF,
+        subFieldName: undefined,
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        message:
+          'Conditional display context key "featureFlags" requires a sub field name',
+      }),
+    ]);
+  });
+
+  it('should reject a map key rule whose sub field name is a path', () => {
+    expect(
+      validateCommandAvailability({
+        ...FEATURE_FLAG_LEAF,
+        subFieldName: 'IS_AI_ENABLED.value',
+      }),
+    ).toEqual([expect.objectContaining({ value: 'IS_AI_ENABLED.value' })]);
+  });
+
+  it('should accept a selected records rule on a dotted path', () => {
+    expect(validateCommandAvailability(SELECTED_RECORDS_LEAF)).toEqual([]);
+  });
+
+  it('should reject a selected records rule on a path with an empty segment', () => {
+    expect(
+      validateCommandAvailability({
+        ...SELECTED_RECORDS_LEAF,
+        subFieldName: 'inboxStatus..isUnread',
+      }),
+    ).toEqual([expect.objectContaining({ value: 'inboxStatus..isUnread' })]);
+  });
+
+  it('should reject a scalar key rule with a sub field name', () => {
+    expect(
+      validateCommandAvailability({
+        ...IS_SELECT_ALL_LEAF,
+        subFieldName: 'value',
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        message:
+          'Conditional display context key "isSelectAll" does not accept a sub field name',
+      }),
+    ]);
+  });
+
+  it('should accept a map key rule with operand DOES_NOT_CONTAIN', () => {
+    expect(
+      validateCommandAvailability({
+        ...FEATURE_FLAG_LEAF,
+        operand: ViewFilterOperand.DOES_NOT_CONTAIN,
+      }),
+    ).toEqual([]);
+  });
+
+  it('should reject a boolean key rule with operand GREATER_THAN_OR_EQUAL', () => {
+    expect(
+      validateCommandAvailability({
+        ...IS_SELECT_ALL_LEAF,
+        operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        value: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
+      }),
+    ]);
+  });
+
+  it('should accept a selection count rule with operand GREATER_THAN_OR_EQUAL', () => {
+    expect(
+      validateCommandAvailability({
+        ...NUMBER_OF_SELECTED_RECORDS_LEAF,
+        operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
+      }),
+    ).toEqual([]);
+  });
+
+  it('should reject a selection count rule with operand CONTAINS', () => {
+    expect(
+      validateCommandAvailability({
+        ...NUMBER_OF_SELECTED_RECORDS_LEAF,
+        operand: ViewFilterOperand.CONTAINS,
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        message:
+          'Operand "CONTAINS" is not supported on conditional display context key "numberOfSelectedRecords"',
+      }),
+    ]);
+  });
+
+  it('should reject a page type rule with operand IS_EMPTY', () => {
+    expect(
+      validateCommandAvailability({
+        ...PAGE_TYPE_LEAF,
+        operand: ViewFilterOperand.IS_EMPTY,
+        value: null,
+      }),
+    ).toEqual([expect.objectContaining({ value: ViewFilterOperand.IS_EMPTY })]);
+  });
+
+  it('should accept a map key rule with operand IS_EMPTY and an empty value', () => {
+    expect(
+      validateCommandAvailability({
+        ...FEATURE_FLAG_LEAF,
+        operand: ViewFilterOperand.IS_EMPTY,
+        value: '',
+      }),
+    ).toEqual([]);
+  });
+
+  it('should reject a map key rule with operand IS_NOT_EMPTY and a value', () => {
+    expect(
+      validateCommandAvailability({
+        ...FEATURE_FLAG_LEAF,
+        operand: ViewFilterOperand.IS_NOT_EMPTY,
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        message:
+          'Value "true" of conditional display context key "featureFlags" must be empty for operand "IS_NOT_EMPTY"',
+      }),
+    ]);
+  });
+
+  it('should reject an engine rule whose value is not a JSON literal', () => {
+    expect(
+      validateCommandAvailability({
+        ...SELECTED_RECORDS_LEAF,
+        value: '[true]',
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        message:
+          'Value "[true]" of conditional display context key "selectedRecords" must be a JSON string, number or boolean',
+      }),
+    ]);
+  });
+
+  it('should reject a boolean key rule whose value is a string', () => {
+    expect(
+      validateCommandAvailability({ ...IS_SELECT_ALL_LEAF, value: '"true"' }),
+    ).toEqual([
+      expect.objectContaining({
+        message:
+          'Value ""true"" of conditional display context key "isSelectAll" must be true or false',
+      }),
+    ]);
+  });
+
+  it.each(['0', '-1'])(
+    'should accept a selection count rule on the integer %s',
+    (value) => {
+      expect(
+        validateCommandAvailability({
+          ...NUMBER_OF_SELECTED_RECORDS_LEAF,
+          value,
+        }),
+      ).toEqual([]);
+    },
+  );
+
+  it('should reject a selection count rule on a non-integer number', () => {
+    expect(
+      validateCommandAvailability({
+        ...NUMBER_OF_SELECTED_RECORDS_LEAF,
+        value: '1.5',
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        message:
+          'Value "1.5" of conditional display context key "numberOfSelectedRecords" must be an integer',
+      }),
+    ]);
+  });
+
+  it('should accept a page type rule on a known page type', () => {
+    expect(
+      validateCommandAvailability({
+        ...PAGE_TYPE_LEAF,
+        operand: ViewFilterOperand.IS_NOT,
+      }),
+    ).toEqual([]);
+  });
+
+  it('should reject a page type rule on an unknown page type', () => {
+    expect(
+      validateCommandAvailability({
+        ...PAGE_TYPE_LEAF,
+        value: '"UNKNOWN_PAGE"',
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        message:
+          'Value ""UNKNOWN_PAGE"" of conditional display context key "pageType" must be a JSON string with one of: INDEX_PAGE, RECORD_PAGE, STANDALONE_PAGE, SETTINGS_PAGE',
+      }),
     ]);
   });
 });

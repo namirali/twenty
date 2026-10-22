@@ -67,7 +67,7 @@ describe('buildEditLayoutCommandMenuItemUpdate', () => {
       name: 'removed availability expression',
       existingCommandMenuItem: {
         ...LEGACY_COMMAND_MENU_ITEM,
-        conditionalAvailabilityExpression: null,
+        conditionalAvailabilityExpression: undefined,
       },
     },
   ])('skips $name', ({ existingCommandMenuItem }) => {

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { WorkspaceIteratorModule } from 'src/database/commands/command-runners/workspace-iterator.module';
-import { MigrateWidgetDeviceVisibilityCommand } from 'src/database/commands/upgrade-version-command/2-51/2-51-workspace-command-1792560764448-migrate-widget-device-visibility.command';
+import { MigrateEngineGatesToConditionalDisplayTreesCommand } from 'src/database/commands/upgrade-version-command/2-51/2-51-workspace-command-1792636240363-migrate-engine-gates-to-conditional-display-trees.command';
 import { ApplicationModule } from 'src/engine/core-modules/application/application.module';
 import { WorkspaceCacheModule } from 'src/engine/workspace-cache/workspace-cache.module';
 import { WorkspaceMigrationModule } from 'src/engine/workspace-manager/workspace-migration/workspace-migration.module';
@@ -13,6 +13,6 @@ import { WorkspaceMigrationModule } from 'src/engine/workspace-manager/workspace
     WorkspaceIteratorModule,
     WorkspaceMigrationModule,
   ],
-  providers: [MigrateWidgetDeviceVisibilityCommand],
+  providers: [MigrateEngineGatesToConditionalDisplayTreesCommand],
 })
 export class V2_51_UpgradeVersionCommandModule {}

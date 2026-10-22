@@ -73,7 +73,8 @@ export class GateConversationsWidgetOnFeatureFlagCommand extends ProvisionedWork
       )
       .map((widget) => ({
         ...widget,
-        conditionalAvailabilityExpression,
+        conditionalAvailabilityExpression:
+          conditionalAvailabilityExpression ?? undefined,
         updatedAt: now,
       }));
 

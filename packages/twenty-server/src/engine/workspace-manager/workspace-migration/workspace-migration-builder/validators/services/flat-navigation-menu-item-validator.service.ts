@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
 import { msg, t } from '@lingui/core/macro';
+import { CONDITIONAL_DISPLAY_PROPERTIES } from 'twenty-shared/constants';
 import { ALL_METADATA_NAME } from 'twenty-shared/metadata';
-import { isDefined } from 'twenty-shared/utils';
+import { isDefined, typedObjectEntries } from 'twenty-shared/utils';
 
 import { validateUniversalFlatEntityConditionalDisplays } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-universal-flat-entity-conditional-displays.util';
 import { findFlatEntityByUniversalIdentifier } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-universal-identifier.util';
@@ -133,15 +134,20 @@ export class FlatNavigationMenuItemValidatorService {
     flatFieldMetadataMaps: MetadataUniversalFlatEntityMaps<'fieldMetadata'>;
     flatRoleMaps: MetadataUniversalFlatEntityMaps<'role'>;
   }): FlatEntityValidationError[] {
-    return validateUniversalFlatEntityConditionalDisplays({
-      flatEntity: flatNavigationMenuItem,
-      surface: 'navigationMenuItem',
-      objectMetadataUniversalIdentifier: null,
-      invalidDataCode:
-        NavigationMenuItemExceptionCode.INVALID_NAVIGATION_MENU_ITEM_INPUT,
-      flatFieldMetadataMaps,
-      flatRoleMaps,
-    });
+    return typedObjectEntries(CONDITIONAL_DISPLAY_PROPERTIES)
+      .filter(([, { surfaces }]) => surfaces.includes('navigationMenuItem'))
+      .flatMap(([property]) =>
+        validateUniversalFlatEntityConditionalDisplays({
+          flatEntity: flatNavigationMenuItem,
+          property,
+          surface: 'navigationMenuItem',
+          objectMetadataUniversalIdentifier: null,
+          invalidDataCode:
+            NavigationMenuItemExceptionCode.INVALID_NAVIGATION_MENU_ITEM_INPUT,
+          flatFieldMetadataMaps,
+          flatRoleMaps,
+        }),
+      );
   }
 
   public validateFlatNavigationMenuItemCreation({

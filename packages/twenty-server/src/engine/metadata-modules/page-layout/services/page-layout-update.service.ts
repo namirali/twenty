@@ -687,8 +687,8 @@ export class PageLayoutUpdateService {
                 flatFieldMetadataMaps.universalIdentifierById,
               roleUniversalIdentifierById: flatRoleMaps.universalIdentifierById,
             }),
-          conditionalAvailabilityExpression:
-            widgetInput.conditionalAvailabilityExpression ?? null,
+          conditionalAvailability: null,
+          universalConditionalAvailability: null,
           overrides: null,
           universalOverrides: null,
           isActive: true,
@@ -838,11 +838,6 @@ export class PageLayoutUpdateService {
       editableProperties.conditionalDisplay = normalizeConditionalDisplay(
         widgetInput.conditionalDisplay,
       );
-    }
-
-    if (widgetInput.conditionalAvailabilityExpression !== undefined) {
-      editableProperties.conditionalAvailabilityExpression =
-        widgetInput.conditionalAvailabilityExpression ?? null;
     }
 
     const { overrides, updatedEditableProperties } =

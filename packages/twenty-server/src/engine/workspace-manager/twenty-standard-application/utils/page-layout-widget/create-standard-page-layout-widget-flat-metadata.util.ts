@@ -30,7 +30,9 @@ export type CreateStandardPageLayoutWidgetContext = {
   objectMetadataId: string | null;
   conditionalDisplay: ConditionalDisplay | null;
   universalConditionalDisplay: MetadataUniversalFlatEntity<'pageLayoutWidget'>['universalConditionalDisplay'];
-  conditionalAvailabilityExpression: string | null;
+  conditionalAvailabilityExpression?: string;
+  conditionalAvailability: ConditionalDisplay | null;
+  universalConditionalAvailability: MetadataUniversalFlatEntity<'pageLayoutWidget'>['universalConditionalAvailability'];
 };
 
 export type CreateStandardPageLayoutWidgetArgs = {
@@ -56,6 +58,8 @@ export const createStandardPageLayoutWidgetFlatMetadata = ({
     conditionalDisplay,
     universalConditionalDisplay,
     conditionalAvailabilityExpression,
+    conditionalAvailability,
+    universalConditionalAvailability,
   },
   workspaceId,
   twentyStandardApplicationId,
@@ -113,8 +117,9 @@ export const createStandardPageLayoutWidgetFlatMetadata = ({
     deletedAt: null,
     conditionalDisplay: conditionalDisplay ?? null,
     universalConditionalDisplay,
-    conditionalAvailabilityExpression:
-      conditionalAvailabilityExpression ?? null,
+    conditionalAvailabilityExpression,
+    conditionalAvailability,
+    universalConditionalAvailability,
     overrides: null,
     universalOverrides: null,
   };

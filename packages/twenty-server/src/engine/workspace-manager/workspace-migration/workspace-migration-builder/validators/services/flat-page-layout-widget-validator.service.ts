@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
 import { msg, t } from '@lingui/core/macro';
+import { CONDITIONAL_DISPLAY_PROPERTIES } from 'twenty-shared/constants';
 import { ALL_METADATA_NAME } from 'twenty-shared/metadata';
 import {
   PageLayoutTabLayoutMode,
   PageLayoutWidgetPosition,
 } from 'twenty-shared/types';
-import { isDefined } from 'twenty-shared/utils';
+import { isDefined, typedObjectEntries } from 'twenty-shared/utils';
 
 import { validateUniversalFlatEntityConditionalDisplays } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-universal-flat-entity-conditional-displays.util';
 import { validateTabViewportConstraints } from 'src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-tab-viewport-constraints.util';
@@ -46,7 +47,7 @@ export class FlatPageLayoutWidgetValidatorService {
     flatEntityUpdate,
     finalFlatEntityMaps,
     optimisticFlatEntityMapsAndRelatedFlatEntityMaps,
-    additionalCacheDataMaps: { featureFlagsMap },
+    additionalCacheDataMaps,
     workspaceId,
     buildOptions,
   }: FlatEntityUpdateValidationArgs<
@@ -137,7 +138,7 @@ export class FlatPageLayoutWidgetValidatorService {
           flatEntityToValidate: updatedFlatPageLayoutWidget,
           optimisticFlatEntityMapsAndRelatedFlatEntityMaps,
           update: flatEntityUpdate,
-          additionalCacheDataMaps: { featureFlagsMap },
+          additionalCacheDataMaps,
           workspaceId,
           buildOptions,
           remainingFlatEntityMapsToValidate:
@@ -194,7 +195,7 @@ export class FlatPageLayoutWidgetValidatorService {
   public async validateFlatPageLayoutWidgetCreation({
     finalFlatEntityMaps,
     flatEntityToValidate: flatPageLayoutWidgetToValidate,
-    additionalCacheDataMaps: { featureFlagsMap },
+    additionalCacheDataMaps,
     optimisticFlatEntityMapsAndRelatedFlatEntityMaps,
     workspaceId,
     buildOptions,
@@ -275,7 +276,7 @@ export class FlatPageLayoutWidgetValidatorService {
         {
           flatEntityToValidate: flatPageLayoutWidgetToValidate,
           optimisticFlatEntityMapsAndRelatedFlatEntityMaps,
-          additionalCacheDataMaps: { featureFlagsMap },
+          additionalCacheDataMaps,
           workspaceId,
           buildOptions,
           remainingFlatEntityMapsToValidate,
@@ -316,16 +317,21 @@ export class FlatPageLayoutWidgetValidatorService {
         })
       : undefined;
 
-    return validateUniversalFlatEntityConditionalDisplays({
-      flatEntity: flatPageLayoutWidget,
-      surface: 'pageLayoutWidget',
-      objectMetadataUniversalIdentifier:
-        pageLayout?.objectMetadataUniversalIdentifier ?? null,
-      invalidDataCode:
-        PageLayoutWidgetExceptionCode.INVALID_PAGE_LAYOUT_WIDGET_DATA,
-      flatFieldMetadataMaps,
-      flatRoleMaps,
-    });
+    return typedObjectEntries(CONDITIONAL_DISPLAY_PROPERTIES)
+      .filter(([, { surfaces }]) => surfaces.includes('pageLayoutWidget'))
+      .flatMap(([property]) =>
+        validateUniversalFlatEntityConditionalDisplays({
+          flatEntity: flatPageLayoutWidget,
+          property,
+          surface: 'pageLayoutWidget',
+          objectMetadataUniversalIdentifier:
+            pageLayout?.objectMetadataUniversalIdentifier ?? null,
+          invalidDataCode:
+            PageLayoutWidgetExceptionCode.INVALID_PAGE_LAYOUT_WIDGET_DATA,
+          flatFieldMetadataMaps,
+          flatRoleMaps,
+        }),
+      );
   }
 
   private getEffectiveWidget(

@@ -103,7 +103,7 @@ export class AddLayoutCustomizationGuardToEditCommandsCommand extends Provisione
       }
 
       const currentConditionalAvailabilityExpression =
-        existingItem.conditionalAvailabilityExpression;
+        existingItem.conditionalAvailabilityExpression ?? null;
 
       const nextConditionalAvailabilityExpression =
         replaceLegacyPageEditModeIdentifier(
@@ -120,7 +120,7 @@ export class AddLayoutCustomizationGuardToEditCommandsCommand extends Provisione
       itemsToUpdateById[existingItem.id] = {
         ...existingItem,
         conditionalAvailabilityExpression:
-          nextConditionalAvailabilityExpression,
+          nextConditionalAvailabilityExpression ?? undefined,
         updatedAt,
       };
     }

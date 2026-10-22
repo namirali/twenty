@@ -199,8 +199,8 @@ export const getUnsupportedPageLayoutWidgetReason = ({
     return 'page layout widget positioned for another layout mode than its tab';
   }
 
-  if (isDefined(flatPageLayoutWidget.conditionalAvailabilityExpression)) {
-    return 'page layout widget with a conditional availability expression';
+  if (isDefined(flatPageLayoutWidget.universalConditionalAvailability)) {
+    return 'page layout widget with a conditional availability';
   }
 
   const unsupportedConditionalDisplayReason =

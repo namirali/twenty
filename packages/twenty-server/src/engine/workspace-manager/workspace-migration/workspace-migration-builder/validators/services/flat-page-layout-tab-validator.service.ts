@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
 import { msg, t } from '@lingui/core/macro';
+import { CONDITIONAL_DISPLAY_PROPERTIES } from 'twenty-shared/constants';
 import { ALL_METADATA_NAME } from 'twenty-shared/metadata';
-import { isDefined } from 'twenty-shared/utils';
+import { isDefined, typedObjectEntries } from 'twenty-shared/utils';
 
 import { validateUniversalFlatEntityConditionalDisplays } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-universal-flat-entity-conditional-displays.util';
 import { findFlatEntityByUniversalIdentifier } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-universal-identifier.util';
@@ -156,14 +157,20 @@ export class FlatPageLayoutTabValidatorService {
       flatEntityMaps: flatPageLayoutMaps,
     });
 
-    return validateUniversalFlatEntityConditionalDisplays({
-      flatEntity: flatPageLayoutTab,
-      surface: 'pageLayoutTab',
-      objectMetadataUniversalIdentifier:
-        pageLayout?.objectMetadataUniversalIdentifier ?? null,
-      invalidDataCode: PageLayoutTabExceptionCode.INVALID_PAGE_LAYOUT_TAB_DATA,
-      flatFieldMetadataMaps,
-      flatRoleMaps,
-    });
+    return typedObjectEntries(CONDITIONAL_DISPLAY_PROPERTIES)
+      .filter(([, { surfaces }]) => surfaces.includes('pageLayoutTab'))
+      .flatMap(([property]) =>
+        validateUniversalFlatEntityConditionalDisplays({
+          flatEntity: flatPageLayoutTab,
+          property,
+          surface: 'pageLayoutTab',
+          objectMetadataUniversalIdentifier:
+            pageLayout?.objectMetadataUniversalIdentifier ?? null,
+          invalidDataCode:
+            PageLayoutTabExceptionCode.INVALID_PAGE_LAYOUT_TAB_DATA,
+          flatFieldMetadataMaps,
+          flatRoleMaps,
+        }),
+      );
   }
 }

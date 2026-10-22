@@ -1119,11 +1119,15 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       universalProperty: 'universalConditionalDisplay',
       isOverridable: true,
     },
+    conditionalAvailability: {
+      toCompare: true,
+      toStringify: true,
+      universalProperty: 'universalConditionalAvailability',
+    },
     conditionalAvailabilityExpression: {
       toCompare: true,
       toStringify: false,
       universalProperty: undefined,
-      isOverridable: true,
     },
     isActive: {
       isOverridable: true,
@@ -1284,12 +1288,6 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       universalProperty: undefined,
       isOverridable: true,
     },
-    availabilityType: {
-      toCompare: true,
-      toStringify: false,
-      universalProperty: undefined,
-      isOverridable: true,
-    },
     conditionalAvailabilityExpression: {
       toCompare: true,
       toStringify: false,
@@ -1299,6 +1297,12 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       toCompare: true,
       toStringify: false,
       universalProperty: undefined,
+    },
+    availabilityType: {
+      toCompare: true,
+      toStringify: false,
+      universalProperty: undefined,
+      isOverridable: true,
     },
     availabilityObjectMetadataId: {
       toCompare: true,
@@ -1348,6 +1352,16 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       toStringify: true,
       universalProperty: 'universalConditionalDisplay',
       isOverridable: true,
+    },
+    conditionalAvailability: {
+      toCompare: true,
+      toStringify: true,
+      universalProperty: 'universalConditionalAvailability',
+    },
+    conditionalPinned: {
+      toCompare: true,
+      toStringify: true,
+      universalProperty: 'universalConditionalPinned',
     },
     workflowVersionId: {
       toCompare: false,

@@ -162,7 +162,8 @@ export const computeStandardRecordFormFlatEntities = ({
         deletedAt: null,
         conditionalDisplay: null,
         universalConditionalDisplay: null,
-        conditionalAvailabilityExpression: null,
+        conditionalAvailability: null,
+        universalConditionalAvailability: null,
         overrides: null,
         universalOverrides: null,
       }));

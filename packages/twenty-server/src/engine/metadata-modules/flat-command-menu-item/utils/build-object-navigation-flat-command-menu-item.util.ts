@@ -1,4 +1,5 @@
 import { type FlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/types/flat-command-menu-item.type';
+import { buildNavigationConditionalAvailability } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-navigation-conditional-availability.util';
 import { buildObjectNavigationUniversalFlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-object-navigation-universal-flat-command-menu-item.util';
 
 export const buildObjectNavigationFlatCommandMenuItem = ({
@@ -38,5 +39,10 @@ export const buildObjectNavigationFlatCommandMenuItem = ({
   availabilityObjectMetadataId: null,
   pageLayoutId: null,
   conditionalDisplay: null,
+  conditionalAvailability: buildNavigationConditionalAvailability({
+    universalIdentifier: objectMetadata.universalIdentifier,
+    nameSingular: objectMetadata.nameSingular,
+  }),
+  conditionalPinned: null,
   overrides: null,
 });

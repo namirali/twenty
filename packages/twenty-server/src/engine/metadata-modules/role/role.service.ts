@@ -684,6 +684,7 @@ export class RoleService {
         .some(({ universalConditionalDisplay, universalOverrides }) =>
           getUniversalFlatEntityConditionalDisplays({
             metadataName,
+            property: 'conditionalDisplay',
             universalConditionalDisplay,
             universalOverrides,
           }).some((conditionalDisplay) =>

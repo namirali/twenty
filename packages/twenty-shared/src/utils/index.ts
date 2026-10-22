@@ -30,6 +30,13 @@ export { evaluateConditionalAvailabilityExpression } from './command-menu-items/
 export { resolveObjectMetadataLabel } from './command-menu-items/resolveObjectMetadataLabel';
 export { safeGetNestedProperty } from './command-menu-items/safeGetNestedProperty';
 export { computeDiffBetweenObjects } from './compute-diff-between-objects';
+export { buildConditionalDisplayFromConditionNode } from './conditional-display/buildConditionalDisplayFromConditionNode';
+export { compileConditionalAvailabilityExpression } from './conditional-display/compileConditionalAvailabilityExpression';
+export { evaluateConditionalDisplay } from './conditional-display/evaluateConditionalDisplay';
+export { groupConditionalDisplayConditionNodes } from './conditional-display/groupConditionalDisplayConditionNodes';
+export { isConditionalDisplayContextKey } from './conditional-display/isConditionalDisplayContextKey';
+export { isConditionalDisplayContextRecordFilterMatching } from './conditional-display/isConditionalDisplayContextRecordFilterMatching';
+export { negateConditionalDisplayConditionNode } from './conditional-display/negateConditionalDisplayConditionNode';
 export { formatValueForCSV } from './csv/formatValueForCSV';
 export { sanitizeValueForCSVExport } from './csv/sanitizeValueForCSVExport';
 export { convertCurrencyAmountToCurrencyMicros } from './currency/convertCurrencyAmountToCurrencyMicros';
@@ -156,6 +163,7 @@ export { getEmptyRecordGqlOperationFilter } from './filter/utils/getEmptyRecordG
 export { getFilterOperandsForFilterableFieldType } from './filter/utils/getFilterOperandsForFilterableFieldType';
 export { getFilterTypeFromFieldType } from './filter/utils/getFilterTypeFromFieldType';
 export { isExpectedSubFieldName } from './filter/utils/isExpectedSubFieldName';
+export { isFieldReferenceFilterOperator } from './filter/utils/isFieldReferenceFilterOperator';
 export { isMatchingArrayFilter } from './filter/utils/isMatchingArrayFilter';
 export { isMatchingBooleanFilter } from './filter/utils/isMatchingBooleanFilter';
 export type { CompositeSubFieldMatcher } from './filter/utils/isMatchingCompositeFilter';
@@ -172,6 +180,7 @@ export { isMatchingSelectFilter } from './filter/utils/isMatchingSelectFilter';
 export { isMatchingStringFilter } from './filter/utils/isMatchingStringFilter';
 export { isMatchingTSVectorFilter } from './filter/utils/isMatchingTSVectorFilter';
 export { isMatchingUUIDFilter } from './filter/utils/isMatchingUUIDFilter';
+export { parseFieldReferenceFilterValue } from './filter/utils/parseFieldReferenceFilterValue';
 export { arrayOfStringsOrVariablesSchema } from './filter/utils/validation-schemas/arrayOfStringsOrVariablesSchema';
 export {
   strictArrayOfUuidOrVariableSchema,

@@ -22,6 +22,7 @@ import { ADD_COMMAND_MENU_ITEM_CONDITIONAL_PINNED_EXPRESSION_UPGRADE_COMMAND_NAM
 import { ADD_CORE_VERSION_POINTERS_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-41/add-core-version-pointers-upgrade-command-name.constant';
 import { ADD_CONDITIONAL_DISPLAY_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-51/constants/add-conditional-display-upgrade-command-name.constant';
 import { WasIntroducedInUpgrade } from 'src/engine/core-modules/upgrade/decorators/was-introduced-in-upgrade.decorator';
+import { type WasRemovedInUpgrade } from 'src/engine/core-modules/upgrade/decorators/was-removed-in-upgrade.decorator';
 import { type PathCommandMenuItemPayload } from 'src/engine/metadata-modules/command-menu-item/dtos/types/path-command-menu-item-payload.type';
 import { EngineComponentKey } from 'src/engine/metadata-modules/command-menu-item/enums/engine-component-key.enum';
 import { FrontComponentEntity } from 'src/engine/metadata-modules/front-component/entities/front-component.entity';
@@ -128,20 +129,32 @@ export class CommandMenuItemEntity
   hotKeys: string[] | null;
 
   @Column({ nullable: true, type: 'varchar' })
-  conditionalAvailabilityExpression: string | null;
+  conditionalAvailabilityExpression: WasRemovedInUpgrade<string | null>;
 
   @WasIntroducedInUpgrade({
     upgradeCommandName:
       ADD_COMMAND_MENU_ITEM_CONDITIONAL_PINNED_EXPRESSION_UPGRADE_COMMAND_NAME,
   })
   @Column({ nullable: true, type: 'varchar' })
-  conditionalPinnedExpression: string | null;
+  conditionalPinnedExpression: WasRemovedInUpgrade<string | null>;
 
   @WasIntroducedInUpgrade({
     upgradeCommandName: ADD_CONDITIONAL_DISPLAY_UPGRADE_COMMAND_NAME,
   })
   @Column({ type: 'jsonb', nullable: true })
   conditionalDisplay: JsonbProperty<ConditionalDisplay | null>;
+
+  @WasIntroducedInUpgrade({
+    upgradeCommandName: ADD_CONDITIONAL_DISPLAY_UPGRADE_COMMAND_NAME,
+  })
+  @Column({ type: 'jsonb', nullable: true })
+  conditionalAvailability: JsonbProperty<ConditionalDisplay | null>;
+
+  @WasIntroducedInUpgrade({
+    upgradeCommandName: ADD_CONDITIONAL_DISPLAY_UPGRADE_COMMAND_NAME,
+  })
+  @Column({ type: 'jsonb', nullable: true })
+  conditionalPinned: JsonbProperty<ConditionalDisplay | null>;
 
   @Column({ nullable: true, type: 'uuid' })
   availabilityObjectMetadataId: string | null;

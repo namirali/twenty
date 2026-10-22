@@ -1,4 +1,5 @@
 import { STANDARD_OBJECTS } from 'twenty-shared/metadata';
+import { compileConditionalAvailabilityExpression } from 'twenty-shared/utils';
 
 import { buildMissingStandardCommandMenuItemsToCreate } from 'src/database/commands/upgrade-version-command/2-39/utils/build-missing-standard-command-menu-items-to-create.util';
 import { createEmptyFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/constant/create-empty-flat-entity-maps.constant';
@@ -50,9 +51,10 @@ describe('buildMissingStandardCommandMenuItemsToCreate', () => {
       applicationId: APPLICATION_ID,
       workspaceId: WORKSPACE_ID,
       availabilityObjectMetadataId: MESSAGE_CAMPAIGN_OBJECT.id,
-      conditionalPinnedExpression:
+      conditionalPinned: compileConditionalAvailabilityExpression(
         STANDARD_COMMAND_MENU_ITEMS.duplicateMessageCampaign
           .conditionalPinnedExpression,
+      ),
       createdAt: NOW,
     });
   });

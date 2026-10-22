@@ -76,8 +76,8 @@ export class PageLayoutWidgetDTO {
   @Field(() => GraphQLJSON, { nullable: true })
   conditionalDisplay?: ConditionalDisplay | null;
 
-  @Field(() => String, { nullable: true })
-  conditionalAvailabilityExpression?: string | null;
+  @Field(() => GraphQLJSON, { nullable: true })
+  conditionalAvailability?: ConditionalDisplay | null;
 
   @Field()
   createdAt: Date;

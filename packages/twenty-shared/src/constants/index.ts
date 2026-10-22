@@ -16,8 +16,10 @@ export { CLIENT_CONFIG_BOOTSTRAP_ELEMENT_ID } from './ClientConfigBootstrapEleme
 export { COMMAND_MENU_CONFIRMATION_MODAL_RESULT_BROWSER_EVENT_NAME } from './CommandMenuConfirmationModalResultBrowserEventName';
 export { COMPOSITE_FIELD_SUB_FIELD_LABELS } from './CompositeFieldSubFieldLabels';
 export { COMPOSITE_FIELD_TYPE_SUB_FIELDS_NAMES } from './CompositeFieldTypeSubFieldsNames';
+export { CONDITIONAL_DISPLAY_COMPILATION_NAMESPACE } from './ConditionalDisplayCompilationNamespace';
 export { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from './ConditionalDisplayContextKeys';
 export { CONDITIONAL_DISPLAY_DEVICES } from './ConditionalDisplayDevices';
+export { CONDITIONAL_DISPLAY_PROPERTIES } from './ConditionalDisplayProperties';
 export { CORE_PICTURE_MIME_TYPES } from './CorePictureMimeTypes';
 export { CSV_DANGEROUS_CHARACTERS } from './CsvDangerousCharacters';
 export { CSV_INJECTION_PREVENTION_ZWJ } from './CsvInjectionPreventionZwj';
@@ -49,6 +51,7 @@ export { EXCLUDED_FIELD_NAMES_FROM_AGENT_TOOL_SCHEMA } from './ExcludedFieldName
 export { FIELD_FOR_TOTAL_COUNT_AGGREGATE_OPERATION } from './FieldForTotalCountAggregateOperation';
 export { MAX_OPTIONS_TO_DISPLAY } from './FieldMetadataMaxOptionsToDisplay';
 export { FIELD_METADATA_TYPES_NOT_SUPPORTED_IN_GROUP_BY } from './FieldMetadataTypesNotSupportedInGroupBy';
+export { FIELD_REFERENCE_FILTER_OPERATORS } from './FieldReferenceFilterOperators';
 export { FIELD_RESTRICTED_ADDITIONAL_PERMISSIONS_REQUIRED } from './FieldRestrictedAdditionalPermissionsRequired';
 export { FIELD_TYPE_DEFAULT_ICONS } from './FieldTypeDefaultIcons';
 export { FILES_FIELD_MAX_NUMBER_OF_VALUES } from './FilesFieldMaxNumberOfValues';
@@ -67,6 +70,7 @@ export { MEMBER_ROLE_UNIVERSAL_IDENTIFIER } from './MemberRoleUniversalIdentifie
 export { MULTI_ITEM_FIELD_DEFAULT_MAX_VALUES } from './MultiItemFieldDefaultMaxValues';
 export { MULTI_ITEM_FIELD_MIN_MAX_VALUES } from './MultiItemFieldMinMaxValues';
 export { MUTATION_MAX_MERGE_RECORDS } from './MutationMaxMergeRecords';
+export { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from './NeverAvailableConditionalDisplay';
 export { OBJECTS_WITH_CHANNEL_VISIBILITY_CONSTRAINTS } from './ObjectsWithChannelVisibilityConstraints';
 export { PARTNER_PATTERN } from './PartnerPattern';
 export { PermissionFlagType } from './PermissionFlagType';
