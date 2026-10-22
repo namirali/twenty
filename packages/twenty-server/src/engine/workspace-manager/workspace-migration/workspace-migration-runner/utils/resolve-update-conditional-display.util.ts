@@ -5,6 +5,7 @@ import {
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
+import { type UniversalConditionalDisplayPropertyName } from 'src/engine/metadata-modules/flat-conditional-display/types/universal-conditional-display-property-name.type';
 import { ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME } from 'src/engine/metadata-modules/flat-entity/constant/all-entity-properties-configuration-by-metadata-name.constant';
 import {
   FlatEntityMapsException,
@@ -12,10 +13,6 @@ import {
 } from 'src/engine/metadata-modules/flat-entity/exceptions/flat-entity-maps.exception';
 import { type MetadataFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/metadata-flat-entity-maps.type';
 import { fromUniversalConditionalDisplayToConditionalDisplay } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/from-universal-conditional-display-to-conditional-display.util';
-
-type UniversalConditionalDisplayPropertyName<
-  TProperty extends ConditionalDisplayProperty,
-> = `universal${Capitalize<TProperty>}`;
 
 export const resolveUpdateConditionalDisplay = <
   TProperty extends ConditionalDisplayProperty,

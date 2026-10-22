@@ -18,6 +18,11 @@ type TestContext = {
   input: CreateCommandMenuItemInput;
 };
 
+type ConditionalDisplayTestContext = {
+  input: CreateCommandMenuItemInput;
+  expectedMessage: string;
+};
+
 const failingCommandMenuItemCreationTestCases: EachTestingContext<TestContext>[] =
   [
     {
@@ -129,6 +134,125 @@ const failingCommandMenuItemCreationTestCases: EachTestingContext<TestContext>[]
     },
   ];
 
+const failingCommandMenuItemConditionalDisplayCreationTestCases: EachTestingContext<ConditionalDisplayTestContext>[] =
+  [
+    {
+      title: 'when conditionalDisplay uses an engine context key',
+      context: {
+        input: {
+          workflowVersionId: faker.string.uuid(),
+          engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
+          label: 'Command With Engine Key In Display',
+          conditionalDisplay: {
+            recordFilters: [
+              {
+                id: '0',
+                contextKey: 'isSelectAll',
+                operand: ViewFilterOperand.IS,
+                value: 'true',
+              },
+            ],
+          },
+        },
+        expectedMessage:
+          'Conditional display context key "isSelectAll" is not allowed in conditionalDisplay',
+      },
+    },
+    {
+      title: 'when conditionalAvailability uses an admin context key',
+      context: {
+        input: {
+          workflowVersionId: faker.string.uuid(),
+          engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
+          label: 'Command With Admin Key In Availability',
+          conditionalAvailability: {
+            recordFilters: [
+              {
+                id: '0',
+                contextKey: 'currentWorkspaceMemberId',
+                operand: ViewFilterOperand.IS,
+                value: JSON.stringify({
+                  isCurrentWorkspaceMemberSelected: true,
+                  selectedRecordIds: [],
+                }),
+              },
+            ],
+          },
+        },
+        expectedMessage:
+          'Conditional display context key "currentWorkspaceMemberId" is not allowed in conditionalAvailability',
+      },
+    },
+    {
+      title:
+        'when conditionalAvailability uses featureFlags without a sub field name',
+      context: {
+        input: {
+          workflowVersionId: faker.string.uuid(),
+          engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
+          label: 'Command With Feature Flag Without Entry',
+          conditionalAvailability: {
+            recordFilters: [
+              {
+                id: '0',
+                contextKey: 'featureFlags',
+                operand: ViewFilterOperand.IS,
+                value: 'true',
+              },
+            ],
+          },
+        },
+        expectedMessage:
+          'Conditional display context key "featureFlags" requires a sub field name',
+      },
+    },
+    {
+      title:
+        'when conditionalAvailability uses numberOfSelectedRecords with operand CONTAINS',
+      context: {
+        input: {
+          workflowVersionId: faker.string.uuid(),
+          engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
+          label: 'Command With Selection Count Contains',
+          conditionalAvailability: {
+            recordFilters: [
+              {
+                id: '0',
+                contextKey: 'numberOfSelectedRecords',
+                operand: ViewFilterOperand.CONTAINS,
+                value: '1',
+              },
+            ],
+          },
+        },
+        expectedMessage:
+          'Operand "CONTAINS" is not supported on conditional display context key "numberOfSelectedRecords"',
+      },
+    },
+    {
+      title: 'when conditionalAvailability uses an unknown pageType value',
+      context: {
+        input: {
+          workflowVersionId: faker.string.uuid(),
+          engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
+          label: 'Command With Unknown Page Type',
+          conditionalAvailability: {
+            recordFilters: [
+              {
+                id: '0',
+                contextKey: 'pageType',
+                operand: ViewFilterOperand.IS,
+                value: '"UNKNOWN_PAGE"',
+              },
+            ],
+          },
+        },
+        expectedMessage:
+          'Value ""UNKNOWN_PAGE"" of conditional display context key "pageType" must be a JSON string with one of: INDEX_PAGE, RECORD_PAGE, STANDALONE_PAGE, SETTINGS_PAGE',
+      },
+    },
+  ];
+
 describe('CommandMenuItem creation should fail', () => {
   it.each(eachTestingContextFilter(failingCommandMenuItemCreationTestCases))(
     '$title',
@@ -194,6 +318,82 @@ describe('CommandMenuItem creation should fail', () => {
                     code: 'INVALID_COMMAND_MENU_ITEM_INPUT',
                     message:
                       'Conditional display rules on commandMenuItem cannot reference a record field',
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      },
+    ]);
+  });
+
+  it('when conditionalAvailability references a record field', async () => {
+    const { fieldMetadataId2: nameFieldMetadataId } =
+      await fetchTestFieldMetadataIds();
+
+    const { errors } = await createCommandMenuItem({
+      expectToFail: true,
+      input: {
+        workflowVersionId: faker.string.uuid(),
+        engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
+        label: 'Command With Field Rule In Availability',
+        conditionalAvailability: {
+          recordFilters: [
+            {
+              id: '0',
+              fieldMetadataId: nameFieldMetadataId,
+              operand: ViewFilterOperand.IS_NOT_EMPTY,
+              value: '',
+            },
+          ],
+        },
+      },
+    });
+
+    expect(errors).toMatchObject([
+      {
+        extensions: {
+          code: 'METADATA_VALIDATION_FAILED',
+          errors: {
+            commandMenuItem: [
+              {
+                errors: [
+                  {
+                    code: 'INVALID_COMMAND_MENU_ITEM_INPUT',
+                    message:
+                      'Conditional display rules in conditionalAvailability cannot reference a record field',
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      },
+    ]);
+  });
+
+  it.each(
+    eachTestingContextFilter(
+      failingCommandMenuItemConditionalDisplayCreationTestCases,
+    ),
+  )('$title', async ({ context }) => {
+    const { errors } = await createCommandMenuItem({
+      expectToFail: true,
+      input: context.input,
+    });
+
+    expect(errors).toMatchObject([
+      {
+        extensions: {
+          code: 'METADATA_VALIDATION_FAILED',
+          errors: {
+            commandMenuItem: [
+              {
+                errors: [
+                  {
+                    code: 'INVALID_COMMAND_MENU_ITEM_INPUT',
+                    message: context.expectedMessage,
                   },
                 ],
               },

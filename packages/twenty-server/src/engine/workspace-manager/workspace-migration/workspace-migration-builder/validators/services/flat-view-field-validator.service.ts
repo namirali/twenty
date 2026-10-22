@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
 import { msg, t } from '@lingui/core/macro';
+import { CONDITIONAL_DISPLAY_PROPERTIES } from 'twenty-shared/constants';
 import { ALL_METADATA_NAME } from 'twenty-shared/metadata';
 import { ViewType } from 'twenty-shared/types';
-import { isDefined } from 'twenty-shared/utils';
+import { isDefined, typedObjectEntries } from 'twenty-shared/utils';
 
 import { validateUniversalFlatEntityConditionalDisplays } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-universal-flat-entity-conditional-displays.util';
 import { type MetadataUniversalFlatEntity } from 'src/engine/metadata-modules/flat-entity/types/metadata-universal-flat-entity.type';
@@ -330,14 +331,19 @@ export class FlatViewFieldValidatorService {
     flatFieldMetadataMaps: MetadataUniversalFlatEntityMaps<'fieldMetadata'>;
     flatRoleMaps: MetadataUniversalFlatEntityMaps<'role'>;
   }): FlatEntityValidationError[] {
-    return validateUniversalFlatEntityConditionalDisplays({
-      flatEntity: flatViewField,
-      surface: 'viewField',
-      objectMetadataUniversalIdentifier:
-        flatView.objectMetadataUniversalIdentifier,
-      invalidDataCode: ViewFieldExceptionCode.INVALID_VIEW_FIELD_DATA,
-      flatFieldMetadataMaps,
-      flatRoleMaps,
-    });
+    return typedObjectEntries(CONDITIONAL_DISPLAY_PROPERTIES)
+      .filter(([, { surfaces }]) => surfaces.includes('viewField'))
+      .flatMap(([property]) =>
+        validateUniversalFlatEntityConditionalDisplays({
+          flatEntity: flatViewField,
+          property,
+          surface: 'viewField',
+          objectMetadataUniversalIdentifier:
+            flatView.objectMetadataUniversalIdentifier,
+          invalidDataCode: ViewFieldExceptionCode.INVALID_VIEW_FIELD_DATA,
+          flatFieldMetadataMaps,
+          flatRoleMaps,
+        }),
+      );
   }
 }
