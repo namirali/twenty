@@ -54,4 +54,26 @@ describe('fromCommandMenuItemManifestToUniversalFlatCommandMenuItem', () => {
       universalConditionalPinned: CONDITIONAL_PINNED,
     });
   });
+
+  it('rejects a manifest declaring a conditional availability expression', () => {
+    expect(() =>
+      build({
+        ...COMMAND_MENU_ITEM_MANIFEST,
+        conditionalAvailabilityExpression: 'numberOfSelectedRecords >= 1',
+      }),
+    ).toThrow(
+      'Command menu item "Escalate ticket" declares the unsupported conditionalAvailabilityExpression, declare a conditionalAvailability tree instead',
+    );
+  });
+
+  it('rejects a manifest declaring a conditional pinned expression', () => {
+    expect(() =>
+      build({
+        ...COMMAND_MENU_ITEM_MANIFEST,
+        conditionalPinnedExpression: 'numberOfSelectedRecords >= 1',
+      }),
+    ).toThrow(
+      'Command menu item "Escalate ticket" declares the unsupported conditionalPinnedExpression, declare a conditionalPinned tree instead',
+    );
+  });
 });

@@ -1124,12 +1124,6 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       toStringify: true,
       universalProperty: 'universalConditionalAvailability',
     },
-    conditionalAvailabilityExpression: {
-      toCompare: true,
-      toStringify: false,
-      universalProperty: undefined,
-      isOverridable: true,
-    },
     isActive: {
       isOverridable: true,
       toCompare: true,
@@ -1294,16 +1288,6 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       toStringify: false,
       universalProperty: undefined,
       isOverridable: true,
-    },
-    conditionalAvailabilityExpression: {
-      toCompare: true,
-      toStringify: false,
-      universalProperty: undefined,
-    },
-    conditionalPinnedExpression: {
-      toCompare: true,
-      toStringify: false,
-      universalProperty: undefined,
     },
     availabilityObjectMetadataId: {
       toCompare: true,

@@ -689,8 +689,6 @@ export class PageLayoutUpdateService {
             }),
           conditionalAvailability: null,
           universalConditionalAvailability: null,
-          conditionalAvailabilityExpression:
-            widgetInput.conditionalAvailabilityExpression ?? null,
           overrides: null,
           universalOverrides: null,
           isActive: true,
@@ -840,11 +838,6 @@ export class PageLayoutUpdateService {
       editableProperties.conditionalDisplay = normalizeConditionalDisplay(
         widgetInput.conditionalDisplay,
       );
-    }
-
-    if (widgetInput.conditionalAvailabilityExpression !== undefined) {
-      editableProperties.conditionalAvailabilityExpression =
-        widgetInput.conditionalAvailabilityExpression ?? null;
     }
 
     const { overrides, updatedEditableProperties } =

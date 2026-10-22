@@ -95,7 +95,7 @@ const buildCallRecordingNavigationCommandMenuItem = ({
     position: 0,
     now: CREATED_AT,
   }),
-  conditionalAvailabilityExpression,
+  conditionalAvailabilityExpression: conditionalAvailabilityExpression ?? undefined,
 });
 
 describe('buildCallRecordingNavigationCommandMenuItemAvailabilityExpressionSyncOperations', () => {

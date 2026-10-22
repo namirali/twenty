@@ -87,8 +87,6 @@ const COMMAND_MENU_ITEM: FlatCommandMenuItem = {
   availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
   payload: null,
   hotKeys: null,
-  conditionalAvailabilityExpression: null,
-  conditionalPinnedExpression: null,
   conditionalDisplay: null,
   universalConditionalDisplay: null,
   conditionalAvailability: null,

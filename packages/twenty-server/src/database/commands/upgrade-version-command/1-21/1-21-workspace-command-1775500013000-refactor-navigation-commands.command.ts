@@ -229,8 +229,7 @@ export class RefactorNavigationCommandsCommand extends ProvisionedWorkspaceComma
         isPinned: commandMenuItem.isPinned,
         availabilityType: commandMenuItem.availabilityType,
         conditionalAvailabilityExpression:
-          commandMenuItem.conditionalAvailabilityExpression ?? null,
-        conditionalPinnedExpression: null,
+          commandMenuItem.conditionalAvailabilityExpression ?? undefined,
         conditionalDisplay: null,
         universalConditionalDisplay: null,
         conditionalAvailability: null,

@@ -1,6 +1,6 @@
 import { STANDARD_OBJECTS } from 'twenty-shared/metadata';
 
-import { buildNavigationConditionalAvailabilityExpression } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-object-navigation-universal-flat-command-menu-item.util';
+import { buildNavigationConditionalAvailabilityExpression } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-navigation-conditional-availability-expression.util';
 
 describe('buildNavigationConditionalAvailabilityExpression', () => {
   it('gates a feature-flagged standard object behind both the flag and read permission', () => {

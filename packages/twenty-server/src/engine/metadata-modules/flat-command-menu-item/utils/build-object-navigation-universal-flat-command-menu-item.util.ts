@@ -1,14 +1,11 @@
 import { msg } from '@lingui/core/macro';
 import { getSystemNavigationCommandMenuItemUniversalIdentifier } from 'twenty-shared/application';
 import { getMetadataLabelPlaceholder } from 'twenty-shared/i18n';
-import { STANDARD_OBJECTS } from 'twenty-shared/metadata';
-import {
-  CommandMenuItemAvailabilityType,
-  FeatureFlagKey,
-} from 'twenty-shared/types';
+import { CommandMenuItemAvailabilityType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
 import { EngineComponentKey } from 'src/engine/metadata-modules/command-menu-item/enums/engine-component-key.enum';
+import { buildNavigationConditionalAvailability } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-navigation-conditional-availability.util';
 import { i18nLabel } from 'src/engine/workspace-manager/twenty-standard-application/utils/i18n-label.util';
 import { type UniversalFlatCommandMenuItem } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/types/universal-flat-command-menu-item.type';
 
@@ -24,41 +21,6 @@ export const NAVIGATION_INTERPOLATED_SHORT_LABEL =
   getMetadataLabelPlaceholder('objectLabelPlural');
 export const NAVIGATION_INTERPOLATED_ICON =
   getMetadataLabelPlaceholder('objectIcon');
-
-const NAVIGATION_FEATURE_FLAG_GATE_BY_OBJECT_UNIVERSAL_IDENTIFIER: Partial<
-  Record<string, FeatureFlagKey>
-> = {
-  [STANDARD_OBJECTS.messageCampaign.universalIdentifier]:
-    FeatureFlagKey.IS_MESSAGE_CAMPAIGN_ENABLED,
-  [STANDARD_OBJECTS.messageList.universalIdentifier]:
-    FeatureFlagKey.IS_MESSAGE_CAMPAIGN_ENABLED,
-};
-
-const HIDDEN_NAVIGATION_OBJECT_UNIVERSAL_IDENTIFIERS = new Set<string>([
-  STANDARD_OBJECTS.workflowVersion.universalIdentifier,
-]);
-
-export const buildNavigationConditionalAvailabilityExpression = ({
-  universalIdentifier,
-  nameSingular,
-}: {
-  universalIdentifier: string;
-  nameSingular: string;
-}): string => {
-  if (HIDDEN_NAVIGATION_OBJECT_UNIVERSAL_IDENTIFIERS.has(universalIdentifier)) {
-    return 'false';
-  }
-
-  const targetObjectReadPermissionExpression = `targetObjectReadPermissions.${nameSingular}`;
-  const featureFlagGate =
-    NAVIGATION_FEATURE_FLAG_GATE_BY_OBJECT_UNIVERSAL_IDENTIFIER[
-      universalIdentifier
-    ];
-
-  return isDefined(featureFlagGate)
-    ? `featureFlags.${featureFlagGate} and ${targetObjectReadPermissionExpression}`
-    : targetObjectReadPermissionExpression;
-};
 
 export const buildObjectNavigationUniversalFlatCommandMenuItem = ({
   objectMetadata,
@@ -84,12 +46,6 @@ export const buildObjectNavigationUniversalFlatCommandMenuItem = ({
       objectUniversalIdentifier: objectMetadata.universalIdentifier,
     });
 
-  const conditionalAvailabilityExpression =
-    buildNavigationConditionalAvailabilityExpression({
-      universalIdentifier: objectMetadata.universalIdentifier,
-      nameSingular: objectMetadata.nameSingular,
-    });
-
   return {
     universalIdentifier,
     applicationUniversalIdentifier,
@@ -99,10 +55,11 @@ export const buildObjectNavigationUniversalFlatCommandMenuItem = ({
     position,
     isPinned: false,
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression,
-    conditionalPinnedExpression: null,
     universalConditionalDisplay: null,
-    universalConditionalAvailability: null,
+    universalConditionalAvailability: buildNavigationConditionalAvailability({
+      universalIdentifier: objectMetadata.universalIdentifier,
+      nameSingular: objectMetadata.nameSingular,
+    }),
     universalConditionalPinned: null,
     frontComponentUniversalIdentifier: null,
     engineComponentKey: EngineComponentKey.NAVIGATION,

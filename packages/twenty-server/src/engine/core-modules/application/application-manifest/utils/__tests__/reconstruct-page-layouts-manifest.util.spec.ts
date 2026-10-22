@@ -893,12 +893,6 @@ describe('reconstructPageLayoutsManifest', () => {
             pageLayoutTabUniversalIdentifier: OVERVIEW_TAB_UID,
           }),
           buildFlatPageLayoutWidget({
-            pageLayoutWidgetManifest:
-              buildNotesWidgetManifest('conditional-widget'),
-            pageLayoutTabUniversalIdentifier: OVERVIEW_TAB_UID,
-            conditionalAvailabilityExpression: 'device === "mobile"',
-          }),
-          buildFlatPageLayoutWidget({
             pageLayoutWidgetManifest: buildNotesWidgetManifest(
               'conditional-availability-widget',
             ),
@@ -1021,9 +1015,6 @@ describe('reconstructPageLayoutsManifest', () => {
     );
     expect(reasonOf(coverage, 'grid-widget')).toBe(
       'page layout widget positioned for another layout mode than its tab',
-    );
-    expect(reasonOf(coverage, 'conditional-widget')).toBe(
-      'page layout widget with a conditional availability expression',
     );
     expect(reasonOf(coverage, 'conditional-availability-widget')).toBe(
       'page layout widget with a conditional availability',

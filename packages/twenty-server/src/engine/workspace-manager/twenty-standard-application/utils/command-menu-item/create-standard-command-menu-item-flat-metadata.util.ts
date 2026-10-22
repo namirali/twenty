@@ -1,6 +1,7 @@
 import { isDefined } from 'twenty-shared/utils';
 
 import { type FlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/types/flat-command-menu-item.type';
+import { compileConditionalAvailabilityExpressionOrNull } from 'src/engine/metadata-modules/flat-conditional-display/utils/compile-conditional-availability-expression-or-null.util';
 import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
 import { findFlatEntityByUniversalIdentifier } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-universal-identifier.util';
 import { type FlatObjectMetadata } from 'src/engine/metadata-modules/flat-object-metadata/types/flat-object-metadata.type';
@@ -47,6 +48,16 @@ export const createStandardCommandMenuItemFlatMetadata = ({
       flatObjectMetadata.universalIdentifier;
   }
 
+  const conditionalAvailability =
+    compileConditionalAvailabilityExpressionOrNull(
+      definition.conditionalAvailabilityExpression,
+    );
+  const conditionalPinned = compileConditionalAvailabilityExpressionOrNull(
+    'conditionalPinnedExpression' in definition
+      ? definition.conditionalPinnedExpression
+      : null,
+  );
+
   return {
     id: commandMenuItemId,
     universalIdentifier: definition.universalIdentifier,
@@ -60,18 +71,12 @@ export const createStandardCommandMenuItemFlatMetadata = ({
     position: definition.position,
     isPinned: definition.isPinned,
     availabilityType: definition.availabilityType,
-    conditionalAvailabilityExpression:
-      definition.conditionalAvailabilityExpression ?? null,
-    conditionalPinnedExpression:
-      'conditionalPinnedExpression' in definition
-        ? definition.conditionalPinnedExpression
-        : null,
     conditionalDisplay: null,
     universalConditionalDisplay: null,
-    conditionalAvailability: null,
-    universalConditionalAvailability: null,
-    conditionalPinned: null,
-    universalConditionalPinned: null,
+    conditionalAvailability,
+    universalConditionalAvailability: conditionalAvailability,
+    conditionalPinned,
+    universalConditionalPinned: conditionalPinned,
     frontComponentId: null,
     frontComponentUniversalIdentifier: null,
     engineComponentKey: definition.engineComponentKey,

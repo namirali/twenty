@@ -1,7 +1,10 @@
 import { getSystemNavigationCommandMenuItemUniversalIdentifier } from 'twenty-shared/application';
 import { STANDARD_OBJECTS } from 'twenty-shared/metadata';
 
-import { CommandMenuItemAvailabilityType } from 'twenty-shared/types';
+import {
+  CommandMenuItemAvailabilityType,
+  ViewFilterOperand,
+} from 'twenty-shared/types';
 import { EngineComponentKey } from 'src/engine/metadata-modules/command-menu-item/enums/engine-component-key.enum';
 import {
   NAVIGATION_INTERPOLATED_ICON,
@@ -9,6 +12,7 @@ import {
   NAVIGATION_INTERPOLATED_SHORT_LABEL,
 } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-object-navigation-universal-flat-command-menu-item.util';
 import { buildObjectNavigationFlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-object-navigation-flat-command-menu-item.util';
+import { NEVER_AVAILABLE_CONDITIONAL_AVAILABILITY } from 'src/engine/metadata-modules/flat-conditional-display/constants/never-available-conditional-availability.constant';
 
 const APPLICATION_UNIVERSAL_IDENTIFIER = 'a1a2a3a4-a5a6-4000-8000-000000000001';
 const OTHER_APPLICATION_UNIVERSAL_IDENTIFIER =
@@ -132,15 +136,26 @@ describe('buildObjectNavigationFlatCommandMenuItem', () => {
     );
   });
 
-  it('should set conditionalAvailabilityExpression based on nameSingular', () => {
+  it('should gate conditionalAvailability on the read permission of the target object', () => {
     const result = buildObjectNavigationFlatCommandMenuItem(baseArgs);
 
-    expect(result.conditionalAvailabilityExpression).toBe(
-      'targetObjectReadPermissions.person',
+    expect(result.conditionalAvailability).toEqual({
+      recordFilters: [
+        {
+          id: expect.any(String),
+          contextKey: 'targetObjectReadPermissions',
+          subFieldName: 'person',
+          operand: ViewFilterOperand.IS,
+          value: 'true',
+        },
+      ],
+    });
+    expect(result.universalConditionalAvailability).toEqual(
+      result.conditionalAvailability,
     );
   });
 
-  it('should additionally gate conditionalAvailabilityExpression behind the feature flag for feature-flagged objects', () => {
+  it('should additionally gate conditionalAvailability behind the feature flag for feature-flagged objects', () => {
     const result = buildObjectNavigationFlatCommandMenuItem({
       ...baseArgs,
       objectMetadata: {
@@ -151,8 +166,42 @@ describe('buildObjectNavigationFlatCommandMenuItem', () => {
       },
     });
 
-    expect(result.conditionalAvailabilityExpression).toBe(
-      'featureFlags.IS_MESSAGE_CAMPAIGN_ENABLED and targetObjectReadPermissions.messageCampaign',
+    expect(result.conditionalAvailability).toEqual({
+      recordFilters: [
+        {
+          id: expect.any(String),
+          contextKey: 'featureFlags',
+          subFieldName: 'IS_MESSAGE_CAMPAIGN_ENABLED',
+          operand: ViewFilterOperand.IS,
+          value: 'true',
+        },
+        {
+          id: expect.any(String),
+          contextKey: 'targetObjectReadPermissions',
+          subFieldName: 'messageCampaign',
+          operand: ViewFilterOperand.IS,
+          value: 'true',
+        },
+      ],
+    });
+  });
+
+  it('should never make the workflow versions navigation available', () => {
+    const result = buildObjectNavigationFlatCommandMenuItem({
+      ...baseArgs,
+      objectMetadata: {
+        ...baseObjectMetadata,
+        universalIdentifier:
+          STANDARD_OBJECTS.workflowVersion.universalIdentifier,
+        nameSingular: 'workflowVersion',
+      },
+    });
+
+    expect(result.conditionalAvailability).toEqual(
+      NEVER_AVAILABLE_CONDITIONAL_AVAILABILITY,
+    );
+    expect(result.universalConditionalAvailability).toEqual(
+      NEVER_AVAILABLE_CONDITIONAL_AVAILABILITY,
     );
   });
 

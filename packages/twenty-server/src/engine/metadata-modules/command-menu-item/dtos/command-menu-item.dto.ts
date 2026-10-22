@@ -101,16 +101,6 @@ export class CommandMenuItemDTO {
   @Field(() => [String], { nullable: true })
   hotKeys?: string[];
 
-  @IsString()
-  @IsOptional()
-  @Field({ nullable: true })
-  conditionalAvailabilityExpression?: string;
-
-  @IsString()
-  @IsOptional()
-  @Field({ nullable: true })
-  conditionalPinnedExpression?: string;
-
   @IsObject()
   @IsOptional()
   @Field(() => GraphQLJSON, { nullable: true })
