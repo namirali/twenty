@@ -1,4 +1,5 @@
-import { useDoesCommandMenuItemMatchConditionalDisplay } from '@/command-menu-item/hooks/useDoesCommandMenuItemMatchConditionalDisplay';
+import { EMPTY_COMMAND_MENU_CONTEXT_API } from '@/command-menu-item/constants/EmptyCommandMenuContextApi';
+import { useCommandMenuItemConditionalDisplay } from '@/command-menu-item/hooks/useCommandMenuItemConditionalDisplay';
 import { buildGlobalRecordCreationCommandMenuItems } from '@/command-menu-item/utils/buildGlobalRecordCreationCommandMenuItems';
 import { type CommandMenuItemDefinition } from '@/command-menu-item/types/CommandMenuItemDefinition';
 import { useFilteredObjectMetadataItems } from '@/object-metadata/hooks/useFilteredObjectMetadataItems';
@@ -22,7 +23,7 @@ export const useGlobalRecordCreationCommandMenuItems = (
     FeatureFlagKey.IS_RECORD_CREATION_FORM_ENABLED,
   );
   const { doesCommandMenuItemMatchConditionalDisplay } =
-    useDoesCommandMenuItemMatchConditionalDisplay();
+    useCommandMenuItemConditionalDisplay(EMPTY_COMMAND_MENU_CONTEXT_API);
   const createRecordCommand = commandMenuItems.find(
     (item) =>
       item.engineComponentKey === EngineComponentKey.CREATE_NEW_RECORD &&

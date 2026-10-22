@@ -79,8 +79,6 @@ export const convertPageLayoutDraftToUpdateInput = (
               tab.layoutMode ?? PageLayoutTabLayoutMode.GRID,
             ),
             configuration: widget.configuration ?? null,
-            conditionalAvailabilityExpression:
-              widget.conditionalAvailabilityExpression ?? null,
             conditionalDisplay: widget.conditionalDisplay ?? null,
           })),
         };

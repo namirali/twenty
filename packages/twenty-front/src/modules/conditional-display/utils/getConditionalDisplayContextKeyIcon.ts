@@ -1,4 +1,4 @@
-import { type ConditionalDisplayContextKey } from 'twenty-shared/types';
+import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { assertUnreachable } from 'twenty-shared/utils';
 import {
   type IconComponent,
@@ -8,7 +8,7 @@ import {
 } from 'twenty-ui/icon';
 
 export const getConditionalDisplayContextKeyIcon = (
-  contextKey: ConditionalDisplayContextKey,
+  contextKey: ConditionalDisplayAdminContextKey,
 ): IconComponent => {
   switch (contextKey) {
     case 'currentRoleId':

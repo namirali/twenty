@@ -1,3 +1,4 @@
+import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { buildConditionalDisplayContextRecordFilter } from '@/conditional-display/utils/buildConditionalDisplayContextRecordFilter';
 import { getConditionalDisplayContextKeyIcon } from '@/conditional-display/utils/getConditionalDisplayContextKeyIcon';
 import { getConditionalDisplayContextKeyLabel } from '@/conditional-display/utils/getConditionalDisplayContextKeyLabel';
@@ -10,7 +11,6 @@ import { SelectOptionIcon } from '@/ui/input/components/SelectOptionIcon';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
 import { useLingui } from '@lingui/react/macro';
 import { Fragment, useContext } from 'react';
-import { type ConditionalDisplayContextKey } from 'twenty-shared/types';
 import { isNonEmptyArray } from 'twenty-shared/utils';
 import { Dropdown } from 'twenty-ui/components/navigation';
 
@@ -63,7 +63,9 @@ export const ConditionalDisplaySubjectSections = ({
     },
   ].filter((section) => isNonEmptyArray(section.contextKeys));
 
-  const handleContextKeySelect = (contextKey: ConditionalDisplayContextKey) => {
+  const handleContextKeySelect = (
+    contextKey: ConditionalDisplayAdminContextKey,
+  ) => {
     const existingRecordFilter = currentRecordFilters.find(
       (recordFilter) => recordFilter.id === recordFilterId,
     );

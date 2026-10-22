@@ -1,9 +1,7 @@
+import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { getConditionalDisplayContextRecordFilterType } from '@/conditional-display/utils/getConditionalDisplayContextRecordFilterType';
 import { type RecordFilter } from '@/object-record/record-filter/types/RecordFilter';
-import {
-  type ConditionalDisplayContextKey,
-  ViewFilterOperand,
-} from 'twenty-shared/types';
+import { ViewFilterOperand } from 'twenty-shared/types';
 
 export const buildConditionalDisplayContextRecordFilter = ({
   id,
@@ -12,7 +10,7 @@ export const buildConditionalDisplayContextRecordFilter = ({
   positionInRecordFilterGroup,
 }: {
   id: string;
-  contextKey: ConditionalDisplayContextKey;
+  contextKey: ConditionalDisplayAdminContextKey;
   recordFilterGroupId?: string;
   positionInRecordFilterGroup?: number | null;
 }): RecordFilter => ({

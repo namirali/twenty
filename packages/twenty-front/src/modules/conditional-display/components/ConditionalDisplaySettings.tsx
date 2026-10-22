@@ -3,6 +3,7 @@ import { ConditionalDisplayVisibilityModeSelect } from '@/conditional-display/co
 import { type ConditionalDisplayVisibilityMode } from '@/conditional-display/types/ConditionalDisplayVisibilityMode';
 import { getConditionalDisplaySettingsLabel } from '@/conditional-display/utils/getConditionalDisplaySettingsLabel';
 import { hasConditionalDisplayRule } from '@/conditional-display/utils/hasConditionalDisplayRule';
+import { isConditionalDisplayAdminContextKey } from '@/conditional-display/utils/isConditionalDisplayAdminContextKey';
 import { mapConditionalDisplayToPersistedRecordFilters } from '@/conditional-display/utils/mapConditionalDisplayToPersistedRecordFilters';
 import { sanitizeConditionalDisplay } from '@/conditional-display/utils/sanitizeConditionalDisplay';
 import { objectMetadataItemsSelector } from '@/object-metadata/states/objectMetadataItemsSelector';
@@ -67,9 +68,11 @@ export const ConditionalDisplaySettings = ({
     Object.keys(
       CONDITIONAL_DISPLAY_CONTEXT_KEYS,
     ) as ConditionalDisplayContextKey[]
-  ).filter((contextKey) =>
-    CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey].surfaces.includes(surface),
-  );
+  )
+    .filter(isConditionalDisplayAdminContextKey)
+    .filter((contextKey) =>
+      CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey].surfaces.includes(surface),
+    );
 
   const objectMetadataItem = useAtomStateValue(
     objectMetadataItemsSelector,

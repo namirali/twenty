@@ -18,7 +18,29 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"RECORD_PAGE\" and not isInSidePanel and objectMetadataItem.nameSingular != \"messageCampaign\"",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "93ff6966-18ed-50d5-af84-cc9f3c07c424",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"RECORD_PAGE\""
+        },
+        {
+          "id": "356dba54-e44c-5c41-906c-279bc53e5a0e",
+          "contextKey": "isInSidePanel",
+          "operand": "IS_NOT",
+          "value": "true"
+        },
+        {
+          "id": "d06f1e69-0331-512c-9b95-23706ed85d4e",
+          "contextKey": "objectMetadataItem",
+          "operand": "IS_NOT",
+          "subFieldName": "nameSingular",
+          "value": "\"messageCampaign\""
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -40,7 +62,29 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"RECORD_PAGE\" and not isInSidePanel and objectMetadataItem.nameSingular != \"messageCampaign\"",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "93ff6966-18ed-50d5-af84-cc9f3c07c424",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"RECORD_PAGE\""
+        },
+        {
+          "id": "356dba54-e44c-5c41-906c-279bc53e5a0e",
+          "contextKey": "isInSidePanel",
+          "operand": "IS_NOT",
+          "value": "true"
+        },
+        {
+          "id": "d06f1e69-0331-512c-9b95-23706ed85d4e",
+          "contextKey": "objectMetadataItem",
+          "operand": "IS_NOT",
+          "subFieldName": "nameSingular",
+          "value": "\"messageCampaign\""
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -62,7 +106,50 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"INDEX_PAGE\" and objectPermissions.canUpdateObjectRecords and not hasAnySoftDeleteFilterOnView and objectMetadataItem.isUICreatable and objectMetadataItem.isUIEditable and not objectMetadataItem.isRemote",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "d918b256-4f26-554f-9a75-56eba5b948fc",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"INDEX_PAGE\""
+        },
+        {
+          "id": "54984bd9-1409-57f9-b352-06383620f177",
+          "contextKey": "objectPermissions",
+          "operand": "IS",
+          "subFieldName": "canUpdateObjectRecords",
+          "value": "true"
+        },
+        {
+          "id": "46ebd89a-f3b5-5df0-89cc-daa112146e30",
+          "contextKey": "hasAnySoftDeleteFilterOnView",
+          "operand": "IS_NOT",
+          "value": "true"
+        },
+        {
+          "id": "09d8c74d-5afb-527a-a12a-a57091015234",
+          "contextKey": "objectMetadataItem",
+          "operand": "IS",
+          "subFieldName": "isUICreatable",
+          "value": "true"
+        },
+        {
+          "id": "45daee2c-a34d-5ae2-afe0-472be989b0d5",
+          "contextKey": "objectMetadataItem",
+          "operand": "IS",
+          "subFieldName": "isUIEditable",
+          "value": "true"
+        },
+        {
+          "id": "356b1b85-5efa-52df-8917-36252a0abd5f",
+          "contextKey": "objectMetadataItem",
+          "operand": "IS_NOT",
+          "subFieldName": "isRemote",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL_OBJECT_CONTEXT",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -84,7 +171,63 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "numberOfSelectedRecords >= 1 and not hasAnySoftDeleteFilterOnView and objectPermissions.canSoftDeleteObjectRecords and (isSelectAll or noneDefined(selectedRecords, \"deletedAt\"))",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "aa3fc354-d3a7-52ed-9dc5-72316f46e4ab",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "GREATER_THAN_OR_EQUAL",
+          "value": "1",
+          "recordFilterGroupId": "f3f8f1f8-fa75-5113-8425-354b03282423",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "0cd984d7-8b47-5373-93f3-4bfacbf5c4a9",
+          "contextKey": "hasAnySoftDeleteFilterOnView",
+          "operand": "IS_NOT",
+          "value": "true",
+          "recordFilterGroupId": "f3f8f1f8-fa75-5113-8425-354b03282423",
+          "positionInRecordFilterGroup": 1
+        },
+        {
+          "id": "4888061e-56f7-56e9-8055-b26cf86b548c",
+          "contextKey": "objectPermissions",
+          "operand": "IS",
+          "subFieldName": "canSoftDeleteObjectRecords",
+          "value": "true",
+          "recordFilterGroupId": "f3f8f1f8-fa75-5113-8425-354b03282423",
+          "positionInRecordFilterGroup": 2
+        },
+        {
+          "id": "2678b911-3218-5775-b4a8-8bec80a6c4e2",
+          "contextKey": "isSelectAll",
+          "operand": "IS",
+          "value": "true",
+          "recordFilterGroupId": "ee692e55-c764-5357-bbda-ae93e72c32ea",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "fda5827f-fa36-50a2-b252-5bddb40101b7",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt",
+          "recordFilterGroupId": "ee692e55-c764-5357-bbda-ae93e72c32ea",
+          "positionInRecordFilterGroup": 1
+        }
+      ],
+      "recordFilterGroups": [
+        {
+          "id": "f3f8f1f8-fa75-5113-8425-354b03282423",
+          "logicalOperator": "AND"
+        },
+        {
+          "id": "ee692e55-c764-5357-bbda-ae93e72c32ea",
+          "logicalOperator": "OR",
+          "parentRecordFilterGroupId": "f3f8f1f8-fa75-5113-8425-354b03282423",
+          "positionInRecordFilterGroup": 3
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -106,7 +249,77 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "numberOfSelectedRecords >= 1 and (isSelectAll or everyDefined(selectedRecords, \"deletedAt\")) and objectPermissions.canSoftDeleteObjectRecords and (pageType == \"RECORD_PAGE\" or hasAnySoftDeleteFilterOnView)",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "944ec30d-a90d-5e08-93c7-005c05228af0",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "GREATER_THAN_OR_EQUAL",
+          "value": "1",
+          "recordFilterGroupId": "825b0d77-f0f0-54f1-be17-5a1b67146afe",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "61226194-3ce4-5a3f-9f62-ca41ba69d938",
+          "contextKey": "isSelectAll",
+          "operand": "IS",
+          "value": "true",
+          "recordFilterGroupId": "105d58ca-ec65-5a39-8d10-6e135383dc5f",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "f15a7d0b-ad1b-5d9b-94ba-13d975cb86b3",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "deletedAt",
+          "recordFilterGroupId": "105d58ca-ec65-5a39-8d10-6e135383dc5f",
+          "positionInRecordFilterGroup": 1
+        },
+        {
+          "id": "65a35933-d5db-58f0-a46e-9e54a2185a05",
+          "contextKey": "objectPermissions",
+          "operand": "IS",
+          "subFieldName": "canSoftDeleteObjectRecords",
+          "value": "true",
+          "recordFilterGroupId": "825b0d77-f0f0-54f1-be17-5a1b67146afe",
+          "positionInRecordFilterGroup": 2
+        },
+        {
+          "id": "6dbda408-9cec-53a2-922b-981172f7cd43",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"RECORD_PAGE\"",
+          "recordFilterGroupId": "82fb2a5d-f739-5a6f-9c47-931e9f3390b1",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "bed9ee8c-9dd4-54cb-ac65-3bed0bb72365",
+          "contextKey": "hasAnySoftDeleteFilterOnView",
+          "operand": "IS",
+          "value": "true",
+          "recordFilterGroupId": "82fb2a5d-f739-5a6f-9c47-931e9f3390b1",
+          "positionInRecordFilterGroup": 1
+        }
+      ],
+      "recordFilterGroups": [
+        {
+          "id": "825b0d77-f0f0-54f1-be17-5a1b67146afe",
+          "logicalOperator": "AND"
+        },
+        {
+          "id": "105d58ca-ec65-5a39-8d10-6e135383dc5f",
+          "logicalOperator": "OR",
+          "parentRecordFilterGroupId": "825b0d77-f0f0-54f1-be17-5a1b67146afe",
+          "positionInRecordFilterGroup": 1
+        },
+        {
+          "id": "82fb2a5d-f739-5a6f-9c47-931e9f3390b1",
+          "logicalOperator": "OR",
+          "parentRecordFilterGroupId": "825b0d77-f0f0-54f1-be17-5a1b67146afe",
+          "positionInRecordFilterGroup": 3
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -128,7 +341,77 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "numberOfSelectedRecords >= 1 and objectPermissions.canDestroyObjectRecords and (isSelectAll or everyDefined(selectedRecords, \"deletedAt\")) and (pageType == \"RECORD_PAGE\" or hasAnySoftDeleteFilterOnView)",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "374a5a3b-a7d0-5432-8f57-8f2fc82139e7",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "GREATER_THAN_OR_EQUAL",
+          "value": "1",
+          "recordFilterGroupId": "e1da7c2b-1756-5bb9-9411-d8806d1e7027",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "8e089cce-580e-5d8f-b7b8-e2d32d6b3cac",
+          "contextKey": "objectPermissions",
+          "operand": "IS",
+          "subFieldName": "canDestroyObjectRecords",
+          "value": "true",
+          "recordFilterGroupId": "e1da7c2b-1756-5bb9-9411-d8806d1e7027",
+          "positionInRecordFilterGroup": 1
+        },
+        {
+          "id": "8838471e-cfe9-510f-9e25-edf330540b24",
+          "contextKey": "isSelectAll",
+          "operand": "IS",
+          "value": "true",
+          "recordFilterGroupId": "9a547470-a47d-53c2-a727-efa1e8cc07e6",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "8abe6d49-2c71-5a9b-90ac-143acf784cd6",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "deletedAt",
+          "recordFilterGroupId": "9a547470-a47d-53c2-a727-efa1e8cc07e6",
+          "positionInRecordFilterGroup": 1
+        },
+        {
+          "id": "a3219326-8493-52b2-9b2b-eeef9e1523fc",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"RECORD_PAGE\"",
+          "recordFilterGroupId": "6a5f980d-a435-5fac-9420-cb9283ddd4ba",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "ef6690e5-e6b4-5aab-86bc-a879ad7bbae6",
+          "contextKey": "hasAnySoftDeleteFilterOnView",
+          "operand": "IS",
+          "value": "true",
+          "recordFilterGroupId": "6a5f980d-a435-5fac-9420-cb9283ddd4ba",
+          "positionInRecordFilterGroup": 1
+        }
+      ],
+      "recordFilterGroups": [
+        {
+          "id": "e1da7c2b-1756-5bb9-9411-d8806d1e7027",
+          "logicalOperator": "AND"
+        },
+        {
+          "id": "9a547470-a47d-53c2-a727-efa1e8cc07e6",
+          "logicalOperator": "OR",
+          "parentRecordFilterGroupId": "e1da7c2b-1756-5bb9-9411-d8806d1e7027",
+          "positionInRecordFilterGroup": 2
+        },
+        {
+          "id": "6a5f980d-a435-5fac-9420-cb9283ddd4ba",
+          "logicalOperator": "OR",
+          "parentRecordFilterGroupId": "e1da7c2b-1756-5bb9-9411-d8806d1e7027",
+          "positionInRecordFilterGroup": 3
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -150,7 +433,35 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "arrayLength(favoriteRecordIds) < numberOfSelectedRecords and noneDefined(selectedRecords, \"deletedAt\") and not hasAnySoftDeleteFilterOnView and objectMetadataItem.nameSingular != \"messageCampaign\"",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "2f587e61-020b-5aa1-ac9a-c40a26efd6f0",
+          "contextKey": "areAllSelectedRecordsFavorites",
+          "operand": "IS",
+          "value": "false"
+        },
+        {
+          "id": "e8b2ebf6-fc27-52b7-a3d1-517e75e7e335",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        },
+        {
+          "id": "0e5dc9c0-dede-5f2e-a306-0808aef1f980",
+          "contextKey": "hasAnySoftDeleteFilterOnView",
+          "operand": "IS_NOT",
+          "value": "true"
+        },
+        {
+          "id": "90734b6e-f2d3-560e-bacf-63ecabcba929",
+          "contextKey": "objectMetadataItem",
+          "operand": "IS_NOT",
+          "subFieldName": "nameSingular",
+          "value": "\"messageCampaign\""
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -172,7 +483,35 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "arrayLength(favoriteRecordIds) == numberOfSelectedRecords and noneDefined(selectedRecords, \"deletedAt\") and not hasAnySoftDeleteFilterOnView and objectMetadataItem.nameSingular != \"messageCampaign\"",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "0f55f4a5-873d-538c-a3a7-f75573e8f9b9",
+          "contextKey": "areAllSelectedRecordsFavorites",
+          "operand": "IS",
+          "value": "true"
+        },
+        {
+          "id": "cd13d62e-fc4f-5605-b7f1-3cbb5e12b1fc",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        },
+        {
+          "id": "c6f333dd-0a83-55a0-a72b-c98215e68b15",
+          "contextKey": "hasAnySoftDeleteFilterOnView",
+          "operand": "IS_NOT",
+          "value": "true"
+        },
+        {
+          "id": "bb3195e7-077c-5aca-8f3d-f70c05bd7587",
+          "contextKey": "objectMetadataItem",
+          "operand": "IS_NOT",
+          "subFieldName": "nameSingular",
+          "value": "\"messageCampaign\""
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -194,7 +533,57 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"RECORD_PAGE\" and (objectMetadataItem.nameSingular == \"note\" or objectMetadataItem.nameSingular == \"task\") and someNonEmptyString(selectedRecords, \"bodyV2.blocknote\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "bc9a3e74-83a0-595f-8af5-faf125d75e84",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"RECORD_PAGE\"",
+          "recordFilterGroupId": "11c9bc82-bcb2-53e5-b971-80a6aa300412",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "1c6e2d9b-8251-52f9-91c6-4a0c60dda478",
+          "contextKey": "objectMetadataItem",
+          "operand": "IS",
+          "subFieldName": "nameSingular",
+          "value": "\"note\"",
+          "recordFilterGroupId": "816743c7-829b-53bd-8a9a-1b1a0ce41e42",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "3c131f3f-4f22-5642-8785-af3904e5b921",
+          "contextKey": "objectMetadataItem",
+          "operand": "IS",
+          "subFieldName": "nameSingular",
+          "value": "\"task\"",
+          "recordFilterGroupId": "816743c7-829b-53bd-8a9a-1b1a0ce41e42",
+          "positionInRecordFilterGroup": 1
+        },
+        {
+          "id": "167e0428-f91f-524d-adb8-77527e3fd10e",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "bodyV2.blocknote",
+          "recordFilterGroupId": "11c9bc82-bcb2-53e5-b971-80a6aa300412",
+          "positionInRecordFilterGroup": 2
+        }
+      ],
+      "recordFilterGroups": [
+        {
+          "id": "11c9bc82-bcb2-53e5-b971-80a6aa300412",
+          "logicalOperator": "AND"
+        },
+        {
+          "id": "816743c7-829b-53bd-8a9a-1b1a0ce41e42",
+          "logicalOperator": "OR",
+          "parentRecordFilterGroupId": "11c9bc82-bcb2-53e5-b971-80a6aa300412",
+          "positionInRecordFilterGroup": 1
+        }
+      ],
+      "quantifier": "SOME"
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -216,7 +605,23 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"INDEX_PAGE\" and permissionFlags.EXPORT_CSV",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "0cba3098-85f1-51fe-a92d-e223e6ba6081",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"INDEX_PAGE\""
+        },
+        {
+          "id": "c7628efd-b3ff-5f67-b3cc-a89534e9e5c5",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "EXPORT_CSV",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -238,7 +643,23 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "numberOfSelectedRecords >= 2 and objectPermissions.canUpdateObjectRecords",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "855cab9b-03e6-5a12-835a-65d76d06453a",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "GREATER_THAN_OR_EQUAL",
+          "value": "2"
+        },
+        {
+          "id": "0c95de7c-5b96-523f-ba3b-6c718023b841",
+          "contextKey": "objectPermissions",
+          "operand": "IS",
+          "subFieldName": "canUpdateObjectRecords",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -260,7 +681,48 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "not isSelectAll and numberOfSelectedRecords >= 2 and isDefined(objectMetadataItem.duplicateCriteria) and objectPermissions.canUpdateObjectRecords and objectPermissions.canDestroyObjectRecords and numberOfSelectedRecords <= 9",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "530a3cc0-c89d-5d06-8107-ca165b29578a",
+          "contextKey": "isSelectAll",
+          "operand": "IS_NOT",
+          "value": "true"
+        },
+        {
+          "id": "47d61333-071c-5fa4-867d-5f199ae395a9",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "GREATER_THAN_OR_EQUAL",
+          "value": "2"
+        },
+        {
+          "id": "d29af885-4fac-5837-bb8e-4b9082671ca2",
+          "contextKey": "objectMetadataItem",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "duplicateCriteria"
+        },
+        {
+          "id": "ccc946cb-aed5-59a8-bbf9-6b5e28f5783c",
+          "contextKey": "objectPermissions",
+          "operand": "IS",
+          "subFieldName": "canUpdateObjectRecords",
+          "value": "true"
+        },
+        {
+          "id": "5a62d78d-af4f-5f68-95cf-26eea6a0f7e3",
+          "contextKey": "objectPermissions",
+          "operand": "IS",
+          "subFieldName": "canDestroyObjectRecords",
+          "value": "true"
+        },
+        {
+          "id": "25e93671-ae65-529b-aa3a-c124e9c33c6a",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "LESS_THAN_OR_EQUAL",
+          "value": "9"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -282,7 +744,29 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"INDEX_PAGE\" and not hasAnySoftDeleteFilterOnView and permissionFlags.IMPORT_CSV",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "5d36cee8-ebc6-54a8-9105-0f6de34cf04b",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"INDEX_PAGE\""
+        },
+        {
+          "id": "2d27d4f4-1456-5c8b-b9d3-a839cc93949a",
+          "contextKey": "hasAnySoftDeleteFilterOnView",
+          "operand": "IS_NOT",
+          "value": "true"
+        },
+        {
+          "id": "c87eed9d-b634-52fa-af81-d38a417f300b",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "IMPORT_CSV",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL_OBJECT_CONTEXT",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -304,7 +788,23 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"INDEX_PAGE\" and permissionFlags.EXPORT_CSV",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "0cba3098-85f1-51fe-a92d-e223e6ba6081",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"INDEX_PAGE\""
+        },
+        {
+          "id": "c7628efd-b3ff-5f67-b3cc-a89534e9e5c5",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "EXPORT_CSV",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL_OBJECT_CONTEXT",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -326,7 +826,22 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"INDEX_PAGE\" and not hasAnySoftDeleteFilterOnView",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "55364171-1160-5b80-b33c-f3a59be908e2",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"INDEX_PAGE\""
+        },
+        {
+          "id": "2ac8c799-c880-5874-a026-ae895f5c0c7a",
+          "contextKey": "hasAnySoftDeleteFilterOnView",
+          "operand": "IS_NOT",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL_OBJECT_CONTEXT",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -348,7 +863,22 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"INDEX_PAGE\" and not hasAnySoftDeleteFilterOnView",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "55364171-1160-5b80-b33c-f3a59be908e2",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"INDEX_PAGE\""
+        },
+        {
+          "id": "2ac8c799-c880-5874-a026-ae895f5c0c7a",
+          "contextKey": "hasAnySoftDeleteFilterOnView",
+          "operand": "IS_NOT",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL_OBJECT_CONTEXT",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -370,7 +900,22 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"INDEX_PAGE\" and hasAnySoftDeleteFilterOnView",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "a8f16ded-2de3-5b3d-9ad6-08fac474a5d5",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"INDEX_PAGE\""
+        },
+        {
+          "id": "514fd09c-4c8b-55ab-a459-003085bfd318",
+          "contextKey": "hasAnySoftDeleteFilterOnView",
+          "operand": "IS",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL_OBJECT_CONTEXT",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -392,7 +937,29 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType != \"SETTINGS_PAGE\" and not isLayoutCustomizationModeEnabled and permissionFlags.LAYOUTS",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "6ea01273-2c68-5f20-86ed-8a82421cb526",
+          "contextKey": "pageType",
+          "operand": "IS_NOT",
+          "value": "\"SETTINGS_PAGE\""
+        },
+        {
+          "id": "cfade857-4a77-51e8-b8ef-c411a608e223",
+          "contextKey": "isLayoutCustomizationModeEnabled",
+          "operand": "IS_NOT",
+          "value": "true"
+        },
+        {
+          "id": "a81d9ec7-ae18-53a4-9465-ff7b5c24ccb0",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "LAYOUTS",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -414,7 +981,47 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"RECORD_PAGE\" and not isDashboardPageLayoutInEditMode and not isLayoutCustomizationModeEnabled and noneDefined(selectedRecords, \"deletedAt\") and everyDefined(selectedRecords, \"pageLayoutId\") and objectPermissions.canUpdateObjectRecords",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "bda7d4d4-75fe-5f42-b9ea-8802a1c568a0",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"RECORD_PAGE\""
+        },
+        {
+          "id": "f5177bc2-6c2e-59c1-8cd2-359ed8563059",
+          "contextKey": "isDashboardPageLayoutInEditMode",
+          "operand": "IS_NOT",
+          "value": "true"
+        },
+        {
+          "id": "74772b21-f647-5c7d-a142-11a6ded10ea3",
+          "contextKey": "isLayoutCustomizationModeEnabled",
+          "operand": "IS_NOT",
+          "value": "true"
+        },
+        {
+          "id": "2c306ef6-8833-5039-b957-f2a386cfc9fc",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        },
+        {
+          "id": "f004b04b-5104-5887-9920-346dea4118b6",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "pageLayoutId"
+        },
+        {
+          "id": "54ac1921-0d38-563e-96b1-81cb633475cf",
+          "contextKey": "objectPermissions",
+          "operand": "IS",
+          "subFieldName": "canUpdateObjectRecords",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "9ea13a87-2454-423c-ae41-db2cbeab0642",
     "pageLayoutId": null,
@@ -436,7 +1043,41 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"RECORD_PAGE\" and isDashboardPageLayoutInEditMode and noneDefined(selectedRecords, \"deletedAt\") and everyDefined(selectedRecords, \"pageLayoutId\") and objectPermissions.canUpdateObjectRecords",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "1c85fe87-c264-5b1d-9f64-efedd590ce78",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"RECORD_PAGE\""
+        },
+        {
+          "id": "69007a31-7838-5ff8-9e48-3deedfbaa88f",
+          "contextKey": "isDashboardPageLayoutInEditMode",
+          "operand": "IS",
+          "value": "true"
+        },
+        {
+          "id": "fdc8603a-a56d-5658-8a34-8d20043edcbb",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        },
+        {
+          "id": "da4e21f5-1954-5454-b468-b8a9c8472898",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "pageLayoutId"
+        },
+        {
+          "id": "435c6e0f-3336-5c8f-988b-7ea8357a0d0e",
+          "contextKey": "objectPermissions",
+          "operand": "IS",
+          "subFieldName": "canUpdateObjectRecords",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "9ea13a87-2454-423c-ae41-db2cbeab0642",
     "pageLayoutId": null,
@@ -458,7 +1099,41 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"RECORD_PAGE\" and isDashboardPageLayoutInEditMode and noneDefined(selectedRecords, \"deletedAt\") and everyDefined(selectedRecords, \"pageLayoutId\") and objectPermissions.canUpdateObjectRecords",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "1c85fe87-c264-5b1d-9f64-efedd590ce78",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"RECORD_PAGE\""
+        },
+        {
+          "id": "69007a31-7838-5ff8-9e48-3deedfbaa88f",
+          "contextKey": "isDashboardPageLayoutInEditMode",
+          "operand": "IS",
+          "value": "true"
+        },
+        {
+          "id": "fdc8603a-a56d-5658-8a34-8d20043edcbb",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        },
+        {
+          "id": "da4e21f5-1954-5454-b468-b8a9c8472898",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "pageLayoutId"
+        },
+        {
+          "id": "435c6e0f-3336-5c8f-988b-7ea8357a0d0e",
+          "contextKey": "objectPermissions",
+          "operand": "IS",
+          "subFieldName": "canUpdateObjectRecords",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "9ea13a87-2454-423c-ae41-db2cbeab0642",
     "pageLayoutId": null,
@@ -480,7 +1155,23 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "noneDefined(selectedRecords, \"deletedAt\") and objectPermissions.canUpdateObjectRecords",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "09ae8267-43b6-5a20-b7d5-8776c0da721f",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        },
+        {
+          "id": "d2fb8f22-6e00-50a8-b5c9-5dcf4be902f0",
+          "contextKey": "objectPermissions",
+          "operand": "IS",
+          "subFieldName": "canUpdateObjectRecords",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "9ea13a87-2454-423c-ae41-db2cbeab0642",
     "pageLayoutId": null,
@@ -502,7 +1193,80 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "everyDefined(selectedRecords, \"currentVersion.trigger\") and everyDefined(selectedRecords, \"currentVersion.steps\") and every(selectedRecords, \"currentVersion.steps.length\") and (everyEquals(selectedRecords, \"currentVersion.status\", \"DRAFT\") or includesNone(selectedRecords, \"statuses\", \"ACTIVE\")) and noneDefined(selectedRecords, \"deletedAt\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "d3f6f4fc-5781-5166-aac9-8d9f31cb20ed",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "IS",
+          "value": "1",
+          "recordFilterGroupId": "61c485e6-aa84-5d57-98aa-efc0407b31ce",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "244c32eb-8179-5a9e-8a96-ae7a4736a00b",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "currentVersion.trigger",
+          "recordFilterGroupId": "61c485e6-aa84-5d57-98aa-efc0407b31ce",
+          "positionInRecordFilterGroup": 1
+        },
+        {
+          "id": "b1688102-0d2f-548f-801c-89eba8d6f0a0",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "currentVersion.steps",
+          "recordFilterGroupId": "61c485e6-aa84-5d57-98aa-efc0407b31ce",
+          "positionInRecordFilterGroup": 2
+        },
+        {
+          "id": "6a9abbd8-4c35-53e6-aafe-7720f5b8ff10",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "currentVersion.steps",
+          "recordFilterGroupId": "61c485e6-aa84-5d57-98aa-efc0407b31ce",
+          "positionInRecordFilterGroup": 3
+        },
+        {
+          "id": "52e92b6f-b17c-57bf-af02-be54ea2808f4",
+          "contextKey": "selectedRecords",
+          "operand": "IS",
+          "subFieldName": "currentVersion.status",
+          "value": "\"DRAFT\"",
+          "recordFilterGroupId": "37e4bc91-09bd-517a-8b6f-ea7301440c52",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "156e356d-2d0e-5220-ac6e-50c09ee965cb",
+          "contextKey": "selectedRecords",
+          "operand": "DOES_NOT_CONTAIN",
+          "subFieldName": "statuses",
+          "value": "\"ACTIVE\"",
+          "recordFilterGroupId": "37e4bc91-09bd-517a-8b6f-ea7301440c52",
+          "positionInRecordFilterGroup": 1
+        },
+        {
+          "id": "211d5470-01f1-5d3d-bf1a-5a1d03378ccf",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt",
+          "recordFilterGroupId": "61c485e6-aa84-5d57-98aa-efc0407b31ce",
+          "positionInRecordFilterGroup": 5
+        }
+      ],
+      "recordFilterGroups": [
+        {
+          "id": "61c485e6-aa84-5d57-98aa-efc0407b31ce",
+          "logicalOperator": "AND"
+        },
+        {
+          "id": "37e4bc91-09bd-517a-8b6f-ea7301440c52",
+          "logicalOperator": "OR",
+          "parentRecordFilterGroupId": "61c485e6-aa84-5d57-98aa-efc0407b31ce",
+          "positionInRecordFilterGroup": 4
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "7fa7fa3c-2efd-4689-9048-559222d3b80d",
     "pageLayoutId": null,
@@ -524,7 +1288,56 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "numberOfSelectedRecords == 1 and (everyEquals(selectedRecords, \"currentVersion.status\", \"ACTIVE\") or includesEvery(selectedRecords, \"statuses\", \"ACTIVE\")) and noneDefined(selectedRecords, \"deletedAt\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "09a04afb-dc34-53e6-ac58-e8b65572d533",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "IS",
+          "value": "1",
+          "recordFilterGroupId": "c84cd673-5728-540a-aa70-f0f2db2e342c",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "798bb95d-2d6b-5ab5-9a18-a1da4a78cf01",
+          "contextKey": "selectedRecords",
+          "operand": "IS",
+          "subFieldName": "currentVersion.status",
+          "value": "\"ACTIVE\"",
+          "recordFilterGroupId": "b8f00477-69ba-59be-b712-3496abef36a9",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "3e210d1b-c792-5df5-89ac-1ddc0ed471e4",
+          "contextKey": "selectedRecords",
+          "operand": "CONTAINS",
+          "subFieldName": "statuses",
+          "value": "\"ACTIVE\"",
+          "recordFilterGroupId": "b8f00477-69ba-59be-b712-3496abef36a9",
+          "positionInRecordFilterGroup": 1
+        },
+        {
+          "id": "ee5d7bd0-14af-50ec-ba35-e8f09b70a64d",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt",
+          "recordFilterGroupId": "c84cd673-5728-540a-aa70-f0f2db2e342c",
+          "positionInRecordFilterGroup": 2
+        }
+      ],
+      "recordFilterGroups": [
+        {
+          "id": "c84cd673-5728-540a-aa70-f0f2db2e342c",
+          "logicalOperator": "AND"
+        },
+        {
+          "id": "b8f00477-69ba-59be-b712-3496abef36a9",
+          "logicalOperator": "OR",
+          "parentRecordFilterGroupId": "c84cd673-5728-540a-aa70-f0f2db2e342c",
+          "positionInRecordFilterGroup": 1
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "7fa7fa3c-2efd-4689-9048-559222d3b80d",
     "pageLayoutId": null,
@@ -546,7 +1359,29 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "every(selectedRecords, \"lastPublishedVersionId\") and everyEquals(selectedRecords, \"currentVersion.status\", \"DRAFT\") and noneDefined(selectedRecords, \"deletedAt\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "36e3ad72-6ddd-5df5-85ac-cad556bb3ad1",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "lastPublishedVersionId"
+        },
+        {
+          "id": "65e880a0-4fbe-5312-9fa9-fb2d119c5c0d",
+          "contextKey": "selectedRecords",
+          "operand": "IS",
+          "subFieldName": "currentVersion.status",
+          "value": "\"DRAFT\""
+        },
+        {
+          "id": "8c50e428-9bf0-5428-87b5-174cdf6ed077",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "7fa7fa3c-2efd-4689-9048-559222d3b80d",
     "pageLayoutId": null,
@@ -568,7 +1403,103 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "everyDefined(selectedRecords, \"currentVersion.trigger\") and everyDefined(selectedRecords, \"currentVersion.steps\") and every(selectedRecords, \"currentVersion.steps.length\") and ((everyEquals(selectedRecords, \"currentVersion.trigger.type\", \"MANUAL\") and noneDefined(selectedRecords, \"currentVersion.trigger.settings.objectType\")) or everyEquals(selectedRecords, \"currentVersion.trigger.type\", \"WEBHOOK\") or everyEquals(selectedRecords, \"currentVersion.trigger.type\", \"CRON\")) and noneDefined(selectedRecords, \"deletedAt\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "218d7cde-f4d6-511d-99c6-bf623bb19664",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "IS",
+          "value": "1",
+          "recordFilterGroupId": "25e1b770-00e9-5b26-9a39-fe66154591cc",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "eb466879-ce37-5992-9b25-7570b6b1c9a2",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "currentVersion.trigger",
+          "recordFilterGroupId": "25e1b770-00e9-5b26-9a39-fe66154591cc",
+          "positionInRecordFilterGroup": 1
+        },
+        {
+          "id": "acc18934-c7cc-5de4-a86c-7c7d6bd85f4d",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "currentVersion.steps",
+          "recordFilterGroupId": "25e1b770-00e9-5b26-9a39-fe66154591cc",
+          "positionInRecordFilterGroup": 2
+        },
+        {
+          "id": "6ac18d4c-eabc-5ca7-a7a4-f6fcf8da3d92",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "currentVersion.steps",
+          "recordFilterGroupId": "25e1b770-00e9-5b26-9a39-fe66154591cc",
+          "positionInRecordFilterGroup": 3
+        },
+        {
+          "id": "80b1e899-199f-5a8a-aa2d-140f79a50ddc",
+          "contextKey": "selectedRecords",
+          "operand": "IS",
+          "subFieldName": "currentVersion.trigger.type",
+          "value": "\"MANUAL\"",
+          "recordFilterGroupId": "bf9c58b8-22c3-5f6a-9140-269abf596d85",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "d221ec12-cbe6-53f1-b037-ede8e313fc8e",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "currentVersion.trigger.settings.objectType",
+          "recordFilterGroupId": "bf9c58b8-22c3-5f6a-9140-269abf596d85",
+          "positionInRecordFilterGroup": 1
+        },
+        {
+          "id": "9e71619e-607b-517b-86a4-ebb34d19738c",
+          "contextKey": "selectedRecords",
+          "operand": "IS",
+          "subFieldName": "currentVersion.trigger.type",
+          "value": "\"WEBHOOK\"",
+          "recordFilterGroupId": "82a57ba3-ade9-53b2-b32d-a41fbc1af2af",
+          "positionInRecordFilterGroup": 1
+        },
+        {
+          "id": "51b3471b-71f5-5b6a-9cbe-659953fea33e",
+          "contextKey": "selectedRecords",
+          "operand": "IS",
+          "subFieldName": "currentVersion.trigger.type",
+          "value": "\"CRON\"",
+          "recordFilterGroupId": "82a57ba3-ade9-53b2-b32d-a41fbc1af2af",
+          "positionInRecordFilterGroup": 2
+        },
+        {
+          "id": "71b9b11f-622a-5fad-98a3-79223378d402",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt",
+          "recordFilterGroupId": "25e1b770-00e9-5b26-9a39-fe66154591cc",
+          "positionInRecordFilterGroup": 5
+        }
+      ],
+      "recordFilterGroups": [
+        {
+          "id": "25e1b770-00e9-5b26-9a39-fe66154591cc",
+          "logicalOperator": "AND"
+        },
+        {
+          "id": "82a57ba3-ade9-53b2-b32d-a41fbc1af2af",
+          "logicalOperator": "OR",
+          "parentRecordFilterGroupId": "25e1b770-00e9-5b26-9a39-fe66154591cc",
+          "positionInRecordFilterGroup": 4
+        },
+        {
+          "id": "bf9c58b8-22c3-5f6a-9140-269abf596d85",
+          "logicalOperator": "AND",
+          "parentRecordFilterGroupId": "82a57ba3-ade9-53b2-b32d-a41fbc1af2af",
+          "positionInRecordFilterGroup": 0
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "7fa7fa3c-2efd-4689-9048-559222d3b80d",
     "pageLayoutId": null,
@@ -590,7 +1521,16 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "noneDefined(selectedRecords, \"deletedAt\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "bc7d8638-ad97-594b-a597-bc7754ac2294",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "7fa7fa3c-2efd-4689-9048-559222d3b80d",
     "pageLayoutId": null,
@@ -612,7 +1552,16 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "noneDefined(selectedRecords, \"deletedAt\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "bc7d8638-ad97-594b-a597-bc7754ac2294",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "7fa7fa3c-2efd-4689-9048-559222d3b80d",
     "pageLayoutId": null,
@@ -634,7 +1583,40 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"RECORD_PAGE\" and everyDefined(selectedRecords, \"currentVersion.trigger\") and everyDefined(selectedRecords, \"currentVersion.steps\") and every(selectedRecords, \"currentVersion.steps.length\") and noneDefined(selectedRecords, \"deletedAt\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "a069e008-6d83-5031-9b1a-672c53cb9e7a",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"RECORD_PAGE\""
+        },
+        {
+          "id": "5e23227b-cc55-502d-bfd9-2b51d0d30722",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "currentVersion.trigger"
+        },
+        {
+          "id": "e4a6b8d7-f189-56d2-9d1c-5f04f464814d",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "currentVersion.steps"
+        },
+        {
+          "id": "b9d84760-181f-5828-a642-156dbbced9ce",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "currentVersion.steps"
+        },
+        {
+          "id": "7098cfa8-455b-5e84-93a6-9420428a2e8d",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "7fa7fa3c-2efd-4689-9048-559222d3b80d",
     "pageLayoutId": null,
@@ -656,7 +1638,22 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "everyDefined(selectedRecords, \"currentVersion\") and noneDefined(selectedRecords, \"deletedAt\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "2905b18b-d907-5fda-8e44-ba0d36079115",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "currentVersion"
+        },
+        {
+          "id": "0623abc1-89fe-5fa3-8154-7c34cf989fbc",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "7fa7fa3c-2efd-4689-9048-559222d3b80d",
     "pageLayoutId": null,
@@ -678,7 +1675,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": null,
+    "conditionalAvailability": null,
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "dccf06e5-31d9-43fc-9612-30517caadf5f",
     "pageLayoutId": null,
@@ -700,7 +1697,52 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "isSelectAll or someEquals(selectedRecords, \"status\", \"NOT_STARTED\") or someEquals(selectedRecords, \"status\", \"ENQUEUED\") or someEquals(selectedRecords, \"status\", \"RUNNING\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "0e697990-55eb-53aa-9265-52b769871078",
+          "contextKey": "isSelectAll",
+          "operand": "IS",
+          "value": "true",
+          "recordFilterGroupId": "21ab452e-c475-59e4-ac2d-0bf38ac3b0f2",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "67f8a70d-3b35-55b5-b3c9-7918af43bec5",
+          "contextKey": "selectedRecords",
+          "operand": "IS",
+          "subFieldName": "status",
+          "value": "\"NOT_STARTED\"",
+          "recordFilterGroupId": "21ab452e-c475-59e4-ac2d-0bf38ac3b0f2",
+          "positionInRecordFilterGroup": 1
+        },
+        {
+          "id": "77a7c3a8-ae07-5275-9cf2-e76752ce7e00",
+          "contextKey": "selectedRecords",
+          "operand": "IS",
+          "subFieldName": "status",
+          "value": "\"ENQUEUED\"",
+          "recordFilterGroupId": "21ab452e-c475-59e4-ac2d-0bf38ac3b0f2",
+          "positionInRecordFilterGroup": 2
+        },
+        {
+          "id": "c0447d6b-d7de-5871-a3ba-963ac8c78b29",
+          "contextKey": "selectedRecords",
+          "operand": "IS",
+          "subFieldName": "status",
+          "value": "\"RUNNING\"",
+          "recordFilterGroupId": "21ab452e-c475-59e4-ac2d-0bf38ac3b0f2",
+          "positionInRecordFilterGroup": 3
+        }
+      ],
+      "recordFilterGroups": [
+        {
+          "id": "21ab452e-c475-59e4-ac2d-0bf38ac3b0f2",
+          "logicalOperator": "OR"
+        }
+      ],
+      "quantifier": "SOME"
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "dccf06e5-31d9-43fc-9612-30517caadf5f",
     "pageLayoutId": null,
@@ -722,7 +1764,18 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "someEquals(selectedRecords, \"status\", \"FAILED\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "d343ba01-6b08-5226-a49e-61037dfc990d",
+          "contextKey": "selectedRecords",
+          "operand": "IS",
+          "subFieldName": "status",
+          "value": "\"FAILED\""
+        }
+      ],
+      "quantifier": "SOME"
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "dccf06e5-31d9-43fc-9612-30517caadf5f",
     "pageLayoutId": null,
@@ -744,7 +1797,16 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "everyDefined(selectedRecords, \"workflow\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "a20750ba-20b5-554b-ac64-ead1a7832009",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "workflow"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "055e168c-bc15-4ef0-8928-7743f6b36a3f",
     "pageLayoutId": null,
@@ -766,7 +1828,16 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "everyDefined(selectedRecords, \"workflow.id\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "045b84e1-d67e-5ba8-a9d1-1fd3633afe01",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "workflow.id"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "055e168c-bc15-4ef0-8928-7743f6b36a3f",
     "pageLayoutId": null,
@@ -788,7 +1859,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "noneEquals(selectedRecords, \"status\", \"DRAFT\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "7bf58db2-b61d-5a32-bede-c2e272e38840",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT",
+          "subFieldName": "status",
+          "value": "\"DRAFT\""
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "055e168c-bc15-4ef0-8928-7743f6b36a3f",
     "pageLayoutId": null,
@@ -810,7 +1891,16 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "everyDefined(selectedRecords, \"workflow\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "a20750ba-20b5-554b-ac64-ead1a7832009",
+          "contextKey": "selectedRecords",
+          "operand": "IS_NOT_EMPTY",
+          "subFieldName": "workflow"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "055e168c-bc15-4ef0-8928-7743f6b36a3f",
     "pageLayoutId": null,
@@ -834,7 +1924,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "hotKeys": [
       "/"
     ],
-    "conditionalAvailabilityExpression": null,
+    "conditionalAvailability": null,
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -858,7 +1948,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "hotKeys": [
       "/"
     ],
-    "conditionalAvailabilityExpression": null,
+    "conditionalAvailability": null,
     "availabilityType": "FALLBACK",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -882,7 +1972,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "hotKeys": [
       "@"
     ],
-    "conditionalAvailabilityExpression": "permissionFlags.AI",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "afc05440-4386-5b1b-84ad-c381d7b587c0",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "AI",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -904,7 +2004,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.AI",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "afc05440-4386-5b1b-84ad-c381d7b587c0",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "AI",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -926,7 +2036,16 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "numberOfSelectedRecords == 1",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "7cfa5a0c-74b8-5a51-86c7-30569681ac76",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "IS",
+          "value": "1"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "272fafcc-c7e5-4a58-a175-67105b43b89a",
     "pageLayoutId": null,
@@ -948,7 +2067,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.SEND_EMAIL_TOOL",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "f70ffa4a-c8e1-5c1e-97b8-d13848cc9be4",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "SEND_EMAIL_TOOL",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -976,7 +2105,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "G",
       "S"
     ],
-    "conditionalAvailabilityExpression": null,
+    "conditionalAvailability": null,
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1001,7 +2130,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/experience"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": null,
+    "conditionalAvailability": null,
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1026,7 +2155,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/accounts"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.CONNECTED_ACCOUNTS",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "90b8a995-600a-5ef5-b7ec-c6608be8b792",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "CONNECTED_ACCOUNTS",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1051,7 +2190,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/accounts/emails"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.CONNECTED_ACCOUNTS",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "90b8a995-600a-5ef5-b7ec-c6608be8b792",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "CONNECTED_ACCOUNTS",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1076,7 +2225,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/accounts/calendars"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.CONNECTED_ACCOUNTS",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "90b8a995-600a-5ef5-b7ec-c6608be8b792",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "CONNECTED_ACCOUNTS",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1101,7 +2260,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/general"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.WORKSPACE",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "4d702d95-51fe-52e2-9f09-cd515d314f15",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "WORKSPACE",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1126,7 +2295,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/objects"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.DATA_MODEL",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "d598aef4-3086-58ff-a69a-7330e5489f95",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "DATA_MODEL",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1151,7 +2330,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/members"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.WORKSPACE_MEMBERS",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "c8766b81-74eb-5453-8ff8-8700ec50fba5",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "WORKSPACE_MEMBERS",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1176,7 +2365,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/members#roles"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.WORKSPACE_MEMBERS",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "c8766b81-74eb-5453-8ff8-8700ec50fba5",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "WORKSPACE_MEMBERS",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1201,7 +2400,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/domains"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.WORKSPACE",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "4d702d95-51fe-52e2-9f09-cd515d314f15",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "WORKSPACE",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1226,7 +2435,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/billing"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.WORKSPACE",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "4d702d95-51fe-52e2-9f09-cd515d314f15",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "WORKSPACE",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1251,7 +2470,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/api-webhooks"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.API_KEYS_AND_WEBHOOKS",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "38f3959c-0e1c-5e32-83b9-38569107506a",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "API_KEYS_AND_WEBHOOKS",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1276,7 +2505,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/applications"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.APPLICATIONS",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "cbc7f5a3-3dd7-558b-a526-21f8af5c1417",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "APPLICATIONS",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1301,7 +2540,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/ai"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.WORKSPACE",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "4d702d95-51fe-52e2-9f09-cd515d314f15",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "WORKSPACE",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1326,7 +2575,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/security"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "permissionFlags.SECURITY",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "ab2a5cc1-0c77-532b-bf4b-f5c71b37fe20",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "SECURITY",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1351,7 +2610,32 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/admin-panel"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "canImpersonate or canAccessFullAdminPanel",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "63576a44-9e7b-5692-af6a-cf150de0cc7b",
+          "contextKey": "canImpersonate",
+          "operand": "IS",
+          "value": "true",
+          "recordFilterGroupId": "a924bc67-6040-5706-8b18-db403f8244a3",
+          "positionInRecordFilterGroup": 0
+        },
+        {
+          "id": "ce980b89-0eed-5df8-8c51-78f477f9e11c",
+          "contextKey": "canAccessFullAdminPanel",
+          "operand": "IS",
+          "value": "true",
+          "recordFilterGroupId": "a924bc67-6040-5706-8b18-db403f8244a3",
+          "positionInRecordFilterGroup": 1
+        }
+      ],
+      "recordFilterGroups": [
+        {
+          "id": "a924bc67-6040-5706-8b18-db403f8244a3",
+          "logicalOperator": "OR"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1376,7 +2660,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "path": "/settings/community"
     },
     "hotKeys": null,
-    "conditionalAvailabilityExpression": null,
+    "conditionalAvailability": null,
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1398,7 +2682,23 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "numberOfSelectedRecords >= 1 and permissionFlags.SEND_EMAIL_TOOL",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "e3ea29ce-14f5-535d-a8bb-f85b402a71a6",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "GREATER_THAN_OR_EQUAL",
+          "value": "1"
+        },
+        {
+          "id": "a5cf9cc4-6593-50df-83bb-99eea4d6c1a2",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "SEND_EMAIL_TOOL",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "d3f10fb7-eb59-4d61-b551-37a1d9724abf",
     "pageLayoutId": null,
@@ -1420,7 +2720,23 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "numberOfSelectedRecords == 1 and permissionFlags.SEND_EMAIL_TOOL",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "c1118103-8053-5718-9aba-15b206f1717d",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "IS",
+          "value": "1"
+        },
+        {
+          "id": "e88ccd1a-7795-569f-abbb-9baf1e013b87",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "SEND_EMAIL_TOOL",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "ba21c3f3-7f9c-4cde-8666-378f279b2622",
     "pageLayoutId": null,
@@ -1442,7 +2758,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "featureFlags.IS_MESSAGE_CAMPAIGN_ENABLED",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "b701694e-ba2b-5185-a126-9a1e0194dc62",
+          "contextKey": "featureFlags",
+          "operand": "IS",
+          "subFieldName": "IS_MESSAGE_CAMPAIGN_ENABLED",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1464,7 +2790,23 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "numberOfSelectedRecords == 1 and permissionFlags.SEND_EMAIL_TOOL",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "c1118103-8053-5718-9aba-15b206f1717d",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "IS",
+          "value": "1"
+        },
+        {
+          "id": "e88ccd1a-7795-569f-abbb-9baf1e013b87",
+          "contextKey": "permissionFlags",
+          "operand": "IS",
+          "subFieldName": "SEND_EMAIL_TOOL",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "ed6f004f-b5bf-4071-8370-ee7aa91ae2f3",
     "pageLayoutId": null,
@@ -1486,7 +2828,23 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"INDEX_PAGE\" and featureFlags.IS_MESSAGE_CAMPAIGN_ENABLED",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "831e405d-adf6-55f5-a1a7-ffc744aad4ec",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"INDEX_PAGE\""
+        },
+        {
+          "id": "dd79a6ef-18f8-5558-a70e-b668158f6c2f",
+          "contextKey": "featureFlags",
+          "operand": "IS",
+          "subFieldName": "IS_MESSAGE_CAMPAIGN_ENABLED",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL_OBJECT_CONTEXT",
     "availabilityObjectMetadataId": "1c5db583-0b37-4eed-a568-208372ecb0f0",
     "pageLayoutId": null,
@@ -1508,7 +2866,29 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "numberOfSelectedRecords >= 1 and everyEquals(selectedRecords, \"status\", \"DRAFT\") and noneDefined(selectedRecords, \"deletedAt\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "ddf14345-727a-5659-926d-894e0ad58695",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "GREATER_THAN_OR_EQUAL",
+          "value": "1"
+        },
+        {
+          "id": "d9414f56-f36b-53f1-b81e-b64b3c87a885",
+          "contextKey": "selectedRecords",
+          "operand": "IS",
+          "subFieldName": "status",
+          "value": "\"DRAFT\""
+        },
+        {
+          "id": "add9ddf6-8d86-5524-a7d1-3224edc02f0c",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "1c5db583-0b37-4eed-a568-208372ecb0f0",
     "pageLayoutId": null,
@@ -1530,7 +2910,29 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "numberOfSelectedRecords >= 1 and everyEquals(selectedRecords, \"status\", \"DRAFT\") and noneDefined(selectedRecords, \"deletedAt\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "ddf14345-727a-5659-926d-894e0ad58695",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "GREATER_THAN_OR_EQUAL",
+          "value": "1"
+        },
+        {
+          "id": "d9414f56-f36b-53f1-b81e-b64b3c87a885",
+          "contextKey": "selectedRecords",
+          "operand": "IS",
+          "subFieldName": "status",
+          "value": "\"DRAFT\""
+        },
+        {
+          "id": "add9ddf6-8d86-5524-a7d1-3224edc02f0c",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "1c5db583-0b37-4eed-a568-208372ecb0f0",
     "pageLayoutId": null,
@@ -1552,7 +2954,35 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "pageType == \"RECORD_PAGE\" and numberOfSelectedRecords == 1 and everyEquals(selectedRecords, \"status\", \"DRAFT\") and noneDefined(selectedRecords, \"deletedAt\")",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "89cf8b80-4186-549d-a89f-94871f172f76",
+          "contextKey": "pageType",
+          "operand": "IS",
+          "value": "\"RECORD_PAGE\""
+        },
+        {
+          "id": "3582f223-88c5-5711-9ca3-f74540eb30d1",
+          "contextKey": "numberOfSelectedRecords",
+          "operand": "IS",
+          "value": "1"
+        },
+        {
+          "id": "a14fc14d-3c96-5ca7-8ec8-7483fc4015e7",
+          "contextKey": "selectedRecords",
+          "operand": "IS",
+          "subFieldName": "status",
+          "value": "\"DRAFT\""
+        },
+        {
+          "id": "061cc873-5732-57d0-9226-fd6bb0754180",
+          "contextKey": "selectedRecords",
+          "operand": "IS_EMPTY",
+          "subFieldName": "deletedAt"
+        }
+      ]
+    },
     "availabilityType": "RECORD_SELECTION",
     "availabilityObjectMetadataId": "1c5db583-0b37-4eed-a568-208372ecb0f0",
     "pageLayoutId": null,
@@ -1577,7 +3007,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "G",
       "C"
     ],
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.company",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "4a77411e-5aec-507b-8243-ca5c1da9d1bc",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "company",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1602,7 +3042,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "G",
       "D"
     ],
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.dashboard",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "5cd17348-ee9f-53ea-b346-a12d94da25ae",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "dashboard",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1627,7 +3077,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "G",
       "N"
     ],
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.note",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "be9268d7-0193-58ad-b6ee-69c636290192",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "note",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1652,7 +3112,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "G",
       "O"
     ],
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.opportunity",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "ec39dbcd-94b5-5baa-8047-c2a22d826787",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "opportunity",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1677,7 +3147,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "G",
       "P"
     ],
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.person",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "2bfd8eb5-da6b-526b-870d-fd41cee25d85",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "person",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1702,7 +3182,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "G",
       "T"
     ],
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.task",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "8041b350-3d9f-578b-bcbc-94184d95fce0",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "task",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1727,7 +3217,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "G",
       "W"
     ],
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.workflow",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "55889e11-f025-58e1-b81d-aae2c2ca9d25",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "workflow",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1749,7 +3249,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.attachment",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "cadcbe77-1057-503f-9aff-39d39bd624a7",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "attachment",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1771,7 +3281,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.blocklist",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "e8666adb-b46a-5f51-8d6f-80008cde1f94",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "blocklist",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1793,7 +3313,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.calendarChannelEventAssociation",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "14b3544b-9b4e-546b-b287-4d30ce9ed050",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "calendarChannelEventAssociation",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1815,7 +3345,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.calendarEventParticipant",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "b761b556-f45c-5b34-b283-bbb351fa4a69",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "calendarEventParticipant",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1837,7 +3377,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.calendarEvent",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "3e37fee4-95fd-5350-99a0-428a640f0f76",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "calendarEvent",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1859,7 +3409,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.callRecording",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "a1075c97-1b68-5fb4-8d11-d19880e08c83",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "callRecording",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1881,7 +3441,24 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "featureFlags.IS_MESSAGE_CAMPAIGN_ENABLED and targetObjectReadPermissions.messageCampaign",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "7d0dcaaa-d7cd-5218-b86b-83857127d259",
+          "contextKey": "featureFlags",
+          "operand": "IS",
+          "subFieldName": "IS_MESSAGE_CAMPAIGN_ENABLED",
+          "value": "true"
+        },
+        {
+          "id": "c540186c-8bce-563a-89aa-ab23d306683e",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "messageCampaign",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1903,7 +3480,24 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "featureFlags.IS_MESSAGE_CAMPAIGN_ENABLED and targetObjectReadPermissions.messageList",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "c80cbbf1-3062-52bd-9b84-d06bf0d3e87f",
+          "contextKey": "featureFlags",
+          "operand": "IS",
+          "subFieldName": "IS_MESSAGE_CAMPAIGN_ENABLED",
+          "value": "true"
+        },
+        {
+          "id": "ca3dba9d-a76c-5a57-91bf-e682fa095d8d",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "messageList",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1925,7 +3519,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.messageListMember",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "a015120b-7b48-5c41-8a67-9b17ee929b0c",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "messageListMember",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1947,7 +3551,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.messageChannelMessageAssociation",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "6e53bcbd-4a0b-5d59-a8ce-8540042a2eff",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "messageChannelMessageAssociation",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1969,7 +3583,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.messageChannelMessageAssociationMessageFolder",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "c380e7bb-ae2b-5667-b788-e9d63df1edcc",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "messageChannelMessageAssociationMessageFolder",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -1991,7 +3615,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.messageParticipant",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "2871b874-ffdd-5f5e-9a61-57baeb28431e",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "messageParticipant",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2013,7 +3647,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.messageThread",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "37cbf050-4808-59ac-bf22-85e2273b7737",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "messageThread",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2035,7 +3679,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.message",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "bd0d1ff9-0cce-5143-a0f5-bae26fe534f6",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "message",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2057,7 +3711,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.noteTarget",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "8c20a6cf-6d54-5de8-b959-0d4ecad3f177",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "noteTarget",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2079,7 +3743,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.taskTarget",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "60d8e8c9-fb7e-53e8-bf3d-e4cc5e93391e",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "taskTarget",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2101,7 +3775,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.timelineActivity",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "13ceaa93-37bf-5cc0-bec2-f1a415292f08",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "timelineActivity",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2123,7 +3807,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.workflowAutomatedTrigger",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "06fc5dce-8743-53ab-9c50-c6541b569959",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "workflowAutomatedTrigger",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2145,7 +3839,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.workflowRun",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "20f9b029-5c4a-5df3-91de-1be7d8c2c0d4",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "workflowRun",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2167,7 +3871,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.workflowVersion",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "361eb986-92c7-5855-9ff7-9701391f31ad",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "workflowVersion",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2189,7 +3903,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.workspaceMember",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "11ec9307-8498-571c-b563-7e2b1f847e9c",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "workspaceMember",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2211,7 +3935,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.rocket",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "5664090b-8695-5e5b-bfad-56228879ffaa",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "rocket",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2233,7 +3967,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": null,
+    "conditionalAvailability": null,
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2255,7 +3989,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.pet",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "45549924-9e56-5270-831a-233b096a127e",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "pet",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2277,7 +4021,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.surveyResult",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "529b0a93-028a-5ca3-8b25-b294afbd0057",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "surveyResult",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2299,7 +4053,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.employmentHistory",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "20cb72f5-b136-5082-b0d4-3f620681ffaf",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "employmentHistory",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2321,7 +4085,17 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": "targetObjectReadPermissions.petCareAgreement",
+    "conditionalAvailability": {
+      "recordFilters": [
+        {
+          "id": "ac5780aa-9e3d-52ac-a16b-472d4076e95e",
+          "contextKey": "targetObjectReadPermissions",
+          "operand": "IS",
+          "subFieldName": "petCareAgreement",
+          "value": "true"
+        }
+      ]
+    },
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2343,7 +4117,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": null,
+    "conditionalAvailability": null,
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2369,7 +4143,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": null,
+    "conditionalAvailability": null,
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,
@@ -2395,7 +4169,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": null,
+    "conditionalAvailability": null,
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": "79c58df5-acf4-45d2-b36a-d7ad03c0a88d",
@@ -2421,7 +4195,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailabilityExpression": null,
+    "conditionalAvailability": null,
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "pageLayoutId": null,

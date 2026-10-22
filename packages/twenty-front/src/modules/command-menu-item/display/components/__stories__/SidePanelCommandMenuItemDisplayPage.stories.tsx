@@ -69,7 +69,7 @@ const createCommandMenuItem = (
   position: 1,
   isPinned: false,
   hotKeys: null,
-  conditionalAvailabilityExpression: null,
+  conditionalAvailability: null,
   availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
   availabilityObjectMetadataId: null,
   payload: null,

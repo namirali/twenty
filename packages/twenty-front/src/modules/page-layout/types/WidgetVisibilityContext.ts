@@ -1,9 +1,12 @@
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
-import { type ConditionalDisplayDevice } from 'twenty-shared/types';
+import {
+  type ConditionalDisplayDevice,
+  type ObjectRecord,
+} from 'twenty-shared/types';
 
 export type WidgetVisibilityContext = {
   device: ConditionalDisplayDevice;
-  selectedRecords: Record<string, unknown>[];
+  selectedRecords: ObjectRecord[];
   featureFlags: Record<string, boolean>;
   currentRoleId: string | null;
   currentWorkspaceMemberId: string | null;

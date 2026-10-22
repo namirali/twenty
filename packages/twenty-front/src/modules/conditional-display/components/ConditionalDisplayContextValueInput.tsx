@@ -1,3 +1,4 @@
+import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { getConditionalDisplayDeviceLabel } from '@/conditional-display/utils/getConditionalDisplayDeviceLabel';
 import { rolesSelector } from '@/metadata-store/states/rolesSelector';
 import { FormMultiSelectFieldInput } from '@/object-record/record-field/ui/form-types/components/FormMultiSelectFieldInput';
@@ -7,14 +8,13 @@ import { type RecordFilter } from '@/object-record/record-filter/types/RecordFil
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { useLingui } from '@lingui/react/macro';
 import { CONDITIONAL_DISPLAY_DEVICES } from 'twenty-shared/constants';
-import { type ConditionalDisplayContextKey } from 'twenty-shared/types';
 import { assertUnreachable, isDefined, parseJson } from 'twenty-shared/utils';
 import { useIcons } from 'twenty-ui/icon';
 import { type JsonValue } from 'type-fest';
 
 type ConditionalDisplayContextValueInputProps = {
   recordFilter: RecordFilter;
-  contextKey: ConditionalDisplayContextKey;
+  contextKey: ConditionalDisplayAdminContextKey;
   onChange: (value: JsonValue) => void;
   readonly?: boolean;
 };

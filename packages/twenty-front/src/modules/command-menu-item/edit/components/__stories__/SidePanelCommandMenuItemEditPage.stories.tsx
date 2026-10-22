@@ -39,7 +39,7 @@ const PINNED_COMMAND_MENU_ITEM: CommandMenuItemFieldsFragment = {
   position: 0,
   isPinned: true,
   hotKeys: null,
-  conditionalAvailabilityExpression: null,
+  conditionalAvailability: null,
   availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
   availabilityObjectMetadataId: null,
   payload: null,

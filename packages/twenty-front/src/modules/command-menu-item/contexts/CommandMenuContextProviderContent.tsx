@@ -1,4 +1,4 @@
-import { useDoesCommandMenuItemMatchConditionalDisplay } from '@/command-menu-item/hooks/useDoesCommandMenuItemMatchConditionalDisplay';
+import { useCommandMenuItemConditionalDisplay } from '@/command-menu-item/hooks/useCommandMenuItemConditionalDisplay';
 import { useGlobalRecordCreationCommandMenuItems } from '@/command-menu-item/hooks/useGlobalRecordCreationCommandMenuItems';
 import { CommandMenuItemContainerType } from '@/command-menu-item/types/CommandMenuItemContainerType';
 import {
@@ -27,7 +27,6 @@ import {
   CoreObjectNameSingular,
   type CommandMenuContextApi,
 } from 'twenty-shared/types';
-import { evaluateConditionalAvailabilityExpression } from 'twenty-shared/utils';
 import { EngineComponentKey } from '~/generated-metadata/graphql';
 
 const WORKSPACE_DEFINITION_COMMANDS = new Set<EngineComponentKey>([
@@ -86,11 +85,6 @@ export const CommandMenuContextProviderContent = ({
     pageLayoutIdFromContext === undefined
       ? currentPageLayoutId
       : pageLayoutIdFromContext;
-  const { doesCommandMenuItemMatchConditionalDisplay } =
-    useDoesCommandMenuItemMatchConditionalDisplay(
-      commandMenuContextApi.selectedRecords,
-    );
-
   const commandMenuContextApiForAvailability = useMemo(
     () =>
       getCommandMenuContextApiForContainerType({
@@ -99,6 +93,9 @@ export const CommandMenuContextProviderContent = ({
       }),
     [commandMenuContextApi, containerType],
   );
+
+  const { conditionalDisplayContext, isCommandMenuItemShown } =
+    useCommandMenuItemConditionalDisplay(commandMenuContextApiForAvailability);
 
   const filteredCommandMenuItems = useMemo(() => {
     const currentObjectMetadataItemId =
@@ -137,18 +134,9 @@ export const CommandMenuContextProviderContent = ({
       .filter(doesCommandMenuItemMatchPageType(commandMenuContextApi.pageType))
       .filter(doesCommandMenuItemMatchSelectionState(hasSelectedRecords))
       .filter(doesCommandMenuItemMatchPageLayoutId(effectivePageLayoutId))
-      .filter((item) =>
-        evaluateConditionalAvailabilityExpression(
-          item.conditionalAvailabilityExpression,
-          commandMenuContextApiForAvailability,
-        ),
-      )
-      .filter(doesCommandMenuItemMatchConditionalDisplay)
+      .filter(isCommandMenuItemShown)
       .map((item) =>
-        resolveCommandMenuItemPinning(
-          item,
-          commandMenuContextApiForAvailability,
-        ),
+        resolveCommandMenuItemPinning(item, conditionalDisplayContext),
       );
 
     return mergeGlobalRecordCreationCommandMenuItems({
@@ -161,7 +149,7 @@ export const CommandMenuContextProviderContent = ({
     });
   }, [
     commandMenuContextApi,
-    commandMenuContextApiForAvailability,
+    conditionalDisplayContext,
     globalRecordCreationCommandMenuItems,
     shouldDisplayGlobalRecordCreationCommands,
     isCoreWorkflow,
@@ -171,7 +159,7 @@ export const CommandMenuContextProviderContent = ({
     isInPreviewMode,
     isLayoutCustomizationAllowedOnCurrentPage,
     isCoreWorkflowIndex,
-    doesCommandMenuItemMatchConditionalDisplay,
+    isCommandMenuItemShown,
   ]);
 
   return (

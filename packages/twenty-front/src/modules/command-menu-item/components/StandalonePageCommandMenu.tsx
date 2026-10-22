@@ -5,7 +5,7 @@ import { CommandMenuContext } from '@/command-menu-item/contexts/CommandMenuCont
 import { PinnedCommandMenuItemButtons } from '@/command-menu-item/display/components/PinnedCommandMenuItemButtons';
 import { CommandMenuItemEditButton } from '@/command-menu-item/edit/components/CommandMenuItemEditButton';
 import { EMPTY_COMMAND_MENU_CONTEXT_API } from '@/command-menu-item/constants/EmptyCommandMenuContextApi';
-import { useDoesCommandMenuItemMatchConditionalDisplay } from '@/command-menu-item/hooks/useDoesCommandMenuItemMatchConditionalDisplay';
+import { useCommandMenuItemConditionalDisplay } from '@/command-menu-item/hooks/useCommandMenuItemConditionalDisplay';
 import { commandMenuItemsSelector } from '@/command-menu-item/states/commandMenuItemsSelector';
 import { commandMenuTargetObjectPermissionsSelector } from '@/command-menu-item/states/commandMenuTargetObjectPermissionsSelector';
 import { doesCommandMenuItemMatchObjectMetadataId } from '@/command-menu-item/utils/doesCommandMenuItemMatchObjectMetadataId';
@@ -22,7 +22,6 @@ import {
   ContextStorePageType,
   type CommandMenuContextApi,
 } from 'twenty-shared/types';
-import { evaluateConditionalAvailabilityExpression } from 'twenty-shared/utils';
 import {
   CommandMenuItemAvailabilityType,
   EngineComponentKey,
@@ -77,10 +76,8 @@ export const StandalonePageCommandMenu = () => {
     targetObjectWritePermissions,
   ]);
 
-  const { doesCommandMenuItemMatchConditionalDisplay } =
-    useDoesCommandMenuItemMatchConditionalDisplay(
-      commandMenuContextApi.selectedRecords,
-    );
+  const { conditionalDisplayContext, isCommandMenuItemShown } =
+    useCommandMenuItemConditionalDisplay(commandMenuContextApi);
 
   const filteredCommandMenuItems = useMemo(() => {
     return commandMenuItems
@@ -99,23 +96,19 @@ export const StandalonePageCommandMenu = () => {
             CommandMenuItemAvailabilityType.GLOBAL_OBJECT_CONTEXT,
       )
       .filter(doesCommandMenuItemMatchPageLayoutId(currentPageLayoutId))
-      .filter((item) =>
-        evaluateConditionalAvailabilityExpression(
-          item.conditionalAvailabilityExpression,
-          commandMenuContextApi,
-        ),
+      .filter(isCommandMenuItemShown)
+      .map((item) =>
+        resolveCommandMenuItemPinning(item, conditionalDisplayContext),
       )
-      .filter(doesCommandMenuItemMatchConditionalDisplay)
-      .map((item) => resolveCommandMenuItemPinning(item, commandMenuContextApi))
       .sort(
         (firstItem, secondItem) => firstItem.position - secondItem.position,
       );
   }, [
     commandMenuItems,
-    commandMenuContextApi,
+    conditionalDisplayContext,
     currentPageLayoutId,
     isLayoutCustomizationAllowedOnCurrentPage,
-    doesCommandMenuItemMatchConditionalDisplay,
+    isCommandMenuItemShown,
   ]);
 
   return (

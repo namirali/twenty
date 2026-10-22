@@ -1,38 +1,32 @@
 import { type ConditionalDisplay } from 'twenty-shared/types';
-import {
-  evaluateConditionalAvailabilityExpression,
-  isDefined,
-} from 'twenty-shared/utils';
 
 import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
 import { type WidgetVisibilityContext } from '@/page-layout/types/WidgetVisibilityContext';
 
 type EvaluateWidgetVisibilityParams = {
-  conditionalAvailabilityExpression: string | null | undefined;
+  conditionalAvailability: ConditionalDisplay | null | undefined;
   conditionalDisplay: ConditionalDisplay | null | undefined;
   context: WidgetVisibilityContext;
 };
 
 export const evaluateWidgetVisibility = ({
-  conditionalAvailabilityExpression,
+  conditionalAvailability,
   conditionalDisplay,
   context,
 }: EvaluateWidgetVisibilityParams): boolean => {
-  const isAvailable =
-    !isDefined(conditionalAvailabilityExpression) ||
-    evaluateConditionalAvailabilityExpression(
-      conditionalAvailabilityExpression,
-      context,
-    );
-
-  return (
-    isAvailable &&
+  const evaluateForWidget = (
+    conditionalDisplayToEvaluate: ConditionalDisplay | null | undefined,
+  ) =>
     evaluateConditionalDisplay({
-      conditionalDisplay,
+      conditionalDisplay: conditionalDisplayToEvaluate,
       context,
       records: context.selectedRecords,
       objectMetadataItem: context.objectMetadataItem,
       objectMetadataItems: context.objectMetadataItems,
-    })
+    });
+
+  return (
+    evaluateForWidget(conditionalAvailability) &&
+    evaluateForWidget(conditionalDisplay)
   );
 };

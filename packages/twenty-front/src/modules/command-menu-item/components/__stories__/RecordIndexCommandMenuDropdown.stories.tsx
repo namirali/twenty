@@ -60,7 +60,7 @@ const THIRD_PARTY_COMMAND_MENU_ITEM: CommandMenuItemFieldsFragment = {
   position: 9,
   isPinned: false,
   hotKeys: null,
-  conditionalAvailabilityExpression: null,
+  conditionalAvailability: null,
   availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
   availabilityObjectMetadataId: null,
   payload: null,

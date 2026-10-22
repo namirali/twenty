@@ -1,9 +1,9 @@
+import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { t } from '@lingui/core/macro';
-import { type ConditionalDisplayContextKey } from 'twenty-shared/types';
 import { assertUnreachable } from 'twenty-shared/utils';
 
 export const getConditionalDisplayContextKeyOperandLabel = (
-  contextKey: ConditionalDisplayContextKey,
+  contextKey: ConditionalDisplayAdminContextKey,
 ): string => {
   switch (contextKey) {
     case 'currentRoleId':

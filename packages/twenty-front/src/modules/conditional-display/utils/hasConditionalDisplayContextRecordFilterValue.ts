@@ -1,5 +1,5 @@
+import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { isNonEmptyString } from '@sniptt/guards';
-import { type ConditionalDisplayContextKey } from 'twenty-shared/types';
 import {
   assertUnreachable,
   isNonEmptyArray,
@@ -10,7 +10,7 @@ export const hasConditionalDisplayContextRecordFilterValue = ({
   contextKey,
   value,
 }: {
-  contextKey: ConditionalDisplayContextKey;
+  contextKey: ConditionalDisplayAdminContextKey;
   value: string | null | undefined;
 }): boolean => {
   switch (contextKey) {

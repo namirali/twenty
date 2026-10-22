@@ -8,10 +8,11 @@ import { evaluateWidgetVisibility } from '@/page-layout/utils/evaluateWidgetVisi
 
 const buildContext = (
   device: WidgetVisibilityContext['device'],
+  featureFlags: WidgetVisibilityContext['featureFlags'] = {},
 ): WidgetVisibilityContext => ({
   device,
   selectedRecords: [],
-  featureFlags: {},
+  featureFlags,
   currentRoleId: null,
   currentWorkspaceMemberId: null,
   objectMetadataItems: [],
@@ -30,10 +31,22 @@ const buildDeviceConditionalDisplay = (
   ],
 });
 
+const FEATURE_ENABLED_AVAILABILITY: ConditionalDisplay = {
+  recordFilters: [
+    {
+      id: 'feature-flag-filter',
+      contextKey: 'featureFlags',
+      subFieldName: 'IS_FEATURE_ENABLED',
+      operand: ViewFilterOperand.IS,
+      value: JSON.stringify(true),
+    },
+  ],
+};
+
 describe('evaluateWidgetVisibility', () => {
   it('should return true (visible) when no conditionalDisplay is provided', () => {
     const result = evaluateWidgetVisibility({
-      conditionalAvailabilityExpression: undefined,
+      conditionalAvailability: undefined,
       conditionalDisplay: undefined,
       context: buildContext('DESKTOP'),
     });
@@ -43,7 +56,7 @@ describe('evaluateWidgetVisibility', () => {
 
   it('should return true (visible) when the device rule matches MOBILE', () => {
     const result = evaluateWidgetVisibility({
-      conditionalAvailabilityExpression: undefined,
+      conditionalAvailability: undefined,
       conditionalDisplay: buildDeviceConditionalDisplay('MOBILE'),
       context: buildContext('MOBILE'),
     });
@@ -53,7 +66,7 @@ describe('evaluateWidgetVisibility', () => {
 
   it('should return false (hidden) when the device rule does not match DESKTOP', () => {
     const result = evaluateWidgetVisibility({
-      conditionalAvailabilityExpression: undefined,
+      conditionalAvailability: undefined,
       conditionalDisplay: buildDeviceConditionalDisplay('MOBILE'),
       context: buildContext('DESKTOP'),
     });
@@ -74,13 +87,13 @@ describe('evaluateWidgetVisibility', () => {
     };
 
     const resultMobile = evaluateWidgetVisibility({
-      conditionalAvailabilityExpression: undefined,
+      conditionalAvailability: undefined,
       conditionalDisplay,
       context: buildContext('MOBILE'),
     });
 
     const resultDesktop = evaluateWidgetVisibility({
-      conditionalAvailabilityExpression: undefined,
+      conditionalAvailability: undefined,
       conditionalDisplay,
       context: buildContext('DESKTOP'),
     });
@@ -89,30 +102,30 @@ describe('evaluateWidgetVisibility', () => {
     expect(resultDesktop).toBe(true);
   });
 
-  describe('conditionalAvailabilityExpression', () => {
-    it('should return true when expression matches MOBILE device', () => {
+  describe('conditionalAvailability', () => {
+    it('should return true when the feature flag of the availability is on', () => {
       const result = evaluateWidgetVisibility({
-        conditionalAvailabilityExpression: 'device == "MOBILE"',
+        conditionalAvailability: FEATURE_ENABLED_AVAILABILITY,
         conditionalDisplay: undefined,
-        context: buildContext('MOBILE'),
+        context: buildContext('DESKTOP', { IS_FEATURE_ENABLED: true }),
       });
 
       expect(result).toBe(true);
     });
 
-    it('should return false when expression does not match MOBILE device', () => {
+    it('should return false when the feature flag of the availability is off', () => {
       const result = evaluateWidgetVisibility({
-        conditionalAvailabilityExpression: 'device == "MOBILE"',
+        conditionalAvailability: FEATURE_ENABLED_AVAILABILITY,
         conditionalDisplay: undefined,
-        context: buildContext('DESKTOP'),
+        context: buildContext('DESKTOP', { IS_FEATURE_ENABLED: false }),
       });
 
       expect(result).toBe(false);
     });
 
-    it('should hide the widget when the expression fails even if conditionalDisplay matches', () => {
+    it('should hide the widget when the availability fails even if conditionalDisplay matches', () => {
       const result = evaluateWidgetVisibility({
-        conditionalAvailabilityExpression: 'device == "MOBILE"',
+        conditionalAvailability: FEATURE_ENABLED_AVAILABILITY,
         conditionalDisplay: buildDeviceConditionalDisplay('DESKTOP'),
         context: buildContext('DESKTOP'),
       });
@@ -120,9 +133,9 @@ describe('evaluateWidgetVisibility', () => {
       expect(result).toBe(false);
     });
 
-    it('should fall through to conditionalDisplay when expression is null', () => {
+    it('should fall through to conditionalDisplay when the availability is null', () => {
       const result = evaluateWidgetVisibility({
-        conditionalAvailabilityExpression: null,
+        conditionalAvailability: null,
         conditionalDisplay: buildDeviceConditionalDisplay('MOBILE'),
         context: buildContext('DESKTOP'),
       });

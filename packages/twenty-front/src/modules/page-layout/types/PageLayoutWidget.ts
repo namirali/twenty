@@ -8,10 +8,13 @@ import {
 
 export type PageLayoutWidget = Omit<
   PageLayoutWidgetGenerated,
-  'objectMetadataId' | 'configuration' | 'conditionalDisplay'
+  | 'objectMetadataId'
+  | 'configuration'
+  | 'conditionalAvailability'
+  | 'conditionalDisplay'
 > & {
   objectMetadataId?: Nullable<string>;
   configuration: WidgetConfiguration | FieldsConfiguration | FieldConfiguration;
-  conditionalAvailabilityExpression?: Nullable<string>;
+  conditionalAvailability?: Nullable<ConditionalDisplay>;
   conditionalDisplay?: Nullable<ConditionalDisplay>;
 };

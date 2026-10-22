@@ -1,12 +1,12 @@
+import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { sanitizeConditionalDisplay } from '@/conditional-display/utils/sanitizeConditionalDisplay';
 import { type PersistedRecordFilter } from '@/object-record/record-filter/types/PersistedRecordFilter';
 import {
-  type ConditionalDisplayContextKey,
   RecordFilterGroupLogicalOperator,
   ViewFilterOperand,
 } from 'twenty-shared/types';
 
-const AVAILABLE_CONTEXT_KEYS: ConditionalDisplayContextKey[] = [
+const AVAILABLE_CONTEXT_KEYS: ConditionalDisplayAdminContextKey[] = [
   'currentRoleId',
   'currentWorkspaceMemberId',
 ];

@@ -1,3 +1,4 @@
+import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { buildConditionalDisplayContextRecordFilter } from '@/conditional-display/utils/buildConditionalDisplayContextRecordFilter';
 import { useChildRecordFiltersAndRecordFilterGroups } from '@/object-record/advanced-filter/hooks/useChildRecordFiltersAndRecordFilterGroups';
 import { useSetRecordFilterUsedInAdvancedFilterDropdownRow } from '@/object-record/advanced-filter/hooks/useSetRecordFilterUsedInAdvancedFilterDropdownRow';
@@ -6,10 +7,7 @@ import { useUpsertRecordFilterGroup } from '@/object-record/record-filter-group/
 import { type RecordFilterGroup } from '@/object-record/record-filter-group/types/RecordFilterGroup';
 import { useUpsertRecordFilter } from '@/object-record/record-filter/hooks/useUpsertRecordFilter';
 import { useAtomComponentSelectorValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentSelectorValue';
-import {
-  type ConditionalDisplayContextKey,
-  RecordFilterGroupLogicalOperator,
-} from 'twenty-shared/types';
+import { RecordFilterGroupLogicalOperator } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import { v4 } from 'uuid';
 
@@ -29,7 +27,7 @@ export const useAddConditionalDisplayRecordFilter = () => {
     useSetRecordFilterUsedInAdvancedFilterDropdownRow();
 
   const addConditionalDisplayRecordFilter = (
-    contextKey: ConditionalDisplayContextKey,
+    contextKey: ConditionalDisplayAdminContextKey,
   ) => {
     if (isDefined(rootRecordFilterGroup)) {
       const newRecordFilter = buildConditionalDisplayContextRecordFilter({

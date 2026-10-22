@@ -30,7 +30,7 @@ const buildMockItem = (
   position: 0,
   isPinned: false,
   hotKeys: null,
-  conditionalAvailabilityExpression: null,
+  conditionalAvailability: null,
   availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
   availabilityObjectMetadataId: null,
   payload: null,

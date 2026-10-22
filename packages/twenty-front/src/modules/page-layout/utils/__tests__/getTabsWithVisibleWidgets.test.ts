@@ -392,19 +392,25 @@ describe('getTabsWithVisibleWidgets', () => {
   describe('with record-gated widgets', () => {
     const createRecordGatedWidget = (
       id: string,
-      conditionalAvailabilityExpression: string,
+      operand: ViewFilterOperand,
     ): PageLayoutTab['widgets'][0] => ({
       ...createMockWidget(id),
-      conditionalAvailabilityExpression,
+      conditionalAvailability: {
+        recordFilters: [
+          {
+            id: 'status-filter',
+            contextKey: 'selectedRecords',
+            subFieldName: 'status',
+            operand,
+            value: JSON.stringify('DRAFT'),
+          },
+        ],
+      },
     });
 
-    // `noneEquals`, not `not everyEquals`: they differ on the empty selection held until the record loads.
     const sentOnlyTab = () =>
       createMockTab('sent-only', [
-        createRecordGatedWidget(
-          'widget-1',
-          'noneEquals(selectedRecords, "status", "DRAFT")',
-        ),
+        createRecordGatedWidget('widget-1', ViewFilterOperand.IS_NOT),
       ]);
 
     it('should drop a tab whose widgets are all gated out by the selected record', () => {
@@ -456,10 +462,7 @@ describe('getTabsWithVisibleWidgets', () => {
       const result = getTabsWithVisibleWidgets({
         tabs: [
           createMockTab('draft-only', [
-            createRecordGatedWidget(
-              'widget-1',
-              'everyEquals(selectedRecords, "status", "DRAFT")',
-            ),
+            createRecordGatedWidget('widget-1', ViewFilterOperand.IS),
           ]),
           createMockTab('always', [createMockWidget('w')]),
         ],

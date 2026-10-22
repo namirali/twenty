@@ -1,4 +1,5 @@
 import { ConditionalDisplaySettings } from '@/conditional-display/components/ConditionalDisplaySettings';
+import { getConditionalDisplaySummaryLabel } from '@/conditional-display/utils/getConditionalDisplaySummaryLabel';
 import { Table } from '@/ui/layout/table/components/Table';
 import { TableCell } from '@/ui/layout/table/components/TableCell';
 import { TableHeader } from '@/ui/layout/table/components/TableHeader';
@@ -18,7 +19,7 @@ type SettingsApplicationCommandMenuItemSettingsTabProps = {
   icon?: string | null;
   isPinned: boolean;
   availabilityType: string;
-  conditionalAvailabilityExpression?: string | null;
+  conditionalAvailability?: ConditionalDisplay | null;
   conditionalDisplay?: ConditionalDisplay | null;
   availabilityObjectMetadataId?: string | null;
   frontComponentName?: string | null;
@@ -53,7 +54,7 @@ export const SettingsApplicationCommandMenuItemSettingsTab = ({
   icon,
   isPinned,
   availabilityType,
-  conditionalAvailabilityExpression,
+  conditionalAvailability,
   conditionalDisplay,
   availabilityObjectMetadataId,
   frontComponentName,
@@ -88,13 +89,9 @@ export const SettingsApplicationCommandMenuItemSettingsTab = ({
       value: <StyledMonoText>{availabilityType}</StyledMonoText>,
     },
     {
-      key: 'conditionalAvailabilityExpression',
+      key: 'conditionalAvailability',
       label: t`Conditional availability`,
-      value: conditionalAvailabilityExpression ? (
-        <StyledMonoText>{conditionalAvailabilityExpression}</StyledMonoText>
-      ) : (
-        t`Not set`
-      ),
+      value: getConditionalDisplaySummaryLabel(conditionalAvailability),
     },
     {
       key: 'conditionalDisplay',

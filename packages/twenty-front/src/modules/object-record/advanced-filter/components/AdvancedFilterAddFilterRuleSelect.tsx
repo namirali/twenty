@@ -1,5 +1,6 @@
 import { NavigationButton } from '@/ui/input/components/NavigationButton';
 import { CommandMenuButton } from '@/command-menu/components/CommandMenuButton';
+import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { buildConditionalDisplayContextRecordFilter } from '@/conditional-display/utils/buildConditionalDisplayContextRecordFilter';
 import { useChildRecordFiltersAndRecordFilterGroups } from '@/object-record/advanced-filter/hooks/useChildRecordFiltersAndRecordFilterGroups';
 import { useGetDefaultFieldMetadataItemForFilter } from '@/object-record/advanced-filter/hooks/useGetDefaultFieldMetadataItemForFilter';
@@ -17,10 +18,7 @@ import { DropdownRoot } from '@/ui/layout/dropdown/components/DropdownRoot';
 import { DropdownContent } from '@/ui/layout/dropdown/components/DropdownContent';
 import { t } from '@lingui/core/macro';
 import { useContext } from 'react';
-import {
-  type ConditionalDisplayContextKey,
-  RecordFilterGroupLogicalOperator,
-} from 'twenty-shared/types';
+import { RecordFilterGroupLogicalOperator } from 'twenty-shared/types';
 import { getFilterTypeFromFieldType, isDefined } from 'twenty-shared/utils';
 import { doNotTranslate } from 'twenty-shared/i18n';
 import { IconLibraryPlus, IconPlus } from 'twenty-ui/icon';
@@ -64,7 +62,7 @@ export const AdvancedFilterAddFilterRuleSelect = ({
     recordFilterGroupId,
     positionInRecordFilterGroup,
   }: {
-    contextKey: ConditionalDisplayContextKey;
+    contextKey: ConditionalDisplayAdminContextKey;
     recordFilterGroupId: string;
     positionInRecordFilterGroup: number;
   }) => {

@@ -1,9 +1,10 @@
-import { type ConditionalDisplayContext } from '@/conditional-display/types/ConditionalDisplayContext';
 import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
 import {
   type ConditionalDisplay,
   type ConditionalDisplayContextKey,
+  type ConditionalDisplayEvaluationContext,
   type ConditionalDisplayRecordFilter,
+  ContextStorePageType,
   RecordFilterGroupLogicalOperator,
   ViewFilterOperand,
 } from 'twenty-shared/types';
@@ -25,8 +26,8 @@ const MEMBER_ROLE_ID = 'member-role-id';
 const CURRENT_WORKSPACE_MEMBER_ID = 'current-workspace-member-id';
 
 const buildContext = (
-  context: ConditionalDisplayContext,
-): ConditionalDisplayContext => ({
+  context: ConditionalDisplayEvaluationContext,
+): ConditionalDisplayEvaluationContext => ({
   currentRoleId: ADMIN_ROLE_ID,
   currentWorkspaceMemberId: CURRENT_WORKSPACE_MEMBER_ID,
   device: 'DESKTOP',
@@ -60,7 +61,7 @@ const evaluateOnCompany = ({
   records = [],
 }: {
   conditionalDisplay: ConditionalDisplay | null;
-  context?: ConditionalDisplayContext;
+  context?: ConditionalDisplayEvaluationContext;
   records?: Record<string, unknown>[];
 }) =>
   evaluateConditionalDisplay({
@@ -327,5 +328,190 @@ describe('evaluateConditionalDisplay', () => {
         records: [{ id: 'company-1', name: 'Airbnb', employees: 10 }],
       }),
     ).toBe(false);
+  });
+
+  describe('engine rows', () => {
+    const atLeastOneSelectedRecordFilter: ConditionalDisplayRecordFilter = {
+      id: 'selection-filter',
+      contextKey: 'numberOfSelectedRecords',
+      operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
+      value: JSON.stringify(1),
+    };
+
+    const featureEnabledRecordFilter: ConditionalDisplayRecordFilter = {
+      id: 'feature-flag-filter',
+      contextKey: 'featureFlags',
+      subFieldName: 'IS_FEATURE_ENABLED',
+      operand: ViewFilterOperand.IS,
+      value: JSON.stringify(true),
+    };
+
+    const statusIsSentRecordFilter: ConditionalDisplayRecordFilter = {
+      id: 'status-filter',
+      contextKey: 'selectedRecords',
+      subFieldName: 'status',
+      operand: ViewFilterOperand.IS,
+      value: JSON.stringify('SENT'),
+    };
+
+    it('evaluates command menu context rows', () => {
+      const conditionalDisplay: ConditionalDisplay = {
+        recordFilters: [
+          atLeastOneSelectedRecordFilter,
+          {
+            id: 'page-type-filter',
+            contextKey: 'pageType',
+            operand: ViewFilterOperand.IS,
+            value: JSON.stringify(ContextStorePageType.Record),
+          },
+          {
+            id: 'permission-filter',
+            contextKey: 'objectPermissions',
+            subFieldName: 'canUpdateObjectRecords',
+            operand: ViewFilterOperand.IS,
+            value: JSON.stringify(true),
+          },
+          {
+            id: 'favorites-filter',
+            contextKey: 'areAllSelectedRecordsFavorites',
+            operand: ViewFilterOperand.IS,
+            value: JSON.stringify(false),
+          },
+        ],
+      };
+
+      const commandMenuContext = buildContext({
+        numberOfSelectedRecords: 1,
+        pageType: ContextStorePageType.Record,
+        objectPermissions: {
+          canReadObjectRecords: true,
+          canUpdateObjectRecords: true,
+          canSoftDeleteObjectRecords: true,
+          canDestroyObjectRecords: true,
+          restrictedFields: {},
+          objectMetadataId: companyObjectMetadataItem.id,
+          rowLevelPermissionPredicates: [],
+          rowLevelPermissionPredicateGroups: [],
+        },
+        areAllSelectedRecordsFavorites: false,
+      });
+
+      expect(
+        evaluateOnCompany({ conditionalDisplay, context: commandMenuContext }),
+      ).toBe(true);
+      expect(
+        evaluateOnCompany({
+          conditionalDisplay,
+          context: { ...commandMenuContext, numberOfSelectedRecords: 0 },
+        }),
+      ).toBe(false);
+      expect(
+        evaluateOnCompany({
+          conditionalDisplay,
+          context: {
+            ...commandMenuContext,
+            areAllSelectedRecordsFavorites: true,
+          },
+        }),
+      ).toBe(false);
+    });
+
+    it('quantifies selected record rows over the selected records', () => {
+      const records = [
+        { id: 'campaign-1', status: 'DRAFT' },
+        { id: 'campaign-2', status: 'SENT' },
+      ];
+
+      expect(
+        evaluateOnCompany({
+          conditionalDisplay: {
+            quantifier: 'SOME',
+            recordFilters: [statusIsSentRecordFilter],
+          },
+          records,
+        }),
+      ).toBe(true);
+      expect(
+        evaluateOnCompany({
+          conditionalDisplay: { recordFilters: [statusIsSentRecordFilter] },
+          records,
+        }),
+      ).toBe(false);
+      expect(
+        evaluateOnCompany({
+          conditionalDisplay: {
+            quantifier: 'SOME',
+            recordFilters: [statusIsSentRecordFilter],
+          },
+          records: [],
+        }),
+      ).toBe(false);
+    });
+
+    it('evaluates widget context rows next to field rows', () => {
+      const conditionalDisplay: ConditionalDisplay = {
+        recordFilters: [
+          featureEnabledRecordFilter,
+          statusIsSentRecordFilter,
+          nameContainsAirRecordFilter,
+        ],
+      };
+
+      const widgetContext = buildContext({
+        featureFlags: { IS_FEATURE_ENABLED: true },
+      });
+
+      expect(
+        evaluateOnCompany({
+          conditionalDisplay,
+          context: widgetContext,
+          records: [{ id: 'company-1', name: 'Airbnb', status: 'SENT' }],
+        }),
+      ).toBe(true);
+      expect(
+        evaluateOnCompany({
+          conditionalDisplay,
+          context: buildContext({
+            featureFlags: { IS_FEATURE_ENABLED: false },
+          }),
+          records: [{ id: 'company-1', name: 'Airbnb', status: 'SENT' }],
+        }),
+      ).toBe(false);
+      expect(
+        evaluateOnCompany({
+          conditionalDisplay,
+          context: widgetContext,
+          records: [{ id: 'company-1', name: 'Stripe', status: 'SENT' }],
+        }),
+      ).toBe(false);
+    });
+
+    it('hides the item when the context lacks the key of an engine row', () => {
+      expect(
+        evaluateOnCompany({
+          conditionalDisplay: {
+            recordFilters: [
+              {
+                ...atLeastOneSelectedRecordFilter,
+                operand: ViewFilterOperand.IS_NOT,
+                value: JSON.stringify(0),
+              },
+            ],
+          },
+        }),
+      ).toBe(false);
+      expect(
+        evaluateOnCompany({
+          conditionalDisplay: {
+            recordFilters: [
+              {
+                ...featureEnabledRecordFilter,
+                operand: ViewFilterOperand.IS_NOT,
+              },
+            ],
+          },
+        }),
+      ).toBe(false);
+    });
   });
 });

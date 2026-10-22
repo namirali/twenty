@@ -1,3 +1,4 @@
+import { type ConditionalDisplayAdminContextKey } from '@/conditional-display/types/ConditionalDisplayAdminContextKey';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
 import { AdvancedFilterSidePanelCreateRootFilterButton } from '@/object-record/advanced-filter/side-panel/components/AdvancedFilterSidePanelCreateRootFilterButton';
 import { AdvancedFilterSidePanelRecordFilterColumn } from '@/object-record/advanced-filter/side-panel/components/AdvancedFilterSidePanelRecordFilterColumn';
@@ -11,7 +12,6 @@ import { isRecordFilterGroupChildARecordFilterGroup } from '@/object-record/adva
 import { type VariablePickerComponent } from '@/ui/input/types/VariablePickerComponent';
 import { useAtomComponentSelectorValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentSelectorValue';
 import { styled } from '@linaria/react';
-import { type ConditionalDisplayContextKey } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import { themeCssVariables } from 'twenty-ui/theme';
 
@@ -35,7 +35,7 @@ export type AdvancedFilterSidePanelContainerProps = {
   objectMetadataItem?: EnrichedObjectMetadataItem;
   VariablePicker?: VariablePickerComponent;
   FieldSelectLeadingSections?: FieldSelectLeadingSectionsComponent;
-  availableContextKeys?: ConditionalDisplayContextKey[];
+  availableContextKeys?: ConditionalDisplayAdminContextKey[];
   isWorkflowFindRecords?: boolean;
 };
 

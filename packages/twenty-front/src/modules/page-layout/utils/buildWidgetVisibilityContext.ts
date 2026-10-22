@@ -1,11 +1,12 @@
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
 import { type WidgetVisibilityContext } from '@/page-layout/types/WidgetVisibilityContext';
+import { type ObjectRecord } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
 type BuildWidgetVisibilityContextParams = {
   isMobile: boolean;
   isInSidePanel: boolean;
-  targetRecord?: Record<string, unknown>;
+  targetRecord?: ObjectRecord;
   featureFlags?: Record<string, boolean>;
   currentRoleId?: string | null;
   currentWorkspaceMemberId?: string | null;

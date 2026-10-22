@@ -67,9 +67,7 @@ export const SettingsApplicationCommandMenuItemDetail = () => {
             icon={commandMenuItem.icon}
             isPinned={commandMenuItem.isPinned}
             availabilityType={commandMenuItem.availabilityType}
-            conditionalAvailabilityExpression={
-              commandMenuItem.conditionalAvailabilityExpression
-            }
+            conditionalAvailability={commandMenuItem.conditionalAvailability}
             conditionalDisplay={commandMenuItem.conditionalDisplay}
             availabilityObjectMetadataId={
               commandMenuItem.availabilityObjectMetadataId
