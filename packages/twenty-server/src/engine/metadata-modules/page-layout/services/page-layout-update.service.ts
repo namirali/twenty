@@ -689,6 +689,7 @@ export class PageLayoutUpdateService {
             }),
           conditionalAvailability: null,
           universalConditionalAvailability: null,
+          conditionalAvailabilityExpression: null,
           overrides: null,
           universalOverrides: null,
           isActive: true,

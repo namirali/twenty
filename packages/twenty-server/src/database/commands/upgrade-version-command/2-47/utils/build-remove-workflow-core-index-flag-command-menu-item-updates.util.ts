@@ -120,7 +120,7 @@ export const buildRemoveWorkflowCoreIndexFlagCommandMenuItemUpdates = ({
     return [
       {
         ...commandMenuItem,
-        conditionalAvailabilityExpression: nextExpression ?? undefined,
+        conditionalAvailabilityExpression: nextExpression,
         updatedAt: now,
       },
     ];

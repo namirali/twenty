@@ -62,6 +62,7 @@ export const buildObjectNavigationUniversalFlatCommandMenuItem = ({
         universalIdentifier: objectMetadata.universalIdentifier,
         nameSingular: objectMetadata.nameSingular,
       }),
+    conditionalPinnedExpression: null,
     universalConditionalDisplay: null,
     universalConditionalAvailability:
       fromConditionalDisplayToUniversalConditionalDisplay({

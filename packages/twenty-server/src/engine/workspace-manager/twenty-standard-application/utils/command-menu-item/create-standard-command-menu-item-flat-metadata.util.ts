@@ -52,11 +52,11 @@ export const createStandardCommandMenuItemFlatMetadata = ({
   }
 
   const conditionalAvailabilityExpression =
-    definition.conditionalAvailabilityExpression ?? undefined;
+    definition.conditionalAvailabilityExpression ?? null;
   const conditionalPinnedExpression =
     'conditionalPinnedExpression' in definition
       ? definition.conditionalPinnedExpression
-      : undefined;
+      : null;
 
   const conditionalAvailability = isDefined(conditionalAvailabilityExpression)
     ? compileConditionalAvailabilityExpression(
