@@ -1,7 +1,9 @@
 import { STANDARD_OBJECTS } from 'twenty-shared/metadata';
-import { isDefined } from 'twenty-shared/utils';
+import {
+  compileConditionalAvailabilityExpression,
+  isDefined,
+} from 'twenty-shared/utils';
 
-import { compileConditionalAvailabilityExpressionOrNull } from 'src/engine/metadata-modules/flat-conditional-display/utils/compile-conditional-availability-expression-or-null.util';
 import { fromConditionalDisplayToUniversalConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/from-conditional-display-to-universal-conditional-display.util';
 import { createEmptyFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/constant/create-empty-flat-entity-maps.constant';
 import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
@@ -394,10 +396,13 @@ const computeRecordPageWidgets = ({
 
         const conditionalDisplay = widget.conditionalDisplay ?? null;
 
-        const conditionalAvailability =
-          compileConditionalAvailabilityExpressionOrNull(
-            widget.conditionalAvailabilityExpression,
-          );
+        const conditionalAvailability = isDefined(
+          widget.conditionalAvailabilityExpression,
+        )
+          ? compileConditionalAvailabilityExpression(
+              widget.conditionalAvailabilityExpression,
+            )
+          : null;
 
         const { configuration, universalConfiguration } =
           buildRecordPageWidgetConfigurations({
@@ -437,6 +442,8 @@ const computeRecordPageWidgets = ({
                   roleUniversalIdentifierById:
                     flatRoleMaps.universalIdentifierById,
                 }),
+              conditionalAvailabilityExpression:
+                widget.conditionalAvailabilityExpression ?? undefined,
               conditionalAvailability,
               universalConditionalAvailability:
                 fromConditionalDisplayToUniversalConditionalDisplay({

@@ -205,18 +205,14 @@ const validateEngineContextLeafValue = ({
       ];
     }
     case 'NUMBER': {
-      if (
-        isNumber(literalValue) &&
-        Number.isInteger(literalValue) &&
-        literalValue >= 0
-      ) {
+      if (isNumber(literalValue) && Number.isInteger(literalValue)) {
         return [];
       }
 
       return [
         {
           code: invalidDataCode,
-          message: t`Value "${value}" of conditional display context key "${contextKey}" must be a non-negative integer`,
+          message: t`Value "${value}" of conditional display context key "${contextKey}" must be an integer`,
           userFriendlyMessage: msg`Conditional display number value is not valid`,
           value,
         },

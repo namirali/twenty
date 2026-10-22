@@ -72,33 +72,6 @@ const getEqualityOperand = (
   }
 };
 
-const compileDeviceEquality = (
-  device: JsonLogicLiteral,
-): ConditionalDisplayConditionNode | undefined => {
-  const rewrittenConditionalDisplay = rewriteLegacyDeviceConditionalDisplay({
-    and: [{ '===': [{ var: 'device' }, device] }],
-  });
-
-  if (!('recordFilters' in rewrittenConditionalDisplay)) {
-    return undefined;
-  }
-
-  const [deviceRecordFilter] = rewrittenConditionalDisplay.recordFilters ?? [];
-
-  if (!isDefined(deviceRecordFilter)) {
-    return undefined;
-  }
-
-  return {
-    kind: 'recordFilter',
-    recordFilter: {
-      contextKey: deviceRecordFilter.contextKey,
-      operand: deviceRecordFilter.operand,
-      value: deviceRecordFilter.value,
-    },
-  };
-};
-
 const compileSelectedRecordFieldEquality = ({
   field,
   operand,
@@ -231,12 +204,6 @@ export const compileLegacyWidgetJsonLogic = ({
       !isJsonLogicLiteral(secondOperand)
     ) {
       return undefined;
-    }
-
-    if (variableName === 'device') {
-      return operand === ViewFilterOperand.IS
-        ? compileDeviceEquality(secondOperand)
-        : undefined;
     }
 
     const field = resolveSelectedRecordField(variableName);

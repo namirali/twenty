@@ -1,7 +1,10 @@
-import { isDefined } from 'twenty-shared/utils';
+import {
+  compileConditionalAvailabilityExpression,
+  isDefined,
+} from 'twenty-shared/utils';
 
 import { type FlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/types/flat-command-menu-item.type';
-import { compileConditionalAvailabilityExpressionOrNull } from 'src/engine/metadata-modules/flat-conditional-display/utils/compile-conditional-availability-expression-or-null.util';
+import { fromConditionalDisplayToUniversalConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/from-conditional-display-to-universal-conditional-display.util';
 import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
 import { findFlatEntityByUniversalIdentifier } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-universal-identifier.util';
 import { type FlatObjectMetadata } from 'src/engine/metadata-modules/flat-object-metadata/types/flat-object-metadata.type';
@@ -48,15 +51,21 @@ export const createStandardCommandMenuItemFlatMetadata = ({
       flatObjectMetadata.universalIdentifier;
   }
 
-  const conditionalAvailability =
-    compileConditionalAvailabilityExpressionOrNull(
-      definition.conditionalAvailabilityExpression,
-    );
-  const conditionalPinned = compileConditionalAvailabilityExpressionOrNull(
+  const conditionalAvailabilityExpression =
+    definition.conditionalAvailabilityExpression ?? undefined;
+  const conditionalPinnedExpression =
     'conditionalPinnedExpression' in definition
       ? definition.conditionalPinnedExpression
-      : null,
-  );
+      : undefined;
+
+  const conditionalAvailability = isDefined(conditionalAvailabilityExpression)
+    ? compileConditionalAvailabilityExpression(
+        conditionalAvailabilityExpression,
+      )
+    : null;
+  const conditionalPinned = isDefined(conditionalPinnedExpression)
+    ? compileConditionalAvailabilityExpression(conditionalPinnedExpression)
+    : null;
 
   return {
     id: commandMenuItemId,
@@ -71,12 +80,24 @@ export const createStandardCommandMenuItemFlatMetadata = ({
     position: definition.position,
     isPinned: definition.isPinned,
     availabilityType: definition.availabilityType,
+    conditionalAvailabilityExpression,
+    conditionalPinnedExpression,
     conditionalDisplay: null,
     universalConditionalDisplay: null,
     conditionalAvailability,
-    universalConditionalAvailability: conditionalAvailability,
+    universalConditionalAvailability:
+      fromConditionalDisplayToUniversalConditionalDisplay({
+        conditionalDisplay: conditionalAvailability,
+        fieldMetadataUniversalIdentifierById: {},
+        roleUniversalIdentifierById: {},
+      }),
     conditionalPinned,
-    universalConditionalPinned: conditionalPinned,
+    universalConditionalPinned:
+      fromConditionalDisplayToUniversalConditionalDisplay({
+        conditionalDisplay: conditionalPinned,
+        fieldMetadataUniversalIdentifierById: {},
+        roleUniversalIdentifierById: {},
+      }),
     frontComponentId: null,
     frontComponentUniversalIdentifier: null,
     engineComponentKey: definition.engineComponentKey,

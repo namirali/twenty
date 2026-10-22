@@ -70,6 +70,7 @@ export { MEMBER_ROLE_UNIVERSAL_IDENTIFIER } from './MemberRoleUniversalIdentifie
 export { MULTI_ITEM_FIELD_DEFAULT_MAX_VALUES } from './MultiItemFieldDefaultMaxValues';
 export { MULTI_ITEM_FIELD_MIN_MAX_VALUES } from './MultiItemFieldMinMaxValues';
 export { MUTATION_MAX_MERGE_RECORDS } from './MutationMaxMergeRecords';
+export { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from './NeverAvailableConditionalDisplay';
 export { OBJECTS_WITH_CHANNEL_VISIBILITY_CONSTRAINTS } from './ObjectsWithChannelVisibilityConstraints';
 export { PARTNER_PATTERN } from './PartnerPattern';
 export { PermissionFlagType } from './PermissionFlagType';

@@ -1,3 +1,4 @@
+import { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from '@/constants/NeverAvailableConditionalDisplay';
 import { RecordFilterGroupLogicalOperator } from '@/types/RecordFilterGroupLogicalOperator';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
 import { compileConditionalAvailabilityExpression } from '@/utils/conditional-display/compileConditionalAvailabilityExpression';
@@ -49,7 +50,7 @@ describe('compileConditionalAvailabilityExpression', () => {
     const { recordFilters, recordFilterGroups } =
       compileConditionalAvailabilityExpression(
         'canImpersonate or canAccessFullAdminPanel',
-      );
+      ) ?? {};
 
     const rootRecordFilterGroupId = recordFilterGroups?.[0]?.id;
 
@@ -83,7 +84,7 @@ describe('compileConditionalAvailabilityExpression', () => {
     const { recordFilters, recordFilterGroups } =
       compileConditionalAvailabilityExpression(
         'numberOfSelectedRecords == 1 and (everyEquals(selectedRecords, "currentVersion.status", "ACTIVE") or includesEvery(selectedRecords, "statuses", "ACTIVE")) and noneDefined(selectedRecords, "deletedAt")',
-      );
+      ) ?? {};
 
     const rootRecordFilterGroupId = recordFilterGroups?.[0]?.id;
     const orRecordFilterGroupId = recordFilterGroups?.[1]?.id;
@@ -181,7 +182,7 @@ describe('compileConditionalAvailabilityExpression', () => {
     expect(
       compileConditionalAvailabilityExpression(
         'noneEquals(selectedRecords, "status", "DRAFT")',
-      ).quantifier,
+      )?.quantifier,
     ).toBeUndefined();
   });
 
@@ -189,7 +190,7 @@ describe('compileConditionalAvailabilityExpression', () => {
     expect(
       compileConditionalAvailabilityExpression(
         'arrayLength(favoriteRecordIds) < numberOfSelectedRecords',
-      ).recordFilters,
+      )?.recordFilters,
     ).toEqual([
       {
         id: expect.any(String),
@@ -201,7 +202,7 @@ describe('compileConditionalAvailabilityExpression', () => {
     expect(
       compileConditionalAvailabilityExpression(
         'arrayLength(favoriteRecordIds) == numberOfSelectedRecords',
-      ).recordFilters,
+      )?.recordFilters,
     ).toEqual([
       {
         id: expect.any(String),
@@ -216,7 +217,7 @@ describe('compileConditionalAvailabilityExpression', () => {
     expect(
       compileConditionalAvailabilityExpression(
         'numberOfSelectedRecords > 1 and numberOfSelectedRecords < 10',
-      ).recordFilters,
+      )?.recordFilters,
     ).toEqual([
       {
         id: expect.any(String),
@@ -237,7 +238,7 @@ describe('compileConditionalAvailabilityExpression', () => {
     expect(
       compileConditionalAvailabilityExpression(
         'every(selectedRecords, "currentVersion.steps.length")',
-      ).recordFilters,
+      )?.recordFilters,
     ).toEqual([
       {
         id: expect.any(String),
@@ -246,6 +247,13 @@ describe('compileConditionalAvailabilityExpression', () => {
         operand: ViewFilterOperand.IS_NOT_EMPTY,
       },
     ]);
+  });
+
+  it('should compile false into the never available tree and true into no tree', () => {
+    expect(compileConditionalAvailabilityExpression('false')).toEqual(
+      NEVER_AVAILABLE_CONDITIONAL_DISPLAY,
+    );
+    expect(compileConditionalAvailabilityExpression('true')).toBeNull();
   });
 
   it.each([
@@ -269,7 +277,7 @@ describe('compileConditionalAvailabilityExpression', () => {
   it('should give every row and group of a tree its own id', () => {
     DISTINCT_CORPUS_EXPRESSIONS.forEach((expression) => {
       const { recordFilters = [], recordFilterGroups = [] } =
-        compileConditionalAvailabilityExpression(expression);
+        compileConditionalAvailabilityExpression(expression) ?? {};
       const ids = [...recordFilters, ...recordFilterGroups].map(({ id }) => id);
 
       expect(new Set(ids).size).toBe(ids.length);

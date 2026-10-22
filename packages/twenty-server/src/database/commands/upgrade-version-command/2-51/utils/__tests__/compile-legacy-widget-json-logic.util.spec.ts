@@ -221,6 +221,6 @@ describe('compileLegacyWidgetJsonLogic', () => {
         jsonLogic: { '!': { '===': [{ var: 'device' }, 'MOBILE'] } },
         resolveField,
       }),
-    ).toThrow('Cannot convert legacy widget json-logic');
+    ).toThrow('unsupported {"===":[{"var":"device"},"MOBILE"]}');
   });
 });

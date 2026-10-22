@@ -1,9 +1,9 @@
+import { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from 'twenty-shared/constants';
 import { FieldMetadataType, ViewFilterOperand } from 'twenty-shared/types';
 import { compileConditionalAvailabilityExpression } from 'twenty-shared/utils';
 
 import { compileLegacyWidgetJsonLogic } from 'src/database/commands/upgrade-version-command/2-51/utils/compile-legacy-widget-json-logic.util';
 import { migrateEngineGatesToConditionalDisplayTrees } from 'src/database/commands/upgrade-version-command/2-51/utils/migrate-engine-gates-to-conditional-display-trees.util';
-import { NEVER_AVAILABLE_CONDITIONAL_AVAILABILITY } from 'src/engine/metadata-modules/flat-conditional-display/constants/never-available-conditional-availability.constant';
 
 const WORKSPACE_CUSTOM_APPLICATION_UNIVERSAL_IDENTIFIER =
   '11111111-1111-4111-8111-111111111111';
@@ -75,6 +75,7 @@ describe('migrateEngineGatesToConditionalDisplayTrees', () => {
       overrides: null,
       isConditionalDisplayConvertedFromJsonLogic: false,
       convertedOverrideEntryCount: 0,
+      unconvertibleOverrideEntries: [],
     });
     expect(result.conditionalAvailability?.recordFilters).toEqual(
       expect.arrayContaining([
@@ -134,8 +135,24 @@ describe('migrateEngineGatesToConditionalDisplayTrees', () => {
     });
 
     expect(result.conditionalAvailability).toEqual(
-      NEVER_AVAILABLE_CONDITIONAL_AVAILABILITY,
+      NEVER_AVAILABLE_CONDITIONAL_DISPLAY,
     );
+  });
+
+  it('should throw on a widget whose availability expression is never available', () => {
+    expect(() =>
+      migrateEngineGatesToConditionalDisplayTrees({
+        metadataName: 'pageLayoutWidget',
+        legacyEngineGateExpressions: {
+          conditionalAvailabilityExpression: 'false',
+          conditionalPinnedExpression: null,
+        },
+        conditionalDisplay: null,
+        overrides: null,
+        authorContext,
+        resolveField,
+      }),
+    ).toThrow('widget expression "false" is never available');
   });
 
   it('should move device expressions on the widget and its override entry to device rules', () => {
@@ -168,29 +185,34 @@ describe('migrateEngineGatesToConditionalDisplayTrees', () => {
       },
       isConditionalDisplayConvertedFromJsonLogic: false,
       convertedOverrideEntryCount: 1,
+      unconvertibleOverrideEntries: [],
     });
   });
 
-  it('should throw on an override entry carrying a non-device expression', () => {
-    expect(() =>
-      migrateEngineGatesToConditionalDisplayTrees({
-        metadataName: 'pageLayoutWidget',
-        legacyEngineGateExpressions: {
-          conditionalAvailabilityExpression: null,
-          conditionalPinnedExpression: null,
-        },
-        conditionalDisplay: null,
-        overrides: {
-          [WORKSPACE_CUSTOM_APPLICATION_UNIVERSAL_IDENTIFIER]: {
-            conditionalAvailabilityExpression: 'numberOfSelectedRecords == 1',
-          },
-        },
-        authorContext,
-        resolveField,
-      }),
-    ).toThrow(
-      `override entry of author ${WORKSPACE_CUSTOM_APPLICATION_UNIVERSAL_IDENTIFIER} carries the expression "numberOfSelectedRecords == 1"`,
-    );
+  it('should report an override entry carrying a non-device expression and leave it untouched', () => {
+    const overrides = {
+      [WORKSPACE_CUSTOM_APPLICATION_UNIVERSAL_IDENTIFIER]: {
+        conditionalAvailabilityExpression: 'numberOfSelectedRecords == 1',
+      },
+    };
+
+    const result = migrateEngineGatesToConditionalDisplayTrees({
+      metadataName: 'pageLayoutWidget',
+      legacyEngineGateExpressions: {
+        conditionalAvailabilityExpression: null,
+        conditionalPinnedExpression: null,
+      },
+      conditionalDisplay: null,
+      overrides,
+      authorContext,
+      resolveField,
+    });
+
+    expect(result.overrides).toEqual(overrides);
+    expect(result.convertedOverrideEntryCount).toBe(0);
+    expect(result.unconvertibleOverrideEntries).toEqual([
+      `override entry of author ${WORKSPACE_CUSTOM_APPLICATION_UNIVERSAL_IDENTIFIER} carries the expression "numberOfSelectedRecords == 1", only device expressions convert to a conditional display`,
+    ]);
   });
 
   it('should leave an already converted entity unchanged', () => {
@@ -230,6 +252,7 @@ describe('migrateEngineGatesToConditionalDisplayTrees', () => {
       overrides: persisted.overrides,
       isConditionalDisplayConvertedFromJsonLogic: false,
       convertedOverrideEntryCount: 0,
+      unconvertibleOverrideEntries: [],
     });
   });
 

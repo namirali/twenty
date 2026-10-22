@@ -31,6 +31,7 @@ type EngineGateMigrationCounts = {
   widgetsWithAvailability: number;
   widgetsConvertedFromJsonLogic: number;
   overrideEntriesConverted: number;
+  overrideEntriesWithUnconvertibleExpression: number;
 };
 
 type UniversalIdentifierMaps = {
@@ -50,7 +51,7 @@ const NO_LEGACY_ENGINE_GATE_EXPRESSIONS: LegacyEngineGateExpressions = {
 @Command({
   name: 'upgrade:2-51:migrate-engine-gates-to-conditional-display-trees',
   description:
-    'Compile the conditionalAvailabilityExpression and conditionalPinnedExpression of command menu items and page layout widgets into conditionalAvailability and conditionalPinned trees, and convert legacy json-logic conditionalDisplay rules and device expression overrides into conditionalDisplay trees. Down clears the compiled conditionalAvailability and conditionalPinned trees and keeps the converted conditionalDisplay trees, since the legacy json-logic is gone and the trees are valid',
+    'Compile the engine gate expressions and legacy json-logic of command menu items and page layout widgets into conditional display trees, where a non-zero dry run count of unconvertible override entries means those workspaces need a hand review before the real run',
 })
 export class MigrateEngineGatesToConditionalDisplayTreesCommand extends ProvisionedWorkspaceCommandRunner {
   constructor(
@@ -147,6 +148,7 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
       widgetsWithAvailability: 0,
       widgetsConvertedFromJsonLogic: 0,
       overrideEntriesConverted: 0,
+      overrideEntriesWithUnconvertibleExpression: 0,
     };
 
     const now = new Date().toISOString();
@@ -160,6 +162,7 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
           workspaceId,
           metadataName: 'commandMenuItem',
           universalIdentifier: flatCommandMenuItem.universalIdentifier,
+          isDryRun: options.dryRun === true,
           migrate: () =>
             migrateEngineGatesToConditionalDisplayTrees({
               metadataName: 'commandMenuItem',
@@ -176,6 +179,9 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
               ),
             }),
         });
+
+        counts.overrideEntriesWithUnconvertibleExpression +=
+          migratedEngineGates.unconvertibleOverrideEntries.length;
 
         const isAvailabilityChanged = !fastDeepEqual(
           migratedEngineGates.conditionalAvailability,
@@ -271,6 +277,7 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
           workspaceId,
           metadataName: 'pageLayoutWidget',
           universalIdentifier: flatPageLayoutWidget.universalIdentifier,
+          isDryRun: options.dryRun === true,
           migrate: () =>
             migrateEngineGatesToConditionalDisplayTrees({
               metadataName: 'pageLayoutWidget',
@@ -287,6 +294,9 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
               ),
             }),
         });
+
+        counts.overrideEntriesWithUnconvertibleExpression +=
+          migratedEngineGates.unconvertibleOverrideEntries.length;
 
         const isAvailabilityChanged = !fastDeepEqual(
           migratedEngineGates.conditionalAvailability,
@@ -361,7 +371,7 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
       });
 
     this.logger.log(
-      `${options.dryRun ? '[DRY RUN] ' : ''}Workspace ${workspaceId}: ${counts.commandsWithAvailability} command(s) with availability, ${counts.commandsWithPinned} command(s) with pinned, ${counts.widgetsWithAvailability} widget(s) with availability, ${counts.widgetsConvertedFromJsonLogic} widget(s) converted from json-logic, ${counts.overrideEntriesConverted} override entr(ies) converted, updating ${commandMenuItemsToUpdate.length} command menu item(s) and ${pageLayoutWidgetsToUpdate.length} page layout widget(s)`,
+      `${options.dryRun ? '[DRY RUN] ' : ''}Workspace ${workspaceId}: ${counts.commandsWithAvailability} command(s) with availability, ${counts.commandsWithPinned} command(s) with pinned, ${counts.widgetsWithAvailability} widget(s) with availability, ${counts.widgetsConvertedFromJsonLogic} widget(s) converted from json-logic, ${counts.overrideEntriesConverted} override entr(ies) converted, ${counts.overrideEntriesWithUnconvertibleExpression} override entr(ies) with an availability expression that cannot be converted, updating ${commandMenuItemsToUpdate.length} command menu item(s) and ${pageLayoutWidgetsToUpdate.length} page layout widget(s)`,
     );
 
     if (options.dryRun) {
@@ -370,8 +380,6 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
 
     await this.runMigrationPerApplication({
       workspaceId,
-      workspaceCustomApplicationUniversalIdentifier:
-        workspaceCustomFlatApplication.universalIdentifier,
       commandMenuItemsToUpdate,
       pageLayoutWidgetsToUpdate,
     });
@@ -383,11 +391,6 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
         'flatCommandMenuItemMaps',
         'flatPageLayoutWidgetMaps',
       ]);
-
-    const { workspaceCustomFlatApplication } =
-      await this.applicationService.findWorkspaceTwentyStandardAndCustomApplicationOrThrow(
-        { workspaceId },
-      );
 
     const { commandMenuItemExpressionsById, pageLayoutWidgetExpressionsById } =
       await fetchLegacyEngineGateExpressions({
@@ -472,31 +475,58 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
 
     await this.runMigrationPerApplication({
       workspaceId,
-      workspaceCustomApplicationUniversalIdentifier:
-        workspaceCustomFlatApplication.universalIdentifier,
       commandMenuItemsToUpdate,
       pageLayoutWidgetsToUpdate,
     });
   }
 
-  private migrateOrThrow<TMigratedEngineGates>({
+  private migrateOrThrow<
+    TMigratedEngineGates extends { unconvertibleOverrideEntries: string[] },
+  >({
     workspaceId,
     metadataName,
     universalIdentifier,
+    isDryRun,
     migrate,
   }: {
     workspaceId: string;
     metadataName: 'commandMenuItem' | 'pageLayoutWidget';
     universalIdentifier: string;
+    isDryRun: boolean;
     migrate: () => TMigratedEngineGates;
   }): TMigratedEngineGates {
+    const buildMigrationError = (reason: string) =>
+      new Error(
+        `Workspace ${workspaceId}: cannot migrate the engine gates of ${metadataName} ${universalIdentifier}: ${reason}`,
+      );
+
+    let migratedEngineGates: TMigratedEngineGates;
+
     try {
-      return migrate();
+      migratedEngineGates = migrate();
     } catch (error) {
-      throw new Error(
-        `Workspace ${workspaceId}: cannot migrate the engine gates of ${metadataName} ${universalIdentifier}: ${error instanceof Error ? error.message : String(error)}`,
+      throw buildMigrationError(
+        error instanceof Error ? error.message : String(error),
       );
     }
+
+    const { unconvertibleOverrideEntries } = migratedEngineGates;
+
+    if (!isNonEmptyArray(unconvertibleOverrideEntries)) {
+      return migratedEngineGates;
+    }
+
+    if (!isDryRun) {
+      throw buildMigrationError(unconvertibleOverrideEntries.join('; '));
+    }
+
+    for (const unconvertibleOverrideEntry of unconvertibleOverrideEntries) {
+      this.logger.warn(
+        `[DRY RUN] Workspace ${workspaceId}: ${metadataName} ${universalIdentifier}: ${unconvertibleOverrideEntry}`,
+      );
+    }
+
+    return migratedEngineGates;
   }
 
   private toUniversalConditionalDisplay({
@@ -541,12 +571,10 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
 
   private async runMigrationPerApplication({
     workspaceId,
-    workspaceCustomApplicationUniversalIdentifier,
     commandMenuItemsToUpdate,
     pageLayoutWidgetsToUpdate,
   }: {
     workspaceId: string;
-    workspaceCustomApplicationUniversalIdentifier: string;
     commandMenuItemsToUpdate: FlatCommandMenuItem[];
     pageLayoutWidgetsToUpdate: FlatPageLayoutWidget[];
   }): Promise<void> {
@@ -574,8 +602,7 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
       const args = {
         workspaceId,
         isSystemBuild: true,
-        applicationUniversalIdentifier:
-          workspaceCustomApplicationUniversalIdentifier,
+        applicationUniversalIdentifier,
         allFlatEntityOperationByMetadataName: {
           ...(isNonEmptyArray(commandMenuItemsOfApplication)
             ? {

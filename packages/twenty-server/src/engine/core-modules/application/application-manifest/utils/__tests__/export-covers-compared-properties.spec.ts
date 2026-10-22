@@ -613,6 +613,8 @@ const EXPORTED_KINDS: ExportedKind[] = [
     workspaceLocalProperties: ['isActive', 'universalOverrides'],
     knownGaps: {
       ...PAGE_LAYOUT_KIND_GAPS,
+      conditionalAvailabilityExpression:
+        'compare-only legacy string; universalConditionalAvailability carries the gate',
       universalConditionalAvailability:
         'no manifest slot; a widget carrying one is reported as unsupported',
     },

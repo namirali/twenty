@@ -19,21 +19,19 @@ import { isDefined } from '@/utils/validation/isDefined';
 
 import { CONDITIONAL_AVAILABILITY_EXPRESSION_CORPUS } from './conditionalAvailabilityExpressionCorpus.fixture';
 
-type RoundTripContext = ConditionalDisplayEvaluationContext;
-
 type MatrixSubject = {
   name: string;
   values: unknown[];
 };
 
 type DeletableContextKeys = {
-  contextKeys: (keyof RoundTripContext)[];
+  contextKeys: (keyof ConditionalDisplayEvaluationContext)[];
   isTopLevelConjunct: boolean;
 };
 
 type FailClosedViolation = {
-  deletedContextKeys: (keyof RoundTripContext)[];
-  context: RoundTripContext;
+  deletedContextKeys: (keyof ConditionalDisplayEvaluationContext)[];
+  context: ConditionalDisplayEvaluationContext;
 };
 
 const MAXIMUM_COMBINATIONS_PER_SELECTION_SIZE = 10000;
@@ -333,7 +331,7 @@ const buildRoundTripContext = ({
   selectedRecords: ObjectRecord[];
   numberOfSelectedRecords: number;
   favoriteRecordCount: number;
-}): RoundTripContext => {
+}): ConditionalDisplayEvaluationContext => {
   const readBoolean = (key: string) => {
     const value = assignments.get(key);
 
@@ -404,8 +402,8 @@ const evaluateTree = ({
   conditionalDisplay,
   context,
 }: {
-  conditionalDisplay: ConditionalDisplay;
-  context: RoundTripContext;
+  conditionalDisplay: ConditionalDisplay | null;
+  context: ConditionalDisplayEvaluationContext;
 }): boolean =>
   evaluateConditionalDisplay({
     conditionalDisplay,
@@ -419,12 +417,12 @@ const evaluateTree = ({
   });
 
 const getDeletableContextKeys = (
-  conditionalDisplay: ConditionalDisplay,
+  conditionalDisplay: ConditionalDisplay | null,
 ): DeletableContextKeys[] => {
-  const recordFilters = conditionalDisplay.recordFilters ?? [];
+  const recordFilters = conditionalDisplay?.recordFilters ?? [];
 
   const rootConjunctionRecordFilterGroupId =
-    conditionalDisplay.recordFilterGroups?.find(
+    conditionalDisplay?.recordFilterGroups?.find(
       ({ parentRecordFilterGroupId, logicalOperator }) =>
         !isDefined(parentRecordFilterGroupId) &&
         logicalOperator === RecordFilterGroupLogicalOperator.AND,
@@ -454,7 +452,7 @@ const getDeletableContextKeys = (
 const runRoundTrip = (expression: string) => {
   const conditionalDisplay =
     compileConditionalAvailabilityExpression(expression);
-  const recordFilters = conditionalDisplay.recordFilters ?? [];
+  const recordFilters = conditionalDisplay?.recordFilters ?? [];
 
   const { contextSubjects, recordPathSubjects } = getMatrixSubjects({
     expression,
@@ -479,8 +477,7 @@ const runRoundTrip = (expression: string) => {
 
   const outcomes = new Set<boolean>();
   let evaluatedContextCount = 0;
-  let evaluatedDeletionCount = 0;
-  let mismatchingContext: RoundTripContext | undefined;
+  let mismatchingContext: ConditionalDisplayEvaluationContext | undefined;
   let failClosedViolation: FailClosedViolation | undefined;
 
   selectionSizes.forEach((selectionSize) => {
@@ -576,8 +573,6 @@ const runRoundTrip = (expression: string) => {
           context: contextWithoutKeys,
         });
 
-        evaluatedDeletionCount += 1;
-
         const isFailingClosed = isTopLevelConjunct
           ? treeOutcomeWithoutKeys === expressionOutcomeWithoutKeys
           : !treeOutcomeWithoutKeys || expressionOutcome;
@@ -591,7 +586,6 @@ const runRoundTrip = (expression: string) => {
 
   return {
     evaluatedContextCount,
-    evaluatedDeletionCount,
     outcomes,
     mismatchingContext,
     failClosedViolation,

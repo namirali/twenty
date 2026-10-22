@@ -1,4 +1,5 @@
 import { isArray } from '@sniptt/guards';
+import { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from 'twenty-shared/constants';
 import { type ConditionalDisplay } from 'twenty-shared/types';
 import {
   compileConditionalAvailabilityExpression,
@@ -7,11 +8,9 @@ import {
   isPlainObject,
 } from 'twenty-shared/utils';
 
-import { LEGACY_NEVER_AVAILABLE_EXPRESSION } from 'src/database/commands/upgrade-version-command/2-51/constants/legacy-never-available-expression.constant';
 import { LEGACY_WIDGET_DEVICE_VISIBILITIES } from 'src/database/commands/upgrade-version-command/2-51/constants/legacy-widget-device-visibilities.constant';
 import { type LegacyEngineGateExpressions } from 'src/database/commands/upgrade-version-command/2-51/types/legacy-engine-gate-expressions.type';
 import { compileLegacyWidgetJsonLogic } from 'src/database/commands/upgrade-version-command/2-51/utils/compile-legacy-widget-json-logic.util';
-import { NEVER_AVAILABLE_CONDITIONAL_AVAILABILITY } from 'src/engine/metadata-modules/flat-conditional-display/constants/never-available-conditional-availability.constant';
 import { rewriteLegacyDeviceConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/rewrite-legacy-device-conditional-display.util';
 import { type OverrideAuthorContext } from 'src/engine/metadata-modules/overrides/types/override-author-context.type';
 import { computeOverrideAuthorOrder } from 'src/engine/metadata-modules/overrides/utils/compute-override-author-order.util';
@@ -26,18 +25,30 @@ type ResolveLegacyWidgetJsonLogicField = Parameters<
 
 const LEGACY_EXPRESSION_OVERRIDE_PROPERTY = 'conditionalAvailabilityExpression';
 
-const compileLegacyExpression = (
-  expression: string | null,
-): ConditionalDisplay | null => {
+const compileLegacyExpression = ({
+  metadataName,
+  expression,
+}: {
+  metadataName: EngineGateMetadataName;
+  expression: string | null;
+}): ConditionalDisplay | null => {
   if (!isDefined(expression)) {
     return null;
   }
 
-  if (expression === LEGACY_NEVER_AVAILABLE_EXPRESSION) {
-    return NEVER_AVAILABLE_CONDITIONAL_AVAILABILITY;
+  const conditionalAvailability =
+    compileConditionalAvailabilityExpression(expression);
+
+  if (
+    metadataName === 'pageLayoutWidget' &&
+    fastDeepEqual(conditionalAvailability, NEVER_AVAILABLE_CONDITIONAL_DISPLAY)
+  ) {
+    throw new Error(
+      `widget expression "${expression}" is never available, which no condition valid on widgets can express`,
+    );
   }
 
-  return compileConditionalAvailabilityExpression(expression);
+  return conditionalAvailability;
 };
 
 const findDeviceConditionalDisplay = (expression: unknown) =>
@@ -54,10 +65,12 @@ const isLegacyJsonLogicConditionalDisplay = (conditionalDisplay: unknown) =>
   );
 
 const migrateBase = ({
+  metadataName,
   conditionalAvailabilityExpression,
   conditionalDisplay,
   resolveField,
 }: {
+  metadataName: EngineGateMetadataName;
   conditionalAvailabilityExpression: string | null;
   conditionalDisplay: unknown;
   resolveField: ResolveLegacyWidgetJsonLogicField;
@@ -90,9 +103,10 @@ const migrateBase = ({
     };
   }
 
-  const conditionalAvailability = compileLegacyExpression(
-    conditionalAvailabilityExpression,
-  );
+  const conditionalAvailability = compileLegacyExpression({
+    metadataName,
+    expression: conditionalAvailabilityExpression,
+  });
 
   if (!isLegacyJsonLogicConditionalDisplay(conditionalDisplay)) {
     return {
@@ -150,7 +164,11 @@ const migrateOverrides = ({
   migratedConditionalDisplay: unknown;
   authorContext: OverrideAuthorContext;
   resolveField: ResolveLegacyWidgetJsonLogicField;
-}): { overrides: unknown; convertedOverrideEntryCount: number } => {
+}): {
+  overrides: unknown;
+  convertedOverrideEntryCount: number;
+  unconvertibleOverrideEntries: string[];
+} => {
   const authoredOverrides = normalizeLegacyAuthoredOverrides({
     metadataName,
     overrides,
@@ -158,7 +176,11 @@ const migrateOverrides = ({
   });
 
   if (!isDefined(authoredOverrides)) {
-    return { overrides, convertedOverrideEntryCount: 0 };
+    return {
+      overrides,
+      convertedOverrideEntryCount: 0,
+      unconvertibleOverrideEntries: [],
+    };
   }
 
   const authorOrder = computeOverrideAuthorOrder(authorContext);
@@ -171,6 +193,7 @@ const migrateOverrides = ({
 
   let migratedOverrides: Record<string, unknown> | null = authoredOverrides;
   let convertedOverrideEntryCount = 0;
+  const unconvertibleOverrideEntries: string[] = [];
 
   for (const author of authorsFromLowestPriority) {
     const entry = migratedOverrides?.[author];
@@ -204,9 +227,10 @@ const migrateOverrides = ({
         findDeviceConditionalDisplay(entryExpression);
 
       if (entryExpression !== null && !isDefined(deviceConditionalDisplay)) {
-        throw new Error(
+        unconvertibleOverrideEntries.push(
           `override entry of author ${author} carries the expression ${JSON.stringify(entryExpression)}, only device expressions convert to a conditional display`,
         );
+        continue;
       }
 
       migratedOverrides = dispatchConditionalDisplayToAuthorEntry({
@@ -234,11 +258,11 @@ const migrateOverrides = ({
     convertedOverrideEntryCount += 1;
   }
 
-  if (convertedOverrideEntryCount === 0) {
-    return { overrides, convertedOverrideEntryCount };
-  }
-
-  return { overrides: migratedOverrides, convertedOverrideEntryCount };
+  return {
+    overrides: convertedOverrideEntryCount === 0 ? overrides : migratedOverrides,
+    convertedOverrideEntryCount,
+    unconvertibleOverrideEntries,
+  };
 };
 
 export const migrateEngineGatesToConditionalDisplayTrees = ({
@@ -260,6 +284,7 @@ export const migrateEngineGatesToConditionalDisplayTrees = ({
   resolveField: ResolveLegacyWidgetJsonLogicField;
 }) => {
   const migratedBase = migrateBase({
+    metadataName,
     conditionalAvailabilityExpression,
     conditionalDisplay,
     resolveField,
@@ -274,11 +299,15 @@ export const migrateEngineGatesToConditionalDisplayTrees = ({
 
   return {
     conditionalAvailability: migratedBase.conditionalAvailability,
-    conditionalPinned: compileLegacyExpression(conditionalPinnedExpression),
+    conditionalPinned: compileLegacyExpression({
+      metadataName,
+      expression: conditionalPinnedExpression,
+    }),
     conditionalDisplay: migratedBase.conditionalDisplay,
     overrides: migratedOverrides.overrides,
     isConditionalDisplayConvertedFromJsonLogic:
       migratedBase.isConditionalDisplayConvertedFromJsonLogic,
     convertedOverrideEntryCount: migratedOverrides.convertedOverrideEntryCount,
+    unconvertibleOverrideEntries: migratedOverrides.unconvertibleOverrideEntries,
   };
 };

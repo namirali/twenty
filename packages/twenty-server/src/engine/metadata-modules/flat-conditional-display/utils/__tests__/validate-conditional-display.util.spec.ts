@@ -689,25 +689,28 @@ describe('validateConditionalDisplay', () => {
     ]);
   });
 
-  it('should accept a selection count rule on a non-negative integer', () => {
-    expect(
-      validateCommandAvailability({
-        ...NUMBER_OF_SELECTED_RECORDS_LEAF,
-        value: '0',
-      }),
-    ).toEqual([]);
-  });
+  it.each(['0', '-1'])(
+    'should accept a selection count rule on the integer %s',
+    (value) => {
+      expect(
+        validateCommandAvailability({
+          ...NUMBER_OF_SELECTED_RECORDS_LEAF,
+          value,
+        }),
+      ).toEqual([]);
+    },
+  );
 
-  it('should reject a selection count rule on a negative number', () => {
+  it('should reject a selection count rule on a non-integer number', () => {
     expect(
       validateCommandAvailability({
         ...NUMBER_OF_SELECTED_RECORDS_LEAF,
-        value: '-1',
+        value: '1.5',
       }),
     ).toEqual([
       expect.objectContaining({
         message:
-          'Value "-1" of conditional display context key "numberOfSelectedRecords" must be a non-negative integer',
+          'Value "1.5" of conditional display context key "numberOfSelectedRecords" must be an integer',
       }),
     ]);
   });

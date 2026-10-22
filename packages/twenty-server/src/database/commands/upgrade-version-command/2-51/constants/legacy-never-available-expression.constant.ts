@@ -1,1 +1,0 @@
-export const LEGACY_NEVER_AVAILABLE_EXPRESSION = 'false';

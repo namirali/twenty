@@ -1,4 +1,5 @@
 import { getSystemNavigationCommandMenuItemUniversalIdentifier } from 'twenty-shared/application';
+import { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from 'twenty-shared/constants';
 import { STANDARD_OBJECTS } from 'twenty-shared/metadata';
 
 import {
@@ -12,7 +13,6 @@ import {
   NAVIGATION_INTERPOLATED_SHORT_LABEL,
 } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-object-navigation-universal-flat-command-menu-item.util';
 import { buildObjectNavigationFlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-object-navigation-flat-command-menu-item.util';
-import { NEVER_AVAILABLE_CONDITIONAL_AVAILABILITY } from 'src/engine/metadata-modules/flat-conditional-display/constants/never-available-conditional-availability.constant';
 
 const APPLICATION_UNIVERSAL_IDENTIFIER = 'a1a2a3a4-a5a6-4000-8000-000000000001';
 const OTHER_APPLICATION_UNIVERSAL_IDENTIFIER =
@@ -139,6 +139,9 @@ describe('buildObjectNavigationFlatCommandMenuItem', () => {
   it('should gate conditionalAvailability on the read permission of the target object', () => {
     const result = buildObjectNavigationFlatCommandMenuItem(baseArgs);
 
+    expect(result.conditionalAvailabilityExpression).toBe(
+      'targetObjectReadPermissions.person',
+    );
     expect(result.conditionalAvailability).toEqual({
       recordFilters: [
         {
@@ -197,11 +200,12 @@ describe('buildObjectNavigationFlatCommandMenuItem', () => {
       },
     });
 
+    expect(result.conditionalAvailabilityExpression).toBe('false');
     expect(result.conditionalAvailability).toEqual(
-      NEVER_AVAILABLE_CONDITIONAL_AVAILABILITY,
+      NEVER_AVAILABLE_CONDITIONAL_DISPLAY,
     );
     expect(result.universalConditionalAvailability).toEqual(
-      NEVER_AVAILABLE_CONDITIONAL_AVAILABILITY,
+      NEVER_AVAILABLE_CONDITIONAL_DISPLAY,
     );
   });
 

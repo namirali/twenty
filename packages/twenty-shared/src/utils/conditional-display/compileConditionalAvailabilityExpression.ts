@@ -8,6 +8,7 @@ import {
 } from '@sniptt/guards';
 
 import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from '@/constants/ConditionalDisplayContextKeys';
+import { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from '@/constants/NeverAvailableConditionalDisplay';
 import { type ConditionalDisplay } from '@/types/conditional-display/ConditionalDisplay';
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
 import { type ConditionalDisplayContextKey } from '@/types/conditional-display/ConditionalDisplayContextKey';
@@ -878,16 +879,19 @@ const findGroupNotDistributingOverRecords = ({
 
 export const compileConditionalAvailabilityExpression = (
   expression: string,
-): ConditionalDisplay => {
+): ConditionalDisplay | null => {
   const tokens = getExpressionTokens({
     tokens: parseExpressionTokens(expression),
     expression,
   });
 
-  const conditionNode = toConditionNode({
-    stackItem: compileTokens({ tokens, expression }),
-    expression,
-  });
+  const stackItem = compileTokens({ tokens, expression });
+
+  if (stackItem.kind === 'literal' && isBoolean(stackItem.value)) {
+    return stackItem.value ? null : NEVER_AVAILABLE_CONDITIONAL_DISPLAY;
+  }
+
+  const conditionNode = toConditionNode({ stackItem, expression });
 
   const quantifiers = new Set(collectQuantifiers(conditionNode));
 

@@ -6,6 +6,8 @@ import { isDefined } from 'twenty-shared/utils';
 
 import { EngineComponentKey } from 'src/engine/metadata-modules/command-menu-item/enums/engine-component-key.enum';
 import { buildNavigationConditionalAvailability } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-navigation-conditional-availability.util';
+import { buildNavigationConditionalAvailabilityExpression } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-navigation-conditional-availability-expression.util';
+import { fromConditionalDisplayToUniversalConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/from-conditional-display-to-universal-conditional-display.util';
 import { i18nLabel } from 'src/engine/workspace-manager/twenty-standard-application/utils/i18n-label.util';
 import { type UniversalFlatCommandMenuItem } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/types/universal-flat-command-menu-item.type';
 
@@ -55,11 +57,21 @@ export const buildObjectNavigationUniversalFlatCommandMenuItem = ({
     position,
     isPinned: false,
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
+    conditionalAvailabilityExpression:
+      buildNavigationConditionalAvailabilityExpression({
+        universalIdentifier: objectMetadata.universalIdentifier,
+        nameSingular: objectMetadata.nameSingular,
+      }),
     universalConditionalDisplay: null,
-    universalConditionalAvailability: buildNavigationConditionalAvailability({
-      universalIdentifier: objectMetadata.universalIdentifier,
-      nameSingular: objectMetadata.nameSingular,
-    }),
+    universalConditionalAvailability:
+      fromConditionalDisplayToUniversalConditionalDisplay({
+        conditionalDisplay: buildNavigationConditionalAvailability({
+          universalIdentifier: objectMetadata.universalIdentifier,
+          nameSingular: objectMetadata.nameSingular,
+        }),
+        fieldMetadataUniversalIdentifierById: {},
+        roleUniversalIdentifierById: {},
+      }),
     universalConditionalPinned: null,
     frontComponentUniversalIdentifier: null,
     engineComponentKey: EngineComponentKey.NAVIGATION,
