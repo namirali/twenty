@@ -143,6 +143,18 @@ export class CommandMenuItemEntity
   @Column({ type: 'jsonb', nullable: true })
   conditionalDisplay: JsonbProperty<ConditionalDisplay | null>;
 
+  @WasIntroducedInUpgrade({
+    upgradeCommandName: ADD_CONDITIONAL_DISPLAY_UPGRADE_COMMAND_NAME,
+  })
+  @Column({ type: 'jsonb', nullable: true })
+  conditionalAvailability: JsonbProperty<ConditionalDisplay | null>;
+
+  @WasIntroducedInUpgrade({
+    upgradeCommandName: ADD_CONDITIONAL_DISPLAY_UPGRADE_COMMAND_NAME,
+  })
+  @Column({ type: 'jsonb', nullable: true })
+  conditionalPinned: JsonbProperty<ConditionalDisplay | null>;
+
   @Column({ nullable: true, type: 'uuid' })
   availabilityObjectMetadataId: string | null;
 

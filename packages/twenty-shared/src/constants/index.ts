@@ -18,6 +18,7 @@ export { COMPOSITE_FIELD_SUB_FIELD_LABELS } from './CompositeFieldSubFieldLabels
 export { COMPOSITE_FIELD_TYPE_SUB_FIELDS_NAMES } from './CompositeFieldTypeSubFieldsNames';
 export { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from './ConditionalDisplayContextKeys';
 export { CONDITIONAL_DISPLAY_DEVICES } from './ConditionalDisplayDevices';
+export { CONDITIONAL_DISPLAY_PROPERTIES } from './ConditionalDisplayProperties';
 export { CORE_PICTURE_MIME_TYPES } from './CorePictureMimeTypes';
 export { CSV_DANGEROUS_CHARACTERS } from './CsvDangerousCharacters';
 export { CSV_INJECTION_PREVENTION_ZWJ } from './CsvInjectionPreventionZwj';

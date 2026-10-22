@@ -7,7 +7,10 @@ import { seedBuiltFrontComponentFile } from 'test/integration/metadata/suites/fr
 import { findManyObjectMetadata } from 'test/integration/metadata/suites/object-metadata/utils/find-many-object-metadata.util';
 import { jestExpectToBeDefined } from 'test/utils/jest-expect-to-be-defined.util.test';
 
-import { CommandMenuItemAvailabilityType } from 'twenty-shared/types';
+import {
+  CommandMenuItemAvailabilityType,
+  ViewFilterOperand,
+} from 'twenty-shared/types';
 import { EngineComponentKey } from 'src/engine/metadata-modules/command-menu-item/enums/engine-component-key.enum';
 
 describe('CommandMenuItem creation should succeed', () => {
@@ -172,6 +175,73 @@ describe('CommandMenuItem creation should succeed', () => {
       label: 'Global Command',
       availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
     });
+  });
+
+  it('should create command menu item with conditionalAvailability', async () => {
+    const conditionalAvailability = {
+      recordFilters: [
+        {
+          id: '0',
+          contextKey: 'isSelectAll' as const,
+          operand: ViewFilterOperand.IS_NOT,
+          value: 'true',
+        },
+      ],
+    };
+
+    const { data } = await createCommandMenuItem({
+      expectToFail: false,
+      input: {
+        workflowVersionId: faker.string.uuid(),
+        engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
+        label: 'Conditionally Available Command',
+        conditionalAvailability,
+      },
+      gqlFields: `
+        id
+        conditionalAvailability
+      `,
+    });
+
+    createdCommandMenuItemId = data?.createCommandMenuItem?.id;
+
+    expect(data.createCommandMenuItem.conditionalAvailability).toEqual(
+      conditionalAvailability,
+    );
+  });
+
+  it('should create command menu item with conditionalPinned', async () => {
+    const conditionalPinned = {
+      recordFilters: [
+        {
+          id: '0',
+          contextKey: 'numberOfSelectedRecords' as const,
+          operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
+          value: '1',
+        },
+      ],
+    };
+
+    const { data } = await createCommandMenuItem({
+      expectToFail: false,
+      input: {
+        workflowVersionId: faker.string.uuid(),
+        engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
+        label: 'Conditionally Pinned Command',
+        isPinned: true,
+        conditionalPinned,
+      },
+      gqlFields: `
+        id
+        conditionalPinned
+      `,
+    });
+
+    createdCommandMenuItemId = data?.createCommandMenuItem?.id;
+
+    expect(data.createCommandMenuItem.conditionalPinned).toEqual(
+      conditionalPinned,
+    );
   });
 
   it('should create NAVIGATION command menu item with path payload', async () => {

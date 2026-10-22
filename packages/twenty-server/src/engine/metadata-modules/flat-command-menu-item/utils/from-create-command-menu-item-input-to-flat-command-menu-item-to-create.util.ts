@@ -79,6 +79,14 @@ export const fromCreateCommandMenuItemInputToFlatCommandMenuItemToCreate = ({
     createCommandMenuItemInput.conditionalDisplay,
   );
 
+  const conditionalAvailability = normalizeConditionalDisplay(
+    createCommandMenuItemInput.conditionalAvailability,
+  );
+
+  const conditionalPinned = normalizeConditionalDisplay(
+    createCommandMenuItemInput.conditionalPinned,
+  );
+
   return {
     id,
     universalIdentifier: id,
@@ -108,6 +116,22 @@ export const fromCreateCommandMenuItemInputToFlatCommandMenuItemToCreate = ({
     universalConditionalDisplay:
       fromConditionalDisplayToUniversalConditionalDisplay({
         conditionalDisplay,
+        fieldMetadataUniversalIdentifierById:
+          flatFieldMetadataMaps.universalIdentifierById,
+        roleUniversalIdentifierById: flatRoleMaps.universalIdentifierById,
+      }),
+    conditionalAvailability,
+    universalConditionalAvailability:
+      fromConditionalDisplayToUniversalConditionalDisplay({
+        conditionalDisplay: conditionalAvailability,
+        fieldMetadataUniversalIdentifierById:
+          flatFieldMetadataMaps.universalIdentifierById,
+        roleUniversalIdentifierById: flatRoleMaps.universalIdentifierById,
+      }),
+    conditionalPinned,
+    universalConditionalPinned:
+      fromConditionalDisplayToUniversalConditionalDisplay({
+        conditionalDisplay: conditionalPinned,
         fieldMetadataUniversalIdentifierById:
           flatFieldMetadataMaps.universalIdentifierById,
         roleUniversalIdentifierById: flatRoleMaps.universalIdentifierById,

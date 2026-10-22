@@ -18,9 +18,27 @@ export class AddConditionalDisplayColumnsFastInstanceCommand implements FastInst
     await queryRunner.query(
       'ALTER TABLE "core"."commandMenuItem" ADD COLUMN IF NOT EXISTS "conditionalDisplay" jsonb',
     );
+    await queryRunner.query(
+      'ALTER TABLE "core"."commandMenuItem" ADD COLUMN IF NOT EXISTS "conditionalAvailability" jsonb',
+    );
+    await queryRunner.query(
+      'ALTER TABLE "core"."commandMenuItem" ADD COLUMN IF NOT EXISTS "conditionalPinned" jsonb',
+    );
+    await queryRunner.query(
+      'ALTER TABLE "core"."pageLayoutWidget" ADD COLUMN IF NOT EXISTS "conditionalAvailability" jsonb',
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      'ALTER TABLE "core"."pageLayoutWidget" DROP COLUMN IF EXISTS "conditionalAvailability"',
+    );
+    await queryRunner.query(
+      'ALTER TABLE "core"."commandMenuItem" DROP COLUMN IF EXISTS "conditionalPinned"',
+    );
+    await queryRunner.query(
+      'ALTER TABLE "core"."commandMenuItem" DROP COLUMN IF EXISTS "conditionalAvailability"',
+    );
     await queryRunner.query(
       'ALTER TABLE "core"."commandMenuItem" DROP COLUMN IF EXISTS "conditionalDisplay"',
     );
