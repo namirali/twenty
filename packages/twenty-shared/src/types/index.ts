@@ -68,8 +68,10 @@ export {
 } from './composite-types/rich-text.composite-type';
 export type { CompositeFieldSubFieldName } from './CompositeFieldSubFieldNameType';
 export type { ConditionalDisplay } from './conditional-display/ConditionalDisplay';
+export type { ConditionalDisplayConditionNode } from './conditional-display/ConditionalDisplayConditionNode';
 export type { ConditionalDisplayContextKey } from './conditional-display/ConditionalDisplayContextKey';
 export type { ConditionalDisplayDevice } from './conditional-display/ConditionalDisplayDevice';
+export type { ConditionalDisplayEvaluationContext } from './conditional-display/ConditionalDisplayEvaluationContext';
 export type { ConditionalDisplayOwner } from './conditional-display/ConditionalDisplayOwner';
 export type { ConditionalDisplayProperty } from './conditional-display/ConditionalDisplayProperty';
 export type { ConditionalDisplayQuantifier } from './conditional-display/ConditionalDisplayQuantifier';

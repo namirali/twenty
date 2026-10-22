@@ -1,0 +1,549 @@
+import { isArray, isBoolean, isString } from '@sniptt/guards';
+
+import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from '@/constants/ConditionalDisplayContextKeys';
+import { type ConditionalDisplayEvaluationContext } from '@/types/conditional-display/ConditionalDisplayEvaluationContext';
+import { type ConditionalDisplayRecordFilter } from '@/types/conditional-display/ConditionalDisplayRecordFilter';
+import { ContextStorePageType } from '@/types/ContextStorePageType';
+import { type ObjectRecord } from '@/types/ObjectRecord';
+import { ViewFilterOperand } from '@/types/ViewFilterOperand';
+import { evaluateConditionalAvailabilityExpression } from '@/utils/command-menu-items/evaluateConditionalAvailabilityExpression';
+import { compileConditionalAvailabilityExpression } from '@/utils/conditional-display/compileConditionalAvailabilityExpression';
+import { evaluateConditionalDisplay } from '@/utils/conditional-display/evaluateConditionalDisplay';
+import { isConditionalDisplayContextRecordFilterMatching } from '@/utils/conditional-display/isConditionalDisplayContextRecordFilterMatching';
+import { parseJson } from '@/utils/parseJson';
+import { isPlainObject } from '@/utils/typeguard/isPlainObject';
+import { isDefined } from '@/utils/validation/isDefined';
+
+import { CONDITIONAL_AVAILABILITY_EXPRESSION_CORPUS } from './conditionalAvailabilityExpressionCorpus.fixture';
+
+type RoundTripContext = ConditionalDisplayEvaluationContext & {
+  device: string;
+};
+
+type MatrixSubject = {
+  name: string;
+  values: unknown[];
+};
+
+const MAXIMUM_COMBINATIONS_PER_SELECTION_SIZE = 10000;
+
+const SELECTION_SIZES_WITH_RECORDS = [0, 1, 2];
+
+const SELECTION_SIZES_WITHOUT_RECORDS = [0, 1, 2, 9, 10];
+
+const FAVORITE_RECORD_COUNTS = [0, 1, 2];
+
+const RECORD_PATH_SUBJECT_PREFIX = 'record';
+
+const FAVORITE_RECORD_COUNT_SUBJECT = 'favoriteRecordCount';
+
+const DISTINCT_CORPUS_EXPRESSIONS = [
+  ...new Set(CONDITIONAL_AVAILABILITY_EXPRESSION_CORPUS),
+];
+
+const BASE_OBJECT_PERMISSIONS = {
+  objectMetadataId: 'object-metadata-id',
+  canReadObjectRecords: true,
+  canUpdateObjectRecords: true,
+  canSoftDeleteObjectRecords: true,
+  canDestroyObjectRecords: true,
+  restrictedFields: {},
+  rowLevelPermissionPredicates: [],
+  rowLevelPermissionPredicateGroups: [],
+};
+
+const getDistinctValues = (values: unknown[]): unknown[] =>
+  values.filter(
+    (value, index) =>
+      values.findIndex(
+        (otherValue) => JSON.stringify(otherValue) === JSON.stringify(value),
+      ) === index,
+  );
+
+const getMapEntryValues = (
+  recordFilters: ConditionalDisplayRecordFilter[],
+): unknown[] => {
+  const literals = recordFilters.map(({ value }) => parseJson<unknown>(value));
+
+  if (recordFilters.some(({ value }) => !isDefined(value))) {
+    return [{}, undefined];
+  }
+
+  if (literals.some(isString)) {
+    return [...getDistinctValues(literals), 'other', undefined];
+  }
+
+  return [true, false, undefined];
+};
+
+const getRecordPathValues = ({
+  path,
+  recordFilters,
+  expression,
+  paths,
+}: {
+  path: string;
+  recordFilters: ConditionalDisplayRecordFilter[];
+  expression: string;
+  paths: string[];
+}): unknown[] => {
+  if (expression.includes(`"${path}.length"`)) {
+    return [[1], [], null, undefined];
+  }
+
+  if (paths.some((otherPath) => otherPath.startsWith(`${path}.`))) {
+    return [{}, null, undefined];
+  }
+
+  const values = recordFilters.flatMap(({ operand, value }) => {
+    const literal = parseJson<unknown>(value);
+
+    if (
+      operand === ViewFilterOperand.CONTAINS ||
+      operand === ViewFilterOperand.DOES_NOT_CONTAIN
+    ) {
+      return [[literal], ['other'], []];
+    }
+
+    if (isBoolean(literal)) {
+      return [true, false];
+    }
+
+    if (isDefined(literal)) {
+      return [literal, 'other'];
+    }
+
+    return expression.includes(`someNonEmptyString(selectedRecords, "${path}")`)
+      ? ['other', '']
+      : ['other'];
+  });
+
+  return [...getDistinctValues(values), null, undefined];
+};
+
+const getMatrixSubjects = ({
+  expression,
+  recordFilters,
+}: {
+  expression: string;
+  recordFilters: ConditionalDisplayRecordFilter[];
+}): {
+  contextSubjects: MatrixSubject[];
+  recordPathSubjects: MatrixSubject[];
+} => {
+  const contextSubjects: MatrixSubject[] = [];
+  const recordPathSubjects: MatrixSubject[] = [];
+
+  const recordFiltersBySubject = new Map<
+    string,
+    ConditionalDisplayRecordFilter[]
+  >();
+
+  recordFilters.forEach((recordFilter) => {
+    const subjectName = isDefined(recordFilter.subFieldName)
+      ? `${recordFilter.contextKey}.${recordFilter.subFieldName}`
+      : `${recordFilter.contextKey}`;
+
+    recordFiltersBySubject.set(subjectName, [
+      ...(recordFiltersBySubject.get(subjectName) ?? []),
+      recordFilter,
+    ]);
+  });
+
+  const recordPaths = recordFilters
+    .filter(({ contextKey }) => contextKey === 'selectedRecords')
+    .map(({ subFieldName }) => subFieldName ?? '');
+
+  recordFiltersBySubject.forEach((subjectRecordFilters, subjectName) => {
+    const contextKey = subjectRecordFilters[0]?.contextKey;
+    const subFieldName = subjectRecordFilters[0]?.subFieldName;
+
+    if (!isDefined(contextKey)) {
+      return;
+    }
+
+    switch (CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey].valueKind) {
+      case 'BOOLEAN':
+        if (contextKey !== 'areAllSelectedRecordsFavorites') {
+          contextSubjects.push({ name: subjectName, values: [true, false] });
+        }
+
+        return;
+      case 'PAGE_TYPE':
+        contextSubjects.push({
+          name: subjectName,
+          values: Object.values(ContextStorePageType),
+        });
+
+        return;
+      case 'DEVICE':
+        contextSubjects.push({
+          name: subjectName,
+          values: ['MOBILE', 'DESKTOP'],
+        });
+
+        return;
+      case 'MAP_ENTRY':
+        contextSubjects.push({
+          name: subjectName,
+          values:
+            contextKey === 'objectPermissions'
+              ? [true, false]
+              : getMapEntryValues(subjectRecordFilters),
+        });
+
+        return;
+      case 'RECORD_PATH':
+        recordPathSubjects.push({
+          name: subFieldName ?? '',
+          values: getRecordPathValues({
+            path: subFieldName ?? '',
+            recordFilters: subjectRecordFilters,
+            expression,
+            paths: recordPaths,
+          }),
+        });
+
+        return;
+      default:
+        return;
+    }
+  });
+
+  return { contextSubjects, recordPathSubjects };
+};
+
+const enumerateCombinations = (subjects: MatrixSubject[]): number[][] => {
+  const combinationCount = subjects.reduce(
+    (count, { values }) => count * values.length,
+    1,
+  );
+
+  const getCombination = (combinationIndex: number) =>
+    subjects.reduce<{ remainder: number; valueIndexes: number[] }>(
+      ({ remainder, valueIndexes }, { values }) => ({
+        remainder: Math.floor(remainder / values.length),
+        valueIndexes: [...valueIndexes, remainder % values.length],
+      }),
+      { remainder: combinationIndex, valueIndexes: [] },
+    ).valueIndexes;
+
+  if (combinationCount <= MAXIMUM_COMBINATIONS_PER_SELECTION_SIZE) {
+    return Array.from({ length: combinationCount }, (_, combinationIndex) =>
+      getCombination(combinationIndex),
+    );
+  }
+
+  let seed = combinationCount % 2147483647;
+
+  const nextRandom = () => {
+    seed = (seed * 48271) % 2147483647;
+
+    return seed / 2147483647;
+  };
+
+  return [
+    subjects.map(() => 0),
+    subjects.map(({ values }) => values.length - 1),
+    ...Array.from({ length: MAXIMUM_COMBINATIONS_PER_SELECTION_SIZE - 2 }, () =>
+      subjects.map(({ values }) => Math.floor(nextRandom() * values.length)),
+    ),
+  ];
+};
+
+const buildRecord = ({
+  recordIndex,
+  recordPathValues,
+}: {
+  recordIndex: number;
+  recordPathValues: Map<string, unknown>;
+}): ObjectRecord => {
+  const record: ObjectRecord = { id: `record-${recordIndex}` };
+
+  const sortedPaths = [...recordPathValues.keys()].sort(
+    (path, otherPath) => path.split('.').length - otherPath.split('.').length,
+  );
+
+  sortedPaths.forEach((path) => {
+    const value = recordPathValues.get(path);
+
+    if (value === undefined) {
+      return;
+    }
+
+    const pathParts = path.split('.');
+    const leafPart = pathParts.pop() ?? '';
+
+    const container = pathParts.reduce<Record<string, unknown> | undefined>(
+      (currentContainer, part, partIndex) => {
+        if (!isDefined(currentContainer)) {
+          return undefined;
+        }
+
+        const prefix = pathParts.slice(0, partIndex + 1).join('.');
+        const existingValue = currentContainer[part];
+
+        if (existingValue === undefined && !recordPathValues.has(prefix)) {
+          const createdContainer: Record<string, unknown> = {};
+
+          currentContainer[part] = createdContainer;
+
+          return createdContainer;
+        }
+
+        return isPlainObject(existingValue) ? existingValue : undefined;
+      },
+      record,
+    );
+
+    if (isDefined(container)) {
+      container[leafPart] = isPlainObject(value) ? {} : value;
+    }
+  });
+
+  return record;
+};
+
+const buildBooleanMap = ({
+  contextKey,
+  assignments,
+}: {
+  contextKey: string;
+  assignments: Map<string, unknown>;
+}): Record<string, boolean> =>
+  Object.fromEntries(
+    [...assignments.entries()].flatMap(([subjectName, value]) =>
+      subjectName.startsWith(`${contextKey}.`) && isBoolean(value)
+        ? [[subjectName.slice(contextKey.length + 1), value]]
+        : [],
+    ),
+  );
+
+const buildRoundTripContext = ({
+  assignments,
+  selectedRecords,
+  numberOfSelectedRecords,
+  favoriteRecordCount,
+}: {
+  assignments: Map<string, unknown>;
+  selectedRecords: ObjectRecord[];
+  numberOfSelectedRecords: number;
+  favoriteRecordCount: number;
+}): RoundTripContext => {
+  const readBoolean = (key: string) => {
+    const value = assignments.get(key);
+
+    return isBoolean(value) ? value : false;
+  };
+
+  const objectPermissions = {
+    ...BASE_OBJECT_PERMISSIONS,
+    ...buildBooleanMap({ contextKey: 'objectPermissions', assignments }),
+  };
+
+  const objectMetadataItem = Object.fromEntries(
+    [...assignments.entries()].flatMap(([subjectName, value]) =>
+      subjectName.startsWith('objectMetadataItem.') && value !== undefined
+        ? [[subjectName.slice('objectMetadataItem.'.length), value]]
+        : [],
+    ),
+  );
+
+  const favoriteRecordIds = Array.from(
+    { length: favoriteRecordCount },
+    (_, favoriteIndex) => `record-${favoriteIndex}`,
+  );
+
+  const pageType = Object.values(ContextStorePageType).find(
+    (contextStorePageType) =>
+      contextStorePageType === assignments.get('pageType'),
+  );
+
+  const device = assignments.get('device');
+
+  return {
+    pageType: pageType ?? ContextStorePageType.Index,
+    isInSidePanel: readBoolean('isInSidePanel'),
+    isDashboardPageLayoutInEditMode: readBoolean(
+      'isDashboardPageLayoutInEditMode',
+    ),
+    isLayoutCustomizationModeEnabled: readBoolean(
+      'isLayoutCustomizationModeEnabled',
+    ),
+    favoriteRecordIds,
+    isSelectAll: readBoolean('isSelectAll'),
+    hasAnySoftDeleteFilterOnView: readBoolean('hasAnySoftDeleteFilterOnView'),
+    numberOfSelectedRecords,
+    objectPermissions,
+    selectedRecords,
+    featureFlags: buildBooleanMap({ contextKey: 'featureFlags', assignments }),
+    permissionFlags: buildBooleanMap({
+      contextKey: 'permissionFlags',
+      assignments,
+    }),
+    targetObjectReadPermissions: buildBooleanMap({
+      contextKey: 'targetObjectReadPermissions',
+      assignments,
+    }),
+    targetObjectWritePermissions: buildBooleanMap({
+      contextKey: 'targetObjectWritePermissions',
+      assignments,
+    }),
+    canImpersonate: readBoolean('canImpersonate'),
+    canAccessFullAdminPanel: readBoolean('canAccessFullAdminPanel'),
+    objectMetadataItem,
+    objectMetadataLabel: '',
+    areAllSelectedRecordsFavorites:
+      favoriteRecordIds.length === numberOfSelectedRecords,
+    device: isString(device) ? device : 'DESKTOP',
+  };
+};
+
+const isRoundTripRecordFilterMatching = ({
+  recordFilter,
+  record,
+  context,
+}: {
+  recordFilter: ConditionalDisplayRecordFilter;
+  record: ObjectRecord | undefined;
+  context: RoundTripContext;
+}): boolean => {
+  if (recordFilter.contextKey !== 'device') {
+    return isConditionalDisplayContextRecordFilterMatching({
+      recordFilter,
+      context,
+      record,
+    });
+  }
+
+  const devices = parseJson<unknown>(recordFilter.value);
+
+  return isArray(devices) && devices.includes(context.device);
+};
+
+const runRoundTrip = (expression: string) => {
+  const conditionalDisplay =
+    compileConditionalAvailabilityExpression(expression);
+  const recordFilters = conditionalDisplay.recordFilters ?? [];
+
+  const { contextSubjects, recordPathSubjects } = getMatrixSubjects({
+    expression,
+    recordFilters,
+  });
+
+  const isFavoriteCountReferenced = recordFilters.some(
+    ({ contextKey }) => contextKey === 'areAllSelectedRecordsFavorites',
+  );
+  const isSelectionCountReferenced = recordFilters.some(
+    ({ contextKey }) => contextKey === 'numberOfSelectedRecords',
+  );
+
+  const selectionSizes =
+    recordPathSubjects.length > 0
+      ? SELECTION_SIZES_WITH_RECORDS
+      : isSelectionCountReferenced || isFavoriteCountReferenced
+        ? SELECTION_SIZES_WITHOUT_RECORDS
+        : [0];
+
+  const outcomes = new Set<boolean>();
+  let evaluatedContextCount = 0;
+  let mismatchingContext: RoundTripContext | undefined;
+
+  selectionSizes.forEach((selectionSize) => {
+    const recordCount = recordPathSubjects.length > 0 ? selectionSize : 0;
+
+    const subjects: MatrixSubject[] = [
+      ...contextSubjects,
+      ...Array.from({ length: recordCount }, (_, recordIndex) =>
+        recordPathSubjects.map(({ name, values }) => ({
+          name: `${RECORD_PATH_SUBJECT_PREFIX}:${recordIndex}:${name}`,
+          values,
+        })),
+      ).flat(),
+      {
+        name: FAVORITE_RECORD_COUNT_SUBJECT,
+        values: isFavoriteCountReferenced
+          ? FAVORITE_RECORD_COUNTS.filter((count) => count <= selectionSize)
+          : [0],
+      },
+    ];
+
+    enumerateCombinations(subjects).forEach((valueIndexes) => {
+      if (isDefined(mismatchingContext)) {
+        return;
+      }
+
+      const assignments = new Map(
+        subjects.map(({ name, values }, subjectIndex) => [
+          name,
+          values[valueIndexes[subjectIndex] ?? 0],
+        ]),
+      );
+
+      const selectedRecords = Array.from(
+        { length: recordCount },
+        (_, recordIndex) =>
+          buildRecord({
+            recordIndex,
+            recordPathValues: new Map(
+              recordPathSubjects.map(({ name }) => [
+                name,
+                assignments.get(
+                  `${RECORD_PATH_SUBJECT_PREFIX}:${recordIndex}:${name}`,
+                ),
+              ]),
+            ),
+          }),
+      );
+
+      const favoriteRecordCount = assignments.get(
+        FAVORITE_RECORD_COUNT_SUBJECT,
+      );
+
+      const context = buildRoundTripContext({
+        assignments,
+        selectedRecords,
+        numberOfSelectedRecords: selectionSize,
+        favoriteRecordCount:
+          typeof favoriteRecordCount === 'number' ? favoriteRecordCount : 0,
+      });
+
+      const expressionOutcome = evaluateConditionalAvailabilityExpression(
+        expression,
+        context,
+      );
+      const treeOutcome = evaluateConditionalDisplay({
+        conditionalDisplay,
+        records: context.selectedRecords,
+        isRecordFilterMatching: ({ recordFilter, record }) =>
+          isRoundTripRecordFilterMatching({ recordFilter, record, context }),
+      });
+
+      evaluatedContextCount += 1;
+      outcomes.add(expressionOutcome);
+
+      if (expressionOutcome !== treeOutcome) {
+        mismatchingContext = context;
+      }
+    });
+  });
+
+  return { evaluatedContextCount, outcomes, mismatchingContext };
+};
+
+describe('evaluateConditionalDisplay round trip', () => {
+  it.each(DISTINCT_CORPUS_EXPRESSIONS)(
+    'should evaluate the compiled tree like the expression %s',
+    (expression) => {
+      const { evaluatedContextCount, outcomes, mismatchingContext } =
+        runRoundTrip(expression);
+
+      expect({ expression, mismatchingContext }).toEqual({
+        expression,
+        mismatchingContext: undefined,
+      });
+      expect(evaluatedContextCount).toBeGreaterThan(0);
+      expect([...outcomes].sort()).toEqual([false, true]);
+    },
+  );
+});

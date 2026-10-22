@@ -16,6 +16,7 @@ export { CLIENT_CONFIG_BOOTSTRAP_ELEMENT_ID } from './ClientConfigBootstrapEleme
 export { COMMAND_MENU_CONFIRMATION_MODAL_RESULT_BROWSER_EVENT_NAME } from './CommandMenuConfirmationModalResultBrowserEventName';
 export { COMPOSITE_FIELD_SUB_FIELD_LABELS } from './CompositeFieldSubFieldLabels';
 export { COMPOSITE_FIELD_TYPE_SUB_FIELDS_NAMES } from './CompositeFieldTypeSubFieldsNames';
+export { CONDITIONAL_DISPLAY_COMPILATION_NAMESPACE } from './ConditionalDisplayCompilationNamespace';
 export { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from './ConditionalDisplayContextKeys';
 export { CONDITIONAL_DISPLAY_DEVICES } from './ConditionalDisplayDevices';
 export { CONDITIONAL_DISPLAY_PROPERTIES } from './ConditionalDisplayProperties';
