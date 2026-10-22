@@ -1,9 +1,9 @@
-import { defineRole } from '@/sdk/define';
+import { defineRole } from 'twenty-sdk/define';
 
 export default defineRole({
-  universalIdentifier: 'c0a1b2c3-0000-4000-8000-000000000002',
+  universalIdentifier: 'c0a1b2c3-0000-4000-8000-000000000102',
   label: 'Default role',
-  description: 'Default role of the conditional availability app',
+  description: 'Default role of the unmapped conditional availability app',
   canReadAllObjectRecords: true,
   canUpdateAllObjectRecords: false,
   canSoftDeleteAllObjectRecords: false,

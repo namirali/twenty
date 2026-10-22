@@ -78,6 +78,8 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` already implies a non-empty selection — use `numberOfSelectedRecords` only for specific counts (e.g. `>= 2`).
 </Note>
 
+The build compiles `conditionalAvailabilityExpression` and `conditionalPinnedExpression` into `conditionalAvailability` and `conditionalPinned` condition trees, and the built manifest carries only those trees. An expression the compiler cannot map fails the build with the file, the field and the unsupported part. Twenty refuses to install a manifest built with an older SDK that still carries the expression strings, so rebuild such an app before deploying it.
+
 ### Context variables
 
 These represent the current state of the page:

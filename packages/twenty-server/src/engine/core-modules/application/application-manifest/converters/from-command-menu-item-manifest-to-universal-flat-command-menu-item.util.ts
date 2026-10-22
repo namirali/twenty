@@ -1,8 +1,7 @@
-import { type CommandMenuItemManifest } from 'twenty-shared/application';
-
 import { CommandMenuItemAvailabilityType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
+import { type LegacyCommandMenuItemManifest } from 'src/engine/core-modules/application/application-manifest/types/legacy-command-menu-item-manifest.type';
 import {
   ApplicationException,
   ApplicationExceptionCode,
@@ -12,19 +11,16 @@ import { normalizeConditionalDisplay } from 'src/engine/metadata-modules/flat-co
 import { type UniversalFlatCommandMenuItem } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/types/universal-flat-command-menu-item.type';
 
 const throwIfCommandMenuItemManifestHasExpressions = (
-  commandMenuItemManifest: CommandMenuItemManifest,
+  commandMenuItemManifest: LegacyCommandMenuItemManifest,
 ): void => {
-  const rawCommandMenuItemManifest: Record<string, unknown> =
-    commandMenuItemManifest;
-
-  if (isDefined(rawCommandMenuItemManifest.conditionalAvailabilityExpression)) {
+  if (isDefined(commandMenuItemManifest.conditionalAvailabilityExpression)) {
     throw new ApplicationException(
       `Command menu item "${commandMenuItemManifest.label}" declares the unsupported conditionalAvailabilityExpression, declare a conditionalAvailability tree instead`,
       ApplicationExceptionCode.INVALID_INPUT,
     );
   }
 
-  if (isDefined(rawCommandMenuItemManifest.conditionalPinnedExpression)) {
+  if (isDefined(commandMenuItemManifest.conditionalPinnedExpression)) {
     throw new ApplicationException(
       `Command menu item "${commandMenuItemManifest.label}" declares the unsupported conditionalPinnedExpression, declare a conditionalPinned tree instead`,
       ApplicationExceptionCode.INVALID_INPUT,
@@ -37,7 +33,7 @@ export const fromCommandMenuItemManifestToUniversalFlatCommandMenuItem = ({
   applicationUniversalIdentifier,
   now,
 }: {
-  commandMenuItemManifest: CommandMenuItemManifest;
+  commandMenuItemManifest: LegacyCommandMenuItemManifest;
   applicationUniversalIdentifier: string;
   now: string;
 }): UniversalFlatCommandMenuItem => {

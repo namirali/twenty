@@ -13,3 +13,11 @@ export const FUNCTION_EXECUTE_APP_PATH = resolve(
   FIXTURES_ROOT,
   'function-execute-app',
 );
+export const CONDITIONAL_AVAILABILITY_APP_PATH = resolve(
+  FIXTURES_ROOT,
+  'conditional-availability-app',
+);
+export const UNMAPPED_CONDITIONAL_AVAILABILITY_APP_PATH = resolve(
+  FIXTURES_ROOT,
+  'unmapped-conditional-availability-app',
+);

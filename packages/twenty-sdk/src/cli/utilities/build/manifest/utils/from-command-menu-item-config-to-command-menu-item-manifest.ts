@@ -9,30 +9,37 @@ import {
 const compileExpressionConfig = ({
   expression,
   configKey,
+  manifestKey,
   relativePath,
-  errors,
 }: {
   expression: boolean | string | undefined;
   configKey:
     | 'conditionalAvailabilityExpression'
     | 'conditionalPinnedExpression';
+  manifestKey: 'conditionalAvailability' | 'conditionalPinned';
   relativePath: string;
+}): {
+  conditionalDisplay: UniversalConditionalDisplay | undefined;
   errors: string[];
-}): UniversalConditionalDisplay | undefined => {
+} => {
   if (!isDefined(expression)) {
-    return undefined;
+    return { conditionalDisplay: undefined, errors: [] };
   }
 
   try {
-    return (
-      compileConditionalAvailabilityExpression(String(expression)) ?? undefined
-    );
+    return {
+      conditionalDisplay:
+        compileConditionalAvailabilityExpression(String(expression)) ??
+        undefined,
+      errors: [],
+    };
   } catch (error) {
-    errors.push(
-      `${relativePath} - ${configKey}: ${error instanceof Error ? error.message : String(error)}`,
-    );
-
-    return undefined;
+    return {
+      conditionalDisplay: undefined,
+      errors: [
+        `${relativePath} - ${configKey} cannot be compiled into a ${manifestKey} tree: ${error instanceof Error ? error.message : String(error)}`,
+      ],
+    };
   }
 };
 
@@ -49,31 +56,35 @@ export const fromCommandMenuItemConfigToCommandMenuItemManifest = ({
     ...commandMenuItemProperties
   } = commandMenuItemConfig;
 
-  const errors: string[] = [];
   const commandMenuItemManifest: CommandMenuItemManifest =
     commandMenuItemProperties;
 
   const conditionalAvailability = compileExpressionConfig({
     expression: conditionalAvailabilityExpression,
     configKey: 'conditionalAvailabilityExpression',
+    manifestKey: 'conditionalAvailability',
     relativePath,
-    errors,
   });
 
   const conditionalPinned = compileExpressionConfig({
     expression: conditionalPinnedExpression,
     configKey: 'conditionalPinnedExpression',
+    manifestKey: 'conditionalPinned',
     relativePath,
-    errors,
   });
 
-  if (isDefined(conditionalAvailability)) {
-    commandMenuItemManifest.conditionalAvailability = conditionalAvailability;
+  if (isDefined(conditionalAvailability.conditionalDisplay)) {
+    commandMenuItemManifest.conditionalAvailability =
+      conditionalAvailability.conditionalDisplay;
   }
 
-  if (isDefined(conditionalPinned)) {
-    commandMenuItemManifest.conditionalPinned = conditionalPinned;
+  if (isDefined(conditionalPinned.conditionalDisplay)) {
+    commandMenuItemManifest.conditionalPinned =
+      conditionalPinned.conditionalDisplay;
   }
 
-  return { commandMenuItemManifest, errors };
+  return {
+    commandMenuItemManifest,
+    errors: [...conditionalAvailability.errors, ...conditionalPinned.errors],
+  };
 };

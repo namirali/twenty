@@ -1,4 +1,4 @@
-import { defineApplication } from '@/sdk/define';
+import { defineApplication } from 'twenty-sdk/define';
 
 export default defineApplication({
   universalIdentifier: 'c0a1b2c3-0000-4000-8000-000000000001',

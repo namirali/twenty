@@ -5,6 +5,7 @@ import {
 } from 'twenty-shared/types';
 
 import { fromCommandMenuItemManifestToUniversalFlatCommandMenuItem } from 'src/engine/core-modules/application/application-manifest/converters/from-command-menu-item-manifest-to-universal-flat-command-menu-item.util';
+import { type LegacyCommandMenuItemManifest } from 'src/engine/core-modules/application/application-manifest/types/legacy-command-menu-item-manifest.type';
 
 const COMMAND_MENU_ITEM_MANIFEST: CommandMenuItemManifest = {
   universalIdentifier: '11111111-1111-4111-8111-111111111111',
@@ -34,7 +35,7 @@ const CONDITIONAL_PINNED: UniversalConditionalDisplay = {
   ],
 };
 
-const build = (commandMenuItemManifest: CommandMenuItemManifest) =>
+const build = (commandMenuItemManifest: LegacyCommandMenuItemManifest) =>
   fromCommandMenuItemManifestToUniversalFlatCommandMenuItem({
     commandMenuItemManifest,
     applicationUniversalIdentifier: '66666666-6666-4666-8666-666666666666',
@@ -56,23 +57,23 @@ describe('fromCommandMenuItemManifestToUniversalFlatCommandMenuItem', () => {
   });
 
   it('rejects a manifest declaring a conditional availability expression', () => {
-    const legacyCommandMenuItemManifest = {
-      ...COMMAND_MENU_ITEM_MANIFEST,
-      conditionalAvailabilityExpression: 'numberOfSelectedRecords >= 1',
-    };
-
-    expect(() => build(legacyCommandMenuItemManifest)).toThrow(
+    expect(() =>
+      build({
+        ...COMMAND_MENU_ITEM_MANIFEST,
+        conditionalAvailabilityExpression: 'numberOfSelectedRecords >= 1',
+      }),
+    ).toThrow(
       'Command menu item "Escalate ticket" declares the unsupported conditionalAvailabilityExpression, declare a conditionalAvailability tree instead',
     );
   });
 
   it('rejects a manifest declaring a conditional pinned expression', () => {
-    const legacyCommandMenuItemManifest = {
-      ...COMMAND_MENU_ITEM_MANIFEST,
-      conditionalPinnedExpression: 'numberOfSelectedRecords >= 1',
-    };
-
-    expect(() => build(legacyCommandMenuItemManifest)).toThrow(
+    expect(() =>
+      build({
+        ...COMMAND_MENU_ITEM_MANIFEST,
+        conditionalPinnedExpression: 'numberOfSelectedRecords >= 1',
+      }),
+    ).toThrow(
       'Command menu item "Escalate ticket" declares the unsupported conditionalPinnedExpression, declare a conditionalPinned tree instead',
     );
   });

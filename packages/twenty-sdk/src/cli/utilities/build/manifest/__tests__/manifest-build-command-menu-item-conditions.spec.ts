@@ -1,19 +1,9 @@
-import { join } from 'path';
-
+import {
+  CONDITIONAL_AVAILABILITY_APP_PATH,
+  UNMAPPED_CONDITIONAL_AVAILABILITY_APP_PATH,
+} from '@/cli/__tests__/apps/fixture-paths';
 import { buildManifest } from '@/cli/utilities/build/manifest/manifest-build';
 import { ViewFilterOperand } from 'twenty-shared/types';
-
-const MOCKS_DIR = join(__dirname, '__mocks__');
-
-const CONDITIONAL_AVAILABILITY_APP_PATH = join(
-  MOCKS_DIR,
-  'conditional-availability-app',
-);
-
-const UNMAPPED_CONDITIONAL_AVAILABILITY_APP_PATH = join(
-  MOCKS_DIR,
-  'unmapped-conditional-availability-app',
-);
 
 const findCommandMenuItem = async (universalIdentifier: string) => {
   const { manifest, errors } = await buildManifest(
@@ -106,13 +96,14 @@ describe('buildManifest command menu item conditions', () => {
     );
   }, 60000);
 
-  it('fails the build with the compiler message when an expression cannot be mapped', async () => {
+  it('fails the build with the file, the config key and the compiler message when an expression cannot be mapped', async () => {
     const { errors } = await buildManifest(
       UNMAPPED_CONDITIONAL_AVAILABILITY_APP_PATH,
     );
 
     expect(errors).toEqual([
-      'favorite-count.command-menu-item.ts - conditionalAvailabilityExpression: Cannot compile conditional availability expression "arrayLength(favoriteRecordIds) > 0": unsupported operator ">" between arrayLength(favoriteRecordIds) and literal 0',
+      'src/command-menu-items/favorite-count.command-menu-item.ts - conditionalAvailabilityExpression cannot be compiled into a conditionalAvailability tree: Cannot compile conditional availability expression "arrayLength(favoriteRecordIds) > 0": unsupported operator ">" between arrayLength(favoriteRecordIds) and literal 0',
+      'src/command-menu-items/selected-records-pinned.command-menu-item.ts - conditionalPinnedExpression cannot be compiled into a conditionalPinned tree: Cannot compile conditional availability expression "arrayLength(selectedRecords) == 1": unsupported call of variable "arrayLength" with variable "selectedRecords"',
     ]);
   }, 60000);
 });

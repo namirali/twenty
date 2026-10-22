@@ -149,7 +149,7 @@ describe('CLI app source loading', () => {
     });
   });
 
-  it('mocks UI and generated clients and converts conditional availability without evaluating the expression', async () => {
+  it('mocks UI and generated clients and hands the builder the conditional availability formula without evaluating the expression', async () => {
     await writeFile(
       join(appPath, 'command.ts'),
       `
