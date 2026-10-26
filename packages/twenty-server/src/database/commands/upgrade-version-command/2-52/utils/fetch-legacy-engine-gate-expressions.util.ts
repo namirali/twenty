@@ -1,6 +1,6 @@
 import { type DataSource } from 'typeorm';
 
-import { type LegacyEngineGateExpressions } from 'src/database/commands/upgrade-version-command/2-51/types/legacy-engine-gate-expressions.type';
+import { type LegacyEngineGateExpressions } from 'src/database/commands/upgrade-version-command/2-52/types/legacy-engine-gate-expressions.type';
 
 type LegacyCommandMenuItemExpressionsRow = LegacyEngineGateExpressions & {
   id: string;

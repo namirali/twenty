@@ -9,9 +9,9 @@ import { DataSource } from 'typeorm';
 import { ProvisionedWorkspaceCommandRunner } from 'src/database/commands/command-runners/provisioned-workspace.command-runner';
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import { type RunOnWorkspaceArgs } from 'src/database/commands/command-runners/workspace.command-runner';
-import { type LegacyEngineGateExpressions } from 'src/database/commands/upgrade-version-command/2-51/types/legacy-engine-gate-expressions.type';
-import { fetchLegacyEngineGateExpressions } from 'src/database/commands/upgrade-version-command/2-51/utils/fetch-legacy-engine-gate-expressions.util';
-import { migrateEngineGatesToConditionalDisplayTrees } from 'src/database/commands/upgrade-version-command/2-51/utils/migrate-engine-gates-to-conditional-display-trees.util';
+import { type LegacyEngineGateExpressions } from 'src/database/commands/upgrade-version-command/2-52/types/legacy-engine-gate-expressions.type';
+import { fetchLegacyEngineGateExpressions } from 'src/database/commands/upgrade-version-command/2-52/utils/fetch-legacy-engine-gate-expressions.util';
+import { migrateEngineGatesToConditionalDisplayTrees } from 'src/database/commands/upgrade-version-command/2-52/utils/migrate-engine-gates-to-conditional-display-trees.util';
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { RegisteredWorkspaceCommand } from 'src/engine/core-modules/upgrade/decorators/registered-workspace-command.decorator';
 import { type FlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/types/flat-command-menu-item.type';
@@ -47,9 +47,9 @@ const NO_LEGACY_ENGINE_GATE_EXPRESSIONS: LegacyEngineGateExpressions = {
   conditionalPinnedExpression: null,
 };
 
-@RegisteredWorkspaceCommand('2.51.0', 1792636240363)
+@RegisteredWorkspaceCommand('2.52.0', 1793025082369)
 @Command({
-  name: 'upgrade:2-51:migrate-engine-gates-to-conditional-display-trees',
+  name: 'upgrade:2-52:migrate-engine-gates-to-conditional-display-trees',
   description:
     'Compile the engine gate expressions and legacy json-logic of command menu items and page layout widgets into conditional display trees, where a non-zero dry run count of unconvertible override entries means those workspaces need a hand review before the real run',
 })

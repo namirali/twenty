@@ -8,9 +8,9 @@ import {
   isPlainObject,
 } from 'twenty-shared/utils';
 
-import { LEGACY_WIDGET_DEVICE_VISIBILITIES } from 'src/database/commands/upgrade-version-command/2-51/constants/legacy-widget-device-visibilities.constant';
-import { type LegacyEngineGateExpressions } from 'src/database/commands/upgrade-version-command/2-51/types/legacy-engine-gate-expressions.type';
-import { compileLegacyWidgetJsonLogic } from 'src/database/commands/upgrade-version-command/2-51/utils/compile-legacy-widget-json-logic.util';
+import { LEGACY_WIDGET_DEVICE_VISIBILITIES } from 'src/database/commands/upgrade-version-command/2-52/constants/legacy-widget-device-visibilities.constant';
+import { type LegacyEngineGateExpressions } from 'src/database/commands/upgrade-version-command/2-52/types/legacy-engine-gate-expressions.type';
+import { compileLegacyWidgetJsonLogic } from 'src/database/commands/upgrade-version-command/2-52/utils/compile-legacy-widget-json-logic.util';
 import { rewriteLegacyDeviceConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/rewrite-legacy-device-conditional-display.util';
 import { type OverrideAuthorContext } from 'src/engine/metadata-modules/overrides/types/override-author-context.type';
 import { computeOverrideAuthorOrder } from 'src/engine/metadata-modules/overrides/utils/compute-override-author-order.util';

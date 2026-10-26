@@ -6,8 +6,8 @@ import {
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
-import { LEGACY_WIDGET_JSON_LOGIC_CORPUS } from 'src/database/commands/upgrade-version-command/2-51/utils/__tests__/legacy-widget-json-logic-corpus.fixture';
-import { compileLegacyWidgetJsonLogic } from 'src/database/commands/upgrade-version-command/2-51/utils/compile-legacy-widget-json-logic.util';
+import { LEGACY_WIDGET_JSON_LOGIC_CORPUS } from 'src/database/commands/upgrade-version-command/2-52/utils/__tests__/legacy-widget-json-logic-corpus.fixture';
+import { compileLegacyWidgetJsonLogic } from 'src/database/commands/upgrade-version-command/2-52/utils/compile-legacy-widget-json-logic.util';
 import { rewriteLegacyDeviceConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/rewrite-legacy-device-conditional-display.util';
 import { validateConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-conditional-display.util';
 import { createEmptyFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/constant/create-empty-flat-entity-maps.constant';
