@@ -161,6 +161,10 @@ describe('CLI manifest fixtures and worker transport', () => {
     const sdkPath = join(modules, 'twenty-sdk');
     const sourceSdk = join(REPOSITORY_ROOT, 'packages/twenty-sdk');
     const sdkRequire = createRequire(join(sourceSdk, 'package.json'));
+    const sdkResolvedModulePaths: Record<string, string> = {
+      uuid: dirname(sdkRequire.resolve('uuid/package.json')),
+      'twenty-shared': dirname(dirname(sdkRequire.resolve('twenty-shared'))),
+    };
 
     await mkdir(join(modules, '@sniptt'), { recursive: true });
 
@@ -177,9 +181,8 @@ describe('CLI manifest fixtures and worker transport', () => {
       'twenty-ui',
     ]) {
       await symlink(
-        name === 'uuid'
-          ? dirname(sdkRequire.resolve('uuid/package.json'))
-          : join(REPOSITORY_ROOT, 'node_modules', name),
+        sdkResolvedModulePaths[name] ??
+          join(REPOSITORY_ROOT, 'node_modules', name),
         join(modules, name),
       );
     }
@@ -298,10 +301,10 @@ describe('CLI manifest fixtures and worker transport', () => {
     if (!unmappedResult.success) {
       expect(unmappedResult.errors).toEqual([
         expect.stringContaining(
-          'src/command-menu-items/favorite-count.command-menu-item.ts - conditionalAvailabilityExpression cannot be compiled into a conditionalAvailability tree:',
+          'src/command-menu-items/favorite-count.command-menu-item.ts - conditionalAvailabilityExpression of command menu item "Favorite count" cannot be compiled into a conditionalAvailability tree: Cannot compile conditional availability expression "favoriteRecordIds.length > 0"',
         ),
         expect.stringContaining(
-          'src/command-menu-items/selected-records-pinned.command-menu-item.ts - conditionalPinnedExpression cannot be compiled into a conditionalPinned tree:',
+          'src/command-menu-items/selected-records-pinned.command-menu-item.ts - conditionalPinnedExpression of command menu item "Selected records pinned" cannot be compiled into a conditionalPinned tree:',
         ),
       ]);
     }

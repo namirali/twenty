@@ -5,6 +5,11 @@ import ts from 'typescript';
 const CONDITIONAL_AVAILABILITY_EXPRESSION_PROPERTY =
   'conditionalAvailabilityExpression';
 
+const CONDITION_EXPRESSION_PROPERTIES = [
+  CONDITIONAL_AVAILABILITY_EXPRESSION_PROPERTY,
+  'conditionalPinnedExpression',
+];
+
 const EXPRESSION_VARIABLE_MODULE_SPECIFIERS = [
   'twenty-sdk/define',
   'twenty-sdk',
@@ -128,7 +133,7 @@ const hasConditionalAvailabilityExpressionProperty = (
       (ts.isPropertyAssignment(node) ||
         ts.isShorthandPropertyAssignment(node)) &&
       (ts.isIdentifier(node.name) || ts.isStringLiteral(node.name)) &&
-      node.name.text === CONDITIONAL_AVAILABILITY_EXPRESSION_PROPERTY
+      CONDITION_EXPRESSION_PROPERTIES.includes(node.name.text)
     ) {
       found = true;
       return;

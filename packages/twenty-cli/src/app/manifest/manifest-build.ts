@@ -487,6 +487,7 @@ export const buildManifest = async (
         const {
           commandMenuItemManifest,
           errors: commandMenuItemManifestErrors,
+          warnings: commandMenuItemManifestWarnings,
         } = fromCommandMenuItemConfigToCommandMenuItemManifest({
           commandMenuItemConfig: extract.config,
           relativePath,
@@ -496,6 +497,7 @@ export const buildManifest = async (
         errors.push(...extract.errors);
         errors.push(...commandMenuItemManifestErrors);
         warnings.push(...(extract.warnings ?? []));
+        warnings.push(...commandMenuItemManifestWarnings);
         commandMenuItemsFilePaths.push(relativePath);
         break;
       }

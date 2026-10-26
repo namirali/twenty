@@ -1,4 +1,6 @@
 import { type CommandMenuItemConfig } from '@/app/manifest/types/command-menu-item-config.type';
+import { type CompiledConditionExpression } from '@/app/source/types/compiled-condition-expression.type';
+import { isString } from '@sniptt/guards';
 import { type CommandMenuItemManifest } from 'twenty-shared/application';
 import { type UniversalConditionalDisplay } from 'twenty-shared/types';
 import {
@@ -10,35 +12,61 @@ const compileExpressionConfig = ({
   expression,
   configKey,
   manifestKey,
+  label,
   relativePath,
 }: {
-  expression: boolean | string | undefined;
+  expression: string | CompiledConditionExpression | undefined;
   configKey:
     | 'conditionalAvailabilityExpression'
     | 'conditionalPinnedExpression';
   manifestKey: 'conditionalAvailability' | 'conditionalPinned';
+  label: string;
   relativePath: string;
 }): {
   conditionalDisplay: UniversalConditionalDisplay | undefined;
   errors: string[];
+  warnings: string[];
 } => {
   if (!isDefined(expression)) {
-    return { conditionalDisplay: undefined, errors: [] };
+    return { conditionalDisplay: undefined, errors: [], warnings: [] };
   }
+
+  const describedExpression = `${relativePath} - ${configKey} of command menu item "${label}"`;
+
+  if (!isString(expression)) {
+    return 'errorMessage' in expression
+      ? {
+          conditionalDisplay: undefined,
+          errors: [
+            `${describedExpression} cannot be compiled into a ${manifestKey} tree: ${expression.errorMessage}`,
+          ],
+          warnings: [],
+        }
+      : {
+          conditionalDisplay: expression.conditionalDisplay ?? undefined,
+          errors: [],
+          warnings: [],
+        };
+  }
+
+  const warnings = [
+    `${describedExpression} is a formula string; write it as code (for example numberOfSelectedRecords === 1) so the build can check it.`,
+  ];
 
   try {
     return {
       conditionalDisplay:
-        compileConditionalAvailabilityExpression(String(expression)) ??
-        undefined,
+        compileConditionalAvailabilityExpression(expression) ?? undefined,
       errors: [],
+      warnings,
     };
   } catch (error) {
     return {
       conditionalDisplay: undefined,
       errors: [
-        `${relativePath} - ${configKey} cannot be compiled into a ${manifestKey} tree: ${error instanceof Error ? error.message : String(error)}`,
+        `${describedExpression} cannot be compiled into a ${manifestKey} tree: ${error instanceof Error ? error.message : String(error)}`,
       ],
+      warnings,
     };
   }
 };
@@ -49,7 +77,11 @@ export const fromCommandMenuItemConfigToCommandMenuItemManifest = ({
 }: {
   commandMenuItemConfig: CommandMenuItemConfig;
   relativePath: string;
-}): { commandMenuItemManifest: CommandMenuItemManifest; errors: string[] } => {
+}): {
+  commandMenuItemManifest: CommandMenuItemManifest;
+  errors: string[];
+  warnings: string[];
+} => {
   const {
     conditionalAvailabilityExpression,
     conditionalPinnedExpression,
@@ -63,6 +95,7 @@ export const fromCommandMenuItemConfigToCommandMenuItemManifest = ({
     expression: conditionalAvailabilityExpression,
     configKey: 'conditionalAvailabilityExpression',
     manifestKey: 'conditionalAvailability',
+    label: commandMenuItemConfig.label,
     relativePath,
   });
 
@@ -70,6 +103,7 @@ export const fromCommandMenuItemConfigToCommandMenuItemManifest = ({
     expression: conditionalPinnedExpression,
     configKey: 'conditionalPinnedExpression',
     manifestKey: 'conditionalPinned',
+    label: commandMenuItemConfig.label,
     relativePath,
   });
 
@@ -86,5 +120,9 @@ export const fromCommandMenuItemConfigToCommandMenuItemManifest = ({
   return {
     commandMenuItemManifest,
     errors: [...conditionalAvailability.errors, ...conditionalPinned.errors],
+    warnings: [
+      ...conditionalAvailability.warnings,
+      ...conditionalPinned.warnings,
+    ],
   };
 };

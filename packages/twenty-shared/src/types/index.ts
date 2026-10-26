@@ -68,6 +68,7 @@ export {
   richTextValueSchema,
 } from './composite-types/rich-text.composite-type';
 export type { CompositeFieldSubFieldName } from './CompositeFieldSubFieldNameType';
+export type { ConditionalAvailabilityExpressionNode } from './conditional-display/ConditionalAvailabilityExpressionNode';
 export type { ConditionalDisplay } from './conditional-display/ConditionalDisplay';
 export type { ConditionalDisplayAdminContextKey } from './conditional-display/ConditionalDisplayAdminContextKey';
 export type { ConditionalDisplayConditionNode } from './conditional-display/ConditionalDisplayConditionNode';

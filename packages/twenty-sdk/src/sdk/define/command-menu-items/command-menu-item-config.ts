@@ -5,5 +5,5 @@ export type CommandMenuItemConfig = Omit<
   'conditionalAvailability' | 'conditionalPinned' | 'conditionalDisplay'
 > & {
   conditionalAvailabilityExpression?: boolean | string;
-  conditionalPinnedExpression?: string;
+  conditionalPinnedExpression?: boolean | string;
 };

@@ -373,4 +373,20 @@ describe('compileConditionalAvailabilityExpression', () => {
       'truthiness of record path "isActive": every, some and none accept a path ending in ".length", a boolean path (canChangeVisibility, inboxStatus.isUnread) or an identifier path (lastPublishedVersionId)',
     );
   });
+
+  it('should throw on a list function over anything but selectedRecords', () => {
+    expect(() =>
+      compileConditionalAvailabilityExpression(
+        'everyEquals(objectPermissions, "canUpdateObjectRecords", true)',
+      ),
+    ).toThrow(
+      'everyEquals over variable "objectPermissions": everyEquals only accepts selectedRecords as its first argument',
+    );
+  });
+
+  it('should throw on an unknown variable', () => {
+    expect(() =>
+      compileConditionalAvailabilityExpression('isSelected and isSelectAll'),
+    ).toThrow('unknown variable "isSelected"');
+  });
 });

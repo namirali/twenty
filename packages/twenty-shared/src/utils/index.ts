@@ -30,8 +30,10 @@ export { evaluateConditionalAvailabilityExpression } from './command-menu-items/
 export { resolveObjectMetadataLabel } from './command-menu-items/resolveObjectMetadataLabel';
 export { safeGetNestedProperty } from './command-menu-items/safeGetNestedProperty';
 export { computeDiffBetweenObjects } from './compute-diff-between-objects';
+export { buildConditionalAvailabilityCompilationError } from './conditional-display/buildConditionalAvailabilityCompilationError';
 export { buildConditionalDisplayFromConditionNode } from './conditional-display/buildConditionalDisplayFromConditionNode';
 export { compileConditionalAvailabilityExpression } from './conditional-display/compileConditionalAvailabilityExpression';
+export { compileConditionalAvailabilityExpressionNode } from './conditional-display/compileConditionalAvailabilityExpressionNode';
 export { evaluateConditionalDisplay } from './conditional-display/evaluateConditionalDisplay';
 export { getConditionalDisplayContextVirtualField } from './conditional-display/getConditionalDisplayContextVirtualField';
 export { groupConditionalDisplayConditionNodes } from './conditional-display/groupConditionalDisplayConditionNodes';

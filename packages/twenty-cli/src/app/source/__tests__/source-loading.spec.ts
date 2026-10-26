@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { stop } from 'esbuild';
+import { compileConditionalAvailabilityExpression } from 'twenty-shared/utils';
 import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { extractDefineEntity } from '@/app/source/extract-define-entity';
@@ -149,7 +150,7 @@ describe('CLI app source loading', () => {
     });
   });
 
-  it('mocks UI and generated clients and hands the builder the conditional availability formula without evaluating the expression', async () => {
+  it('mocks UI and generated clients and hands the builder the compiled conditional availability without evaluating the expression', async () => {
     await writeFile(
       join(appPath, 'command.ts'),
       `
@@ -160,7 +161,8 @@ describe('CLI app source loading', () => {
       export default defineCommandMenuItem({
         universalIdentifier: '${SOURCE_TEST_APPLICATION_ID}',
         component: () => { new CoreApiClient(); new MetadataApiClient(); return IconTest; },
-        conditionalAvailabilityExpression: selectedRecords.length === 1 && !isSelected,
+        conditionalAvailabilityExpression: numberOfSelectedRecords === 1 && !isSelectAll,
+        conditionalPinnedExpression: selectedRecords.length === 1 && !isSelected,
       });
     `,
     );
@@ -169,9 +171,18 @@ describe('CLI app source loading', () => {
       filePath: join(appPath, 'command.ts'),
     });
 
-    expect(result.config.conditionalAvailabilityExpression).toBe(
-      'arrayLength(selectedRecords) == 1 and not isSelected',
-    );
+    expect(result.config.conditionalAvailabilityExpression).toEqual({
+      expression: 'numberOfSelectedRecords === 1 && !isSelectAll',
+      conditionalDisplay: compileConditionalAvailabilityExpression(
+        'numberOfSelectedRecords == 1 and not isSelectAll',
+      ),
+    });
+    expect(result.config.conditionalPinnedExpression).toEqual({
+      expression: 'selectedRecords.length === 1 && !isSelected',
+      errorMessage: expect.stringContaining(
+        'unsupported member "length" of variable "selectedRecords"',
+      ),
+    });
     expect(result.config.component).toBeTypeOf('function');
   });
 
