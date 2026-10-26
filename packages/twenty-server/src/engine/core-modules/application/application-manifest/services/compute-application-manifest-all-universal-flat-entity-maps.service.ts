@@ -81,7 +81,8 @@ export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
     }) =>
       [
         ...Object.values(
-          allUniversalFlatEntityMaps.flatFieldMetadataMaps.byUniversalIdentifier,
+          allUniversalFlatEntityMaps.flatFieldMetadataMaps
+            .byUniversalIdentifier,
         ),
         ...Object.values(workspaceFlatFieldMetadataMaps.byUniversalIdentifier),
       ].find(

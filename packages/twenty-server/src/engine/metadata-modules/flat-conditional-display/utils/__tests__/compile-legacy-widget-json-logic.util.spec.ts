@@ -58,13 +58,14 @@ const validateAsWidgetConditionalDisplay = ({
   validateConditionalDisplay({
     conditionalDisplay: {
       ...conditionalDisplay,
-      recordFilters: recordFilters.map(({ fieldMetadataId, ...recordFilter }) =>
-        isDefined(fieldMetadataId)
-          ? {
-              ...recordFilter,
-              fieldMetadataUniversalIdentifier: fieldMetadataId,
-            }
-          : recordFilter,
+      recordFilters: recordFilters.map(
+        ({ fieldMetadataId, ...recordFilter }) =>
+          isDefined(fieldMetadataId)
+            ? {
+                ...recordFilter,
+                fieldMetadataUniversalIdentifier: fieldMetadataId,
+              }
+            : recordFilter,
       ),
     },
     property: 'conditionalDisplay',
@@ -157,7 +158,8 @@ describe('compileLegacyWidgetJsonLogic', () => {
       resolveField,
     });
 
-    const rootRecordFilterGroupId = conditionalDisplay.recordFilterGroups?.[0]?.id;
+    const rootRecordFilterGroupId =
+      conditionalDisplay.recordFilterGroups?.[0]?.id;
 
     expect(conditionalDisplay).toEqual({
       recordFilters: [
