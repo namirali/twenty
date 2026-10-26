@@ -1,8 +1,11 @@
+import { Logger } from '@nestjs/common';
+
 import { type CommandMenuItemManifest } from 'twenty-shared/application';
 import {
   type UniversalConditionalDisplay,
   ViewFilterOperand,
 } from 'twenty-shared/types';
+import { compileConditionalAvailabilityExpression } from 'twenty-shared/utils';
 
 import { fromCommandMenuItemManifestToUniversalFlatCommandMenuItem } from 'src/engine/core-modules/application/application-manifest/converters/from-command-menu-item-manifest-to-universal-flat-command-menu-item.util';
 import { type LegacyCommandMenuItemManifest } from 'src/engine/core-modules/application/application-manifest/types/legacy-command-menu-item-manifest.type';
@@ -43,7 +46,17 @@ const build = (commandMenuItemManifest: LegacyCommandMenuItemManifest) =>
   });
 
 describe('fromCommandMenuItemManifestToUniversalFlatCommandMenuItem', () => {
-  it('carries the conditional availability and pinned trees onto the command menu item', () => {
+  let warnSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    warnSpy = jest
+      .spyOn(Logger.prototype, 'warn')
+      .mockImplementation(() => undefined);
+  });
+
+  afterEach(() => warnSpy.mockRestore());
+
+  it('carries the conditional availability and pinned trees onto the command menu item without a warning', () => {
     expect(
       build({
         ...COMMAND_MENU_ITEM_MANIFEST,
@@ -54,27 +67,69 @@ describe('fromCommandMenuItemManifestToUniversalFlatCommandMenuItem', () => {
       universalConditionalAvailability: CONDITIONAL_AVAILABILITY,
       universalConditionalPinned: CONDITIONAL_PINNED,
     });
+    expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  it('rejects a manifest declaring a conditional availability expression', () => {
-    expect(() =>
+  it('converts the formula strings of an older SDK build with the migration converter and warns to rebuild', () => {
+    expect(
       build({
         ...COMMAND_MENU_ITEM_MANIFEST,
+        conditionalAvailabilityExpression: 'not isSelectAll',
+        conditionalPinnedExpression: 'numberOfSelectedRecords == 1',
+      }),
+    ).toMatchObject({
+      conditionalAvailabilityExpression: null,
+      conditionalPinnedExpression: null,
+      universalConditionalAvailability:
+        compileConditionalAvailabilityExpression('not isSelectAll'),
+      universalConditionalPinned: compileConditionalAvailabilityExpression(
+        'numberOfSelectedRecords == 1',
+      ),
+    });
+    expect(warnSpy.mock.calls).toEqual([
+      [
+        'Command menu item "Escalate ticket" carries a conditionalAvailabilityExpression: Built with an older SDK. Rebuild to remove this warning.',
+      ],
+      [
+        'Command menu item "Escalate ticket" carries a conditionalPinnedExpression: Built with an older SDK. Rebuild to remove this warning.',
+      ],
+    ]);
+  });
+
+  it('keeps an always available formula string without a tree', () => {
+    expect(
+      build({
+        ...COMMAND_MENU_ITEM_MANIFEST,
+        conditionalAvailabilityExpression: 'true',
+      }),
+    ).toMatchObject({ universalConditionalAvailability: null });
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('uses the trees and ignores the formula strings when a manifest carries both', () => {
+    expect(
+      build({
+        ...COMMAND_MENU_ITEM_MANIFEST,
+        conditionalAvailability: CONDITIONAL_AVAILABILITY,
         conditionalAvailabilityExpression: 'numberOfSelectedRecords >= 1',
+        conditionalPinned: CONDITIONAL_PINNED,
+        conditionalPinnedExpression: 'unknown formula',
       }),
-    ).toThrow(
-      'Command menu item "Escalate ticket" declares the unsupported conditionalAvailabilityExpression, declare a conditionalAvailability tree instead',
-    );
+    ).toMatchObject({
+      universalConditionalAvailability: CONDITIONAL_AVAILABILITY,
+      universalConditionalPinned: CONDITIONAL_PINNED,
+    });
+    expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  it('rejects a manifest declaring a conditional pinned expression', () => {
+  it('fails the install naming the item when a formula string cannot be converted', () => {
     expect(() =>
       build({
         ...COMMAND_MENU_ITEM_MANIFEST,
-        conditionalPinnedExpression: 'numberOfSelectedRecords >= 1',
+        conditionalPinnedExpression: 'arrayLength(selectedRecords) == 1',
       }),
     ).toThrow(
-      'Command menu item "Escalate ticket" declares the unsupported conditionalPinnedExpression, declare a conditionalPinned tree instead',
+      'Command menu item "Escalate ticket" carries a conditionalPinnedExpression that cannot be converted: Cannot compile conditional availability expression "arrayLength(selectedRecords) == 1"',
     );
   });
 });

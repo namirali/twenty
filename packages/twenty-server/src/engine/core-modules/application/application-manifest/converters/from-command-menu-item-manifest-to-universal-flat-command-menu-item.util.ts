@@ -1,5 +1,13 @@
-import { CommandMenuItemAvailabilityType } from 'twenty-shared/types';
-import { isDefined } from 'twenty-shared/utils';
+import { Logger } from '@nestjs/common';
+
+import {
+  CommandMenuItemAvailabilityType,
+  type UniversalConditionalDisplay,
+} from 'twenty-shared/types';
+import {
+  compileConditionalAvailabilityExpression,
+  isDefined,
+} from 'twenty-shared/utils';
 
 import { type LegacyCommandMenuItemManifest } from 'src/engine/core-modules/application/application-manifest/types/legacy-command-menu-item-manifest.type';
 import {
@@ -10,22 +18,42 @@ import { EngineComponentKey } from 'src/engine/metadata-modules/command-menu-ite
 import { normalizeConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/normalize-conditional-display.util';
 import { type UniversalFlatCommandMenuItem } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/types/universal-flat-command-menu-item.type';
 
-const throwIfCommandMenuItemManifestHasExpressions = (
-  commandMenuItemManifest: LegacyCommandMenuItemManifest,
-): void => {
-  if (isDefined(commandMenuItemManifest.conditionalAvailabilityExpression)) {
+const logger = new Logger('CommandMenuItemManifestConverter');
+
+const resolveLegacyExpressionOrThrow = ({
+  label,
+  expressionPropertyName,
+  expression,
+  conditionalDisplay,
+}: {
+  label: string;
+  expressionPropertyName:
+    | 'conditionalAvailabilityExpression'
+    | 'conditionalPinnedExpression';
+  expression: string | undefined;
+  conditionalDisplay: UniversalConditionalDisplay | undefined;
+}): UniversalConditionalDisplay | undefined => {
+  if (isDefined(conditionalDisplay) || !isDefined(expression)) {
+    return conditionalDisplay;
+  }
+
+  let convertedConditionalDisplay: UniversalConditionalDisplay | undefined;
+
+  try {
+    convertedConditionalDisplay =
+      compileConditionalAvailabilityExpression(expression) ?? undefined;
+  } catch (error) {
     throw new ApplicationException(
-      `Command menu item "${commandMenuItemManifest.label}" declares the unsupported conditionalAvailabilityExpression, declare a conditionalAvailability tree instead`,
+      `Command menu item "${label}" carries a ${expressionPropertyName} that cannot be converted: ${error instanceof Error ? error.message : String(error)}. Rebuild the app with the current SDK.`,
       ApplicationExceptionCode.INVALID_INPUT,
     );
   }
 
-  if (isDefined(commandMenuItemManifest.conditionalPinnedExpression)) {
-    throw new ApplicationException(
-      `Command menu item "${commandMenuItemManifest.label}" declares the unsupported conditionalPinnedExpression, declare a conditionalPinned tree instead`,
-      ApplicationExceptionCode.INVALID_INPUT,
-    );
-  }
+  logger.warn(
+    `Command menu item "${label}" carries a ${expressionPropertyName}: Built with an older SDK. Rebuild to remove this warning.`,
+  );
+
+  return convertedConditionalDisplay;
 };
 
 export const fromCommandMenuItemManifestToUniversalFlatCommandMenuItem = ({
@@ -37,7 +65,18 @@ export const fromCommandMenuItemManifestToUniversalFlatCommandMenuItem = ({
   applicationUniversalIdentifier: string;
   now: string;
 }): UniversalFlatCommandMenuItem => {
-  throwIfCommandMenuItemManifestHasExpressions(commandMenuItemManifest);
+  const conditionalAvailability = resolveLegacyExpressionOrThrow({
+    label: commandMenuItemManifest.label,
+    expressionPropertyName: 'conditionalAvailabilityExpression',
+    expression: commandMenuItemManifest.conditionalAvailabilityExpression,
+    conditionalDisplay: commandMenuItemManifest.conditionalAvailability,
+  });
+  const conditionalPinned = resolveLegacyExpressionOrThrow({
+    label: commandMenuItemManifest.label,
+    expressionPropertyName: 'conditionalPinnedExpression',
+    expression: commandMenuItemManifest.conditionalPinnedExpression,
+    conditionalDisplay: commandMenuItemManifest.conditionalPinned,
+  });
 
   return {
     universalIdentifier: commandMenuItemManifest.universalIdentifier,
@@ -56,11 +95,9 @@ export const fromCommandMenuItemManifestToUniversalFlatCommandMenuItem = ({
       commandMenuItemManifest.conditionalDisplay,
     ),
     universalConditionalAvailability: normalizeConditionalDisplay(
-      commandMenuItemManifest.conditionalAvailability,
+      conditionalAvailability,
     ),
-    universalConditionalPinned: normalizeConditionalDisplay(
-      commandMenuItemManifest.conditionalPinned,
-    ),
+    universalConditionalPinned: normalizeConditionalDisplay(conditionalPinned),
     frontComponentUniversalIdentifier:
       commandMenuItemManifest.frontComponentUniversalIdentifier,
     availabilityObjectMetadataUniversalIdentifier:
