@@ -87,7 +87,7 @@ Elles représentent l’état actuel de la page :
 | `numberOfSelectedRecords`      | `number`  | Nombre d'enregistrements actuellement sélectionnés                   |
 | `isSelectAll`                  | `boolean` | Indique si "tout sélectionner" est actif                             |
 | `selectedRecords`              | `array`   | Les objets d'enregistrement sélectionnés                             |
-| `favoriteRecordIds`            | `array`   | IDs des enregistrements ajoutés aux favoris                          |
+| `favoriteRecordIds`            | `array`   | IDs des enregistrements ajoutés aux favoris, utilisable uniquement sous la forme `favoriteRecordIds.length == numberOfSelectedRecords` (tous les enregistrements sélectionnés sont en favoris) ou `favoriteRecordIds.length < numberOfSelectedRecords` (au moins un ne l'est pas) |
 | `objectPermissions`            | `object`  | Autorisations pour le type d'objet actuel                            |
 | `targetObjectReadPermissions`  | `object`  | Autorisations de lecture pour l'objet cible                          |
 | `targetObjectWritePermissions` | `object`  | Autorisations d'écriture pour l'objet cible                          |
@@ -102,8 +102,8 @@ Combinez des variables en expressions booléennes :
 | Opérateur                           | Description                                                            |
 | ----------------------------------- | ---------------------------------------------------------------------- |
 | `isDefined(value)`                  | `true` si la valeur n'est pas null/undefined                           |
-| `isNonEmptyString(value)`           | `true` si la valeur est une chaîne non vide                            |
-| `includes(array, value)`            | `true` si le tableau contient la valeur                                |
+| `isNonEmptyString(value)`           | `true` si une valeur texte du contexte (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) est une chaîne non vide |
+| `includes(list, value)`             | `true` si une valeur texte du contexte fait partie des valeurs listées, par ex. `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true` si la propriété de chaque élément inclut la valeur              |
 | `every(array, prop)`                | `true` si la propriété est truthy sur chaque élément                   |
 | `everyDefined(array, prop)`         | `true` si la propriété est définie pour chaque élément                 |

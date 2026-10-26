@@ -87,7 +87,7 @@ export default defineCommandMenuItem({
 | `numberOfSelectedRecords`      | `number`  | 現在選択されているレコード数                                  |
 | `isSelectAll`                  | `boolean` | 「すべて選択」が有効かどうか                                  |
 | `selectedRecords`              | `array`   | 選択されたレコードオブジェクト                                 |
-| `favoriteRecordIds`            | `array`   | お気に入り登録されたレコードの ID                              |
+| `favoriteRecordIds`            | `array`   | お気に入り登録されたレコードの ID。`favoriteRecordIds.length == numberOfSelectedRecords`（選択したすべてのレコードがお気に入り）または `favoriteRecordIds.length < numberOfSelectedRecords`（少なくとも 1 件がお気に入りでない）の形でのみ使用できます |
 | `objectPermissions`            | `object`  | 現在のオブジェクトタイプの権限                                 |
 | `targetObjectReadPermissions`  | `object`  | 対象オブジェクトの読み取り権限                                 |
 | `targetObjectWritePermissions` | `object`  | 対象オブジェクトの書き込み権限                                 |
@@ -102,8 +102,8 @@ export default defineCommandMenuItem({
 | 演算子                                 | 説明                                        |
 | ----------------------------------- | ----------------------------------------- |
 | `isDefined(value)`                  | 値が null/undefined でない場合は `true`           |
-| `isNonEmptyString(value)`           | 値が空でない文字列の場合は `true`                      |
-| `includes(array, value)`            | 配列に値が含まれている場合は `true`                     |
+| `isNonEmptyString(value)`           | テキストのコンテキスト値（`pageType`、`objectMetadataItem.nameSingular`、`objectMetadataItem.readability`）が空でない文字列の場合は `true` |
+| `includes(list, value)`             | テキストのコンテキスト値が列挙した値のいずれかである場合は `true`（例: `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)`） |
 | `includesEvery(array, prop, value)` | すべての要素のプロパティに値が含まれている場合は `true`           |
 | `every(array, prop)`                | すべての要素でそのプロパティが truthy の場合は `true`        |
 | `everyDefined(array, prop)`         | すべての要素でそのプロパティが定義されている場合は `true`          |

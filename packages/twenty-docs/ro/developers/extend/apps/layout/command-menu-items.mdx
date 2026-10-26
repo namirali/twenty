@@ -87,7 +87,7 @@ Acestea reprezintă starea curentă a paginii:
 | `numberOfSelectedRecords`      | `number`  | Numărul de înregistrări selectate în prezent                           |
 | `isSelectAll`                  | `boolean` | Dacă "select all" este activ                                           |
 | `selectedRecords`              | `array`   | Obiectele înregistrărilor selectate                                    |
-| `favoriteRecordIds`            | `array`   | ID-urile înregistrărilor marcate ca favorite                           |
+| `favoriteRecordIds`            | `array`   | ID-urile înregistrărilor marcate ca favorite, utilizabile doar ca `favoriteRecordIds.length == numberOfSelectedRecords` (toate înregistrările selectate sunt favorite) sau `favoriteRecordIds.length < numberOfSelectedRecords` (cel puțin una nu este) |
 | `objectPermissions`            | `object`  | Permisiuni pentru tipul de obiect curent                               |
 | `targetObjectReadPermissions`  | `object`  | Permisiuni de citire pentru obiectul țintă                             |
 | `targetObjectWritePermissions` | `object`  | Permisiuni de scriere pentru obiectul țintă                            |
@@ -102,8 +102,8 @@ Combinați variabilele în expresii booleene:
 | Operator                            | Descriere                                                               |
 | ----------------------------------- | ----------------------------------------------------------------------- |
 | `isDefined(value)`                  | `true` dacă valoarea nu este null/undefined                             |
-| `isNonEmptyString(value)`           | `true` dacă valoarea este un șir nevid                                  |
-| `includes(array, value)`            | `true` dacă array-ul conține valoarea                                   |
+| `isNonEmptyString(value)`           | `true` dacă o valoare text din context (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) este un șir nevid |
+| `includes(list, value)`             | `true` dacă o valoare text din context este una dintre valorile listate, de ex. `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true` dacă proprietatea fiecărui element include valoarea              |
 | `every(array, prop)`                | `true` dacă proprietatea este truthy pentru fiecare element             |
 | `everyDefined(array, prop)`         | `true` dacă proprietatea este definită pentru fiecare element           |

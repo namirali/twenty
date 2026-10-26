@@ -1679,7 +1679,7 @@ exports[`CLI manifest fixtures and worker transport > matches the manifest, file
 exports[`CLI manifest fixtures and worker transport > matches the manifest, file paths, errors and warnings for unmapped-conditional-availability-app 1`] = `
 {
   "errors": [
-    "src/command-menu-items/favorite-count.command-menu-item.ts - conditionalAvailabilityExpression of command menu item "Favorite count" cannot be compiled into a conditionalAvailability tree: Cannot compile conditional availability expression "favoriteRecordIds.length > 0": unsupported operator ">" between favoriteRecordIds.length and literal 0",
+    "src/command-menu-items/favorite-count.command-menu-item.ts - conditionalAvailabilityExpression of command menu item "Favorite count" cannot be compiled into a conditionalAvailability tree: Cannot compile conditional availability expression "favoriteRecordIds.length > 0": unsupported comparison of favoriteRecordIds.length: write favoriteRecordIds.length == numberOfSelectedRecords when every selected record is a favorite, or favoriteRecordIds.length < numberOfSelectedRecords when at least one is not",
     "src/command-menu-items/selected-records-pinned.command-menu-item.ts - conditionalPinnedExpression of command menu item "Selected records pinned" cannot be compiled into a conditionalPinned tree: Cannot compile conditional availability expression "arrayLength(selectedRecords) == 1": unsupported call of arrayLength(variable "selectedRecords")",
   ],
   "success": false,

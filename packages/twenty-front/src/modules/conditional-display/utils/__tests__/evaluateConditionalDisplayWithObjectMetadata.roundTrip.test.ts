@@ -11,6 +11,7 @@ import {
   type ConditionalDisplayRecordFilter,
   ContextStorePageType,
   FieldMetadataType,
+  MetadataReadability,
   type ObjectRecord,
   RecordFilterGroupLogicalOperator,
   ViewFilterOperand,
@@ -642,4 +643,63 @@ describe('evaluateConditionalDisplayWithObjectMetadata round trip', () => {
       }),
     ).toBe(false);
   });
+
+  it.each([
+    'isNonEmptyString(pageType)',
+    'isNonEmptyString(objectMetadataItem.nameSingular)',
+    'isNonEmptyString(objectMetadataLabel)',
+    'isNonEmptyString(objectMetadataItem.readability)',
+    'includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)',
+    'includes(["company", "person"], objectMetadataItem.nameSingular)',
+    'arrayLength(favoriteRecordIds) != numberOfSelectedRecords',
+  ])(
+    'should evaluate the compiled documented helper formula %s like the expression',
+    (expression) => {
+      const conditionalDisplay =
+        compileConditionalAvailabilityExpression(expression);
+
+      const objectMetadataItemCases = [
+        { objectMetadataItem: {}, objectMetadataLabel: '' },
+        {
+          objectMetadataItem: { nameSingular: 'company' },
+          objectMetadataLabel: 'Companies',
+        },
+        {
+          objectMetadataItem: {
+            nameSingular: 'note',
+            readability: MetadataReadability.OPEN,
+          },
+          objectMetadataLabel: 'Note',
+        },
+      ];
+
+      const contexts = Object.values(ContextStorePageType).flatMap(
+        (pageType) =>
+          objectMetadataItemCases.flatMap((objectMetadataItemCase) =>
+            [0, 1, 2].flatMap((numberOfSelectedRecords) =>
+              FAVORITE_RECORD_COUNTS.filter(
+                (favoriteRecordCount) =>
+                  favoriteRecordCount <= numberOfSelectedRecords,
+              ).map((favoriteRecordCount) => ({
+                ...buildRoundTripContext({
+                  assignments: new Map([['pageType', pageType]]),
+                  selectedRecords: [],
+                  numberOfSelectedRecords,
+                  favoriteRecordCount,
+                }),
+                ...objectMetadataItemCase,
+              })),
+            ),
+          ),
+      );
+
+      const mismatchingContexts = contexts.filter(
+        (context) =>
+          evaluateConditionalAvailabilityExpression(expression, context) !==
+          evaluateTree({ conditionalDisplay, context }),
+      );
+
+      expect(mismatchingContexts).toEqual([]);
+    },
+  );
 });

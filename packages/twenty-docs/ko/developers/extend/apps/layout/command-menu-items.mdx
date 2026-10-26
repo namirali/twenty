@@ -87,7 +87,7 @@ export default defineCommandMenuItem({
 | `numberOfSelectedRecords`      | `number`  | 현재 선택된 레코드 수                                      |
 | `isSelectAll`                  | `boolean` | "전체 선택"이 활성화되었는지 여부                               |
 | `selectedRecords`              | `array`   | 선택된 레코드 객체                                        |
-| `favoriteRecordIds`            | `array`   | 즐겨찾기된 레코드의 ID들                                    |
+| `favoriteRecordIds`            | `array`   | 즐겨찾기된 레코드의 ID들. `favoriteRecordIds.length == numberOfSelectedRecords`(선택한 모든 레코드가 즐겨찾기) 또는 `favoriteRecordIds.length < numberOfSelectedRecords`(하나 이상이 즐겨찾기가 아님) 형태로만 사용할 수 있습니다 |
 | `objectPermissions`            | `object`  | 현재 객체 타입에 대한 권한                                   |
 | `targetObjectReadPermissions`  | `object`  | 대상 객체에 대한 읽기 권한                                   |
 | `targetObjectWritePermissions` | `object`  | 대상 객체에 대한 쓰기 권한                                   |
@@ -102,8 +102,8 @@ export default defineCommandMenuItem({
 | 연산자                                 | 설명                                      |
 | ----------------------------------- | --------------------------------------- |
 | `isDefined(value)`                  | 값이 null/undefined가 아니면 `true`           |
-| `isNonEmptyString(value)`           | 값이 비어 있지 않은 문자열이면 `true`                |
-| `includes(array, value)`            | 배열에 해당 값이 포함되어 있으면 `true`               |
+| `isNonEmptyString(value)`           | 텍스트 컨텍스트 값(`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`)이 비어 있지 않은 문자열이면 `true` |
+| `includes(list, value)`             | 텍스트 컨텍스트 값이 나열된 값 중 하나이면 `true` (예: `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)`) |
 | `includesEvery(array, prop, value)` | 모든 항목의 속성에 해당 값이 포함되어 있으면 `true`        |
 | `every(array, prop)`                | 모든 항목에서 해당 속성이 truthy이면 `true`          |
 | `everyDefined(array, prop)`         | 모든 항목에서 해당 속성이 정의되어 있으면 `true`          |

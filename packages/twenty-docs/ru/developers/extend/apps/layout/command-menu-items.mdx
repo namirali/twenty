@@ -87,7 +87,7 @@ export default defineCommandMenuItem({
 | `numberOfSelectedRecords`      | `number`  | Количество выбранных в данный момент записей                             |
 | `isSelectAll`                  | `boolean` | Активен ли режим "выбрать все"                                           |
 | `selectedRecords`              | `array`   | Объекты выбранных записей                                                |
-| `favoriteRecordIds`            | `array`   | ID избранных записей                                                     |
+| `favoriteRecordIds`            | `array`   | ID избранных записей, используется только как `favoriteRecordIds.length == numberOfSelectedRecords` (все выбранные записи в избранном) или `favoriteRecordIds.length < numberOfSelectedRecords` (хотя бы одна не в избранном) |
 | `objectPermissions`            | `object`  | Разрешения для текущего типа объекта                                     |
 | `targetObjectReadPermissions`  | `object`  | Права на чтение для целевого объекта                                     |
 | `targetObjectWritePermissions` | `object`  | Права на запись для целевого объекта                                     |
@@ -102,8 +102,8 @@ export default defineCommandMenuItem({
 | Оператор                            | Описание                                                                  |
 | ----------------------------------- | ------------------------------------------------------------------------- |
 | `isDefined(value)`                  | `true`, если значение не null/undefined                                   |
-| `isNonEmptyString(value)`           | `true`, если значение — непустая строка                                   |
-| `includes(array, value)`            | `true`, если массив содержит значение                                     |
+| `isNonEmptyString(value)`           | `true`, если текстовое значение контекста (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) является непустой строкой |
+| `includes(list, value)`             | `true`, если текстовое значение контекста входит в перечисленные значения, например `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true`, если свойство каждого элемента включает значение                  |
 | `every(array, prop)`                | `true`, если свойство истинно для каждого элемента                        |
 | `everyDefined(array, prop)`         | `true`, если свойство определено у каждого элемента                       |

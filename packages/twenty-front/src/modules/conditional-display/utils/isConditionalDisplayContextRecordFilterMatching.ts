@@ -97,7 +97,7 @@ export const isConditionalDisplayContextRecordFilterMatching = ({
       [fieldName]:
         virtualField.type === FieldMetadataType.BOOLEAN
           ? subjectValue === true
-          : subjectValue,
+          : (subjectValue ?? null),
     },
     filter,
     objectMetadataItem: {

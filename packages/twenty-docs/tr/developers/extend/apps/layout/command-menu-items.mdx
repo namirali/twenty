@@ -87,7 +87,7 @@ Bunlar sayfanın mevcut durumunu temsil eder:
 | `numberOfSelectedRecords`      | `number`  | Şu anda seçili kayıt sayısı                                       |
 | `isSelectAll`                  | `boolean` | "tümünü seç" seçeneğinin etkin olup olmadığı                      |
 | `selectedRecords`              | `array`   | Seçili kayıt nesneleri                                            |
-| `favoriteRecordIds`            | `array`   | Favorilere eklenen kayıtların ID'leri                             |
+| `favoriteRecordIds`            | `array`   | Favorilere eklenen kayıtların ID'leri; yalnızca `favoriteRecordIds.length == numberOfSelectedRecords` (seçili tüm kayıtlar favori) veya `favoriteRecordIds.length < numberOfSelectedRecords` (en az biri favori değil) olarak kullanılabilir |
 | `objectPermissions`            | `object`  | Geçerli nesne türü için izinler                                   |
 | `targetObjectReadPermissions`  | `object`  | Hedef nesne için okuma izinleri                                   |
 | `targetObjectWritePermissions` | `object`  | Hedef nesne için yazma izinleri                                   |
@@ -102,8 +102,8 @@ Değişkenleri boolean ifadelere dönüştürmek için birleştirin:
 | Operatör                            | Açıklama                                                  |
 | ----------------------------------- | --------------------------------------------------------- |
 | `isDefined(value)`                  | Değer null/undefined değilse `true`                       |
-| `isNonEmptyString(value)`           | Değer boş olmayan bir string ise `true`                   |
-| `includes(array, value)`            | Dizi değeri içeriyorsa `true`                             |
+| `isNonEmptyString(value)`           | Metin türündeki bir bağlam değeri (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) boş olmayan bir string ise `true` |
+| `includes(list, value)`             | Metin türündeki bir bağlam değeri listelenen değerlerden biriyse `true`, örn. `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | Her bir öğenin özelliği değeri içeriyorsa `true`          |
 | `every(array, prop)`                | Özellik her öğede truthy ise `true`                       |
 | `everyDefined(array, prop)`         | Özellik her öğede tanımlıysa `true`                       |

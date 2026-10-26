@@ -66,6 +66,17 @@ export const toConditionalAvailabilityExpressionNode = ({
       return { kind: 'variable', name: childNode.text };
     }
 
+    if (ts.isArrayLiteralExpression(childNode)) {
+      return {
+        kind: 'list',
+        elements: childNode.elements.map((element) =>
+          ts.isSpreadElement(element)
+            ? throwUnsupported('spread element')
+            : convert(element),
+        ),
+      };
+    }
+
     if (ts.isPropertyAccessExpression(childNode)) {
       if (
         isDefined(childNode.questionDotToken) ||

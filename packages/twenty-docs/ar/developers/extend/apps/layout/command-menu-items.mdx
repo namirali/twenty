@@ -87,7 +87,7 @@ export default defineCommandMenuItem({
 | `numberOfSelectedRecords`      | `number`  | عدد السجلات المحدّدة حاليًا                                     |
 | `isSelectAll`                  | `boolean` | ما إذا كان "تحديد الكل" مفعّلًا                                 |
 | `selectedRecords`              | `array`   | كائنات السجلات المحدّدة                                         |
-| `favoriteRecordIds`            | `array`   | معرّفات السجلات المفضّلة                                        |
+| `favoriteRecordIds`            | `array`   | معرّفات السجلات المفضّلة، ولا تُستخدم إلا بالشكل `favoriteRecordIds.length == numberOfSelectedRecords` (كل السجلات المحددة مفضّلة) أو `favoriteRecordIds.length < numberOfSelectedRecords` (سجل واحد على الأقل غير مفضّل) |
 | `objectPermissions`            | `object`  | الأذونات الخاصة بنوع الكائن الحالي                              |
 | `targetObjectReadPermissions`  | `object`  | أذونات القراءة للكائن الهدف                                     |
 | `targetObjectWritePermissions` | `object`  | أذونات الكتابة للكائن الهدف                                     |
@@ -102,8 +102,8 @@ export default defineCommandMenuItem({
 | المُشغِّل                           | الوصف                                                              |
 | ----------------------------------- | ------------------------------------------------------------------ |
 | `isDefined(value)`                  | `true` إذا لم تكن القيمة null/undefined                            |
-| `isNonEmptyString(value)`           | `true` إذا كانت القيمة سلسلة غير فارغة                             |
-| `includes(array, value)`            | `true` إذا كانت المصفوفة تحتوي على القيمة                          |
+| `isNonEmptyString(value)`           | `true` إذا كانت قيمة سياق نصية (`pageType` أو `objectMetadataItem.nameSingular` أو `objectMetadataItem.readability`) سلسلة غير فارغة |
+| `includes(list, value)`             | `true` إذا كانت قيمة سياق نصية إحدى القيم المدرجة، مثل `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true` إذا كانت خاصية كل عنصر تتضمن القيمة                         |
 | `every(array, prop)`                | `true` إذا كانت الخاصية تُقيَّم كقيمة صادقة في كل عنصر             |
 | `everyDefined(array, prop)`         | `true` إذا كانت الخاصية معرّفة في كل عنصر                          |

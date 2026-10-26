@@ -26,6 +26,36 @@ const GENERIC_APP_CORPUS = [
   'someEquals(selectedRecords, "selectField", "VALUE_32")',
 ];
 
+const DOCUMENTED_HELPER_CORPUS = [
+  'isNonEmptyString(objectMetadataItem.nameSingular)',
+  'isNonEmptyString(objectMetadataLabel) and numberOfSelectedRecords == 1',
+  'pageType == "RECORD_PAGE" and isNonEmptyString(objectMetadataItem.readability)',
+  'includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)',
+  'includes(["company", "person"], objectMetadataItem.nameSingular) and not isSelectAll',
+  'arrayLength(favoriteRecordIds) == numberOfSelectedRecords',
+  'arrayLength(favoriteRecordIds) < numberOfSelectedRecords',
+  'arrayLength(favoriteRecordIds) != numberOfSelectedRecords',
+];
+
+const UNMAPPED_HELPER_EXPRESSIONS: [string, string][] = [
+  [
+    'favoriteRecordIds.length > 0',
+    'write favoriteRecordIds.length == numberOfSelectedRecords when every selected record is a favorite, or favoriteRecordIds.length < numberOfSelectedRecords when at least one is not',
+  ],
+  [
+    'objectMetadataLabel === "Companies"',
+    'compare objectMetadataItem.nameSingular instead (e.g. objectMetadataItem.nameSingular == "company")',
+  ],
+  [
+    'includes(favoriteRecordIds, "record-id")',
+    'includes accepts a list of values followed by a text context value, e.g. includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)',
+  ],
+  [
+    'isNonEmptyString(numberOfSelectedRecords)',
+    'isNonEmptyString accepts a text context value',
+  ],
+];
+
 const FORMULA_STRING_BY_REPOSITORY_APP_EXPRESSION: Record<string, string> = {
   true: 'true',
   '!isSelectAll': 'not isSelectAll',
@@ -169,4 +199,27 @@ describe('conditional availability built from source code', () => {
       });
     });
   });
+
+  it.each(DOCUMENTED_HELPER_CORPUS)(
+    'builds a tree, the same as the formula string, for the documented helper formula %s',
+    (formulaString) => {
+      const expression = toTypeScriptSource(formulaString);
+
+      expect(buildFromSource(expression)).toEqual({
+        expression,
+        conditionalDisplay:
+          compileConditionalAvailabilityExpression(formulaString),
+      });
+    },
+  );
+
+  it.each(UNMAPPED_HELPER_EXPRESSIONS)(
+    'fails the build of %s with what to write instead',
+    (expression, expectedMessage) => {
+      expect(buildFromSource(expression)).toEqual({
+        expression,
+        errorMessage: expect.stringContaining(expectedMessage),
+      });
+    },
+  );
 });

@@ -195,6 +195,15 @@ const toExpressionNode = ({
         );
         break;
       }
+      case 'IARRAY': {
+        const elementCount = isNumber(token.value) ? token.value : 0;
+        const elements = Array.from({ length: elementCount }, () =>
+          popExpressionNode(token),
+        ).reverse();
+
+        stack.push({ kind: 'list', elements });
+        break;
+      }
       case 'IFUNCALL': {
         const argumentCount = isNumber(token.value) ? token.value : 0;
         const functionArguments = Array.from({ length: argumentCount }, () =>

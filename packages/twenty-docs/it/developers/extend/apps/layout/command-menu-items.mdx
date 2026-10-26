@@ -87,7 +87,7 @@ Rappresentano lo stato corrente della pagina:
 | `numberOfSelectedRecords`      | `number`  | Numero di record attualmente selezionati                                 |
 | `isSelectAll`                  | `boolean` | Indica se "seleziona tutto" è attivo                                     |
 | `selectedRecords`              | `array`   | Gli oggetti dei record selezionati                                       |
-| `favoriteRecordIds`            | `array`   | ID dei record aggiunti ai preferiti                                      |
+| `favoriteRecordIds`            | `array`   | ID dei record aggiunti ai preferiti, utilizzabile solo come `favoriteRecordIds.length == numberOfSelectedRecords` (tutti i record selezionati sono preferiti) o `favoriteRecordIds.length < numberOfSelectedRecords` (almeno uno non lo è) |
 | `objectPermissions`            | `object`  | Autorizzazioni per il tipo di oggetto corrente                           |
 | `targetObjectReadPermissions`  | `object`  | Autorizzazioni di lettura per l'oggetto di destinazione                  |
 | `targetObjectWritePermissions` | `object`  | Autorizzazioni di scrittura per l'oggetto di destinazione                |
@@ -102,8 +102,8 @@ Combinano le variabili in espressioni booleane:
 | Operatore                           | Descrizione                                                          |
 | ----------------------------------- | -------------------------------------------------------------------- |
 | `isDefined(value)`                  | `true` se il valore non è null/undefined                             |
-| `isNonEmptyString(value)`           | `true` se il valore è una stringa non vuota                          |
-| `includes(array, value)`            | `true` se l'array contiene il valore                                 |
+| `isNonEmptyString(value)`           | `true` se un valore di testo del contesto (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) è una stringa non vuota |
+| `includes(list, value)`             | `true` se un valore di testo del contesto è uno dei valori elencati, ad es. `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true` se la proprietà di ogni elemento include il valore            |
 | `every(array, prop)`                | `true` se la proprietà è truthy su ogni elemento                     |
 | `everyDefined(array, prop)`         | `true` se la proprietà è definita su ogni elemento                   |

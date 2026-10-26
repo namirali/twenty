@@ -87,7 +87,7 @@ Diese repräsentieren den aktuellen Zustand der Seite:
 | `numberOfSelectedRecords`      | `number`  | Anzahl der aktuell ausgewählten Datensätze                      |
 | `isSelectAll`                  | `boolean` | Ob „Alle auswählen“ aktiv ist                                   |
 | `selectedRecords`              | `array`   | Die ausgewählten Datensatzobjekte                               |
-| `favoriteRecordIds`            | `array`   | IDs der favorisierten Datensätze                                |
+| `favoriteRecordIds`            | `array`   | IDs der favorisierten Datensätze, nur verwendbar als `favoriteRecordIds.length == numberOfSelectedRecords` (alle ausgewählten Datensätze sind Favoriten) oder `favoriteRecordIds.length < numberOfSelectedRecords` (mindestens einer nicht) |
 | `objectPermissions`            | `object`  | Berechtigungen für den aktuellen Objekttyp                      |
 | `targetObjectReadPermissions`  | `object`  | Leseberechtigungen für das Zielobjekt                           |
 | `targetObjectWritePermissions` | `object`  | Schreibberechtigungen für das Zielobjekt                        |
@@ -102,8 +102,8 @@ Kombinieren Sie Variablen zu booleschen Ausdrücken:
 | Operator                            | Beschreibung                                                                                |
 | ----------------------------------- | ------------------------------------------------------------------------------------------- |
 | `isDefined(value)`                  | `true`, wenn der Wert nicht null/undefined ist                                              |
-| `isNonEmptyString(value)`           | `true`, wenn der Wert eine nicht leere Zeichenfolge ist                                     |
-| `includes(array, value)`            | `true`, wenn das Array den Wert enthält                                                     |
+| `isNonEmptyString(value)`           | `true`, wenn ein Text-Kontextwert (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) eine nicht leere Zeichenfolge ist |
+| `includes(list, value)`             | `true`, wenn ein Text-Kontextwert einer der aufgeführten Werte ist, z. B. `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true`, wenn die Eigenschaft jedes Elements den Wert enthält                                |
 | `every(array, prop)`                | `true`, wenn die Eigenschaft bei jedem Element truthy ist                                   |
 | `everyDefined(array, prop)`         | `true`, wenn die Eigenschaft bei jedem Element definiert ist                                |

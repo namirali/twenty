@@ -87,7 +87,7 @@ Tyto proměnné reprezentují aktuální stav stránky:
 | `numberOfSelectedRecords`      | `number`  | Počet aktuálně vybraných záznamů                                     |
 | `isSelectAll`                  | `boolean` | Zda je aktivní "vybrat vše"                                          |
 | `selectedRecords`              | `array`   | Vybrané objekty záznamů                                              |
-| `favoriteRecordIds`            | `array`   | ID oblíbených záznamů                                                |
+| `favoriteRecordIds`            | `array`   | ID oblíbených záznamů, použitelné jen jako `favoriteRecordIds.length == numberOfSelectedRecords` (všechny vybrané záznamy jsou oblíbené) nebo `favoriteRecordIds.length < numberOfSelectedRecords` (alespoň jeden není) |
 | `objectPermissions`            | `object`  | Oprávnění pro aktuální typ objektu                                   |
 | `targetObjectReadPermissions`  | `object`  | Oprávnění ke čtení pro cílový objekt                                 |
 | `targetObjectWritePermissions` | `object`  | Oprávnění k zápisu pro cílový objekt                                 |
@@ -102,8 +102,8 @@ Kombinujte proměnné do logických výrazů:
 | Operátor                            | Popis                                                                          |
 | ----------------------------------- | ------------------------------------------------------------------------------ |
 | `isDefined(value)`                  | `true`, pokud hodnota není null/undefined                                      |
-| `isNonEmptyString(value)`           | `true`, pokud je hodnota neprázdným řetězcem                                   |
-| `includes(array, value)`            | `true`, pokud pole obsahuje danou hodnotu                                      |
+| `isNonEmptyString(value)`           | `true`, pokud je textová hodnota kontextu (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) neprázdným řetězcem |
+| `includes(list, value)`             | `true`, pokud je textová hodnota kontextu jednou z uvedených hodnot, např. `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true`, pokud vlastnost každé položky zahrnuje danou hodnotu                   |
 | `every(array, prop)`                | `true`, pokud je vlastnost u každé položky pravdivá (truthy)                   |
 | `everyDefined(array, prop)`         | `true`, pokud je vlastnost definována u každé položky                          |

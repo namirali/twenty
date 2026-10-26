@@ -93,7 +93,7 @@ These represent the current state of the page:
 | `numberOfSelectedRecords` | `number` | Number of currently selected records |
 | `isSelectAll` | `boolean` | Whether "select all" is active |
 | `selectedRecords` | `array` | The selected record objects |
-| `favoriteRecordIds` | `array` | IDs of favorited records |
+| `favoriteRecordIds` | `array` | IDs of favorited records, only usable as `favoriteRecordIds.length == numberOfSelectedRecords` (every selected record is a favorite) or `favoriteRecordIds.length < numberOfSelectedRecords` (at least one is not) |
 | `objectPermissions` | `object` | Permissions for the current object type |
 | `targetObjectReadPermissions` | `object` | Read permissions for the target object |
 | `targetObjectWritePermissions` | `object` | Write permissions for the target object |
@@ -108,8 +108,8 @@ Combine variables into boolean expressions:
 | Operator | Description |
 |----------|-------------|
 | `isDefined(value)` | `true` if the value is not null/undefined |
-| `isNonEmptyString(value)` | `true` if the value is a non-empty string |
-| `includes(array, value)` | `true` if the array contains the value |
+| `isNonEmptyString(value)` | `true` if a text context value (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) is a non-empty string |
+| `includes(list, value)` | `true` if a text context value is one of the listed values, e.g. `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true` if every item's property includes the value |
 | `every(array, prop)` | `true` if the property is truthy on every item |
 | `everyDefined(array, prop)` | `true` if the property is defined on every item |

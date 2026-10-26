@@ -46,6 +46,7 @@ type CompiledExpressionItem =
       entryName: string;
     }
   | { kind: 'literal'; value: ExpressionLiteral }
+  | { kind: 'list'; values: ExpressionLiteral[] }
   | { kind: 'favoriteRecordCount' }
   | { kind: 'condition'; conditionNode: ConditionalDisplayConditionNode };
 
@@ -61,6 +62,8 @@ type ContextSubject = {
 };
 
 const FAVORITE_RECORD_IDS_VARIABLE_NAME = 'favoriteRecordIds';
+
+const OBJECT_METADATA_LABEL_VARIABLE_NAME = 'objectMetadataLabel';
 
 const SELECTED_RECORDS_FUNCTION_NAMES = [
   'every',
@@ -80,6 +83,8 @@ const SELECTED_RECORDS_FUNCTION_NAMES = [
 
 const SUPPORTED_FUNCTION_NAMES = [
   'isDefined',
+  'isNonEmptyString',
+  'includes',
   'arrayLength',
   ...SELECTED_RECORDS_FUNCTION_NAMES,
 ];
@@ -98,6 +103,8 @@ const describeCompiledItem = (compiledItem: CompiledExpressionItem): string => {
       return `member "${compiledItem.contextKey}.${compiledItem.entryName}"`;
     case 'literal':
       return `literal ${JSON.stringify(compiledItem.value)}`;
+    case 'list':
+      return `list ${JSON.stringify(compiledItem.values)}`;
     case 'favoriteRecordCount':
       return `${FAVORITE_RECORD_IDS_VARIABLE_NAME}.length`;
     case 'condition':
@@ -208,6 +215,13 @@ const compileVariable = ({
     throw buildConditionalAvailabilityCompilationError({
       expression,
       reason: `unsupported admin subject "${name}": engine conditions cannot carry admin subjects`,
+    });
+  }
+
+  if (name === OBJECT_METADATA_LABEL_VARIABLE_NAME) {
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: `unsupported use of "${name}": it is a display label that changes with the selection count and the workspace language; use isNonEmptyString(${name}) to require an object, or compare objectMetadataItem.nameSingular instead (e.g. objectMetadataItem.nameSingular == "company")`,
     });
   }
 
@@ -391,13 +405,14 @@ const compileComparison = ({
     });
   };
 
-  if (left.kind === 'favoriteRecordCount') {
-    if (right.kind !== 'variable' || right.name !== 'numberOfSelectedRecords') {
-      return throwUnsupportedComparison();
-    }
-
+  if (
+    left.kind === 'favoriteRecordCount' &&
+    right.kind === 'variable' &&
+    right.name === 'numberOfSelectedRecords'
+  ) {
     switch (operator) {
       case '<':
+      case '!=':
         return buildContextConditionNode({
           contextKey: 'areAllSelectedRecordsFavorites',
           operand: ViewFilterOperand.IS,
@@ -409,9 +424,17 @@ const compileComparison = ({
           operand: ViewFilterOperand.IS,
           value: JSON.stringify(true),
         });
-      default:
-        return throwUnsupportedComparison();
     }
+  }
+
+  if (
+    left.kind === 'favoriteRecordCount' ||
+    right.kind === 'favoriteRecordCount'
+  ) {
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: `unsupported comparison of ${FAVORITE_RECORD_IDS_VARIABLE_NAME}.length: write ${FAVORITE_RECORD_IDS_VARIABLE_NAME}.length == numberOfSelectedRecords when every selected record is a favorite, or ${FAVORITE_RECORD_IDS_VARIABLE_NAME}.length < numberOfSelectedRecords when at least one is not`,
+    });
   }
 
   const conditionNode =
@@ -664,6 +687,82 @@ const compileIsDefinedCall = (
     : undefined;
 };
 
+const getSelectContextSubject = (
+  compiledItem: CompiledExpressionItem | undefined,
+): ContextSubject | undefined => {
+  const contextSubject = isDefined(compiledItem)
+    ? getContextSubject(compiledItem)
+    : undefined;
+
+  return contextSubject?.virtualField.type === FieldMetadataType.SELECT
+    ? contextSubject
+    : undefined;
+};
+
+const compileIsNonEmptyStringCall = ({
+  functionArguments,
+  expression,
+}: {
+  functionArguments: CompiledExpressionItem[];
+  expression: string;
+}): ConditionalDisplayConditionNode => {
+  const [firstArgument] = functionArguments;
+  const contextSubject =
+    functionArguments.length === 1
+      ? getSelectContextSubject(firstArgument)
+      : undefined;
+
+  if (!isDefined(contextSubject)) {
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: `unsupported call of isNonEmptyString(${functionArguments.map(describeCompiledItem).join(', ')}): isNonEmptyString accepts a text context value (pageType, objectMetadataItem.nameSingular, objectMetadataItem.readability or ${OBJECT_METADATA_LABEL_VARIABLE_NAME}); use isDefined(...) for other context values and someNonEmptyString(selectedRecords, "path") for record fields`,
+    });
+  }
+
+  return buildContextConditionNode({
+    contextKey: contextSubject.contextKey,
+    subFieldName: contextSubject.subFieldName,
+    operand: ViewFilterOperand.IS_NOT_EMPTY,
+  });
+};
+
+const compileIncludesCall = ({
+  functionArguments,
+  expression,
+}: {
+  functionArguments: CompiledExpressionItem[];
+  expression: string;
+}): ConditionalDisplayConditionNode => {
+  const [firstArgument, secondArgument] = functionArguments;
+  const contextSubject =
+    functionArguments.length === 2
+      ? getSelectContextSubject(secondArgument)
+      : undefined;
+  const values =
+    firstArgument?.kind === 'list' && firstArgument.values.every(isString)
+      ? firstArgument.values.filter(isString)
+      : [];
+  const options = contextSubject?.virtualField.options;
+
+  if (
+    !isDefined(contextSubject) ||
+    values.length === 0 ||
+    (isDefined(options) && !values.every((value) => options.includes(value)))
+  ) {
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: `unsupported call of includes(${functionArguments.map(describeCompiledItem).join(', ')}): includes accepts a list of values followed by a text context value, e.g. includes(["INDEX_PAGE", "RECORD_PAGE"], pageType); use someEquals or includesSome(selectedRecords, "path", value) for record fields`,
+    });
+  }
+
+  return buildContextConditionNode({
+    contextKey: contextSubject.contextKey,
+    subFieldName: contextSubject.subFieldName,
+    operand: ViewFilterOperand.IS,
+    value: JSON.stringify(values),
+  });
+};
+
 const compileSelectedRecordsCall = ({
   functionName,
   functionArguments,
@@ -725,6 +824,23 @@ const compileFunctionCall = ({
     return { kind: 'favoriteRecordCount' };
   }
 
+  if (functionName === 'isNonEmptyString') {
+    return {
+      kind: 'condition',
+      conditionNode: compileIsNonEmptyStringCall({
+        functionArguments,
+        expression,
+      }),
+    };
+  }
+
+  if (functionName === 'includes') {
+    return {
+      kind: 'condition',
+      conditionNode: compileIncludesCall({ functionArguments, expression }),
+    };
+  }
+
   const conditionNode =
     functionName === 'isDefined'
       ? compileIsDefinedCall(functionArguments)
@@ -746,6 +862,22 @@ const compileFunctionCall = ({
   return { kind: 'condition', conditionNode };
 };
 
+const isObjectMetadataLabelPresenceCheck = (
+  expressionNode: Extract<
+    ConditionalAvailabilityExpressionNode,
+    { kind: 'functionCall' }
+  >,
+): boolean => {
+  const [firstArgument] = expressionNode.functionArguments;
+
+  return (
+    expressionNode.functionName === 'isNonEmptyString' &&
+    expressionNode.functionArguments.length === 1 &&
+    firstArgument?.kind === 'variable' &&
+    firstArgument.name === OBJECT_METADATA_LABEL_VARIABLE_NAME
+  );
+};
+
 const compileExpressionNode = ({
   expressionNode,
   expression,
@@ -759,6 +891,20 @@ const compileExpressionNode = ({
   switch (expressionNode.kind) {
     case 'literal':
       return { kind: 'literal', value: expressionNode.value };
+    case 'list':
+      return {
+        kind: 'list',
+        values: expressionNode.elements.map((element) => {
+          if (element.kind !== 'literal') {
+            throw buildConditionalAvailabilityCompilationError({
+              expression,
+              reason: 'unsupported list element: lists only accept literals',
+            });
+          }
+
+          return element.value;
+        }),
+      };
     case 'variable':
       return compileVariable({ name: expressionNode.name, expression });
     case 'member':
@@ -801,6 +947,17 @@ const compileExpressionNode = ({
           expression,
           reason: `unsupported function "${expressionNode.functionName}"`,
         });
+      }
+
+      if (isObjectMetadataLabelPresenceCheck(expressionNode)) {
+        return {
+          kind: 'condition',
+          conditionNode: buildContextConditionNode({
+            contextKey: 'objectMetadataItem',
+            subFieldName: 'nameSingular',
+            operand: ViewFilterOperand.IS_NOT_EMPTY,
+          }),
+        };
       }
 
       return compileFunctionCall({

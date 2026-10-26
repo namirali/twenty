@@ -328,15 +328,110 @@ describe('compileConditionalAvailabilityExpression', () => {
 
   it('should throw on an unmapped function with the expression in the message', () => {
     const expression =
-      'pageType == "RECORD_PAGE" and isNonEmptyString(objectMetadataItem.labelSingular)';
+      'pageType == "RECORD_PAGE" and arrayLength(selectedRecords) > 1';
 
     expect(() => compileConditionalAvailabilityExpression(expression)).toThrow(
       expression,
     );
     expect(() => compileConditionalAvailabilityExpression(expression)).toThrow(
-      'isNonEmptyString',
+      'unsupported call of arrayLength',
     );
   });
+
+  it('should compile isNonEmptyString over a text context value into a not empty row', () => {
+    expect(
+      compileConditionalAvailabilityExpression(
+        'isNonEmptyString(pageType) and isNonEmptyString(objectMetadataItem.nameSingular)',
+      )?.recordFilters,
+    ).toEqual([
+      {
+        id: expect.any(String),
+        contextKey: 'pageType',
+        operand: ViewFilterOperand.IS_NOT_EMPTY,
+      },
+      {
+        id: expect.any(String),
+        contextKey: 'objectMetadataItem',
+        subFieldName: 'nameSingular',
+        operand: ViewFilterOperand.IS_NOT_EMPTY,
+      },
+    ]);
+  });
+
+  it('should compile isNonEmptyString(objectMetadataLabel) into a check that an object is set', () => {
+    expect(
+      compileConditionalAvailabilityExpression(
+        'isNonEmptyString(objectMetadataLabel)',
+      )?.recordFilters,
+    ).toEqual([
+      {
+        id: expect.any(String),
+        contextKey: 'objectMetadataItem',
+        subFieldName: 'nameSingular',
+        operand: ViewFilterOperand.IS_NOT_EMPTY,
+      },
+    ]);
+  });
+
+  it('should compile includes over a list of values into an is any of row', () => {
+    expect(
+      compileConditionalAvailabilityExpression(
+        'includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)',
+      )?.recordFilters,
+    ).toEqual([
+      {
+        id: expect.any(String),
+        contextKey: 'pageType',
+        operand: ViewFilterOperand.IS,
+        value: '["INDEX_PAGE","RECORD_PAGE"]',
+      },
+    ]);
+  });
+
+  it('should compile a favorites count different from the selection like a smaller one', () => {
+    expect(
+      compileConditionalAvailabilityExpression(
+        'arrayLength(favoriteRecordIds) != numberOfSelectedRecords',
+      )?.recordFilters,
+    ).toEqual(
+      compileConditionalAvailabilityExpression(
+        'arrayLength(favoriteRecordIds) < numberOfSelectedRecords',
+      )?.recordFilters?.map((recordFilter) => ({
+        ...recordFilter,
+        id: expect.any(String),
+      })),
+    );
+  });
+
+  it.each([
+    [
+      'isNonEmptyString(isSelectAll)',
+      'isNonEmptyString accepts a text context value (pageType, objectMetadataItem.nameSingular, objectMetadataItem.readability or objectMetadataLabel); use isDefined(...) for other context values and someNonEmptyString(selectedRecords, "path") for record fields',
+    ],
+    [
+      'includes(favoriteRecordIds, "record-id")',
+      'includes accepts a list of values followed by a text context value, e.g. includes(["INDEX_PAGE", "RECORD_PAGE"], pageType); use someEquals or includesSome(selectedRecords, "path", value) for record fields',
+    ],
+    [
+      'includes(["UNKNOWN_PAGE"], pageType)',
+      'includes accepts a list of values followed by a text context value',
+    ],
+    [
+      'objectMetadataLabel == "Companies"',
+      'use isNonEmptyString(objectMetadataLabel) to require an object, or compare objectMetadataItem.nameSingular instead (e.g. objectMetadataItem.nameSingular == "company")',
+    ],
+    [
+      'arrayLength(favoriteRecordIds) > 0',
+      'write favoriteRecordIds.length == numberOfSelectedRecords when every selected record is a favorite, or favoriteRecordIds.length < numberOfSelectedRecords when at least one is not',
+    ],
+  ])(
+    'should throw on %s, naming what to write instead',
+    (expression, expectedMessage) => {
+      expect(() =>
+        compileConditionalAvailabilityExpression(expression),
+      ).toThrow(expectedMessage);
+    },
+  );
 
   it('should throw on an expression mixing every and some functions', () => {
     expect(() =>

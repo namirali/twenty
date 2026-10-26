@@ -90,7 +90,7 @@ describe('compileConditionExpressionsInSource', () => {
     ['isSelected && isSelectAll', 'unknown variable "isSelected"'],
     [
       'objectMetadataLabel === "Company"',
-      'unknown variable "objectMetadataLabel"',
+      'compare objectMetadataItem.nameSingular instead',
     ],
     [
       'isSelectAll ? isInSidePanel : false',
@@ -107,8 +107,8 @@ describe('compileConditionExpressionsInSource', () => {
       'unsupported optional or private member access',
     ],
     [
-      'isNonEmptyString(objectMetadataItem.nameSingular)',
-      'unsupported function "isNonEmptyString"',
+      'isEmptyString(objectMetadataItem.nameSingular)',
+      'unsupported function "isEmptyString"',
     ],
     [
       'selectedRecords.length === 1',

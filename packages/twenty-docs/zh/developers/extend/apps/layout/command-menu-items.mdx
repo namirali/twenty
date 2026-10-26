@@ -87,7 +87,7 @@ export default defineCommandMenuItem({
 | `numberOfSelectedRecords`      | `number`  | 当前选中的记录数量                                     |
 | `isSelectAll`                  | `boolean` | “全选”是否已激活                                     |
 | `selectedRecords`              | `array`   | 已选记录对象                                        |
-| `favoriteRecordIds`            | `array`   | 已收藏记录的 ID                                     |
+| `favoriteRecordIds`            | `array`   | 已收藏记录的 ID，只能以 `favoriteRecordIds.length == numberOfSelectedRecords`（所有选中记录都已收藏）或 `favoriteRecordIds.length < numberOfSelectedRecords`（至少一条未收藏）的形式使用 |
 | `objectPermissions`            | `object`  | 当前对象类型的权限                                     |
 | `targetObjectReadPermissions`  | `object`  | 目标对象的读取权限                                     |
 | `targetObjectWritePermissions` | `object`  | 目标对象的写入权限                                     |
@@ -102,8 +102,8 @@ export default defineCommandMenuItem({
 | 运算符                                 | 描述                               |
 | ----------------------------------- | -------------------------------- |
 | `isDefined(value)`                  | 当该值不是 null/undefined 时为 `true`   |
-| `isNonEmptyString(value)`           | 当该值为非空字符串时为 `true`               |
-| `includes(array, value)`            | 当数组包含该值时为 `true`                 |
+| `isNonEmptyString(value)`           | 当文本上下文值（`pageType`、`objectMetadataItem.nameSingular`、`objectMetadataItem.readability`）为非空字符串时为 `true` |
+| `includes(list, value)`             | 当文本上下文值是所列值之一时为 `true`，例如 `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | 当每个条目的属性都包含该值时为 `true`           |
 | `every(array, prop)`                | 当该属性在每个条目上都为 truthy 时为 `true`    |
 | `everyDefined(array, prop)`         | 当该属性在每个条目上都已定义时为 `true`          |
