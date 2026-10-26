@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { ApplicationModule } from 'src/engine/core-modules/application/application.module';
+import { UpgradeStatusModule } from 'src/engine/core-modules/upgrade/upgrade-status.module';
 import { CoreWorkflowAccessModule } from 'src/engine/core-modules/workflow/core-workflow-access.module';
 import { CommandMenuItemResolver } from 'src/engine/metadata-modules/command-menu-item/command-menu-item.resolver';
 import { FrontComponentModule } from 'src/engine/metadata-modules/front-component/front-component.module';
@@ -21,6 +22,7 @@ import { ApplicationTranslationCatalogModule } from 'src/engine/metadata-modules
     FlatCommandMenuItemModule,
     FrontComponentModule,
     PermissionsModule,
+    UpgradeStatusModule,
   ],
   providers: [CommandMenuItemService, CommandMenuItemResolver],
   exports: [CommandMenuItemService],

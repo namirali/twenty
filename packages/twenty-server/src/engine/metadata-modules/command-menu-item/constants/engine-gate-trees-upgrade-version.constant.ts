@@ -1,0 +1,1 @@
+export const ENGINE_GATE_TREES_UPGRADE_VERSION = '2.52.0';

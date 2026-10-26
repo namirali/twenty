@@ -2,10 +2,13 @@ import { Injectable } from '@nestjs/common';
 
 import { isNonEmptyString } from '@sniptt/guards';
 import type DataLoader from 'dataloader';
+import semver from 'semver';
 import { type APP_LOCALES } from 'twenty-shared/translations';
 import { isDefined } from 'twenty-shared/utils';
 
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
+import { UpgradeStatusService } from 'src/engine/core-modules/upgrade/services/upgrade-status.service';
+import { ENGINE_GATE_TREES_UPGRADE_VERSION } from 'src/engine/metadata-modules/command-menu-item/constants/engine-gate-trees-upgrade-version.constant';
 import { type ObjectMetadataLoaderPayload } from 'src/engine/dataloaders/dataloader.service';
 import {
   CommandMenuItemException,
@@ -36,11 +39,14 @@ import { resetAuthoredOverrides } from 'src/engine/metadata-modules/overrides/ut
 
 @Injectable()
 export class CommandMenuItemService {
+  private readonly workspaceIdsWithEngineGateTrees = new Set<string>();
+
   constructor(
     private readonly workspaceMigrationValidateBuildAndRunService: WorkspaceMigrationValidateBuildAndRunService,
     private readonly workspaceManyOrAllFlatEntityMapsCacheService: WorkspaceManyOrAllFlatEntityMapsCacheService,
     private readonly applicationService: ApplicationService,
     private readonly applicationTranslationCatalogService: ApplicationTranslationCatalogService,
+    private readonly upgradeStatusService: UpgradeStatusService,
   ) {}
 
   async findAll(workspaceId: string): Promise<CommandMenuItemDTO[]> {
@@ -52,8 +58,15 @@ export class CommandMenuItemService {
         },
       );
 
+    const hasEngineGateTrees = await this.hasEngineGateTrees(workspaceId);
+
     return Object.values(flatCommandMenuItemMaps.byUniversalIdentifier)
       .filter(isDefined)
+      .filter(
+        (flatCommandMenuItem) =>
+          hasEngineGateTrees ||
+          !this.hasLegacyEngineGateWithoutTree(flatCommandMenuItem),
+      )
       .sort((a, b) => a.position - b.position)
       .map(fromFlatCommandMenuItemToCommandMenuItemDto);
   }
@@ -580,5 +593,36 @@ export class CommandMenuItemService {
     return isDefined(flatCommandMenuItem)
       ? fromFlatCommandMenuItemToCommandMenuItemDto(flatCommandMenuItem)
       : null;
+  }
+
+  private async hasEngineGateTrees(workspaceId: string): Promise<boolean> {
+    if (this.workspaceIdsWithEngineGateTrees.has(workspaceId)) {
+      return true;
+    }
+
+    const workspaceCompletedVersion =
+      await this.upgradeStatusService.getWorkspaceCompletedVersion(workspaceId);
+
+    if (
+      !isDefined(workspaceCompletedVersion) ||
+      semver.lt(workspaceCompletedVersion, ENGINE_GATE_TREES_UPGRADE_VERSION)
+    ) {
+      return false;
+    }
+
+    this.workspaceIdsWithEngineGateTrees.add(workspaceId);
+
+    return true;
+  }
+
+  private hasLegacyEngineGateWithoutTree(
+    flatCommandMenuItem: FlatCommandMenuItem,
+  ): boolean {
+    return (
+      (isDefined(flatCommandMenuItem.conditionalAvailabilityExpression) &&
+        !isDefined(flatCommandMenuItem.conditionalAvailability)) ||
+      (isDefined(flatCommandMenuItem.conditionalPinnedExpression) &&
+        !isDefined(flatCommandMenuItem.conditionalPinned))
+    );
   }
 }
