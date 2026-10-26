@@ -1,7 +1,10 @@
 import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
 import { isArray, isBoolean, isNumber, isString } from '@sniptt/guards';
 import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from 'twenty-shared/constants';
-import { CONDITIONAL_AVAILABILITY_EXPRESSION_CORPUS } from 'twenty-shared/testing';
+import {
+  CONDITIONAL_AVAILABILITY_EXPRESSION_CORPUS,
+  evaluateConditionalAvailabilityExpression,
+} from 'twenty-shared/testing';
 import {
   type ConditionalDisplay,
   type ConditionalDisplayEvaluationContext,
@@ -14,7 +17,6 @@ import {
 } from 'twenty-shared/types';
 import {
   compileConditionalAvailabilityExpression,
-  evaluateConditionalAvailabilityExpression,
   isDefined,
   isPlainObject,
   parseJson,
