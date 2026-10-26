@@ -60,8 +60,9 @@ The `conditionalAvailabilityExpression` field lets you control when a command is
 ```ts src/command-menu-items/bulk-update.command-menu-item.ts
 import {
   defineCommandMenuItem,
+  noneDefined,
   objectPermissions,
-  everyEquals,
+  selectedRecords,
 } from 'twenty-sdk/define';
 
 export default defineCommandMenuItem({
@@ -69,11 +70,9 @@ export default defineCommandMenuItem({
   label: 'Bulk Update',
   availabilityType: 'RECORD_SELECTION',
   frontComponentUniversalIdentifier: '...',
-  conditionalAvailabilityExpression: everyEquals(
-    objectPermissions,
-    'canUpdateObjectRecords',
-    true,
-  ),
+  conditionalAvailabilityExpression:
+    objectPermissions.canUpdateObjectRecords &&
+    noneDefined(selectedRecords, 'deletedAt'),
 });
 ```
 
@@ -81,7 +80,7 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` already implies a non-empty selection — use `numberOfSelectedRecords` only for specific counts (e.g. `>= 2`).
 </Note>
 
-The build compiles `conditionalAvailabilityExpression` and `conditionalPinnedExpression` into `conditionalAvailability` and `conditionalPinned` condition trees, and the built manifest carries only those trees. An expression the compiler cannot map fails the build with the file, the field and the unsupported part. Twenty refuses to install a manifest built with an older SDK that still carries the expression strings, so rebuild such an app before deploying it.
+The build reads `conditionalAvailabilityExpression` and `conditionalPinnedExpression` from your code and compiles them into `conditionalAvailability` and `conditionalPinned` condition trees, and the built manifest carries only those trees. Misuse is a build error naming the command and the expression: an unknown variable, syntax other than variables, `!`, `&&`, `||` and comparisons, or a list operator such as `everyEquals` applied to anything but `selectedRecords`. An app built with an older SDK still installs: Twenty converts its expression strings and logs a warning asking to rebuild it.
 
 ### Context variables
 
@@ -89,7 +88,7 @@ These represent the current state of the page:
 
 | Variable | Type | Description |
 |----------|------|-------------|
-| `pageType` | `string` | Current page type (e.g. `'RecordIndexPage'`, `'RecordShowPage'`) |
+| `pageType` | `string` | Current page type (e.g. `'INDEX_PAGE'`, `'RECORD_PAGE'`) |
 | `isInSidePanel` | `boolean` | Whether the component is rendered in a side panel |
 | `numberOfSelectedRecords` | `number` | Number of currently selected records |
 | `isSelectAll` | `boolean` | Whether "select all" is active |
