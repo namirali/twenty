@@ -1,4 +1,4 @@
-import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
+import { evaluateConditionalDisplayWithObjectMetadata } from '@/conditional-display/utils/evaluateConditionalDisplayWithObjectMetadata';
 import { type WidgetVisibilityContext } from '@/page-layout/types/WidgetVisibilityContext';
 import { type FieldsWidgetGroup } from '@/page-layout/widgets/fields/types/FieldsWidgetGroup';
 
@@ -18,7 +18,7 @@ export const filterFieldsWidgetGroupsByConditionalDisplay = ({
       ...group,
       fields: group.fields
         .filter((field) =>
-          evaluateConditionalDisplay({
+          evaluateConditionalDisplayWithObjectMetadata({
             conditionalDisplay: field.conditionalDisplay,
             context,
             records: context.selectedRecords,

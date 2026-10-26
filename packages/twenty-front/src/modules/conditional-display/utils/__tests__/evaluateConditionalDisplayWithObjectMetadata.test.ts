@@ -1,4 +1,4 @@
-import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
+import { evaluateConditionalDisplayWithObjectMetadata } from '@/conditional-display/utils/evaluateConditionalDisplayWithObjectMetadata';
 import {
   type ConditionalDisplay,
   type ConditionalDisplayContextKey,
@@ -64,7 +64,7 @@ const evaluateOnCompany = ({
   context?: ConditionalDisplayEvaluationContext;
   records?: Record<string, unknown>[];
 }) =>
-  evaluateConditionalDisplay({
+  evaluateConditionalDisplayWithObjectMetadata({
     conditionalDisplay,
     context,
     records,
@@ -72,7 +72,7 @@ const evaluateOnCompany = ({
     objectMetadataItems,
   });
 
-describe('evaluateConditionalDisplay', () => {
+describe('evaluateConditionalDisplayWithObjectMetadata', () => {
   it('shows the item when there is no rule', () => {
     expect(evaluateOnCompany({ conditionalDisplay: null })).toBe(true);
     expect(
@@ -258,7 +258,7 @@ describe('evaluateConditionalDisplay', () => {
 
   it('hides the item when a record leaf has no object to evaluate against', () => {
     expect(
-      evaluateConditionalDisplay({
+      evaluateConditionalDisplayWithObjectMetadata({
         conditionalDisplay: { recordFilters: [nameContainsAirRecordFilter] },
         context: buildContext({}),
         records: [{ id: 'company-1', name: 'Airbnb' }],

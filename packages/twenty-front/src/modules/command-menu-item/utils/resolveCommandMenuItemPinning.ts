@@ -1,6 +1,6 @@
 import { type ConditionalDisplayEvaluationContext } from 'twenty-shared/types';
 
-import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
+import { evaluateConditionalDisplayWithObjectMetadata } from '@/conditional-display/utils/evaluateConditionalDisplayWithObjectMetadata';
 import { type CommandMenuItemFieldsFragment } from '~/generated-metadata/graphql';
 
 type PinnableCommandMenuItem = Pick<
@@ -19,7 +19,7 @@ export const resolveCommandMenuItemPinning = <
   ...commandMenuItem,
   isPinned:
     commandMenuItem.isPinned &&
-    evaluateConditionalDisplay({
+    evaluateConditionalDisplayWithObjectMetadata({
       conditionalDisplay: commandMenuItem.conditionalPinned,
       context: conditionalDisplayContext,
       records: conditionalDisplayContext.selectedRecords ?? [],

@@ -1,6 +1,6 @@
 import { type ConditionalDisplay } from 'twenty-shared/types';
 
-import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
+import { evaluateConditionalDisplayWithObjectMetadata } from '@/conditional-display/utils/evaluateConditionalDisplayWithObjectMetadata';
 import { type WidgetVisibilityContext } from '@/page-layout/types/WidgetVisibilityContext';
 
 type EvaluateWidgetVisibilityParams = {
@@ -17,7 +17,7 @@ export const evaluateWidgetVisibility = ({
   const evaluateForWidget = (
     conditionalDisplayToEvaluate: ConditionalDisplay | null | undefined,
   ) =>
-    evaluateConditionalDisplay({
+    evaluateConditionalDisplayWithObjectMetadata({
       conditionalDisplay: conditionalDisplayToEvaluate,
       context,
       records: context.selectedRecords,

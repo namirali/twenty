@@ -6,12 +6,12 @@ import {
   type ConditionalDisplayEvaluationContext,
 } from 'twenty-shared/types';
 import {
-  evaluateConditionalDisplay as evaluateConditionalDisplayTree,
+  evaluateConditionalDisplay,
   isConditionalDisplaySelectedRecordPathMatching,
   isDefined,
 } from 'twenty-shared/utils';
 
-type EvaluateConditionalDisplayParams = {
+type EvaluateConditionalDisplayWithObjectMetadataParams = {
   conditionalDisplay: ConditionalDisplay | null | undefined;
   context: ConditionalDisplayEvaluationContext;
   records: Record<string, unknown>[];
@@ -19,13 +19,13 @@ type EvaluateConditionalDisplayParams = {
   objectMetadataItems: EnrichedObjectMetadataItem[];
 };
 
-export const evaluateConditionalDisplay = ({
+export const evaluateConditionalDisplayWithObjectMetadata = ({
   conditionalDisplay,
   context,
   records,
   objectMetadataItem,
   objectMetadataItems,
-}: EvaluateConditionalDisplayParams): boolean => {
+}: EvaluateConditionalDisplayWithObjectMetadataParams): boolean => {
   const hasFieldRecordFilter = (conditionalDisplay?.recordFilters ?? []).some(
     (recordFilter) => !isDefined(recordFilter.contextKey),
   );
@@ -34,7 +34,7 @@ export const evaluateConditionalDisplay = ({
     return false;
   }
 
-  return evaluateConditionalDisplayTree({
+  return evaluateConditionalDisplay({
     conditionalDisplay,
     records,
     isRecordFilterMatching: ({ recordFilter, record }) => {

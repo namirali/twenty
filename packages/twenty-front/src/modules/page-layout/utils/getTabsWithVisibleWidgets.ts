@@ -1,4 +1,4 @@
-import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
+import { evaluateConditionalDisplayWithObjectMetadata } from '@/conditional-display/utils/evaluateConditionalDisplayWithObjectMetadata';
 import { type PageLayoutTab } from '@/page-layout/types/PageLayoutTab';
 import { type WidgetVisibilityContext } from '@/page-layout/types/WidgetVisibilityContext';
 import { filterVisibleWidgets } from '@/page-layout/utils/filterVisibleWidgets';
@@ -28,7 +28,7 @@ export const getTabsWithVisibleWidgets = ({
   const tabsWithVisibleWidgets = tabsWithFilteredWidgets.filter(
     (tab) =>
       tab.widgets.length > 0 &&
-      evaluateConditionalDisplay({
+      evaluateConditionalDisplayWithObjectMetadata({
         conditionalDisplay: tab.conditionalDisplay,
         context,
         records: context.selectedRecords,

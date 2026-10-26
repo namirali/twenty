@@ -1,5 +1,5 @@
 import { useConditionalDisplayCurrentUserContext } from '@/conditional-display/hooks/useConditionalDisplayCurrentUserContext';
-import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
+import { evaluateConditionalDisplayWithObjectMetadata } from '@/conditional-display/utils/evaluateConditionalDisplayWithObjectMetadata';
 import { getConditionalDisplayDevice } from '@/conditional-display/utils/getConditionalDisplayDevice';
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
 import { useMemo } from 'react';
@@ -39,7 +39,7 @@ export const useCommandMenuItemConditionalDisplay = (
       conditionalDisplay: ConditionalDisplay | null | undefined,
       item: CommandMenuItemFieldsFragment,
     ) =>
-      evaluateConditionalDisplay({
+      evaluateConditionalDisplayWithObjectMetadata({
         conditionalDisplay,
         context: conditionalDisplayContext,
         records: commandMenuContextApi.selectedRecords,

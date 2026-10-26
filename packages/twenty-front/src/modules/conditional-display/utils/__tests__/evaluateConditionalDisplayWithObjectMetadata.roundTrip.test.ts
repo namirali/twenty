@@ -1,4 +1,4 @@
-import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
+import { evaluateConditionalDisplayWithObjectMetadata } from '@/conditional-display/utils/evaluateConditionalDisplayWithObjectMetadata';
 import { isArray, isBoolean, isNumber, isString } from '@sniptt/guards';
 import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from 'twenty-shared/constants';
 import {
@@ -417,7 +417,7 @@ const evaluateTree = ({
   conditionalDisplay: ConditionalDisplay | null;
   context: ConditionalDisplayEvaluationContext;
 }): boolean =>
-  evaluateConditionalDisplay({
+  evaluateConditionalDisplayWithObjectMetadata({
     conditionalDisplay,
     context,
     records: context.selectedRecords ?? [],
@@ -600,7 +600,7 @@ const runRoundTrip = (expression: string) => {
   };
 };
 
-describe('evaluateConditionalDisplay round trip', () => {
+describe('evaluateConditionalDisplayWithObjectMetadata round trip', () => {
   it.each(DISTINCT_CORPUS_EXPRESSIONS)(
     'should evaluate the compiled tree like the expression %s',
     (expression) => {
