@@ -1,7 +1,9 @@
 import { useConditionalDisplayCurrentUserContext } from '@/conditional-display/hooks/useConditionalDisplayCurrentUserContext';
 import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
+import { getConditionalDisplayDevice } from '@/conditional-display/utils/getConditionalDisplayDevice';
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
 import { useMemo } from 'react';
+import { useIsMobile } from 'twenty-ui/utilities';
 import {
   type CommandMenuContextApi,
   type ConditionalDisplay,
@@ -17,6 +19,8 @@ export const useCommandMenuItemConditionalDisplay = (
   const { currentRoleId, currentWorkspaceMemberId } =
     useConditionalDisplayCurrentUserContext();
 
+  const isMobile = useIsMobile();
+
   return useMemo(() => {
     const conditionalDisplayContext: ConditionalDisplayEvaluationContext = {
       ...commandMenuContextApi,
@@ -25,6 +29,10 @@ export const useCommandMenuItemConditionalDisplay = (
         commandMenuContextApi.numberOfSelectedRecords,
       currentRoleId,
       currentWorkspaceMemberId,
+      device: getConditionalDisplayDevice({
+        isMobile,
+        isInSidePanel: commandMenuContextApi.isInSidePanel,
+      }),
     };
 
     const evaluateForCommandMenuItem = (
@@ -59,6 +67,7 @@ export const useCommandMenuItemConditionalDisplay = (
     commandMenuContextApi,
     currentRoleId,
     currentWorkspaceMemberId,
+    isMobile,
     objectMetadataItems,
   ]);
 };

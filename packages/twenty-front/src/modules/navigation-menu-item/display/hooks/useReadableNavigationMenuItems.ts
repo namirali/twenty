@@ -1,8 +1,10 @@
 import { type NavigationMenuItem } from '~/generated-metadata/graphql';
 import { isDefined } from 'twenty-shared/utils';
+import { useIsMobile } from 'twenty-ui/utilities';
 
 import { useConditionalDisplayCurrentUserContext } from '@/conditional-display/hooks/useConditionalDisplayCurrentUserContext';
 import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
+import { getConditionalDisplayDevice } from '@/conditional-display/utils/getConditionalDisplayDevice';
 import { isLayoutCustomizationModeEnabledState } from '@/layout-customization/states/isLayoutCustomizationModeEnabledState';
 import { isNavigationMenuItemFolder } from '@/navigation-menu-item/common/utils/isNavigationMenuItemFolder';
 import { isNavigationMenuItemReadable } from '@/navigation-menu-item/common/utils/isNavigationMenuItemReadable';
@@ -27,12 +29,19 @@ export const useReadableNavigationMenuItems = ({
   const views = useAtomStateValue(viewsSelector);
   const { objectPermissionsByObjectMetadataId } = useObjectPermissions();
   const currentUserContext = useConditionalDisplayCurrentUserContext();
+  const isMobile = useIsMobile();
 
   const isItemVisibleToCurrentUser = (item: NavigationMenuItem) =>
     isDefined(item.userWorkspaceId) ||
     evaluateConditionalDisplay({
       conditionalDisplay: item.conditionalDisplay,
-      context: currentUserContext,
+      context: {
+        ...currentUserContext,
+        device: getConditionalDisplayDevice({
+          isMobile,
+          isInSidePanel: false,
+        }),
+      },
       records: [],
       objectMetadataItems,
     });

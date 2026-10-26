@@ -55,7 +55,13 @@ export const CONDITIONAL_DISPLAY_CONTEXT_KEYS: Record<
   },
   device: {
     owner: 'admin',
-    surfaces: ['pageLayoutWidget', 'pageLayoutTab', 'viewField'],
+    surfaces: [
+      'pageLayoutWidget',
+      'pageLayoutTab',
+      'viewField',
+      'commandMenuItem',
+      'navigationMenuItem',
+    ],
     subject: {
       kind: 'VALUE',
       field: {

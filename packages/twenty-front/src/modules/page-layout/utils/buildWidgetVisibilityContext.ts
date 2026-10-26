@@ -1,3 +1,4 @@
+import { getConditionalDisplayDevice } from '@/conditional-display/utils/getConditionalDisplayDevice';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
 import { type WidgetVisibilityContext } from '@/page-layout/types/WidgetVisibilityContext';
 import { type ObjectRecord } from 'twenty-shared/types';
@@ -25,7 +26,7 @@ export const buildWidgetVisibilityContext = ({
   objectMetadataItems,
 }: BuildWidgetVisibilityContextParams): WidgetVisibilityContext => {
   return {
-    device: isMobile || isInSidePanel ? 'MOBILE' : 'DESKTOP',
+    device: getConditionalDisplayDevice({ isMobile, isInSidePanel }),
     // Plural to share the command menu grammar; empty when absent so record-gated widgets stay hidden until load.
     selectedRecords: isDefined(targetRecord) ? [targetRecord] : [],
     featureFlags: featureFlags ?? {},
