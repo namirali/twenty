@@ -1,18 +1,18 @@
 import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
 import { removeEmptyRecordFilterGroups } from '@/object-record/record-filter-group/utils/removeEmptyRecordFilterGroups';
-import { type ChartFilters } from '@/side-panel/pages/page-layout/types/ChartFilters';
+import { type RecordFiltersWithGroups } from '@/object-record/record-filter/types/RecordFiltersWithGroups';
 import { pointRecordFiltersAtMorphRelationFields } from '@/object-record/record-filter/utils/pointRecordFiltersAtMorphRelationFields';
 import { isDefined } from 'twenty-shared/utils';
 
-export const sanitizeChartRecordFilters = ({
-  chartFilters,
+export const sanitizeRecordFilters = ({
+  recordFiltersWithGroups,
   fieldMetadataItems,
 }: {
-  chartFilters: ChartFilters;
+  recordFiltersWithGroups: RecordFiltersWithGroups;
   fieldMetadataItems: (Pick<FieldMetadataItem, 'id' | 'isActive'> & {
     morphRelations?: { sourceFieldMetadata: { id: string } }[] | null;
   })[];
-}): ChartFilters => {
+}): RecordFiltersWithGroups => {
   const activeFieldMetadataItems = fieldMetadataItems.filter(
     (fieldMetadataItem) => fieldMetadataItem.isActive,
   );
@@ -22,7 +22,7 @@ export const sanitizeChartRecordFilters = ({
   );
 
   const validRecordFilters = pointRecordFiltersAtMorphRelationFields({
-    recordFilters: chartFilters.recordFilters ?? [],
+    recordFilters: recordFiltersWithGroups.recordFilters ?? [],
     fieldMetadataItems: activeFieldMetadataItems,
   }).filter(
     (recordFilter) =>
@@ -32,7 +32,7 @@ export const sanitizeChartRecordFilters = ({
 
   const remainingGroups = removeEmptyRecordFilterGroups({
     recordFilters: validRecordFilters,
-    recordFilterGroups: chartFilters.recordFilterGroups ?? [],
+    recordFilterGroups: recordFiltersWithGroups.recordFilterGroups ?? [],
   });
 
   const validRecordFiltersWithDroppedOrphanedGroups = validRecordFilters.filter(
@@ -44,7 +44,7 @@ export const sanitizeChartRecordFilters = ({
   );
 
   return {
-    ...chartFilters,
+    ...recordFiltersWithGroups,
     recordFilters: validRecordFiltersWithDroppedOrphanedGroups,
     recordFilterGroups: remainingGroups,
   };

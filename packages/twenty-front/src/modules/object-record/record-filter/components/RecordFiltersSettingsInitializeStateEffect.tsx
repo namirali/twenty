@@ -5,8 +5,8 @@ import { currentRecordFilterGroupsComponentState } from '@/object-record/record-
 import { currentRecordFiltersComponentState } from '@/object-record/record-filter/states/currentRecordFiltersComponentState';
 import { unresolvedRecordFiltersComponentState } from '@/object-record/record-filter/states/unresolvedRecordFiltersComponentState';
 import { hydrateRecordFiltersFromFieldMetadata } from '@/object-record/record-filter/utils/hydrateRecordFiltersFromFieldMetadata';
-import { hasInitializedChartFiltersComponentState } from '@/side-panel/pages/page-layout/states/hasInitializedChartFiltersComponentState';
-import { type ChartFilters } from '@/side-panel/pages/page-layout/types/ChartFilters';
+import { hasInitializedRecordFiltersComponentState } from '@/object-record/record-filter/states/hasInitializedRecordFiltersComponentState';
+import { type RecordFiltersWithGroups } from '@/object-record/record-filter/types/RecordFiltersWithGroups';
 import { pointRecordFiltersAtMorphRelationFields } from '@/object-record/record-filter/utils/pointRecordFiltersAtMorphRelationFields';
 import { useAtomComponentState } from '@/ui/utilities/state/jotai/hooks/useAtomComponentState';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
@@ -14,15 +14,15 @@ import { useSetAtomComponentState } from '@/ui/utilities/state/jotai/hooks/useSe
 import { useEffect, useState } from 'react';
 import { isDefined } from 'twenty-shared/utils';
 
-export type ChartFiltersSettingsInitializeStateEffectProps = {
-  initialChartFilters?: ChartFilters;
+export type RecordFiltersSettingsInitializeStateEffectProps = {
+  initialRecordFilters?: RecordFiltersWithGroups;
 };
 
-export const ChartFiltersSettingsInitializeStateEffect = ({
-  initialChartFilters,
-}: ChartFiltersSettingsInitializeStateEffectProps) => {
-  const [hasInitializedChartFilters, setHasInitializedChartFilters] =
-    useAtomComponentState(hasInitializedChartFiltersComponentState);
+export const RecordFiltersSettingsInitializeStateEffect = ({
+  initialRecordFilters,
+}: RecordFiltersSettingsInitializeStateEffectProps) => {
+  const [hasInitializedRecordFilters, setHasInitializedRecordFilters] =
+    useAtomComponentState(hasInitializedRecordFiltersComponentState);
 
   const setCurrentRecordFilters = useSetAtomComponentState(
     currentRecordFiltersComponentState,
@@ -49,14 +49,14 @@ export const ChartFiltersSettingsInitializeStateEffect = ({
   ] = useState(false);
 
   useEffect(() => {
-    if (!hasInitializedChartFilters && isDefined(initialChartFilters)) {
+    if (!hasInitializedRecordFilters && isDefined(initialRecordFilters)) {
       const { recordFilters: persistedRecordFilters, recordFilterGroups } =
         attachUngroupedRecordFiltersToRootRecordFilterGroup({
           recordFilters: pointRecordFiltersAtMorphRelationFields({
-            recordFilters: initialChartFilters.recordFilters ?? [],
+            recordFilters: initialRecordFilters.recordFilters ?? [],
             fieldMetadataItems: flattenedFieldMetadataItems,
           }),
-          recordFilterGroups: initialChartFilters.recordFilterGroups ?? [],
+          recordFilterGroups: initialRecordFilters.recordFilterGroups ?? [],
         });
 
       const { recordFilters, unresolvedRecordFilters } =
@@ -70,15 +70,15 @@ export const ChartFiltersSettingsInitializeStateEffect = ({
       setCurrentRecordFilterGroups(recordFilterGroups);
 
       setShouldSetAdvancedFilterDropdownStates(true);
-      setHasInitializedChartFilters(true);
+      setHasInitializedRecordFilters(true);
     }
   }, [
     setCurrentRecordFilters,
     setCurrentRecordFilterGroups,
     setUnresolvedRecordFilters,
-    setHasInitializedChartFilters,
-    hasInitializedChartFilters,
-    initialChartFilters,
+    setHasInitializedRecordFilters,
+    hasInitializedRecordFilters,
+    initialRecordFilters,
     flattenedFieldMetadataItems,
   ]);
 

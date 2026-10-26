@@ -15,8 +15,8 @@ import { RecordFiltersComponentInstanceContext } from '@/object-record/record-fi
 import { currentRecordFiltersComponentState } from '@/object-record/record-filter/states/currentRecordFiltersComponentState';
 import { mapRecordFiltersToPersistedRecordFilters } from '@/object-record/record-filter/utils/mapRecordFiltersToPersistedRecordFilters';
 import { SidePanelRecordFiltersDeletedFieldsWarning } from '@/side-panel/components/SidePanelRecordFiltersDeletedFieldsWarning';
-import { ChartFiltersSettingsInitializeStateEffect } from '@/side-panel/pages/page-layout/components/ChartFiltersSettingsInitializeStateEffect';
-import { hasInitializedChartFiltersComponentState } from '@/side-panel/pages/page-layout/states/hasInitializedChartFiltersComponentState';
+import { RecordFiltersSettingsInitializeStateEffect } from '@/object-record/record-filter/components/RecordFiltersSettingsInitializeStateEffect';
+import { hasInitializedRecordFiltersComponentState } from '@/object-record/record-filter/states/hasInitializedRecordFiltersComponentState';
 import { useAtomComponentStateCallbackState } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateCallbackState';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
@@ -99,14 +99,14 @@ export const ConditionalDisplaySettings = ({
 
   const store = useStore();
 
-  const setHasInitializedChartFilters = useSetAtomComponentState(
-    hasInitializedChartFiltersComponentState,
+  const setHasInitializedRecordFilters = useSetAtomComponentState(
+    hasInitializedRecordFiltersComponentState,
     instanceId,
   );
 
   useEffect(
-    () => () => setHasInitializedChartFilters(false),
-    [setHasInitializedChartFilters],
+    () => () => setHasInitializedRecordFilters(false),
+    [setHasInitializedRecordFilters],
   );
 
   const visibilityMode: ConditionalDisplayVisibilityMode =
@@ -181,8 +181,8 @@ export const ConditionalDisplaySettings = ({
               </>
             )}
           </AdvancedFilterContext.Provider>
-          <ChartFiltersSettingsInitializeStateEffect
-            initialChartFilters={{
+          <RecordFiltersSettingsInitializeStateEffect
+            initialRecordFilters={{
               recordFilters:
                 mapConditionalDisplayToPersistedRecordFilters(
                   conditionalDisplay,

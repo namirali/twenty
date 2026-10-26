@@ -1,11 +1,11 @@
 import { RecordFilterGroupLogicalOperator } from 'twenty-shared/types';
 
-import { type ChartFilters } from '@/side-panel/pages/page-layout/types/ChartFilters';
-import { sanitizeChartRecordFilters } from '@/side-panel/pages/page-layout/utils/sanitizeChartRecordFilters';
+import { type RecordFiltersWithGroups } from '@/object-record/record-filter/types/RecordFiltersWithGroups';
+import { sanitizeRecordFilters } from '@/object-record/record-filter/utils/sanitizeRecordFilters';
 
-describe('sanitizeChartRecordFilters', () => {
+describe('sanitizeRecordFilters', () => {
   it('should drop record filters referencing fields that no longer exist', () => {
-    const chartFilters: ChartFilters = {
+    const recordFiltersWithGroups: RecordFiltersWithGroups = {
       recordFilters: [
         { id: 'filter-1', fieldMetadataId: 'valid-field' },
         { id: 'filter-2', fieldMetadataId: 'deleted-field' },
@@ -17,10 +17,10 @@ describe('sanitizeChartRecordFilters', () => {
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
         },
       ],
-    } as ChartFilters;
+    } as RecordFiltersWithGroups;
 
-    const result = sanitizeChartRecordFilters({
-      chartFilters,
+    const result = sanitizeRecordFilters({
+      recordFiltersWithGroups,
       fieldMetadataItems: [{ id: 'valid-field', isActive: true }],
     });
 
@@ -30,7 +30,7 @@ describe('sanitizeChartRecordFilters', () => {
   });
 
   it('should preserve record filter groups that still contain valid filters', () => {
-    const chartFilters: ChartFilters = {
+    const recordFiltersWithGroups: RecordFiltersWithGroups = {
       recordFilters: [
         {
           id: 'filter-1',
@@ -45,10 +45,10 @@ describe('sanitizeChartRecordFilters', () => {
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
         },
       ],
-    } as ChartFilters;
+    } as RecordFiltersWithGroups;
 
-    const result = sanitizeChartRecordFilters({
-      chartFilters,
+    const result = sanitizeRecordFilters({
+      recordFiltersWithGroups,
       fieldMetadataItems: [{ id: 'valid-field', isActive: true }],
     });
 
@@ -62,15 +62,15 @@ describe('sanitizeChartRecordFilters', () => {
   });
 
   it('should keep all record filters when every field is still valid', () => {
-    const chartFilters: ChartFilters = {
+    const recordFiltersWithGroups: RecordFiltersWithGroups = {
       recordFilters: [
         { id: 'filter-1', fieldMetadataId: 'field-a' },
         { id: 'filter-2', fieldMetadataId: 'field-b' },
       ],
-    } as ChartFilters;
+    } as RecordFiltersWithGroups;
 
-    const result = sanitizeChartRecordFilters({
-      chartFilters,
+    const result = sanitizeRecordFilters({
+      recordFiltersWithGroups,
       fieldMetadataItems: [
         { id: 'field-a', isActive: true },
         { id: 'field-b', isActive: true },
@@ -81,10 +81,10 @@ describe('sanitizeChartRecordFilters', () => {
   });
 
   it('should handle undefined record filters', () => {
-    const chartFilters: ChartFilters = {} as ChartFilters;
+    const recordFiltersWithGroups: RecordFiltersWithGroups = {} as RecordFiltersWithGroups;
 
-    const result = sanitizeChartRecordFilters({
-      chartFilters,
+    const result = sanitizeRecordFilters({
+      recordFiltersWithGroups,
       fieldMetadataItems: [{ id: 'field-a', isActive: true }],
     });
 
@@ -92,7 +92,7 @@ describe('sanitizeChartRecordFilters', () => {
   });
 
   it('should remove orphaned root group when all its filters are dropped', () => {
-    const chartFilters: ChartFilters = {
+    const recordFiltersWithGroups: RecordFiltersWithGroups = {
       recordFilters: [
         {
           id: 'filter-1',
@@ -107,10 +107,10 @@ describe('sanitizeChartRecordFilters', () => {
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
         },
       ],
-    } as ChartFilters;
+    } as RecordFiltersWithGroups;
 
-    const result = sanitizeChartRecordFilters({
-      chartFilters,
+    const result = sanitizeRecordFilters({
+      recordFiltersWithGroups,
       fieldMetadataItems: [],
     });
 
@@ -119,7 +119,7 @@ describe('sanitizeChartRecordFilters', () => {
   });
 
   it('should remove orphaned child group when its only filter is dropped, but keep root group if it has other valid children', () => {
-    const chartFilters: ChartFilters = {
+    const recordFiltersWithGroups: RecordFiltersWithGroups = {
       recordFilters: [
         {
           id: 'filter-1',
@@ -144,10 +144,10 @@ describe('sanitizeChartRecordFilters', () => {
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
         },
       ],
-    } as ChartFilters;
+    } as RecordFiltersWithGroups;
 
-    const result = sanitizeChartRecordFilters({
-      chartFilters,
+    const result = sanitizeRecordFilters({
+      recordFiltersWithGroups,
       fieldMetadataItems: [{ id: 'valid-field', isActive: true }],
     });
 
@@ -168,7 +168,7 @@ describe('sanitizeChartRecordFilters', () => {
   });
 
   it('should remove both child and root group when all filters are dropped', () => {
-    const chartFilters: ChartFilters = {
+    const recordFiltersWithGroups: RecordFiltersWithGroups = {
       recordFilters: [
         {
           id: 'filter-1',
@@ -188,10 +188,10 @@ describe('sanitizeChartRecordFilters', () => {
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
         },
       ],
-    } as ChartFilters;
+    } as RecordFiltersWithGroups;
 
-    const result = sanitizeChartRecordFilters({
-      chartFilters,
+    const result = sanitizeRecordFilters({
+      recordFiltersWithGroups,
       fieldMetadataItems: [],
     });
 
@@ -200,12 +200,12 @@ describe('sanitizeChartRecordFilters', () => {
   });
 
   it('should point record filters on a morph relation target at the morph relation field', () => {
-    const chartFilters: ChartFilters = {
+    const recordFiltersWithGroups: RecordFiltersWithGroups = {
       recordFilters: [{ id: 'filter-1', fieldMetadataId: 'morph-target' }],
-    } as ChartFilters;
+    } as RecordFiltersWithGroups;
 
-    const result = sanitizeChartRecordFilters({
-      chartFilters,
+    const result = sanitizeRecordFilters({
+      recordFiltersWithGroups,
       fieldMetadataItems: [
         {
           id: 'morph-head',

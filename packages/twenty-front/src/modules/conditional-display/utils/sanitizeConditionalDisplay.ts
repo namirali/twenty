@@ -1,7 +1,7 @@
 import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
 import { type RecordFilterGroup } from '@/object-record/record-filter-group/types/RecordFilterGroup';
 import { type PersistedRecordFilter } from '@/object-record/record-filter/types/PersistedRecordFilter';
-import { sanitizeChartRecordFilters } from '@/side-panel/pages/page-layout/utils/sanitizeChartRecordFilters';
+import { sanitizeRecordFilters } from '@/object-record/record-filter/utils/sanitizeRecordFilters';
 import {
   type ConditionalDisplay,
   type ConditionalDisplayAdminContextKey,
@@ -47,8 +47,8 @@ export const sanitizeConditionalDisplay = ({
   const {
     recordFilters: validRecordFilters = [],
     recordFilterGroups: remainingRecordFilterGroups = [],
-  } = sanitizeChartRecordFilters({
-    chartFilters: recordFiltersToSanitize,
+  } = sanitizeRecordFilters({
+    recordFiltersWithGroups: recordFiltersToSanitize,
     fieldMetadataItems,
   });
 
