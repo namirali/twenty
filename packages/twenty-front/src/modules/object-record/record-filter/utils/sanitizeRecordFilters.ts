@@ -24,10 +24,8 @@ export const sanitizeRecordFilters = ({
   const validRecordFilters = pointRecordFiltersAtMorphRelationFields({
     recordFilters: recordFiltersWithGroups.recordFilters ?? [],
     fieldMetadataItems: activeFieldMetadataItems,
-  }).filter(
-    (recordFilter) =>
-      isDefined(recordFilter.contextKey) ||
-      validFieldMetadataIds.has(recordFilter.fieldMetadataId),
+  }).filter((recordFilter) =>
+    validFieldMetadataIds.has(recordFilter.fieldMetadataId),
   );
 
   const remainingGroups = removeEmptyRecordFilterGroups({

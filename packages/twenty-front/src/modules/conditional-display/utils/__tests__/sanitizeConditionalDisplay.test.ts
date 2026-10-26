@@ -150,4 +150,51 @@ describe('sanitizeConditionalDisplay', () => {
       selectedRecordsMatch: 'SOME',
     });
   });
+
+  it('keeps a group holding only context rows and the original row order next to a dropped deleted-field row', () => {
+    expect(
+      sanitizeConditionalDisplay({
+        recordFilters: [
+          { ...nameRecordFilter, recordFilterGroupId: 'root' },
+          {
+            ...nameRecordFilter,
+            id: 'deleted-filter',
+            fieldMetadataId: 'deleted-field-id',
+            recordFilterGroupId: 'root',
+          },
+          { ...roleRecordFilter, recordFilterGroupId: 'context-only' },
+          {
+            ...roleRecordFilter,
+            id: 'member-filter',
+            contextKey: 'currentWorkspaceMemberId',
+            recordFilterGroupId: 'root',
+          },
+        ],
+        recordFilterGroups: [
+          { id: 'root', logicalOperator: RecordFilterGroupLogicalOperator.AND },
+          {
+            id: 'context-only',
+            logicalOperator: RecordFilterGroupLogicalOperator.OR,
+            parentRecordFilterGroupId: 'root',
+          },
+        ],
+        availableContextKeys: AVAILABLE_CONTEXT_KEYS,
+        fieldMetadataItems: FIELD_METADATA_ITEMS,
+      }),
+    ).toEqual({
+      recordFilters: [
+        expect.objectContaining({ id: 'name-filter' }),
+        expect.objectContaining({ id: 'role-filter' }),
+        expect.objectContaining({ id: 'member-filter' }),
+      ],
+      recordFilterGroups: [
+        { id: 'root', logicalOperator: RecordFilterGroupLogicalOperator.AND },
+        {
+          id: 'context-only',
+          logicalOperator: RecordFilterGroupLogicalOperator.OR,
+          parentRecordFilterGroupId: 'root',
+        },
+      ],
+    });
+  });
 });

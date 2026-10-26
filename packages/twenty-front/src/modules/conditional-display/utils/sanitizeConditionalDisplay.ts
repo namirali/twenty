@@ -1,4 +1,5 @@
 import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
+import { removeEmptyRecordFilterGroups } from '@/object-record/record-filter-group/utils/removeEmptyRecordFilterGroups';
 import { type RecordFilterGroup } from '@/object-record/record-filter-group/types/RecordFilterGroup';
 import { type PersistedRecordFilter } from '@/object-record/record-filter/types/PersistedRecordFilter';
 import { sanitizeRecordFilters } from '@/object-record/record-filter/utils/sanitizeRecordFilters';
@@ -31,25 +32,49 @@ export const sanitizeConditionalDisplay = ({
   availableContextKeys,
   fieldMetadataItems,
 }: SanitizeConditionalDisplayParams): ConditionalDisplay | null => {
-  const recordFiltersToSanitize = {
-    recordFilters: recordFilters.filter(
-      (recordFilter) =>
-        !isDefined(recordFilter.contextKey) ||
-        (availableContextKeys.includes(recordFilter.contextKey) &&
-          isRecordFilterValueValid({
-            operand: recordFilter.operand,
-            value: recordFilter.value ?? '',
-          })),
-    ),
-    recordFilterGroups,
-  };
+  const availableRecordFilters = recordFilters.filter(
+    (recordFilter) =>
+      !isDefined(recordFilter.contextKey) ||
+      (availableContextKeys.includes(recordFilter.contextKey) &&
+        isRecordFilterValueValid({
+          operand: recordFilter.operand,
+          value: recordFilter.value ?? '',
+        })),
+  );
 
-  const {
-    recordFilters: validRecordFilters = [],
-    recordFilterGroups: remainingRecordFilterGroups = [],
-  } = sanitizeRecordFilters({
-    recordFiltersWithGroups: recordFiltersToSanitize,
-    fieldMetadataItems,
+  const { recordFilters: sanitizedFieldRecordFilters = [] } =
+    sanitizeRecordFilters({
+      recordFiltersWithGroups: {
+        recordFilters: availableRecordFilters.filter(
+          (recordFilter) => !isDefined(recordFilter.contextKey),
+        ),
+        recordFilterGroups,
+      },
+      fieldMetadataItems,
+    });
+
+  const sanitizedFieldRecordFilterById = new Map(
+    sanitizedFieldRecordFilters.map((recordFilter) => [
+      recordFilter.id,
+      recordFilter,
+    ]),
+  );
+
+  const validRecordFilters = availableRecordFilters.flatMap((recordFilter) => {
+    if (isDefined(recordFilter.contextKey)) {
+      return [recordFilter];
+    }
+
+    const sanitizedRecordFilter = sanitizedFieldRecordFilterById.get(
+      recordFilter.id,
+    );
+
+    return isDefined(sanitizedRecordFilter) ? [sanitizedRecordFilter] : [];
+  });
+
+  const remainingRecordFilterGroups = removeEmptyRecordFilterGroups({
+    recordFilters: validRecordFilters,
+    recordFilterGroups,
   });
 
   const conditionalDisplayRecordFilters: ConditionalDisplayRecordFilter[] =
