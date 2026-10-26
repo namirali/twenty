@@ -1,7 +1,7 @@
-import {
-  type ConditionalDisplay,
-  ViewFilterOperand,
-} from 'twenty-shared/types';
+import { type ConditionalDisplay } from 'twenty-shared/types';
+
+import { STANDARD_DEVICE_DESKTOP_CONDITIONAL_DISPLAY } from 'src/engine/workspace-manager/twenty-standard-application/constants/standard-device-desktop-conditional-display.constant';
+import { STANDARD_DEVICE_MOBILE_CONDITIONAL_DISPLAY } from 'src/engine/workspace-manager/twenty-standard-application/constants/standard-device-mobile-conditional-display.constant';
 
 export const LEGACY_WIDGET_DEVICE_VISIBILITIES: {
   conditionalAvailabilityExpression: string;
@@ -9,28 +9,10 @@ export const LEGACY_WIDGET_DEVICE_VISIBILITIES: {
 }[] = [
   {
     conditionalAvailabilityExpression: 'device == "MOBILE"',
-    conditionalDisplay: {
-      recordFilters: [
-        {
-          id: '0',
-          contextKey: 'device',
-          operand: ViewFilterOperand.IS,
-          value: JSON.stringify(['MOBILE']),
-        },
-      ],
-    },
+    conditionalDisplay: STANDARD_DEVICE_MOBILE_CONDITIONAL_DISPLAY,
   },
   {
     conditionalAvailabilityExpression: 'device == "DESKTOP"',
-    conditionalDisplay: {
-      recordFilters: [
-        {
-          id: '0',
-          contextKey: 'device',
-          operand: ViewFilterOperand.IS,
-          value: JSON.stringify(['DESKTOP']),
-        },
-      ],
-    },
+    conditionalDisplay: STANDARD_DEVICE_DESKTOP_CONDITIONAL_DISPLAY,
   },
 ];

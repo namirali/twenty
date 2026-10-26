@@ -599,7 +599,7 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
           applicationUniversalIdentifier,
       );
 
-      const args = {
+      const workspaceMigrationInput = {
         workspaceId,
         isSystemBuild: true,
         applicationUniversalIdentifier,
@@ -629,10 +629,10 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
         applicationUniversalIdentifier ===
         TWENTY_STANDARD_APPLICATION_UNIVERSAL_IDENTIFIER
           ? await this.workspaceMigrationValidateBuildAndRunService.validateBuildAndRunLegacyWorkspaceMigration(
-              args,
+              workspaceMigrationInput,
             )
           : await this.workspaceMigrationValidateBuildAndRunService.validateBuildAndRunWorkspaceMigration(
-              args,
+              workspaceMigrationInput,
             );
 
       if (result.status === 'fail') {
