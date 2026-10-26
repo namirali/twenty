@@ -597,6 +597,7 @@ const EXPORTED_KINDS: ExportedKind[] = [
             pageLayoutWidgetManifest: PAGE_LAYOUT_WIDGET_MANIFEST,
             pageLayoutTabUniversalIdentifier: PAGE_LAYOUT_TAB_UID,
             applicationUniversalIdentifier: APP_UID,
+            findObjectFieldByName: () => undefined,
             now: NOW,
           }),
         position: {

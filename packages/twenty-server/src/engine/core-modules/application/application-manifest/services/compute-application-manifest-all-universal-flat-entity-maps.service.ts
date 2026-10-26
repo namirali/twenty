@@ -50,6 +50,8 @@ import { type FlatApplication } from 'src/engine/core-modules/application/types/
 import { fromAgentManifestToUniversalFlatAgent } from 'src/engine/core-modules/application/utils/from-agent-manifest-to-universal-flat-agent.util';
 import { createEmptyAllFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/constant/create-empty-all-flat-entity-maps.constant';
 import { type AllFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/all-flat-entity-maps.type';
+import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
+import { type FlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-metadata/types/flat-field-metadata.type';
 import { type UniversalFlatFieldMetadata } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/types/universal-flat-field-metadata.type';
 import { addUniversalFlatEntityToUniversalFlatEntityMapsThroughMutationOrThrow } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/utils/add-universal-flat-entity-to-universal-flat-entity-maps-through-mutation-or-throw.util';
 
@@ -59,14 +61,36 @@ export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
     manifest,
     ownerFlatApplication,
     fromAllFlatEntityMaps,
+    workspaceFlatFieldMetadataMaps,
     now,
   }: {
     manifest: Manifest;
     ownerFlatApplication: FlatApplication;
     fromAllFlatEntityMaps: AllFlatEntityMaps;
+    workspaceFlatFieldMetadataMaps: FlatEntityMaps<FlatFieldMetadata>;
     now: string;
   }): AllFlatEntityMaps {
     const allUniversalFlatEntityMaps = createEmptyAllFlatEntityMaps();
+
+    const findObjectFieldByName = ({
+      objectUniversalIdentifier,
+      fieldName,
+    }: {
+      objectUniversalIdentifier: string;
+      fieldName: string;
+    }) =>
+      [
+        ...Object.values(
+          allUniversalFlatEntityMaps.flatFieldMetadataMaps.byUniversalIdentifier,
+        ),
+        ...Object.values(workspaceFlatFieldMetadataMaps.byUniversalIdentifier),
+      ].find(
+        (flatFieldMetadata) =>
+          isDefined(flatFieldMetadata) &&
+          flatFieldMetadata.objectMetadataUniversalIdentifier ===
+            objectUniversalIdentifier &&
+          flatFieldMetadata.name === fieldName,
+      );
 
     const {
       universalIdentifier: applicationUniversalIdentifier,
@@ -549,6 +573,7 @@ export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
           pageLayoutUniversalIdentifier: pageLayoutManifest.universalIdentifier,
           pageLayoutType: pageLayoutManifest.type,
           applicationUniversalIdentifier,
+          findObjectFieldByName,
           now,
           allUniversalFlatEntityMaps,
         });
@@ -574,6 +599,7 @@ export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
           pageLayoutTabManifest.pageLayoutUniversalIdentifier,
         pageLayoutType: referencedPageLayoutManifest?.type,
         applicationUniversalIdentifier,
+        findObjectFieldByName,
         now,
         allUniversalFlatEntityMaps,
       });
@@ -595,6 +621,7 @@ export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
             pageLayoutTabUniversalIdentifier:
               pageLayoutWidgetManifest.pageLayoutTabUniversalIdentifier,
             applicationUniversalIdentifier,
+            findObjectFieldByName,
             now,
           }),
         universalFlatEntityMapsToMutate:
@@ -702,6 +729,7 @@ export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
     pageLayoutUniversalIdentifier,
     pageLayoutType,
     applicationUniversalIdentifier,
+    findObjectFieldByName,
     now,
     allUniversalFlatEntityMaps,
   }: {
@@ -709,6 +737,9 @@ export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
     pageLayoutUniversalIdentifier: string;
     pageLayoutType: PageLayoutManifest['type'] | undefined;
     applicationUniversalIdentifier: string;
+    findObjectFieldByName: Parameters<
+      typeof fromPageLayoutWidgetManifestToUniversalFlatPageLayoutWidget
+    >[0]['findObjectFieldByName'];
     now: string;
     allUniversalFlatEntityMaps: AllFlatEntityMaps;
   }): void {
@@ -745,6 +776,7 @@ export class ComputeApplicationManifestAllUniversalFlatEntityMapsService {
             pageLayoutWidgetManifest,
             pageLayoutTabUniversalIdentifier: pageLayoutTab.universalIdentifier,
             applicationUniversalIdentifier,
+            findObjectFieldByName,
             now,
           }),
         universalFlatEntityMapsToMutate:

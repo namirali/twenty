@@ -251,6 +251,7 @@ const buildFlatPageLayoutWidget = ({
     }).widgets[0],
     pageLayoutTabUniversalIdentifier,
     applicationUniversalIdentifier: APP_UID,
+    findObjectFieldByName: () => undefined,
     now: NOW,
   }),
   id: `${pageLayoutWidgetManifest.universalIdentifier}-id`,

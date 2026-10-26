@@ -124,6 +124,8 @@ export class ApplicationManifestMigrationService {
         manifest: preInstallOnlyManifest,
         ownerFlatApplication,
         fromAllFlatEntityMaps,
+        workspaceFlatFieldMetadataMaps:
+          existingAllFlatEntityMaps.flatFieldMetadataMaps,
         now,
       });
 
@@ -211,6 +213,8 @@ export class ApplicationManifestMigrationService {
         manifest,
         ownerFlatApplication,
         fromAllFlatEntityMaps,
+        workspaceFlatFieldMetadataMaps:
+          existingAllFlatEntityMaps.flatFieldMetadataMaps,
         now,
       });
 

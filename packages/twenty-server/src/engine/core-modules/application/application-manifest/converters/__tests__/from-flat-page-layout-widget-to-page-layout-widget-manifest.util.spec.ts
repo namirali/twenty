@@ -67,6 +67,7 @@ const forward = (
     }).widgets[0],
     pageLayoutTabUniversalIdentifier: TAB_UID,
     applicationUniversalIdentifier: APP_UID,
+    findObjectFieldByName: () => undefined,
     now: NOW,
   });
 
@@ -185,19 +186,6 @@ describe('fromFlatPageLayoutWidgetToPageLayoutWidgetManifest', () => {
         },
       ],
     });
-  });
-
-  it('should keep any other json-logic rule for the validator to reject', () => {
-    const foreignJsonLogic = {
-      '==': [{ var: 'objectMetadataItem.nameSingular' }, 'company'],
-    };
-
-    expect(
-      forward({
-        ...MINIMAL_WIDGET_MANIFEST,
-        conditionalDisplay: foreignJsonLogic,
-      } as unknown as PageLayoutWidgetManifest).universalConditionalDisplay,
-    ).toEqual(foreignJsonLogic);
   });
 
   it('should reproduce the flat entity after an inverse then a forward conversion', () => {
