@@ -9,9 +9,13 @@ import { DataSource } from 'typeorm';
 import { ProvisionedWorkspaceCommandRunner } from 'src/database/commands/command-runners/provisioned-workspace.command-runner';
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import { type RunOnWorkspaceArgs } from 'src/database/commands/command-runners/workspace.command-runner';
+import { ENGINE_GATE_ORIGINALS_KEY_VALUE_PAIR_KEY } from 'src/database/commands/upgrade-version-command/2-52/constants/engine-gate-originals-key-value-pair-key.constant';
+import { type EngineGateOriginal } from 'src/database/commands/upgrade-version-command/2-52/types/engine-gate-original.type';
 import { type LegacyEngineGateExpressions } from 'src/database/commands/upgrade-version-command/2-52/types/legacy-engine-gate-expressions.type';
+import { buildEngineGateOriginal } from 'src/database/commands/upgrade-version-command/2-52/utils/build-engine-gate-original.util';
 import { fetchLegacyEngineGateExpressions } from 'src/database/commands/upgrade-version-command/2-52/utils/fetch-legacy-engine-gate-expressions.util';
 import { migrateEngineGatesToConditionalDisplayTrees } from 'src/database/commands/upgrade-version-command/2-52/utils/migrate-engine-gates-to-conditional-display-trees.util';
+import { restoreEngineGatesFromOriginals } from 'src/database/commands/upgrade-version-command/2-52/utils/restore-engine-gates-from-originals.util';
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { RegisteredWorkspaceCommand } from 'src/engine/core-modules/upgrade/decorators/registered-workspace-command.decorator';
 import { type FlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/types/flat-command-menu-item.type';
@@ -153,6 +157,8 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
 
     const now = new Date().toISOString();
 
+    const engineGateOriginalsById: Record<string, EngineGateOriginal> = {};
+
     const commandMenuItemsToUpdate = Object.values(
       flatCommandMenuItemMaps.byUniversalIdentifier,
     )
@@ -225,6 +231,15 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
 
         counts.overrideEntriesConverted +=
           migratedEngineGates.convertedOverrideEntryCount;
+
+        const engineGateOriginal = buildEngineGateOriginal({
+          original: flatCommandMenuItem,
+          migrated: migratedEngineGates,
+        });
+
+        if (isDefined(engineGateOriginal)) {
+          engineGateOriginalsById[flatCommandMenuItem.id] = engineGateOriginal;
+        }
 
         const conditionalDisplay =
           migratedEngineGates.conditionalDisplay as FlatCommandMenuItem['conditionalDisplay'];
@@ -333,6 +348,15 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
         counts.overrideEntriesConverted +=
           migratedEngineGates.convertedOverrideEntryCount;
 
+        const engineGateOriginal = buildEngineGateOriginal({
+          original: flatPageLayoutWidget,
+          migrated: migratedEngineGates,
+        });
+
+        if (isDefined(engineGateOriginal)) {
+          engineGateOriginalsById[flatPageLayoutWidget.id] = engineGateOriginal;
+        }
+
         const conditionalDisplay =
           migratedEngineGates.conditionalDisplay as FlatPageLayoutWidget['conditionalDisplay'];
         const overrides =
@@ -378,6 +402,19 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
       return;
     }
 
+    if (Object.keys(engineGateOriginalsById).length > 0) {
+      await this.coreDataSource.query(
+        `INSERT INTO core."keyValuePair" ("key", "workspaceId", "type", "value") VALUES ($1, $2, 'CONFIG_VARIABLE', $3::jsonb)
+         ON CONFLICT ("key", "workspaceId") WHERE "userId" IS NULL AND "applicationId" IS NULL
+         DO UPDATE SET "value" = EXCLUDED."value" || "keyValuePair"."value", "updatedAt" = now()`,
+        [
+          ENGINE_GATE_ORIGINALS_KEY_VALUE_PAIR_KEY,
+          workspaceId,
+          JSON.stringify(engineGateOriginalsById),
+        ],
+      );
+    }
+
     await this.runMigrationPerApplication({
       workspaceId,
       commandMenuItemsToUpdate,
@@ -398,86 +435,101 @@ export class MigrateEngineGatesToConditionalDisplayTreesCommand extends Provisio
         workspaceId,
       });
 
-    const now = new Date().toISOString();
+    const engineGateOriginalRows: { value: Record<string, EngineGateOriginal> }[] =
+      await this.coreDataSource.query(
+        `SELECT "value" FROM core."keyValuePair" WHERE "key" = $1 AND "workspaceId" = $2 AND "userId" IS NULL AND "applicationId" IS NULL`,
+        [ENGINE_GATE_ORIGINALS_KEY_VALUE_PAIR_KEY, workspaceId],
+      );
+    const engineGateOriginalsById = engineGateOriginalRows[0]?.value ?? {};
 
-    const commandMenuItemsToUpdate = Object.values(
+    const commandMenuItemsToRestore = Object.values(
       flatCommandMenuItemMaps.byUniversalIdentifier,
     )
       .filter(isDefined)
-      .flatMap((flatCommandMenuItem): FlatCommandMenuItem[] => {
-        const legacyEngineGateExpressions =
-          commandMenuItemExpressionsById.get(flatCommandMenuItem.id) ??
-          NO_LEGACY_ENGINE_GATE_EXPRESSIONS;
-        const shouldClearAvailability =
-          isDefined(
-            legacyEngineGateExpressions.conditionalAvailabilityExpression,
-          ) && isDefined(flatCommandMenuItem.conditionalAvailability);
-        const shouldClearPinned =
-          isDefined(legacyEngineGateExpressions.conditionalPinnedExpression) &&
-          isDefined(flatCommandMenuItem.conditionalPinned);
+      .flatMap((flatCommandMenuItem) => {
+        const currentEngineGates = {
+          conditionalAvailability: flatCommandMenuItem.conditionalAvailability,
+          conditionalPinned: flatCommandMenuItem.conditionalPinned,
+          conditionalDisplay: flatCommandMenuItem.conditionalDisplay,
+          overrides: flatCommandMenuItem.overrides,
+        };
+        const restoredEngineGates = restoreEngineGatesFromOriginals({
+          legacyEngineGateExpressions:
+            commandMenuItemExpressionsById.get(flatCommandMenuItem.id) ??
+            NO_LEGACY_ENGINE_GATE_EXPRESSIONS,
+          ...currentEngineGates,
+          engineGateOriginal: engineGateOriginalsById[flatCommandMenuItem.id],
+        });
 
-        if (!shouldClearAvailability && !shouldClearPinned) {
-          return [];
-        }
-
-        return [
-          {
-            ...flatCommandMenuItem,
-            ...(shouldClearAvailability
-              ? {
-                  conditionalAvailability: null,
-                  universalConditionalAvailability: null,
-                }
-              : {}),
-            ...(shouldClearPinned
-              ? { conditionalPinned: null, universalConditionalPinned: null }
-              : {}),
-            updatedAt: now,
-          },
-        ];
+        return fastDeepEqual(restoredEngineGates, currentEngineGates)
+          ? []
+          : [{ id: flatCommandMenuItem.id, ...restoredEngineGates }];
       });
 
-    const pageLayoutWidgetsToUpdate = Object.values(
+    const pageLayoutWidgetsToRestore = Object.values(
       flatPageLayoutWidgetMaps.byUniversalIdentifier,
     )
       .filter(isDefined)
-      .flatMap((flatPageLayoutWidget): FlatPageLayoutWidget[] => {
-        const legacyEngineGateExpressions =
-          pageLayoutWidgetExpressionsById.get(flatPageLayoutWidget.id) ??
-          NO_LEGACY_ENGINE_GATE_EXPRESSIONS;
+      .flatMap((flatPageLayoutWidget) => {
+        const currentEngineGates = {
+          conditionalAvailability: flatPageLayoutWidget.conditionalAvailability,
+          conditionalPinned: null,
+          conditionalDisplay: flatPageLayoutWidget.conditionalDisplay,
+          overrides: flatPageLayoutWidget.overrides,
+        };
+        const restoredEngineGates = restoreEngineGatesFromOriginals({
+          legacyEngineGateExpressions:
+            pageLayoutWidgetExpressionsById.get(flatPageLayoutWidget.id) ??
+            NO_LEGACY_ENGINE_GATE_EXPRESSIONS,
+          ...currentEngineGates,
+          engineGateOriginal: engineGateOriginalsById[flatPageLayoutWidget.id],
+        });
 
-        if (
-          !isDefined(
-            legacyEngineGateExpressions.conditionalAvailabilityExpression,
-          ) ||
-          !isDefined(flatPageLayoutWidget.conditionalAvailability)
-        ) {
-          return [];
-        }
-
-        return [
-          {
-            ...flatPageLayoutWidget,
-            conditionalAvailability: null,
-            universalConditionalAvailability: null,
-            updatedAt: now,
-          },
-        ];
+        return fastDeepEqual(restoredEngineGates, currentEngineGates)
+          ? []
+          : [{ id: flatPageLayoutWidget.id, ...restoredEngineGates }];
       });
 
     this.logger.log(
-      `${options.dryRun ? '[DRY RUN] ' : ''}Workspace ${workspaceId}: clearing the compiled engine gates of ${commandMenuItemsToUpdate.length} command menu item(s) and ${pageLayoutWidgetsToUpdate.length} page layout widget(s)`,
+      `${options.dryRun ? '[DRY RUN] ' : ''}Workspace ${workspaceId}: restoring the engine gates of ${commandMenuItemsToRestore.length} command menu item(s) and ${pageLayoutWidgetsToRestore.length} page layout widget(s)`,
     );
 
     if (options.dryRun) {
       return;
     }
 
-    await this.runMigrationPerApplication({
-      workspaceId,
-      commandMenuItemsToUpdate,
-      pageLayoutWidgetsToUpdate,
+    await this.coreDataSource.transaction(async (entityManager) => {
+      await entityManager.query(
+        `UPDATE core."commandMenuItem" AS "commandMenuItem"
+         SET "conditionalAvailability" = restored."conditionalAvailability",
+             "conditionalPinned" = restored."conditionalPinned",
+             "conditionalDisplay" = restored."conditionalDisplay",
+             "overrides" = restored."overrides",
+             "updatedAt" = now()
+         FROM jsonb_to_recordset($1::jsonb) AS restored(id uuid, "conditionalAvailability" jsonb, "conditionalPinned" jsonb, "conditionalDisplay" jsonb, "overrides" jsonb)
+         WHERE "commandMenuItem".id = restored.id AND "commandMenuItem"."workspaceId" = $2`,
+        [JSON.stringify(commandMenuItemsToRestore), workspaceId],
+      );
+      await entityManager.query(
+        `UPDATE core."pageLayoutWidget" AS "pageLayoutWidget"
+         SET "conditionalAvailability" = restored."conditionalAvailability",
+             "conditionalDisplay" = restored."conditionalDisplay",
+             "overrides" = restored."overrides",
+             "updatedAt" = now()
+         FROM jsonb_to_recordset($1::jsonb) AS restored(id uuid, "conditionalAvailability" jsonb, "conditionalDisplay" jsonb, "overrides" jsonb)
+         WHERE "pageLayoutWidget".id = restored.id AND "pageLayoutWidget"."workspaceId" = $2`,
+        [JSON.stringify(pageLayoutWidgetsToRestore), workspaceId],
+      );
+      await entityManager.query(
+        `DELETE FROM core."keyValuePair" WHERE "key" = $1 AND "workspaceId" = $2 AND "userId" IS NULL AND "applicationId" IS NULL`,
+        [ENGINE_GATE_ORIGINALS_KEY_VALUE_PAIR_KEY, workspaceId],
+      );
     });
+
+    await this.workspaceCacheService.invalidateAndRecompute(workspaceId, [
+      'flatCommandMenuItemMaps',
+      'flatPageLayoutWidgetMaps',
+    ]);
   }
 
   private migrateOrThrow<
