@@ -36,7 +36,6 @@ export type PageLayoutWidgetOverrides = {
   title?: string;
   position?: PageLayoutWidgetPosition | null;
   conditionalDisplay?: ConditionalDisplay | null;
-  conditionalAvailabilityExpression?: string | null;
   pageLayoutTabId?: SerializedRelation;
 };
 
