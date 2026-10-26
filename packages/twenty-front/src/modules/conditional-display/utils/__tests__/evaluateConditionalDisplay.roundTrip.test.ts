@@ -1,23 +1,25 @@
-import { isBoolean, isNumber, isString } from '@sniptt/guards';
-
-import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from '@/constants/ConditionalDisplayContextKeys';
-import { type ConditionalDisplay } from '@/types/conditional-display/ConditionalDisplay';
-import { type ConditionalDisplayEvaluationContext } from '@/types/conditional-display/ConditionalDisplayEvaluationContext';
-import { type ConditionalDisplayRecordFilter } from '@/types/conditional-display/ConditionalDisplayRecordFilter';
-import { ContextStorePageType } from '@/types/ContextStorePageType';
-import { type ObjectRecord } from '@/types/ObjectRecord';
-import { RecordFilterGroupLogicalOperator } from '@/types/RecordFilterGroupLogicalOperator';
-import { ViewFilterOperand } from '@/types/ViewFilterOperand';
-import { evaluateConditionalAvailabilityExpression } from '@/utils/command-menu-items/evaluateConditionalAvailabilityExpression';
-import { compileConditionalAvailabilityExpression } from '@/utils/conditional-display/compileConditionalAvailabilityExpression';
-import { evaluateConditionalDisplay } from '@/utils/conditional-display/evaluateConditionalDisplay';
-import { isConditionalDisplayContextRecordFilterMatching } from '@/utils/conditional-display/isConditionalDisplayContextRecordFilterMatching';
-import { parseJson } from '@/utils/parseJson';
-import { removePropertiesFromRecord } from '@/utils/removePropertiesFromRecord';
-import { isPlainObject } from '@/utils/typeguard/isPlainObject';
-import { isDefined } from '@/utils/validation/isDefined';
-
-import { CONDITIONAL_AVAILABILITY_EXPRESSION_CORPUS } from './conditionalAvailabilityExpressionCorpus.fixture';
+import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
+import { isArray, isBoolean, isNumber, isString } from '@sniptt/guards';
+import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from 'twenty-shared/constants';
+import { CONDITIONAL_AVAILABILITY_EXPRESSION_CORPUS } from 'twenty-shared/testing';
+import {
+  type ConditionalDisplay,
+  type ConditionalDisplayEvaluationContext,
+  type ConditionalDisplayRecordFilter,
+  ContextStorePageType,
+  FieldMetadataType,
+  type ObjectRecord,
+  RecordFilterGroupLogicalOperator,
+  ViewFilterOperand,
+} from 'twenty-shared/types';
+import {
+  compileConditionalAvailabilityExpression,
+  evaluateConditionalAvailabilityExpression,
+  isDefined,
+  isPlainObject,
+  parseJson,
+  removePropertiesFromRecord,
+} from 'twenty-shared/utils';
 
 type MatrixSubject = {
   name: string;
@@ -72,7 +74,11 @@ const getDistinctValues = (values: unknown[]): unknown[] =>
 const getMapEntryValues = (
   recordFilters: ConditionalDisplayRecordFilter[],
 ): unknown[] => {
-  const literals = recordFilters.map(({ value }) => parseJson<unknown>(value));
+  const literals = recordFilters.flatMap(({ value }) => {
+    const literal = parseJson<unknown>(value);
+
+    return isArray(literal) ? literal : [literal];
+  });
 
   if (recordFilters.some(({ value }) => !isDefined(value))) {
     return [{}, undefined];
@@ -171,21 +177,27 @@ const getMatrixSubjects = ({
       return;
     }
 
-    switch (CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey].valueKind) {
-      case 'BOOLEAN':
-        if (contextKey !== 'areAllSelectedRecordsFavorites') {
+    const { subject } = CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey];
+
+    switch (subject.kind) {
+      case 'VALUE':
+        if (
+          subject.field.type === FieldMetadataType.BOOLEAN &&
+          contextKey !== 'areAllSelectedRecordsFavorites'
+        ) {
           contextSubjects.push({ name: subjectName, values: [true, false] });
         }
 
-        return;
-      case 'PAGE_TYPE':
-        contextSubjects.push({
-          name: subjectName,
-          values: Object.values(ContextStorePageType),
-        });
+        if (subject.field.type === FieldMetadataType.SELECT) {
+          contextSubjects.push({
+            name: subjectName,
+            values: [...(subject.field.options ?? [])],
+          });
+        }
 
         return;
       case 'MAP_ENTRY':
+      case 'PROPERTY':
         contextSubjects.push({
           name: subjectName,
           values:
@@ -195,7 +207,7 @@ const getMatrixSubjects = ({
         });
 
         return;
-      case 'RECORD_PATH':
+      case 'SELECTED_RECORD_PATH':
         recordPathSubjects.push({
           name: subFieldName ?? '',
           values: getRecordPathValues({
@@ -206,8 +218,6 @@ const getMatrixSubjects = ({
           }),
         });
 
-        return;
-      default:
         return;
     }
   });
@@ -407,13 +417,9 @@ const evaluateTree = ({
 }): boolean =>
   evaluateConditionalDisplay({
     conditionalDisplay,
-    records: context.selectedRecords,
-    isRecordFilterMatching: ({ recordFilter, record }) =>
-      isConditionalDisplayContextRecordFilterMatching({
-        recordFilter,
-        context,
-        record,
-      }),
+    context,
+    records: context.selectedRecords ?? [],
+    objectMetadataItems: [],
   });
 
 const getDeletableContextKeys = (

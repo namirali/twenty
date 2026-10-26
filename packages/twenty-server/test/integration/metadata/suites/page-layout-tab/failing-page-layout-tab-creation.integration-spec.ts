@@ -47,11 +47,11 @@ describe('Page layout tab creation should fail', () => {
     expectOneNotInternalServerErrorSnapshot({ errors });
   });
 
-  it('when conditional display matches two devices at once', async () => {
+  it('when conditional display uses a device that does not exist', async () => {
     const { errors } = await createOnePageLayoutTab({
       expectToFail: true,
       input: {
-        title: 'Tab With Two Devices',
+        title: 'Tab With Unknown Device',
         pageLayoutId: testPageLayoutId,
         conditionalDisplay: {
           recordFilters: [
@@ -59,7 +59,7 @@ describe('Page layout tab creation should fail', () => {
               id: '0',
               contextKey: 'device',
               operand: ViewFilterOperand.IS,
-              value: '["MOBILE","DESKTOP"]',
+              value: '["TABLET"]',
             },
           ],
         },

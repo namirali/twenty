@@ -7,6 +7,7 @@
  *                              |___/
  */
 
+export { CONDITIONAL_AVAILABILITY_EXPRESSION_CORPUS } from './constants/ConditionalAvailabilityExpressionCorpus';
 export { eachTestingContextFilter } from './EachTestingContextFilter';
 export type { EachTestingContext } from './types/EachTestingContext';
 export type { SuccessfulAndFailingTestCases } from './types/SuccessfulAndFailingTestCases';

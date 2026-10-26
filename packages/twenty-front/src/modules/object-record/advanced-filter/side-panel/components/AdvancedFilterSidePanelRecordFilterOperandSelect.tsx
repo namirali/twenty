@@ -1,4 +1,3 @@
-import { getConditionalDisplayContextKeyOperandLabel } from '@/conditional-display/utils/getConditionalDisplayContextKeyOperandLabel';
 import { AdvancedFilterRecordFilterOperandSelectContent } from '@/object-record/advanced-filter/components/AdvancedFilterRecordFilterOperandSelectContent';
 import { AdvancedFilterContext } from '@/object-record/advanced-filter/states/context/AdvancedFilterContext';
 import { getOperandLabel } from '@/object-record/object-filter-dropdown/utils/getOperandLabel';
@@ -27,7 +26,8 @@ export const AdvancedFilterSidePanelRecordFilterOperandSelect = ({
     (recordFilter) => recordFilter.id === recordFilterId,
   );
 
-  const isDisabled = !filter?.fieldMetadataId || readonly;
+  const isDisabled =
+    (!filter?.fieldMetadataId && !isDefined(filter?.contextKey)) || readonly;
 
   const filterType = filter?.type;
 
@@ -46,11 +46,7 @@ export const AdvancedFilterSidePanelRecordFilterOperandSelect = ({
   if (isDisabled === true) {
     let disabledOperandLabel = t`Select operand`;
 
-    if (isDefined(filter?.contextKey)) {
-      disabledOperandLabel = getConditionalDisplayContextKeyOperandLabel(
-        filter.contextKey,
-      );
-    } else if (isDefined(filter?.operand)) {
+    if (isDefined(filter?.operand)) {
       disabledOperandLabel = getOperandLabel(
         filter.operand,
         timeZoneAbbreviation,

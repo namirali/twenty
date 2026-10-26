@@ -72,6 +72,7 @@ export type { ConditionalDisplay } from './conditional-display/ConditionalDispla
 export type { ConditionalDisplayAdminContextKey } from './conditional-display/ConditionalDisplayAdminContextKey';
 export type { ConditionalDisplayConditionNode } from './conditional-display/ConditionalDisplayConditionNode';
 export type { ConditionalDisplayContextKey } from './conditional-display/ConditionalDisplayContextKey';
+export type { ConditionalDisplayContextKeySubject } from './conditional-display/ConditionalDisplayContextKeySubject';
 export type { ConditionalDisplayDevice } from './conditional-display/ConditionalDisplayDevice';
 export type { ConditionalDisplayEngineContextKey } from './conditional-display/ConditionalDisplayEngineContextKey';
 export type { ConditionalDisplayEvaluationContext } from './conditional-display/ConditionalDisplayEvaluationContext';
@@ -81,6 +82,7 @@ export type { ConditionalDisplayRecordFilter } from './conditional-display/Condi
 export type { ConditionalDisplayRecordFilterGroup } from './conditional-display/ConditionalDisplayRecordFilterGroup';
 export type { ConditionalDisplaySelectedRecordsMatch } from './conditional-display/ConditionalDisplaySelectedRecordsMatch';
 export type { ConditionalDisplaySurface } from './conditional-display/ConditionalDisplaySurface';
+export type { ConditionalDisplayVirtualField } from './conditional-display/ConditionalDisplayVirtualField';
 export type { UniversalConditionalDisplay } from './conditional-display/UniversalConditionalDisplay';
 export type { ConfigVariableValue } from './ConfigVariableValue';
 export type { ConfirmationModalCaller } from './ConfirmationModalCaller';

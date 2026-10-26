@@ -225,7 +225,7 @@ describe('Page layout widget update should fail', () => {
     });
 
     describe('Conditional display validation failures', () => {
-      it('when updating conditional display to match two devices at once', async () => {
+      it('when updating conditional display to a device that does not exist', async () => {
         const { errors } = await updateOnePageLayoutWidget({
           expectToFail: true,
           input: {
@@ -236,7 +236,7 @@ describe('Page layout widget update should fail', () => {
                   id: '0',
                   contextKey: 'device',
                   operand: ViewFilterOperand.IS,
-                  value: '["MOBILE","DESKTOP"]',
+                  value: '["TABLET"]',
                 },
               ],
             },

@@ -7,20 +7,24 @@ import {
   isString,
 } from '@sniptt/guards';
 
-import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from '@/constants/ConditionalDisplayContextKeys';
 import { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from '@/constants/NeverAvailableConditionalDisplay';
 import { type ConditionalDisplay } from '@/types/conditional-display/ConditionalDisplay';
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
 import { type ConditionalDisplayContextKey } from '@/types/conditional-display/ConditionalDisplayContextKey';
 import { type ConditionalDisplaySelectedRecordsMatch } from '@/types/conditional-display/ConditionalDisplaySelectedRecordsMatch';
+import { type ConditionalDisplayVirtualField } from '@/types/conditional-display/ConditionalDisplayVirtualField';
+import { FieldMetadataType } from '@/types/FieldMetadataType';
 import { RecordFilterGroupLogicalOperator } from '@/types/RecordFilterGroupLogicalOperator';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
 import { conditionalAvailabilityParser } from '@/utils/command-menu-items/conditionalAvailabilityParser';
 import { buildConditionalDisplayFromConditionNode } from '@/utils/conditional-display/buildConditionalDisplayFromConditionNode';
+import { getConditionalDisplayContextVirtualField } from '@/utils/conditional-display/getConditionalDisplayContextVirtualField';
 import { groupConditionalDisplayConditionNodes } from '@/utils/conditional-display/groupConditionalDisplayConditionNodes';
 import { isConditionalDisplayAdminContextKey } from '@/utils/conditional-display/isConditionalDisplayAdminContextKey';
 import { isConditionalDisplayContextKey } from '@/utils/conditional-display/isConditionalDisplayContextKey';
 import { negateConditionalDisplayConditionNode } from '@/utils/conditional-display/negateConditionalDisplayConditionNode';
+import { getFilterOperandsForFilterableFieldType } from '@/utils/filter/utils/getFilterOperandsForFilterableFieldType';
+import { getFilterTypeFromFieldType } from '@/utils/filter/utils/getFilterTypeFromFieldType';
 import { isDefined } from '@/utils/validation/isDefined';
 
 type ExpressionToken = {
@@ -45,6 +49,12 @@ type RecordFilterConditionNode = Extract<
   ConditionalDisplayConditionNode,
   { kind: 'recordFilter' }
 >;
+
+type ContextSubject = {
+  contextKey: ConditionalDisplayContextKey;
+  subFieldName?: string;
+  virtualField: ConditionalDisplayVirtualField;
+};
 
 const BOOLEAN_RECORD_PATHS = ['canChangeVisibility', 'inboxStatus.isUnread'];
 
@@ -150,6 +160,32 @@ const buildContextConditionNode = ({
   return conditionNode;
 };
 
+const getContextSubject = (
+  stackItem: CompilationStackItem,
+): ContextSubject | undefined => {
+  if (stackItem.kind !== 'mapEntry' && stackItem.kind !== 'variable') {
+    return undefined;
+  }
+
+  const contextKey =
+    stackItem.kind === 'mapEntry' ? stackItem.contextKey : stackItem.name;
+  const subFieldName =
+    stackItem.kind === 'mapEntry' ? stackItem.entryName : undefined;
+
+  if (!isConditionalDisplayContextKey(contextKey)) {
+    return undefined;
+  }
+
+  const virtualField = getConditionalDisplayContextVirtualField({
+    contextKey,
+    subFieldName,
+  });
+
+  return isDefined(virtualField)
+    ? { contextKey, subFieldName, virtualField }
+    : undefined;
+};
+
 const toConditionNode = ({
   stackItem,
   expression,
@@ -161,19 +197,13 @@ const toConditionNode = ({
     case 'condition':
       return stackItem.conditionNode;
     case 'mapEntry':
-      return buildContextConditionNode({
-        contextKey: stackItem.contextKey,
-        subFieldName: stackItem.entryName,
-        operand: ViewFilterOperand.IS,
-        value: JSON.stringify(true),
-      });
-    case 'variable':
-      if (
-        isConditionalDisplayContextKey(stackItem.name) &&
-        CONDITIONAL_DISPLAY_CONTEXT_KEYS[stackItem.name].valueKind === 'BOOLEAN'
-      ) {
+    case 'variable': {
+      const contextSubject = getContextSubject(stackItem);
+
+      if (contextSubject?.virtualField.type === FieldMetadataType.BOOLEAN) {
         return buildContextConditionNode({
-          contextKey: stackItem.name,
+          contextKey: contextSubject.contextKey,
+          subFieldName: contextSubject.subFieldName,
           operand: ViewFilterOperand.IS,
           value: JSON.stringify(true),
         });
@@ -183,6 +213,7 @@ const toConditionNode = ({
         expression,
         offendingToken: describeStackItem(stackItem),
       });
+    }
     case 'literal':
     case 'favoriteRecordCount':
       throw buildCompilationError({
@@ -205,7 +236,12 @@ const compileMember = ({
     object.kind !== 'variable' ||
     !isNonEmptyString(memberName) ||
     !isConditionalDisplayContextKey(object.name) ||
-    CONDITIONAL_DISPLAY_CONTEXT_KEYS[object.name].valueKind !== 'MAP_ENTRY'
+    !isDefined(
+      getConditionalDisplayContextVirtualField({
+        contextKey: object.name,
+        subFieldName: memberName,
+      }),
+    )
   ) {
     throw buildCompilationError({
       expression,
@@ -289,52 +325,42 @@ const compileContextComparison = ({
   left: CompilationStackItem;
   literal: ExpressionLiteral;
 }): ConditionalDisplayConditionNode | undefined => {
-  const equalityOperand = getEqualityOperand(operator);
+  const contextSubject = getContextSubject(left);
 
-  if (left.kind === 'mapEntry') {
-    return isDefined(equalityOperand)
-      ? buildContextConditionNode({
-          contextKey: left.contextKey,
-          subFieldName: left.entryName,
-          operand: equalityOperand,
-          value: JSON.stringify(literal),
-        })
-      : undefined;
-  }
-
-  if (left.kind !== 'variable' || !isConditionalDisplayContextKey(left.name)) {
+  if (!isDefined(contextSubject)) {
     return undefined;
   }
 
-  const { valueKind, allowedValues = [] } =
-    CONDITIONAL_DISPLAY_CONTEXT_KEYS[left.name];
+  const { contextKey, subFieldName, virtualField } = contextSubject;
+  const equalityOperand = getEqualityOperand(operator);
 
-  switch (valueKind) {
-    case 'BOOLEAN':
+  switch (virtualField.type) {
+    case FieldMetadataType.BOOLEAN:
       return isDefined(equalityOperand) && isBoolean(literal)
         ? buildContextConditionNode({
-            contextKey: left.name,
-            operand: equalityOperand,
-            value: JSON.stringify(literal),
+            contextKey,
+            subFieldName,
+            operand: ViewFilterOperand.IS,
+            value: JSON.stringify(
+              equalityOperand === ViewFilterOperand.IS ? literal : !literal,
+            ),
           })
         : undefined;
-    case 'PAGE_TYPE':
+    case FieldMetadataType.SELECT:
       return isDefined(equalityOperand) &&
         isString(literal) &&
-        allowedValues.includes(literal)
+        (!isDefined(virtualField.options) ||
+          virtualField.options.includes(literal))
         ? buildContextConditionNode({
-            contextKey: left.name,
+            contextKey,
+            subFieldName,
             operand: equalityOperand,
-            value: JSON.stringify(literal),
+            value: JSON.stringify([literal]),
           })
         : undefined;
-    case 'NUMBER':
+    case FieldMetadataType.NUMBER:
       return isNumber(literal) && Number.isInteger(literal)
-        ? compileCountComparison({
-            contextKey: left.name,
-            operator,
-            count: literal,
-          })
+        ? compileCountComparison({ contextKey, operator, count: literal })
         : undefined;
     default:
       return undefined;
@@ -641,12 +667,22 @@ const compileFunctionCall = ({
   const [firstArgument, secondArgument, thirdArgument] = functionArguments;
 
   if (functionItem.name === 'isDefined') {
-    return functionArguments.length === 1 && firstArgument?.kind === 'mapEntry'
+    const contextSubject =
+      functionArguments.length === 1 && firstArgument?.kind === 'mapEntry'
+        ? getContextSubject(firstArgument)
+        : undefined;
+
+    return isDefined(contextSubject) &&
+      getFilterOperandsForFilterableFieldType({
+        filterType: getFilterTypeFromFieldType(
+          contextSubject.virtualField.type,
+        ),
+      }).includes(ViewFilterOperand.IS_NOT_EMPTY)
       ? {
           kind: 'condition',
           conditionNode: buildContextConditionNode({
-            contextKey: firstArgument.contextKey,
-            subFieldName: firstArgument.entryName,
+            contextKey: contextSubject.contextKey,
+            subFieldName: contextSubject.subFieldName,
             operand: ViewFilterOperand.IS_NOT_EMPTY,
           }),
         }

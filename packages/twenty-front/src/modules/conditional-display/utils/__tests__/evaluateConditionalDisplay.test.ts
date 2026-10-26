@@ -21,8 +21,8 @@ const getCompanyFieldMetadataId = (fieldName: string) =>
     (fieldMetadataItem) => fieldMetadataItem.name === fieldName,
   )!.id;
 
-const ADMIN_ROLE_ID = 'admin-role-id';
-const MEMBER_ROLE_ID = 'member-role-id';
+const ADMIN_ROLE_ID = '20202020-0000-4000-8000-000000000001';
+const MEMBER_ROLE_ID = '20202020-0000-4000-8000-000000000002';
 const CURRENT_WORKSPACE_MEMBER_ID = 'current-workspace-member-id';
 
 const buildContext = (
@@ -362,7 +362,7 @@ describe('evaluateConditionalDisplay', () => {
             id: 'page-type-filter',
             contextKey: 'pageType',
             operand: ViewFilterOperand.IS,
-            value: JSON.stringify(ContextStorePageType.Record),
+            value: JSON.stringify([ContextStorePageType.Record]),
           },
           {
             id: 'permission-filter',
@@ -506,7 +506,7 @@ describe('evaluateConditionalDisplay', () => {
             recordFilters: [
               {
                 ...featureEnabledRecordFilter,
-                operand: ViewFilterOperand.IS_NOT,
+                value: JSON.stringify(false),
               },
             ],
           },

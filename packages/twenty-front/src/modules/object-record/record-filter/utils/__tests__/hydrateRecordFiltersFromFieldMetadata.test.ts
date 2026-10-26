@@ -86,7 +86,7 @@ describe('hydrateRecordFiltersFromFieldMetadata', () => {
         expect.objectContaining({
           id: 'role-filter-id',
           contextKey: 'currentRoleId',
-          type: 'SELECT',
+          type: 'UUID',
           label: '',
           displayValue: roleRecordFilter.value,
         }),

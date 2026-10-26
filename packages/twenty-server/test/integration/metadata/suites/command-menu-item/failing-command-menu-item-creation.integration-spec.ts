@@ -226,7 +226,7 @@ const failingCommandMenuItemConditionalDisplayCreationTestCases: EachTestingCont
           },
         },
         expectedMessage:
-          'Operand "CONTAINS" is not supported on conditional display context key "numberOfSelectedRecords"',
+          'Operand "CONTAINS" is not supported on conditional display context key "numberOfSelectedRecords" of type "NUMBER". Supported operands: IS, IS_NOT, GREATER_THAN_OR_EQUAL, LESS_THAN_OR_EQUAL, IS_EMPTY, IS_NOT_EMPTY.',
       },
     },
     {
@@ -242,13 +242,13 @@ const failingCommandMenuItemConditionalDisplayCreationTestCases: EachTestingCont
                 id: '0',
                 contextKey: 'pageType',
                 operand: ViewFilterOperand.IS,
-                value: '"UNKNOWN_PAGE"',
+                value: '["UNKNOWN_PAGE"]',
               },
             ],
           },
         },
         expectedMessage:
-          'Value ""UNKNOWN_PAGE"" of conditional display context key "pageType" must be a JSON string with one of: INDEX_PAGE, RECORD_PAGE, STANDALONE_PAGE, SETTINGS_PAGE',
+          'Conditional display context key "pageType" uses option(s) UNKNOWN_PAGE that do not exist. Allowed values: INDEX_PAGE, RECORD_PAGE, STANDALONE_PAGE, SETTINGS_PAGE.',
       },
     },
   ];

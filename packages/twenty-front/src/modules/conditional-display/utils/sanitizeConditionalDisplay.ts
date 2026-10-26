@@ -1,4 +1,3 @@
-import { hasConditionalDisplayContextRecordFilterValue } from '@/conditional-display/utils/hasConditionalDisplayContextRecordFilterValue';
 import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
 import { type RecordFilterGroup } from '@/object-record/record-filter-group/types/RecordFilterGroup';
 import { type PersistedRecordFilter } from '@/object-record/record-filter/types/PersistedRecordFilter';
@@ -9,7 +8,11 @@ import {
   type ConditionalDisplayRecordFilter,
   type ConditionalDisplaySelectedRecordsMatch,
 } from 'twenty-shared/types';
-import { isDefined, isNonEmptyArray } from 'twenty-shared/utils';
+import {
+  isDefined,
+  isNonEmptyArray,
+  isRecordFilterValueValid,
+} from 'twenty-shared/utils';
 
 type SanitizeConditionalDisplayParams = {
   recordFilters: PersistedRecordFilter[];
@@ -33,9 +36,9 @@ export const sanitizeConditionalDisplay = ({
       (recordFilter) =>
         !isDefined(recordFilter.contextKey) ||
         (availableContextKeys.includes(recordFilter.contextKey) &&
-          hasConditionalDisplayContextRecordFilterValue({
-            contextKey: recordFilter.contextKey,
-            value: recordFilter.value,
+          isRecordFilterValueValid({
+            operand: recordFilter.operand,
+            value: recordFilter.value ?? '',
           })),
     ),
     recordFilterGroups,

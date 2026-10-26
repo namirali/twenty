@@ -2,7 +2,6 @@ import { msg, t } from '@lingui/core/macro';
 import { isArray, isNonEmptyString, isString } from '@sniptt/guards';
 import {
   CONDITIONAL_DISPLAY_CONTEXT_KEYS,
-  CONDITIONAL_DISPLAY_DEVICES,
   CONDITIONAL_DISPLAY_PROPERTIES,
 } from 'twenty-shared/constants';
 import {
@@ -16,10 +15,7 @@ import {
   isDefined,
   isNonEmptyArray,
   isPlainObject,
-  jsonRelationFilterValueSchema,
-  parseJson,
 } from 'twenty-shared/utils';
-import { z } from 'zod';
 
 import { validateConditionalDisplayContextLeaf } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-conditional-display-context-leaf.util';
 import { parseConditionalDisplayRoleIds } from 'src/engine/metadata-modules/flat-conditional-display/utils/parse-conditional-display-role-ids.util';
@@ -44,8 +40,6 @@ type ValidateConditionalDisplayContext = {
   flatFieldMetadataMaps: MetadataUniversalFlatEntityMaps<'fieldMetadata'>;
   flatRoleMaps: MetadataUniversalFlatEntityMaps<'role'>;
 };
-
-const SINGLE_DEVICE_SCHEMA = z.tuple([z.enum(CONDITIONAL_DISPLAY_DEVICES)]);
 
 const isRecordFilterGroupLogicalOperator = (
   logicalOperator: unknown,
@@ -79,8 +73,7 @@ const validateContextRecordFilter = ({
     ];
   }
 
-  const { owner, valueKind, surfaces } =
-    CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey];
+  const { owner, surfaces } = CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey];
 
   if (owner !== CONDITIONAL_DISPLAY_PROPERTIES[property].owner) {
     return [
@@ -114,77 +107,26 @@ const validateContextRecordFilter = ({
     return leafErrors;
   }
 
-  const value = recordFilter.value ?? '';
-
-  switch (valueKind) {
-    case 'ROLE_IDS': {
-      const roleUniversalIdentifiers = parseConditionalDisplayRoleIds(value);
-
-      if (!isDefined(roleUniversalIdentifiers)) {
-        return [
-          {
-            code: invalidDataCode,
-            message: t`Value "${value}" of conditional display context key "${contextKey}" must be a JSON array of role identifiers`,
-            userFriendlyMessage: msg`Conditional display role value is not valid`,
-            value,
-          },
-        ];
-      }
-
-      return roleUniversalIdentifiers
-        .filter(
-          (roleUniversalIdentifier) =>
-            !isDefined(
-              findFlatEntityByUniversalIdentifier({
-                flatEntityMaps: flatRoleMaps,
-                universalIdentifier: roleUniversalIdentifier,
-              }),
-            ),
-        )
-        .map((roleUniversalIdentifier) => ({
-          code: invalidDataCode,
-          message: t`Role "${roleUniversalIdentifier}" referenced by a conditional display rule does not exist`,
-          userFriendlyMessage: msg`Conditional display rule references a role that does not exist`,
-          value: roleUniversalIdentifier,
-        }));
-    }
-    case 'WORKSPACE_MEMBER': {
-      if (jsonRelationFilterValueSchema.safeParse(value).success) {
-        return [];
-      }
-
-      return [
-        {
-          code: invalidDataCode,
-          message: t`Value "${value}" of conditional display context key "${contextKey}" is not a valid workspace member selection`,
-          userFriendlyMessage: msg`Conditional display workspace member value is not valid`,
-          value,
-        },
-      ];
-    }
-    case 'DEVICE': {
-      if (SINGLE_DEVICE_SCHEMA.safeParse(parseJson<unknown>(value)).success) {
-        return [];
-      }
-
-      const allowedDevicesText = CONDITIONAL_DISPLAY_DEVICES.join(', ');
-
-      return [
-        {
-          code: invalidDataCode,
-          message: t`Value "${value}" of conditional display context key "${contextKey}" must be a JSON array with exactly one of: ${allowedDevicesText}`,
-          userFriendlyMessage: msg`Conditional display device value is not valid`,
-          value,
-        },
-      ];
-    }
-    case 'BOOLEAN':
-    case 'NUMBER':
-    case 'PAGE_TYPE':
-    case 'MAP_ENTRY':
-    case 'RECORD_PATH':
-      return [];
+  if (contextKey !== 'currentRoleId') {
+    return [];
   }
+
+  return (parseConditionalDisplayRoleIds(recordFilter.value) ?? [])
+    .filter(
+      (roleUniversalIdentifier) =>
+        !isDefined(
+          findFlatEntityByUniversalIdentifier({
+            flatEntityMaps: flatRoleMaps,
+            universalIdentifier: roleUniversalIdentifier,
+          }),
+        ),
+    )
+    .map((roleUniversalIdentifier) => ({
+      code: invalidDataCode,
+      message: t`Role "${roleUniversalIdentifier}" referenced by a conditional display rule does not exist`,
+      userFriendlyMessage: msg`Conditional display rule references a role that does not exist`,
+      value: roleUniversalIdentifier,
+    }));
 };
 
 const validateFieldRecordFilter = ({

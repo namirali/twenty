@@ -21,6 +21,7 @@ export { CONDITIONAL_DISPLAY_COMPILATION_NAMESPACE } from './ConditionalDisplayC
 export { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from './ConditionalDisplayContextKeys';
 export { CONDITIONAL_DISPLAY_DEVICES } from './ConditionalDisplayDevices';
 export { CONDITIONAL_DISPLAY_PROPERTIES } from './ConditionalDisplayProperties';
+export { CONDITIONAL_DISPLAY_SELECTED_RECORD_PATH_OPERANDS } from './ConditionalDisplaySelectedRecordPathOperands';
 export { CORE_PICTURE_MIME_TYPES } from './CorePictureMimeTypes';
 export { CSV_DANGEROUS_CHARACTERS } from './CsvDangerousCharacters';
 export { CSV_INJECTION_PREVENTION_ZWJ } from './CsvInjectionPreventionZwj';

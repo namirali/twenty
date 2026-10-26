@@ -22,26 +22,26 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "c8d0b8c3-2d35-5ea1-bff3-153cdf8f0be4",
-          "value": "\"RECORD_PAGE\"",
+          "value": "[\"RECORD_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
         {
           "id": "9a600a0c-4386-5250-a4c5-61860730986b",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "isInSidePanel"
         },
         {
           "id": "f1a4844c-9cb3-57fc-82ee-1ab95462cef2",
-          "value": "\"messageCampaign\"",
+          "value": "[\"messageCampaign\"]",
           "operand": "IS_NOT",
           "contextKey": "objectMetadataItem",
           "subFieldName": "nameSingular"
         },
         {
           "id": "e3278481-99a6-54cd-bfc6-5ba1a4d67cac",
-          "value": "\"agentChatThread\"",
+          "value": "[\"agentChatThread\"]",
           "operand": "IS_NOT",
           "contextKey": "objectMetadataItem",
           "subFieldName": "nameSingular"
@@ -74,26 +74,26 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "c8d0b8c3-2d35-5ea1-bff3-153cdf8f0be4",
-          "value": "\"RECORD_PAGE\"",
+          "value": "[\"RECORD_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
         {
           "id": "9a600a0c-4386-5250-a4c5-61860730986b",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "isInSidePanel"
         },
         {
           "id": "f1a4844c-9cb3-57fc-82ee-1ab95462cef2",
-          "value": "\"messageCampaign\"",
+          "value": "[\"messageCampaign\"]",
           "operand": "IS_NOT",
           "contextKey": "objectMetadataItem",
           "subFieldName": "nameSingular"
         },
         {
           "id": "e3278481-99a6-54cd-bfc6-5ba1a4d67cac",
-          "value": "\"agentChatThread\"",
+          "value": "[\"agentChatThread\"]",
           "operand": "IS_NOT",
           "contextKey": "objectMetadataItem",
           "subFieldName": "nameSingular"
@@ -177,21 +177,21 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
         },
         {
           "id": "fdba48b1-5bc6-5c8f-93e8-d779e9d7ae8a",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "objectMetadataItem",
           "subFieldName": "isSystem"
         },
         {
           "id": "f57bdb27-f62d-5230-8f36-5f2901a63c9b",
-          "value": "\"APPLICATION\"",
+          "value": "[\"APPLICATION\"]",
           "operand": "IS_NOT",
           "contextKey": "objectMetadataItem",
           "subFieldName": "readability"
         },
         {
           "id": "10e27192-0c7c-5166-8ca6-efe255ff37d8",
-          "value": "\"SYSTEM\"",
+          "value": "[\"SYSTEM\"]",
           "operand": "IS_NOT",
           "contextKey": "objectMetadataItem",
           "subFieldName": "readability"
@@ -230,7 +230,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "d918b256-4f26-554f-9a75-56eba5b948fc",
-          "value": "\"INDEX_PAGE\"",
+          "value": "[\"INDEX_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
@@ -243,8 +243,8 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
         },
         {
           "id": "46ebd89a-f3b5-5df0-89cc-daa112146e30",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "hasAnySoftDeleteFilterOnView"
         },
         {
@@ -263,8 +263,8 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
         },
         {
           "id": "356b1b85-5efa-52df-8917-36252a0abd5f",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "objectMetadataItem",
           "subFieldName": "isRemote"
         }
@@ -313,8 +313,8 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
         },
         {
           "id": "bcc5b074-d7a2-5a0c-a8b6-c7194225c721",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "hasAnySoftDeleteFilterOnView",
           "recordFilterGroupId": "8c09f2f1-b559-535c-8382-c6d7cf7a0805",
           "positionInRecordFilterGroup": 1
@@ -440,7 +440,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
         },
         {
           "id": "db880ca8-7236-59ca-9d15-46082efbbb0c",
-          "value": "\"RECORD_PAGE\"",
+          "value": "[\"RECORD_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType",
           "recordFilterGroupId": "1a9b483e-4da7-52fd-82c2-117c69b5ce8e",
@@ -556,7 +556,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
         },
         {
           "id": "cff7fc35-d03e-5549-84a9-25c0376837e8",
-          "value": "\"RECORD_PAGE\"",
+          "value": "[\"RECORD_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType",
           "recordFilterGroupId": "59f04802-6855-5855-a226-200b013f088f",
@@ -651,20 +651,20 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
         },
         {
           "id": "b60e2336-5796-5d68-a27d-48845bf6ec07",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "hasAnySoftDeleteFilterOnView"
         },
         {
           "id": "4850da95-60ad-5105-9a4f-32955b7ffd00",
-          "value": "\"messageCampaign\"",
+          "value": "[\"messageCampaign\"]",
           "operand": "IS_NOT",
           "contextKey": "objectMetadataItem",
           "subFieldName": "nameSingular"
         },
         {
           "id": "6f14cef3-c8b2-58d0-9275-161702fba3ec",
-          "value": "\"workflow\"",
+          "value": "[\"workflow\"]",
           "operand": "IS_NOT",
           "contextKey": "objectMetadataItem",
           "subFieldName": "nameSingular"
@@ -709,20 +709,20 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
         },
         {
           "id": "37ecfc4f-72c0-52e5-97da-aacf0ecd5b86",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "hasAnySoftDeleteFilterOnView"
         },
         {
           "id": "b8e89a2e-868f-5e3a-b426-0b7c01ea73ce",
-          "value": "\"messageCampaign\"",
+          "value": "[\"messageCampaign\"]",
           "operand": "IS_NOT",
           "contextKey": "objectMetadataItem",
           "subFieldName": "nameSingular"
         },
         {
           "id": "8c19c5fd-2030-5da4-ae12-ace8cb6fa5f5",
-          "value": "\"workflow\"",
+          "value": "[\"workflow\"]",
           "operand": "IS_NOT",
           "contextKey": "objectMetadataItem",
           "subFieldName": "nameSingular"
@@ -755,7 +755,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "0cba3098-85f1-51fe-a92d-e223e6ba6081",
-          "value": "\"INDEX_PAGE\"",
+          "value": "[\"INDEX_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
@@ -833,8 +833,8 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "530a3cc0-c89d-5d06-8107-ca165b29578a",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "isSelectAll"
         },
         {
@@ -897,14 +897,14 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "5d36cee8-ebc6-54a8-9105-0f6de34cf04b",
-          "value": "\"INDEX_PAGE\"",
+          "value": "[\"INDEX_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
         {
           "id": "2d27d4f4-1456-5c8b-b9d3-a839cc93949a",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "hasAnySoftDeleteFilterOnView"
         },
         {
@@ -942,7 +942,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "0cba3098-85f1-51fe-a92d-e223e6ba6081",
-          "value": "\"INDEX_PAGE\"",
+          "value": "[\"INDEX_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
@@ -981,14 +981,14 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "55364171-1160-5b80-b33c-f3a59be908e2",
-          "value": "\"INDEX_PAGE\"",
+          "value": "[\"INDEX_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
         {
           "id": "2ac8c799-c880-5874-a026-ae895f5c0c7a",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "hasAnySoftDeleteFilterOnView"
         }
       ]
@@ -1019,14 +1019,14 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "55364171-1160-5b80-b33c-f3a59be908e2",
-          "value": "\"INDEX_PAGE\"",
+          "value": "[\"INDEX_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
         {
           "id": "2ac8c799-c880-5874-a026-ae895f5c0c7a",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "hasAnySoftDeleteFilterOnView"
         }
       ]
@@ -1057,7 +1057,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "a8f16ded-2de3-5b3d-9ad6-08fac474a5d5",
-          "value": "\"INDEX_PAGE\"",
+          "value": "[\"INDEX_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
@@ -1095,14 +1095,14 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "6ea01273-2c68-5f20-86ed-8a82421cb526",
-          "value": "\"SETTINGS_PAGE\"",
+          "value": "[\"SETTINGS_PAGE\"]",
           "operand": "IS_NOT",
           "contextKey": "pageType"
         },
         {
           "id": "cfade857-4a77-51e8-b8ef-c411a608e223",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "isLayoutCustomizationModeEnabled"
         },
         {
@@ -1140,20 +1140,20 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "bda7d4d4-75fe-5f42-b9ea-8802a1c568a0",
-          "value": "\"RECORD_PAGE\"",
+          "value": "[\"RECORD_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
         {
           "id": "f5177bc2-6c2e-59c1-8cd2-359ed8563059",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "isDashboardPageLayoutInEditMode"
         },
         {
           "id": "74772b21-f647-5c7d-a142-11a6ded10ea3",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "isLayoutCustomizationModeEnabled"
         },
         {
@@ -1203,7 +1203,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "1c85fe87-c264-5b1d-9f64-efedd590ce78",
-          "value": "\"RECORD_PAGE\"",
+          "value": "[\"RECORD_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
@@ -1260,7 +1260,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "1c85fe87-c264-5b1d-9f64-efedd590ce78",
-          "value": "\"RECORD_PAGE\"",
+          "value": "[\"RECORD_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
@@ -1773,7 +1773,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "a2a69433-23a8-5218-ad8b-ddfefe5bf0c3",
-          "value": "\"RECORD_PAGE\"",
+          "value": "[\"RECORD_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
@@ -2305,13 +2305,13 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
         },
         {
           "id": "5a5c8642-bfa6-5c21-8693-1673f91621ba",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "isInSidePanel"
         },
         {
           "id": "d171285a-a7e7-5a0f-ba45-ea065731034d",
-          "value": "\"agentChatThread\"",
+          "value": "[\"agentChatThread\"]",
           "operand": "IS_NOT",
           "contextKey": "objectMetadataItem",
           "subFieldName": "nameSingular"
@@ -2350,14 +2350,14 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
         },
         {
           "id": "e145f445-d158-5ca5-9c17-a0ba6cf79411",
-          "value": "\"RECORD_PAGE\"",
+          "value": "[\"RECORD_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
         {
           "id": "0820a15c-c7f6-53fa-8e6e-d99c1b8514b6",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "isInSidePanel"
         },
         {
@@ -3243,7 +3243,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "831e405d-adf6-55f5-a1a7-ffc744aad4ec",
-          "value": "\"INDEX_PAGE\"",
+          "value": "[\"INDEX_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
@@ -3453,7 +3453,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "89cf8b80-4186-549d-a89f-94871f172f76",
-          "value": "\"RECORD_PAGE\"",
+          "value": "[\"RECORD_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
@@ -3504,7 +3504,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
       "recordFilters": [
         {
           "id": "89cf8b80-4186-549d-a89f-94871f172f76",
-          "value": "\"RECORD_PAGE\"",
+          "value": "[\"RECORD_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
@@ -3835,8 +3835,8 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
         },
         {
           "id": "032bfda5-b451-515b-b853-161ed2a7fc4c",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "hasAnySoftDeleteFilterOnView",
           "recordFilterGroupId": "82a70b34-22cf-588e-81ac-308fb9e1ae15",
           "positionInRecordFilterGroup": 3
@@ -3970,14 +3970,14 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
         },
         {
           "id": "48a3a213-04f3-5beb-bae0-09d365061cd2",
-          "value": "\"INDEX_PAGE\"",
+          "value": "[\"INDEX_PAGE\"]",
           "operand": "IS",
           "contextKey": "pageType"
         },
         {
           "id": "d2ce424d-659c-59cb-94a5-f123820c96eb",
-          "value": "true",
-          "operand": "IS_NOT",
+          "value": "false",
+          "operand": "IS",
           "contextKey": "hasAnySoftDeleteFilterOnView"
         }
       ]

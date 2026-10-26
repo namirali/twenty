@@ -1,10 +1,12 @@
 import { isNumber } from '@sniptt/guards';
 
-import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from '@/constants/ConditionalDisplayContextKeys';
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
+import { FieldMetadataType } from '@/types/FieldMetadataType';
 import { RecordFilterGroupLogicalOperator } from '@/types/RecordFilterGroupLogicalOperator';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
+import { getConditionalDisplayContextVirtualField } from '@/utils/conditional-display/getConditionalDisplayContextVirtualField';
 import { isConditionalDisplayAdminContextKey } from '@/utils/conditional-display/isConditionalDisplayAdminContextKey';
+import { booleanFilterValueSchema } from '@/utils/filter/utils/validation-schemas/filterValueScalarSchemas';
 import { parseJson } from '@/utils/parseJson';
 import { isDefined } from '@/utils/validation/isDefined';
 
@@ -20,14 +22,6 @@ const shiftCountBoundary = ({
   recordFilter: ConditionalDisplayConditionNodeRecordFilter;
   offset: number;
 }): string | undefined => {
-  if (
-    !isDefined(recordFilter.contextKey) ||
-    CONDITIONAL_DISPLAY_CONTEXT_KEYS[recordFilter.contextKey].valueKind !==
-      'NUMBER'
-  ) {
-    return undefined;
-  }
-
   const boundary = parseJson<unknown>(recordFilter.value);
 
   if (
@@ -41,16 +35,41 @@ const shiftCountBoundary = ({
   return JSON.stringify(boundary + offset);
 };
 
+const negateBooleanRecordFilter = (
+  recordFilter: ConditionalDisplayConditionNodeRecordFilter,
+): ConditionalDisplayConditionNodeRecordFilter | undefined => {
+  const booleanValue = booleanFilterValueSchema.safeParse(recordFilter.value);
+
+  if (recordFilter.operand !== ViewFilterOperand.IS || !booleanValue.success) {
+    return undefined;
+  }
+
+  return { ...recordFilter, value: JSON.stringify(!booleanValue.data) };
+};
+
 const negateRecordFilter = (
   recordFilter: ConditionalDisplayConditionNodeRecordFilter,
 ): ConditionalDisplayConditionNodeRecordFilter | undefined => {
+  const { contextKey, subFieldName } = recordFilter;
+
   if (
-    isDefined(recordFilter.contextKey) &&
-    (recordFilter.contextKey === 'selectedRecords' ||
-      isConditionalDisplayAdminContextKey(recordFilter.contextKey))
+    isDefined(contextKey) &&
+    (contextKey === 'selectedRecords' ||
+      isConditionalDisplayAdminContextKey(contextKey))
   ) {
     return undefined;
   }
+
+  const virtualFieldType = isDefined(contextKey)
+    ? getConditionalDisplayContextVirtualField({ contextKey, subFieldName })
+        ?.type
+    : undefined;
+
+  if (virtualFieldType === FieldMetadataType.BOOLEAN) {
+    return negateBooleanRecordFilter(recordFilter);
+  }
+
+  const isCountRecordFilter = virtualFieldType === FieldMetadataType.NUMBER;
 
   switch (recordFilter.operand) {
     case ViewFilterOperand.IS:
@@ -68,7 +87,7 @@ const negateRecordFilter = (
     case ViewFilterOperand.GREATER_THAN_OR_EQUAL: {
       const value = shiftCountBoundary({ recordFilter, offset: -1 });
 
-      if (!isDefined(value)) {
+      if (!isCountRecordFilter || !isDefined(value)) {
         return undefined;
       }
 
@@ -81,7 +100,7 @@ const negateRecordFilter = (
     case ViewFilterOperand.LESS_THAN_OR_EQUAL: {
       const value = shiftCountBoundary({ recordFilter, offset: 1 });
 
-      if (!isDefined(value)) {
+      if (!isCountRecordFilter || !isDefined(value)) {
         return undefined;
       }
 

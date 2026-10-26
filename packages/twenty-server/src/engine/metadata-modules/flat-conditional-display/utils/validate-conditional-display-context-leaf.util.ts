@@ -5,90 +5,79 @@ import {
   isNumber,
   isString,
 } from '@sniptt/guards';
-import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from 'twenty-shared/constants';
+import {
+  CONDITIONAL_DISPLAY_CONTEXT_KEYS,
+  CONDITIONAL_DISPLAY_SELECTED_RECORD_PATH_OPERANDS,
+} from 'twenty-shared/constants';
 import {
   type ConditionalDisplayContextKey,
-  ViewFilterOperand,
+  type ConditionalDisplayVirtualField,
+  FieldMetadataType,
+  type ViewFilterOperand,
 } from 'twenty-shared/types';
 import {
+  getConditionalDisplayContextVirtualField,
   isDefined,
   isEmptinessOperand,
   isNonEmptyArray,
+  isRecordFilterOperandExpectingValue,
   parseJson,
 } from 'twenty-shared/utils';
 
+import { parseSelectFilterValues } from 'src/engine/metadata-modules/flat-field-metadata/utils/get-invalid-select-filter-option-values.util';
+import { validateRecordFilterFieldLeaf } from 'src/engine/metadata-modules/flat-field-metadata/utils/validate-record-filter-field-leaf.util';
 import { type FlatEntityValidationError } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/types/failed-flat-entity-validation.type';
 
-type ConditionalDisplayContextValueKind =
-  (typeof CONDITIONAL_DISPLAY_CONTEXT_KEYS)[ConditionalDisplayContextKey]['valueKind'];
-
-type EngineConditionalDisplayContextValueKind = Exclude<
-  ConditionalDisplayContextValueKind,
-  'ROLE_IDS' | 'WORKSPACE_MEMBER' | 'DEVICE'
->;
+type ContextLeafRecordFilter = {
+  operand: ViewFilterOperand;
+  subFieldName?: string | null;
+  value?: string | null;
+};
 
 const SUB_FIELD_NAME_IDENTIFIER_PATTERN = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
 
 const SUB_FIELD_NAME_PATH_PATTERN =
   /^[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*$/;
 
-const getContextLeafOperands = (
-  valueKind: ConditionalDisplayContextValueKind,
-): ViewFilterOperand[] => {
-  switch (valueKind) {
-    case 'ROLE_IDS':
-    case 'WORKSPACE_MEMBER':
-    case 'DEVICE':
-      return [ViewFilterOperand.IS];
-    case 'BOOLEAN':
-    case 'PAGE_TYPE':
-      return [ViewFilterOperand.IS, ViewFilterOperand.IS_NOT];
-    case 'NUMBER':
-      return [
-        ViewFilterOperand.IS,
-        ViewFilterOperand.IS_NOT,
-        ViewFilterOperand.GREATER_THAN_OR_EQUAL,
-        ViewFilterOperand.LESS_THAN_OR_EQUAL,
-      ];
-    case 'MAP_ENTRY':
-    case 'RECORD_PATH':
-      return [
-        ViewFilterOperand.IS,
-        ViewFilterOperand.IS_NOT,
-        ViewFilterOperand.IS_EMPTY,
-        ViewFilterOperand.IS_NOT_EMPTY,
-        ViewFilterOperand.CONTAINS,
-        ViewFilterOperand.DOES_NOT_CONTAIN,
-        ViewFilterOperand.GREATER_THAN_OR_EQUAL,
-        ViewFilterOperand.LESS_THAN_OR_EQUAL,
-      ];
-  }
-};
-
 const validateContextLeafSubFieldName = ({
   subFieldName,
   contextKey,
-  valueKind,
   invalidDataCode,
 }: {
   subFieldName: string | null | undefined;
   contextKey: ConditionalDisplayContextKey;
-  valueKind: ConditionalDisplayContextValueKind;
   invalidDataCode: string;
 }): FlatEntityValidationError[] => {
-  const missingSubFieldNameError: FlatEntityValidationError = {
-    code: invalidDataCode,
-    message: t`Conditional display context key "${contextKey}" requires a sub field name`,
-    userFriendlyMessage: msg`Conditional display rule is missing a sub field`,
-    value: contextKey,
-  };
+  const { subject } = CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey];
 
-  switch (valueKind) {
+  if (subject.kind === 'VALUE') {
+    if (!isDefined(subFieldName)) {
+      return [];
+    }
+
+    return [
+      {
+        code: invalidDataCode,
+        message: t`Conditional display context key "${contextKey}" does not accept a sub field name`,
+        userFriendlyMessage: msg`Conditional display rule sub field is not supported`,
+        value: subFieldName,
+      },
+    ];
+  }
+
+  if (!isDefined(subFieldName)) {
+    return [
+      {
+        code: invalidDataCode,
+        message: t`Conditional display context key "${contextKey}" requires a sub field name`,
+        userFriendlyMessage: msg`Conditional display rule is missing a sub field`,
+        value: contextKey,
+      },
+    ];
+  }
+
+  switch (subject.kind) {
     case 'MAP_ENTRY': {
-      if (!isDefined(subFieldName)) {
-        return [missingSubFieldNameError];
-      }
-
       if (SUB_FIELD_NAME_IDENTIFIER_PATTERN.test(subFieldName)) {
         return [];
       }
@@ -102,11 +91,28 @@ const validateContextLeafSubFieldName = ({
         },
       ];
     }
-    case 'RECORD_PATH': {
-      if (!isDefined(subFieldName)) {
-        return [missingSubFieldNameError];
+    case 'PROPERTY': {
+      if (
+        isDefined(
+          getConditionalDisplayContextVirtualField({
+            contextKey,
+            subFieldName,
+          }),
+        )
+      ) {
+        return [];
       }
 
+      return [
+        {
+          code: invalidDataCode,
+          message: t`Sub field name "${subFieldName}" is not a known property of conditional display context key "${contextKey}"`,
+          userFriendlyMessage: msg`Conditional display rule sub field is not valid`,
+          value: subFieldName,
+        },
+      ];
+    }
+    case 'SELECTED_RECORD_PATH': {
       if (SUB_FIELD_NAME_PATH_PATTERN.test(subFieldName)) {
         return [];
       }
@@ -120,41 +126,33 @@ const validateContextLeafSubFieldName = ({
         },
       ];
     }
-    case 'ROLE_IDS':
-    case 'WORKSPACE_MEMBER':
-    case 'DEVICE':
-    case 'BOOLEAN':
-    case 'NUMBER':
-    case 'PAGE_TYPE': {
-      if (!isDefined(subFieldName)) {
-        return [];
-      }
-
-      return [
-        {
-          code: invalidDataCode,
-          message: t`Conditional display context key "${contextKey}" does not accept a sub field name`,
-          userFriendlyMessage: msg`Conditional display rule sub field is not supported`,
-          value: subFieldName,
-        },
-      ];
-    }
   }
 };
 
-const validateEngineContextLeafValue = ({
-  operand,
-  rawValue,
+const validateSelectedRecordPathLeaf = ({
+  recordFilter: { operand, value: rawValue },
   contextKey,
-  valueKind,
   invalidDataCode,
 }: {
-  operand: ViewFilterOperand;
-  rawValue: string | null | undefined;
+  recordFilter: ContextLeafRecordFilter;
   contextKey: ConditionalDisplayContextKey;
-  valueKind: EngineConditionalDisplayContextValueKind;
   invalidDataCode: string;
 }): FlatEntityValidationError[] => {
+  const allowedOperand = CONDITIONAL_DISPLAY_SELECTED_RECORD_PATH_OPERANDS.find(
+    (selectedRecordPathOperand) => selectedRecordPathOperand === operand,
+  );
+
+  if (!isDefined(allowedOperand)) {
+    return [
+      {
+        code: invalidDataCode,
+        message: t`Operand "${operand}" is not supported on conditional display context key "${contextKey}"`,
+        userFriendlyMessage: msg`Conditional display rule operand is not supported`,
+        value: operand,
+      },
+    ];
+  }
+
   if (isEmptinessOperand(operand)) {
     if (!isNonEmptyString(rawValue)) {
       return [];
@@ -175,93 +173,77 @@ const validateEngineContextLeafValue = ({
   const literalValue = parseJson<unknown>(value);
 
   if (
-    !isString(literalValue) &&
-    !isNumber(literalValue) &&
-    !isBoolean(literalValue)
+    isString(literalValue) ||
+    isNumber(literalValue) ||
+    isBoolean(literalValue)
   ) {
-    return [
-      {
-        code: invalidDataCode,
-        message: t`Value "${value}" of conditional display context key "${contextKey}" must be a JSON string, number or boolean`,
-        userFriendlyMessage: msg`Conditional display rule value is not valid`,
-        value,
-      },
-    ];
+    return [];
   }
 
-  switch (valueKind) {
-    case 'BOOLEAN': {
-      if (isBoolean(literalValue)) {
-        return [];
-      }
-
-      return [
-        {
-          code: invalidDataCode,
-          message: t`Value "${value}" of conditional display context key "${contextKey}" must be true or false`,
-          userFriendlyMessage: msg`Conditional display boolean value is not valid`,
-          value,
-        },
-      ];
-    }
-    case 'NUMBER': {
-      if (isNumber(literalValue) && Number.isInteger(literalValue)) {
-        return [];
-      }
-
-      return [
-        {
-          code: invalidDataCode,
-          message: t`Value "${value}" of conditional display context key "${contextKey}" must be an integer`,
-          userFriendlyMessage: msg`Conditional display number value is not valid`,
-          value,
-        },
-      ];
-    }
-    case 'PAGE_TYPE': {
-      const allowedPageTypes =
-        CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey].allowedValues ?? [];
-
-      if (isString(literalValue) && allowedPageTypes.includes(literalValue)) {
-        return [];
-      }
-
-      const allowedPageTypesText = allowedPageTypes.join(', ');
-
-      return [
-        {
-          code: invalidDataCode,
-          message: t`Value "${value}" of conditional display context key "${contextKey}" must be a JSON string with one of: ${allowedPageTypesText}`,
-          userFriendlyMessage: msg`Conditional display page type value is not valid`,
-          value,
-        },
-      ];
-    }
-    case 'MAP_ENTRY':
-    case 'RECORD_PATH':
-      return [];
-  }
+  return [
+    {
+      code: invalidDataCode,
+      message: t`Value "${value}" of conditional display context key "${contextKey}" must be a JSON string, number or boolean`,
+      userFriendlyMessage: msg`Conditional display rule value is not valid`,
+      value,
+    },
+  ];
 };
 
-export const validateConditionalDisplayContextLeaf = ({
-  recordFilter: { operand, subFieldName, value },
+const validateContextLeafSelectOptions = ({
+  recordFilter: { operand, value },
+  virtualField,
   contextKey,
   invalidDataCode,
 }: {
-  recordFilter: {
-    operand: ViewFilterOperand;
-    subFieldName?: string | null;
-    value?: string | null;
-  };
+  recordFilter: ContextLeafRecordFilter;
+  virtualField: ConditionalDisplayVirtualField;
   contextKey: ConditionalDisplayContextKey;
   invalidDataCode: string;
 }): FlatEntityValidationError[] => {
-  const { valueKind } = CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey];
+  const { options } = virtualField;
 
+  if (
+    virtualField.type !== FieldMetadataType.SELECT ||
+    !isDefined(options) ||
+    !isRecordFilterOperandExpectingValue(operand)
+  ) {
+    return [];
+  }
+
+  const invalidValues = (parseSelectFilterValues(value ?? null) ?? []).filter(
+    (selectedValue) => !options.includes(selectedValue),
+  );
+
+  if (!isNonEmptyArray(invalidValues)) {
+    return [];
+  }
+
+  const invalidValuesText = invalidValues.join(', ');
+  const allowedValuesText = options.join(', ');
+
+  return [
+    {
+      code: invalidDataCode,
+      message: t`Conditional display context key "${contextKey}" uses option(s) ${invalidValuesText} that do not exist. Allowed values: ${allowedValuesText}.`,
+      userFriendlyMessage: msg`Conditional display rule uses an option that does not exist`,
+      value,
+    },
+  ];
+};
+
+export const validateConditionalDisplayContextLeaf = ({
+  recordFilter,
+  contextKey,
+  invalidDataCode,
+}: {
+  recordFilter: ContextLeafRecordFilter;
+  contextKey: ConditionalDisplayContextKey;
+  invalidDataCode: string;
+}): FlatEntityValidationError[] => {
   const subFieldNameErrors = validateContextLeafSubFieldName({
-    subFieldName,
+    subFieldName: recordFilter.subFieldName,
     contextKey,
-    valueKind,
     invalidDataCode,
   });
 
@@ -269,33 +251,64 @@ export const validateConditionalDisplayContextLeaf = ({
     return subFieldNameErrors;
   }
 
-  if (!getContextLeafOperands(valueKind).includes(operand)) {
-    return [
-      {
-        code: invalidDataCode,
-        message: t`Operand "${operand}" is not supported on conditional display context key "${contextKey}"`,
-        userFriendlyMessage: msg`Conditional display rule operand is not supported`,
-        value: operand,
-      },
-    ];
+  if (contextKey === 'selectedRecords') {
+    return validateSelectedRecordPathLeaf({
+      recordFilter,
+      contextKey,
+      invalidDataCode,
+    });
   }
 
-  switch (valueKind) {
-    case 'ROLE_IDS':
-    case 'WORKSPACE_MEMBER':
-    case 'DEVICE':
-      return [];
-    case 'BOOLEAN':
-    case 'NUMBER':
-    case 'PAGE_TYPE':
-    case 'MAP_ENTRY':
-    case 'RECORD_PATH':
-      return validateEngineContextLeafValue({
-        operand,
-        rawValue: value,
-        contextKey,
-        valueKind,
-        invalidDataCode,
-      });
+  const virtualField = getConditionalDisplayContextVirtualField({
+    contextKey,
+    subFieldName: recordFilter.subFieldName,
+  });
+
+  if (!isDefined(virtualField)) {
+    return [];
   }
+
+  const fieldLeafErrors =
+    validateRecordFilterFieldLeaf<FlatEntityValidationError>({
+      recordFilter: {
+        operand: recordFilter.operand,
+        value: recordFilter.value,
+      },
+      filterField: virtualField,
+      relationTargetField: undefined,
+      buildUnsupportedOperandError: ({
+        rawOperand,
+        effectiveFieldType,
+        allowedOperandsText,
+      }) => ({
+        code: invalidDataCode,
+        message: t`Operand "${rawOperand}" is not supported on conditional display context key "${contextKey}" of type "${effectiveFieldType}". Supported operands: ${allowedOperandsText}.`,
+        userFriendlyMessage: msg`Conditional display rule operand is not supported`,
+        value: rawOperand,
+      }),
+      buildInvalidValueError: ({
+        stringifiedValue,
+        operand,
+        filterType,
+        hint,
+      }) => ({
+        code: invalidDataCode,
+        message: isNonEmptyString(hint)
+          ? t`Value "${stringifiedValue}" of conditional display context key "${contextKey}" is not valid for operand "${operand}" on type "${filterType}". ${hint}`
+          : t`Value "${stringifiedValue}" of conditional display context key "${contextKey}" is not valid for operand "${operand}" on type "${filterType}".`,
+        userFriendlyMessage: msg`Conditional display rule value is not valid for this operand`,
+        value: recordFilter.value,
+      }),
+    });
+
+  if (isNonEmptyArray(fieldLeafErrors)) {
+    return fieldLeafErrors;
+  }
+
+  return validateContextLeafSelectOptions({
+    recordFilter,
+    virtualField,
+    contextKey,
+    invalidDataCode,
+  });
 };

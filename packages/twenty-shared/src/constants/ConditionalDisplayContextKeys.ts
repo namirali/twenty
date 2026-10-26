@@ -1,38 +1,38 @@
 import { CONDITIONAL_DISPLAY_DEVICES } from '@/constants/ConditionalDisplayDevices';
 import { type ConditionalDisplayAdminContextKey } from '@/types/conditional-display/ConditionalDisplayAdminContextKey';
+import { type ConditionalDisplayContextKeySubject } from '@/types/conditional-display/ConditionalDisplayContextKeySubject';
 import { type ConditionalDisplayEngineContextKey } from '@/types/conditional-display/ConditionalDisplayEngineContextKey';
 import { type ConditionalDisplayOwner } from '@/types/conditional-display/ConditionalDisplayOwner';
 import { type ConditionalDisplaySurface } from '@/types/conditional-display/ConditionalDisplaySurface';
 import { ContextStorePageType } from '@/types/ContextStorePageType';
+import { FieldMetadataType } from '@/types/FieldMetadataType';
+import { MetadataReadability } from '@/types/MetadataReadability';
 
 type ConditionalDisplayContextKeyDefinition<
   TOwner extends ConditionalDisplayOwner,
+  TSubject extends ConditionalDisplayContextKeySubject,
 > = {
   owner: TOwner;
-  valueKind:
-    | 'ROLE_IDS'
-    | 'WORKSPACE_MEMBER'
-    | 'DEVICE'
-    | 'BOOLEAN'
-    | 'NUMBER'
-    | 'PAGE_TYPE'
-    | 'MAP_ENTRY'
-    | 'RECORD_PATH';
   surfaces: ConditionalDisplaySurface[];
-  allowedValues?: readonly string[];
+  subject: TSubject;
 };
 
 export const CONDITIONAL_DISPLAY_CONTEXT_KEYS: Record<
   ConditionalDisplayAdminContextKey,
-  ConditionalDisplayContextKeyDefinition<'admin'>
+  ConditionalDisplayContextKeyDefinition<
+    'admin',
+    Extract<ConditionalDisplayContextKeySubject, { kind: 'VALUE' }>
+  >
 > &
   Record<
     ConditionalDisplayEngineContextKey,
-    ConditionalDisplayContextKeyDefinition<'engine'>
+    ConditionalDisplayContextKeyDefinition<
+      'engine',
+      ConditionalDisplayContextKeySubject
+    >
   > = {
   currentRoleId: {
     owner: 'admin',
-    valueKind: 'ROLE_IDS',
     surfaces: [
       'pageLayoutWidget',
       'pageLayoutTab',
@@ -40,10 +40,10 @@ export const CONDITIONAL_DISPLAY_CONTEXT_KEYS: Record<
       'commandMenuItem',
       'navigationMenuItem',
     ],
+    subject: { kind: 'VALUE', field: { type: FieldMetadataType.UUID } },
   },
   currentWorkspaceMemberId: {
     owner: 'admin',
-    valueKind: 'WORKSPACE_MEMBER',
     surfaces: [
       'pageLayoutWidget',
       'pageLayoutTab',
@@ -51,97 +51,137 @@ export const CONDITIONAL_DISPLAY_CONTEXT_KEYS: Record<
       'commandMenuItem',
       'navigationMenuItem',
     ],
+    subject: { kind: 'VALUE', field: { type: FieldMetadataType.RELATION } },
   },
   device: {
     owner: 'admin',
-    valueKind: 'DEVICE',
     surfaces: ['pageLayoutWidget', 'pageLayoutTab', 'viewField'],
-    allowedValues: CONDITIONAL_DISPLAY_DEVICES,
+    subject: {
+      kind: 'VALUE',
+      field: {
+        type: FieldMetadataType.SELECT,
+        options: CONDITIONAL_DISPLAY_DEVICES,
+      },
+    },
   },
   pageType: {
     owner: 'engine',
-    valueKind: 'PAGE_TYPE',
     surfaces: ['commandMenuItem'],
-    allowedValues: Object.values(ContextStorePageType),
+    subject: {
+      kind: 'VALUE',
+      field: {
+        type: FieldMetadataType.SELECT,
+        options: Object.values(ContextStorePageType),
+      },
+    },
   },
   isInSidePanel: {
     owner: 'engine',
-    valueKind: 'BOOLEAN',
     surfaces: ['commandMenuItem'],
+    subject: { kind: 'VALUE', field: { type: FieldMetadataType.BOOLEAN } },
   },
   isDashboardPageLayoutInEditMode: {
     owner: 'engine',
-    valueKind: 'BOOLEAN',
     surfaces: ['commandMenuItem'],
+    subject: { kind: 'VALUE', field: { type: FieldMetadataType.BOOLEAN } },
   },
   isLayoutCustomizationModeEnabled: {
     owner: 'engine',
-    valueKind: 'BOOLEAN',
     surfaces: ['commandMenuItem'],
+    subject: { kind: 'VALUE', field: { type: FieldMetadataType.BOOLEAN } },
   },
   isSelectAll: {
     owner: 'engine',
-    valueKind: 'BOOLEAN',
     surfaces: ['commandMenuItem'],
+    subject: { kind: 'VALUE', field: { type: FieldMetadataType.BOOLEAN } },
   },
   hasAnySoftDeleteFilterOnView: {
     owner: 'engine',
-    valueKind: 'BOOLEAN',
     surfaces: ['commandMenuItem'],
+    subject: { kind: 'VALUE', field: { type: FieldMetadataType.BOOLEAN } },
   },
   numberOfSelectedRecords: {
     owner: 'engine',
-    valueKind: 'NUMBER',
     surfaces: ['commandMenuItem'],
+    subject: { kind: 'VALUE', field: { type: FieldMetadataType.NUMBER } },
   },
   canImpersonate: {
     owner: 'engine',
-    valueKind: 'BOOLEAN',
     surfaces: ['commandMenuItem'],
+    subject: { kind: 'VALUE', field: { type: FieldMetadataType.BOOLEAN } },
   },
   canAccessFullAdminPanel: {
     owner: 'engine',
-    valueKind: 'BOOLEAN',
     surfaces: ['commandMenuItem'],
+    subject: { kind: 'VALUE', field: { type: FieldMetadataType.BOOLEAN } },
   },
   areAllSelectedRecordsFavorites: {
     owner: 'engine',
-    valueKind: 'BOOLEAN',
     surfaces: ['commandMenuItem'],
+    subject: { kind: 'VALUE', field: { type: FieldMetadataType.BOOLEAN } },
   },
   featureFlags: {
     owner: 'engine',
-    valueKind: 'MAP_ENTRY',
     surfaces: ['commandMenuItem', 'pageLayoutWidget'],
+    subject: {
+      kind: 'MAP_ENTRY',
+      entryField: { type: FieldMetadataType.BOOLEAN },
+    },
   },
   permissionFlags: {
     owner: 'engine',
-    valueKind: 'MAP_ENTRY',
     surfaces: ['commandMenuItem'],
+    subject: {
+      kind: 'MAP_ENTRY',
+      entryField: { type: FieldMetadataType.BOOLEAN },
+    },
   },
   objectPermissions: {
     owner: 'engine',
-    valueKind: 'MAP_ENTRY',
     surfaces: ['commandMenuItem'],
+    subject: {
+      kind: 'MAP_ENTRY',
+      entryField: { type: FieldMetadataType.BOOLEAN },
+    },
   },
   targetObjectReadPermissions: {
     owner: 'engine',
-    valueKind: 'MAP_ENTRY',
     surfaces: ['commandMenuItem'],
+    subject: {
+      kind: 'MAP_ENTRY',
+      entryField: { type: FieldMetadataType.BOOLEAN },
+    },
   },
   targetObjectWritePermissions: {
     owner: 'engine',
-    valueKind: 'MAP_ENTRY',
     surfaces: ['commandMenuItem'],
+    subject: {
+      kind: 'MAP_ENTRY',
+      entryField: { type: FieldMetadataType.BOOLEAN },
+    },
   },
   objectMetadataItem: {
     owner: 'engine',
-    valueKind: 'MAP_ENTRY',
     surfaces: ['commandMenuItem'],
+    subject: {
+      kind: 'PROPERTY',
+      propertyFields: {
+        nameSingular: { type: FieldMetadataType.SELECT },
+        readability: {
+          type: FieldMetadataType.SELECT,
+          options: Object.values(MetadataReadability),
+        },
+        isRemote: { type: FieldMetadataType.BOOLEAN },
+        isSystem: { type: FieldMetadataType.BOOLEAN },
+        isUICreatable: { type: FieldMetadataType.BOOLEAN },
+        isUIEditable: { type: FieldMetadataType.BOOLEAN },
+        duplicateCriteria: { type: FieldMetadataType.RAW_JSON },
+      },
+    },
   },
   selectedRecords: {
     owner: 'engine',
-    valueKind: 'RECORD_PATH',
     surfaces: ['commandMenuItem', 'pageLayoutWidget'],
+    subject: { kind: 'SELECTED_RECORD_PATH' },
   },
 };

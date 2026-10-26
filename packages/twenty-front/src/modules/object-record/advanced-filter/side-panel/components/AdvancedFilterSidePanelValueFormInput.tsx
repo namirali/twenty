@@ -140,6 +140,10 @@ export const AdvancedFilterSidePanelValueFormInput = ({
     recordFilter.operand === RecordFilterOperand.IS_RELATIVE;
 
   if (isDefined(recordFilter.contextKey)) {
+    if (operandHasNoInput) {
+      return null;
+    }
+
     return (
       <ConditionalDisplayContextValueInput
         recordFilter={recordFilter}

@@ -1,3 +1,4 @@
+import { isConditionalDisplayContextRecordFilterMatching } from '@/conditional-display/utils/isConditionalDisplayContextRecordFilterMatching';
 import { isConditionalDisplayFieldRecordFilterMatching } from '@/conditional-display/utils/isConditionalDisplayFieldRecordFilterMatching';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
 import {
@@ -6,7 +7,7 @@ import {
 } from 'twenty-shared/types';
 import {
   evaluateConditionalDisplay as evaluateConditionalDisplayTree,
-  isConditionalDisplayContextRecordFilterMatching,
+  isConditionalDisplaySelectedRecordPathMatching,
   isDefined,
 } from 'twenty-shared/utils';
 
@@ -47,10 +48,17 @@ export const evaluateConditionalDisplay = ({
         });
       }
 
+      if (recordFilter.contextKey === 'selectedRecords') {
+        return isConditionalDisplaySelectedRecordPathMatching({
+          recordFilter,
+          record,
+        });
+      }
+
       return isConditionalDisplayContextRecordFilterMatching({
         recordFilter,
         context,
-        record,
+        objectMetadataItems,
       });
     },
   });

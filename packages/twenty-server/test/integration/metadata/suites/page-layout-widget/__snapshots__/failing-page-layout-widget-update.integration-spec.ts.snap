@@ -44,7 +44,7 @@ exports[`Page layout widget update should fail Widget configuration validation f
 }
 `;
 
-exports[`Page layout widget update should fail Widget configuration validation failures on update Conditional display validation failures when updating conditional display to match two devices at once 1`] = `
+exports[`Page layout widget update should fail Widget configuration validation failures on update Conditional display validation failures when updating conditional display to a device that does not exist 1`] = `
 {
   "extensions": {
     "code": "METADATA_VALIDATION_FAILED",
@@ -54,9 +54,9 @@ exports[`Page layout widget update should fail Widget configuration validation f
           "errors": [
             {
               "code": "INVALID_PAGE_LAYOUT_WIDGET_DATA",
-              "message": "Value "["MOBILE","DESKTOP"]" of conditional display context key "device" must be a JSON array with exactly one of: DESKTOP, MOBILE",
-              "userFriendlyMessage": "Conditional display device value is not valid",
-              "value": "["MOBILE","DESKTOP"]",
+              "message": "Conditional display context key "device" uses option(s) TABLET that do not exist. Allowed values: DESKTOP, MOBILE.",
+              "userFriendlyMessage": "Conditional display rule uses an option that does not exist",
+              "value": "["TABLET"]",
             },
           ],
           "flatEntityMinimalInformation": {

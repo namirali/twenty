@@ -1,9 +1,8 @@
 import { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from '@/constants/NeverAvailableConditionalDisplay';
+import { CONDITIONAL_AVAILABILITY_EXPRESSION_CORPUS } from '@/testing/constants/ConditionalAvailabilityExpressionCorpus';
 import { RecordFilterGroupLogicalOperator } from '@/types/RecordFilterGroupLogicalOperator';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
 import { compileConditionalAvailabilityExpression } from '@/utils/conditional-display/compileConditionalAvailabilityExpression';
-
-import { CONDITIONAL_AVAILABILITY_EXPRESSION_CORPUS } from './conditionalAvailabilityExpressionCorpus.fixture';
 
 const DISTINCT_CORPUS_EXPRESSIONS = [
   ...new Set(CONDITIONAL_AVAILABILITY_EXPRESSION_CORPUS),
@@ -27,13 +26,13 @@ describe('compileConditionalAvailabilityExpression', () => {
           id: expect.any(String),
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
-          value: '"INDEX_PAGE"',
+          value: '["INDEX_PAGE"]',
         },
         {
           id: expect.any(String),
           contextKey: 'hasAnySoftDeleteFilterOnView',
-          operand: ViewFilterOperand.IS_NOT,
-          value: 'true',
+          operand: ViewFilterOperand.IS,
+          value: 'false',
         },
         {
           id: expect.any(String),
@@ -149,8 +148,8 @@ describe('compileConditionalAvailabilityExpression', () => {
         {
           id: expect.any(String),
           contextKey: 'isSelectAll',
-          operand: ViewFilterOperand.IS_NOT,
-          value: 'true',
+          operand: ViewFilterOperand.IS,
+          value: 'false',
         },
         {
           id: expect.any(String),
@@ -212,6 +211,49 @@ describe('compileConditionalAvailabilityExpression', () => {
       },
     ]);
   });
+
+  it('should compile object properties into rows on the field type they behave like', () => {
+    expect(
+      compileConditionalAvailabilityExpression(
+        'objectMetadataItem.nameSingular != "workflow" and not objectMetadataItem.isRemote and isDefined(objectMetadataItem.duplicateCriteria)',
+      )?.recordFilters,
+    ).toEqual([
+      {
+        id: expect.any(String),
+        contextKey: 'objectMetadataItem',
+        subFieldName: 'nameSingular',
+        operand: ViewFilterOperand.IS_NOT,
+        value: '["workflow"]',
+      },
+      {
+        id: expect.any(String),
+        contextKey: 'objectMetadataItem',
+        subFieldName: 'isRemote',
+        operand: ViewFilterOperand.IS,
+        value: 'false',
+      },
+      {
+        id: expect.any(String),
+        contextKey: 'objectMetadataItem',
+        subFieldName: 'duplicateCriteria',
+        operand: ViewFilterOperand.IS_NOT_EMPTY,
+      },
+    ]);
+  });
+
+  it.each([
+    'featureFlags.IS_AI_ENABLED == "yes"',
+    'objectMetadataItem.labelSingular == "Person"',
+    'pageType == "UNKNOWN_PAGE"',
+    'isDefined(permissionFlags.AI)',
+  ])(
+    'should throw on %s, which the field type of its context key does not accept',
+    (expression) => {
+      expect(() =>
+        compileConditionalAvailabilityExpression(expression),
+      ).toThrow(expression);
+    },
+  );
 
   it('should rewrite strict count comparisons into inclusive bounds', () => {
     expect(

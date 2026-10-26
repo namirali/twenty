@@ -185,8 +185,8 @@ describe('CommandMenuItem creation should succeed', () => {
         {
           id: '0',
           contextKey: 'isSelectAll' as const,
-          operand: ViewFilterOperand.IS_NOT,
-          value: 'true',
+          operand: ViewFilterOperand.IS,
+          value: 'false',
         },
       ],
     };

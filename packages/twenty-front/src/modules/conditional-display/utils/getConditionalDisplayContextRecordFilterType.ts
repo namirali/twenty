@@ -1,19 +1,13 @@
+import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from 'twenty-shared/constants';
 import {
   type ConditionalDisplayAdminContextKey,
   type FilterableAndTSVectorFieldType,
 } from 'twenty-shared/types';
-import { assertUnreachable } from 'twenty-shared/utils';
+import { getFilterTypeFromFieldType } from 'twenty-shared/utils';
 
 export const getConditionalDisplayContextRecordFilterType = (
   contextKey: ConditionalDisplayAdminContextKey,
-): FilterableAndTSVectorFieldType => {
-  switch (contextKey) {
-    case 'currentRoleId':
-    case 'device':
-      return 'SELECT';
-    case 'currentWorkspaceMemberId':
-      return 'RELATION';
-    default:
-      return assertUnreachable(contextKey);
-  }
-};
+): FilterableAndTSVectorFieldType =>
+  getFilterTypeFromFieldType(
+    CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey].subject.field.type,
+  );

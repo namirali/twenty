@@ -88,7 +88,7 @@ const PAGE_TYPE_LEAF = {
   id: '0',
   contextKey: 'pageType',
   operand: ViewFilterOperand.IS,
-  value: '"RECORD_PAGE"',
+  value: '["RECORD_PAGE"]',
 };
 
 const FEATURE_FLAG_LEAF = {
@@ -142,26 +142,26 @@ describe('validateConditionalDisplay', () => {
     ).toEqual([expect.objectContaining({ value: '["TABLET"]' })]);
   });
 
-  it('should reject a device rule matching two devices at once', () => {
+  it('should accept a device rule matching any of several devices', () => {
     expect(
       validate({
         conditionalDisplay: {
           recordFilters: [{ ...DEVICE_LEAF, value: '["MOBILE","DESKTOP"]' }],
         },
       }),
-    ).toEqual([expect.objectContaining({ value: '["MOBILE","DESKTOP"]' })]);
+    ).toEqual([]);
   });
 
-  it('should reject a context rule with an operand other than IS', () => {
+  it('should reject a context rule with an operand its field type does not support', () => {
     expect(
       validate({
         conditionalDisplay: {
           recordFilters: [
-            { ...DEVICE_LEAF, operand: ViewFilterOperand.IS_NOT },
+            { ...DEVICE_LEAF, operand: ViewFilterOperand.CONTAINS },
           ],
         },
       }),
-    ).toEqual([expect.objectContaining({ value: ViewFilterOperand.IS_NOT })]);
+    ).toEqual([expect.objectContaining({ value: ViewFilterOperand.CONTAINS })]);
   });
 
   it('should reject an unknown context key', () => {
@@ -203,16 +203,12 @@ describe('validateConditionalDisplay', () => {
               id: '0',
               contextKey: 'currentWorkspaceMemberId',
               operand: ViewFilterOperand.IS,
-              value: '["20202020-0000-4000-8000-000000000000"]',
+              value: '"me"',
             },
           ],
         },
       }),
-    ).toEqual([
-      expect.objectContaining({
-        value: '["20202020-0000-4000-8000-000000000000"]',
-      }),
-    ]);
+    ).toEqual([expect.objectContaining({ value: '"me"' })]);
   });
 
   it('should accept a field rule on a field of the surface object', () => {
@@ -585,13 +581,15 @@ describe('validateConditionalDisplay', () => {
     ]);
   });
 
-  it('should accept a map key rule with operand DOES_NOT_CONTAIN', () => {
+  it('should reject a map key rule with an operand its boolean entries do not support', () => {
     expect(
       validateCommandAvailability({
         ...FEATURE_FLAG_LEAF,
         operand: ViewFilterOperand.DOES_NOT_CONTAIN,
       }),
-    ).toEqual([]);
+    ).toEqual([
+      expect.objectContaining({ value: ViewFilterOperand.DOES_NOT_CONTAIN }),
+    ]);
   });
 
   it('should reject a boolean key rule with operand GREATER_THAN_OR_EQUAL', () => {
@@ -625,41 +623,55 @@ describe('validateConditionalDisplay', () => {
     ).toEqual([
       expect.objectContaining({
         message:
-          'Operand "CONTAINS" is not supported on conditional display context key "numberOfSelectedRecords"',
+          'Operand "CONTAINS" is not supported on conditional display context key "numberOfSelectedRecords" of type "NUMBER". Supported operands: IS, IS_NOT, GREATER_THAN_OR_EQUAL, LESS_THAN_OR_EQUAL, IS_EMPTY, IS_NOT_EMPTY.',
       }),
     ]);
   });
 
-  it('should reject a page type rule with operand IS_EMPTY', () => {
+  it('should reject a boolean property rule with operand IS_EMPTY', () => {
     expect(
       validateCommandAvailability({
-        ...PAGE_TYPE_LEAF,
+        id: '0',
+        contextKey: 'objectMetadataItem',
+        subFieldName: 'isRemote',
         operand: ViewFilterOperand.IS_EMPTY,
         value: null,
       }),
     ).toEqual([expect.objectContaining({ value: ViewFilterOperand.IS_EMPTY })]);
   });
 
-  it('should accept a map key rule with operand IS_EMPTY and an empty value', () => {
+  it('should accept a json property rule with operand IS_EMPTY and an empty value', () => {
     expect(
       validateCommandAvailability({
-        ...FEATURE_FLAG_LEAF,
+        id: '0',
+        contextKey: 'objectMetadataItem',
+        subFieldName: 'duplicateCriteria',
         operand: ViewFilterOperand.IS_EMPTY,
         value: '',
       }),
     ).toEqual([]);
   });
 
-  it('should reject a map key rule with operand IS_NOT_EMPTY and a value', () => {
+  it('should reject an unknown object property', () => {
     expect(
       validateCommandAvailability({
-        ...FEATURE_FLAG_LEAF,
+        ...IS_SELECT_ALL_LEAF,
+        contextKey: 'objectMetadataItem',
+        subFieldName: 'labelSingular',
+      }),
+    ).toEqual([expect.objectContaining({ value: 'labelSingular' })]);
+  });
+
+  it('should reject a selected records rule with operand IS_NOT_EMPTY and a value', () => {
+    expect(
+      validateCommandAvailability({
+        ...SELECTED_RECORDS_LEAF,
         operand: ViewFilterOperand.IS_NOT_EMPTY,
       }),
     ).toEqual([
       expect.objectContaining({
         message:
-          'Value "true" of conditional display context key "featureFlags" must be empty for operand "IS_NOT_EMPTY"',
+          'Value "true" of conditional display context key "selectedRecords" must be empty for operand "IS_NOT_EMPTY"',
       }),
     ]);
   });
@@ -681,12 +693,7 @@ describe('validateConditionalDisplay', () => {
   it('should reject a boolean key rule whose value is a string', () => {
     expect(
       validateCommandAvailability({ ...IS_SELECT_ALL_LEAF, value: '"true"' }),
-    ).toEqual([
-      expect.objectContaining({
-        message:
-          'Value ""true"" of conditional display context key "isSelectAll" must be true or false',
-      }),
-    ]);
+    ).toEqual([expect.objectContaining({ value: '"true"' })]);
   });
 
   it.each(['0', '-1'])(
@@ -701,18 +708,13 @@ describe('validateConditionalDisplay', () => {
     },
   );
 
-  it('should reject a selection count rule on a non-integer number', () => {
+  it('should reject a selection count rule on a value that is not a number', () => {
     expect(
       validateCommandAvailability({
         ...NUMBER_OF_SELECTED_RECORDS_LEAF,
-        value: '1.5',
+        value: 'many',
       }),
-    ).toEqual([
-      expect.objectContaining({
-        message:
-          'Value "1.5" of conditional display context key "numberOfSelectedRecords" must be an integer',
-      }),
-    ]);
+    ).toEqual([expect.objectContaining({ value: 'many' })]);
   });
 
   it('should accept a page type rule on a known page type', () => {
@@ -728,12 +730,12 @@ describe('validateConditionalDisplay', () => {
     expect(
       validateCommandAvailability({
         ...PAGE_TYPE_LEAF,
-        value: '"UNKNOWN_PAGE"',
+        value: '["UNKNOWN_PAGE"]',
       }),
     ).toEqual([
       expect.objectContaining({
         message:
-          'Value ""UNKNOWN_PAGE"" of conditional display context key "pageType" must be a JSON string with one of: INDEX_PAGE, RECORD_PAGE, STANDALONE_PAGE, SETTINGS_PAGE',
+          'Conditional display context key "pageType" uses option(s) UNKNOWN_PAGE that do not exist. Allowed values: INDEX_PAGE, RECORD_PAGE, STANDALONE_PAGE, SETTINGS_PAGE.',
       }),
     ]);
   });
