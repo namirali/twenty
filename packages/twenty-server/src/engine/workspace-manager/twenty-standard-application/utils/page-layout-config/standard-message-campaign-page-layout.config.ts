@@ -3,7 +3,12 @@ import {
   STANDARD_PAGE_LAYOUT_UNIVERSAL_IDENTIFIERS,
 } from 'twenty-shared/metadata';
 
-import { PageLayoutType, WidgetType } from 'twenty-shared/types';
+import {
+  type ConditionalDisplay,
+  PageLayoutType,
+  ViewFilterOperand,
+  WidgetType,
+} from 'twenty-shared/types';
 import {
   TAB_PROPS,
   VERTICAL_LIST_LAYOUT_POSITIONS,
@@ -33,6 +38,17 @@ const MESSAGE_CAMPAIGN_PAGE_TABS = {
             .universalIdentifier,
         conditionalAvailabilityExpression:
           'noneEquals(selectedRecords, "status", "DRAFT")',
+        conditionalAvailability: {
+          recordFilters: [
+            {
+              id: '7bf58db2-b61d-5a32-bede-c2e272e38840',
+              contextKey: 'selectedRecords',
+              operand: ViewFilterOperand.IS_NOT,
+              subFieldName: 'status',
+              value: '"DRAFT"',
+            },
+          ],
+        } satisfies ConditionalDisplay,
       },
       fields: {
         universalIdentifier:
@@ -42,6 +58,17 @@ const MESSAGE_CAMPAIGN_PAGE_TABS = {
         position: VERTICAL_LIST_LAYOUT_POSITIONS.SECOND,
         conditionalAvailabilityExpression:
           'noneEquals(selectedRecords, "status", "DRAFT")',
+        conditionalAvailability: {
+          recordFilters: [
+            {
+              id: '7bf58db2-b61d-5a32-bede-c2e272e38840',
+              contextKey: 'selectedRecords',
+              operand: ViewFilterOperand.IS_NOT,
+              subFieldName: 'status',
+              value: '"DRAFT"',
+            },
+          ],
+        } satisfies ConditionalDisplay,
       },
     },
   },

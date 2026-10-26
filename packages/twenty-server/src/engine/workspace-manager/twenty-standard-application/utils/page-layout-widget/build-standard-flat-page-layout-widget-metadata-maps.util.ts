@@ -1,8 +1,5 @@
 import { STANDARD_OBJECTS } from 'twenty-shared/metadata';
-import {
-  compileConditionalAvailabilityExpression,
-  isDefined,
-} from 'twenty-shared/utils';
+import { isDefined } from 'twenty-shared/utils';
 
 import { fromConditionalDisplayToUniversalConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/from-conditional-display-to-universal-conditional-display.util';
 import { createEmptyFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/constant/create-empty-flat-entity-maps.constant';
@@ -396,13 +393,7 @@ const computeRecordPageWidgets = ({
 
         const conditionalDisplay = widget.conditionalDisplay ?? null;
 
-        const conditionalAvailability = isDefined(
-          widget.conditionalAvailabilityExpression,
-        )
-          ? compileConditionalAvailabilityExpression(
-              widget.conditionalAvailabilityExpression,
-            )
-          : null;
+        const conditionalAvailability = widget.conditionalAvailability ?? null;
 
         const { configuration, universalConfiguration } =
           buildRecordPageWidgetConfigurations({

@@ -15,6 +15,7 @@ export type StandardPageLayoutWidgetConfig = {
   position?: PageLayoutWidgetPosition;
   conditionalDisplay?: ConditionalDisplay | null;
   conditionalAvailabilityExpression?: string | null;
+  conditionalAvailability?: ConditionalDisplay | null;
   fieldUniversalIdentifier?: string;
   fieldDisplayMode?: FieldDisplayMode;
   embeddedViewUniversalIdentifier?: string;
@@ -45,6 +46,7 @@ export type StandardRecordPageWidgetConfig = {
   position?: PageLayoutWidgetPosition;
   conditionalDisplay?: ConditionalDisplay | null;
   conditionalAvailabilityExpression?: string | null;
+  conditionalAvailability?: ConditionalDisplay | null;
   fieldUniversalIdentifier?: string;
   fieldDisplayMode?: FieldDisplayMode;
   embeddedViewUniversalIdentifier?: string;

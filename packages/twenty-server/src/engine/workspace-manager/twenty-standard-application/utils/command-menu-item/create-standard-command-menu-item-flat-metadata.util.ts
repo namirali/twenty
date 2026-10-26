@@ -1,7 +1,4 @@
-import {
-  compileConditionalAvailabilityExpression,
-  isDefined,
-} from 'twenty-shared/utils';
+import { isDefined } from 'twenty-shared/utils';
 
 import { type FlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/types/flat-command-menu-item.type';
 import { fromConditionalDisplayToUniversalConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/from-conditional-display-to-universal-conditional-display.util';
@@ -58,14 +55,9 @@ export const createStandardCommandMenuItemFlatMetadata = ({
       ? definition.conditionalPinnedExpression
       : null;
 
-  const conditionalAvailability = isDefined(conditionalAvailabilityExpression)
-    ? compileConditionalAvailabilityExpression(
-        conditionalAvailabilityExpression,
-      )
-    : null;
-  const conditionalPinned = isDefined(conditionalPinnedExpression)
-    ? compileConditionalAvailabilityExpression(conditionalPinnedExpression)
-    : null;
+  const conditionalAvailability = definition.conditionalAvailability ?? null;
+  const conditionalPinned =
+    'conditionalPinned' in definition ? definition.conditionalPinned : null;
 
   return {
     id: commandMenuItemId,

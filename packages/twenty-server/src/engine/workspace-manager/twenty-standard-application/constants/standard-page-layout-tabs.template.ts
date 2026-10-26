@@ -1,8 +1,10 @@
 import { msg } from '@lingui/core/macro';
 import {
+  type ConditionalDisplay,
   PageLayoutTabLayoutMode,
   type PageLayoutWidgetGridPosition,
   type PageLayoutWidgetVerticalListPosition,
+  ViewFilterOperand,
   WidgetType,
 } from 'twenty-shared/types';
 
@@ -202,6 +204,17 @@ export const WIDGET_PROPS = {
     type: WidgetType.CHAT_THREADS,
     position: VERTICAL_LIST_LAYOUT_POSITIONS.FIRST,
     conditionalAvailabilityExpression: 'featureFlags.IS_AI_CHAT_INBOX_ENABLED',
+    conditionalAvailability: {
+      recordFilters: [
+        {
+          id: '01eab46a-4da2-5378-886b-95d166627167',
+          contextKey: 'featureFlags',
+          operand: ViewFilterOperand.IS,
+          subFieldName: 'IS_AI_CHAT_INBOX_ENABLED',
+          value: 'true',
+        },
+      ],
+    } satisfies ConditionalDisplay,
   },
   calendar: {
     title: i18nLabel(
