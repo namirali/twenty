@@ -162,7 +162,7 @@ describe('compileConditionalAvailabilityExpression', () => {
     });
   });
 
-  it('should set the SOME quantifier only when a some function is used', () => {
+  it('should set selectedRecordsMatch to SOME only when a some function is used', () => {
     expect(
       compileConditionalAvailabilityExpression(
         'someEquals(selectedRecords, "status", "FAILED")',
@@ -177,12 +177,12 @@ describe('compileConditionalAvailabilityExpression', () => {
           value: '"FAILED"',
         },
       ],
-      quantifier: 'SOME',
+      selectedRecordsMatch: 'SOME',
     });
     expect(
       compileConditionalAvailabilityExpression(
         'noneEquals(selectedRecords, "status", "DRAFT")',
-      )?.quantifier,
+      )?.selectedRecordsMatch,
     ).toBeUndefined();
   });
 

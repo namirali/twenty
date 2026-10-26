@@ -130,7 +130,7 @@ export const ConditionalDisplaySettings = ({
           store.get(currentRecordFiltersCallbackState),
         ),
         recordFilterGroups: store.get(currentRecordFilterGroupsCallbackState),
-        quantifier: conditionalDisplay?.quantifier,
+        selectedRecordsMatch: conditionalDisplay?.selectedRecordsMatch,
         availableContextKeys,
         fieldMetadataItems,
       }),

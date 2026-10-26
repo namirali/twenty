@@ -339,7 +339,7 @@ describe('CommandMenuItem creation should succeed', () => {
           value: '',
         },
       ],
-      quantifier: 'SOME' as const,
+      selectedRecordsMatch: 'SOME' as const,
     };
 
     const { data } = await createCommandMenuItem({

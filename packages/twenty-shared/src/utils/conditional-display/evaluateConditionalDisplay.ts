@@ -73,7 +73,7 @@ export const evaluateConditionalDisplay = <TRecord>({
     return evaluateForRecord(undefined);
   }
 
-  return conditionalDisplay?.quantifier === 'SOME'
+  return conditionalDisplay?.selectedRecordsMatch === 'SOME'
     ? records.some(evaluateForRecord)
     : records.every(evaluateForRecord);
 };

@@ -6,15 +6,15 @@ import { sanitizeChartRecordFilters } from '@/side-panel/pages/page-layout/utils
 import {
   type ConditionalDisplay,
   type ConditionalDisplayAdminContextKey,
-  type ConditionalDisplayQuantifier,
   type ConditionalDisplayRecordFilter,
+  type ConditionalDisplaySelectedRecordsMatch,
 } from 'twenty-shared/types';
 import { isDefined, isNonEmptyArray } from 'twenty-shared/utils';
 
 type SanitizeConditionalDisplayParams = {
   recordFilters: PersistedRecordFilter[];
   recordFilterGroups: RecordFilterGroup[];
-  quantifier?: ConditionalDisplayQuantifier;
+  selectedRecordsMatch?: ConditionalDisplaySelectedRecordsMatch;
   availableContextKeys: ConditionalDisplayAdminContextKey[];
   fieldMetadataItems: (Pick<FieldMetadataItem, 'id' | 'isActive'> & {
     morphRelations?: { sourceFieldMetadata: { id: string } }[] | null;
@@ -24,7 +24,7 @@ type SanitizeConditionalDisplayParams = {
 export const sanitizeConditionalDisplay = ({
   recordFilters,
   recordFilterGroups,
-  quantifier,
+  selectedRecordsMatch,
   availableContextKeys,
   fieldMetadataItems,
 }: SanitizeConditionalDisplayParams): ConditionalDisplay | null => {
@@ -84,8 +84,8 @@ export const sanitizeConditionalDisplay = ({
     recordFilterGroups: remainingRecordFilterGroups,
   };
 
-  if (isDefined(quantifier)) {
-    conditionalDisplay.quantifier = quantifier;
+  if (isDefined(selectedRecordsMatch)) {
+    conditionalDisplay.selectedRecordsMatch = selectedRecordsMatch;
   }
 
   return conditionalDisplay;

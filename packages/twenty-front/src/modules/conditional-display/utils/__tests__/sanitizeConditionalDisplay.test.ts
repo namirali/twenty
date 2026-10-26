@@ -111,7 +111,7 @@ describe('sanitizeConditionalDisplay', () => {
     ]);
   });
 
-  it('removes groups emptied by dropped context rows and keeps the quantifier', () => {
+  it('removes groups emptied by dropped context rows and keeps the selectedRecordsMatch', () => {
     expect(
       sanitizeConditionalDisplay({
         recordFilters: [
@@ -132,7 +132,7 @@ describe('sanitizeConditionalDisplay', () => {
             parentRecordFilterGroupId: 'root',
           },
         ],
-        quantifier: 'SOME',
+        selectedRecordsMatch: 'SOME',
         availableContextKeys: AVAILABLE_CONTEXT_KEYS,
         fieldMetadataItems: [],
       }),
@@ -147,7 +147,7 @@ describe('sanitizeConditionalDisplay', () => {
       recordFilterGroups: [
         { id: 'root', logicalOperator: RecordFilterGroupLogicalOperator.AND },
       ],
-      quantifier: 'SOME',
+      selectedRecordsMatch: 'SOME',
     });
   });
 });

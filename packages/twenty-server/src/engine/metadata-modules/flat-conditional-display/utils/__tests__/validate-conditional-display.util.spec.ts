@@ -299,19 +299,19 @@ describe('validateConditionalDisplay', () => {
     ]);
   });
 
-  it('should reject a quantifier in the display of a widget', () => {
+  it('should reject selectedRecordsMatch in the display of a widget', () => {
     expect(
       validate({
         conditionalDisplay: {
           recordFilters: [DEVICE_LEAF],
-          quantifier: 'SOME',
+          selectedRecordsMatch: 'SOME',
         },
         property: 'conditionalDisplay',
       }),
     ).toEqual([expect.objectContaining({ value: 'SOME' })]);
   });
 
-  it('should accept a quantified selected records rule in the availability of a widget', () => {
+  it('should accept a selected records rule with selectedRecordsMatch in the availability of a widget', () => {
     expect(
       validate({
         conditionalDisplay: {
@@ -323,19 +323,19 @@ describe('validateConditionalDisplay', () => {
               value: '"DRAFT"',
             },
           ],
-          quantifier: 'EVERY',
+          selectedRecordsMatch: 'EVERY',
         },
         property: 'conditionalAvailability',
       }),
     ).toEqual([]);
   });
 
-  it('should accept a quantified selected records rule in the pinned condition of a command menu item', () => {
+  it('should accept a selected records rule with selectedRecordsMatch in the pinned condition of a command menu item', () => {
     expect(
       validate({
         conditionalDisplay: {
           recordFilters: [SELECTED_RECORDS_LEAF],
-          quantifier: 'EVERY',
+          selectedRecordsMatch: 'EVERY',
         },
         property: 'conditionalPinned',
         surface: 'commandMenuItem',
@@ -343,7 +343,7 @@ describe('validateConditionalDisplay', () => {
     ).toEqual([]);
   });
 
-  it('should accept a quantifier on a command menu item', () => {
+  it('should accept selectedRecordsMatch on a command menu item', () => {
     expect(
       validate({
         conditionalDisplay: {
@@ -355,7 +355,7 @@ describe('validateConditionalDisplay', () => {
               value: '',
             },
           ],
-          quantifier: 'SOME',
+          selectedRecordsMatch: 'SOME',
         },
         surface: 'commandMenuItem',
       }),

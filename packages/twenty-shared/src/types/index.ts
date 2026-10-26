@@ -77,9 +77,9 @@ export type { ConditionalDisplayEngineContextKey } from './conditional-display/C
 export type { ConditionalDisplayEvaluationContext } from './conditional-display/ConditionalDisplayEvaluationContext';
 export type { ConditionalDisplayOwner } from './conditional-display/ConditionalDisplayOwner';
 export type { ConditionalDisplayProperty } from './conditional-display/ConditionalDisplayProperty';
-export type { ConditionalDisplayQuantifier } from './conditional-display/ConditionalDisplayQuantifier';
 export type { ConditionalDisplayRecordFilter } from './conditional-display/ConditionalDisplayRecordFilter';
 export type { ConditionalDisplayRecordFilterGroup } from './conditional-display/ConditionalDisplayRecordFilterGroup';
+export type { ConditionalDisplaySelectedRecordsMatch } from './conditional-display/ConditionalDisplaySelectedRecordsMatch';
 export type { ConditionalDisplaySurface } from './conditional-display/ConditionalDisplaySurface';
 export type { UniversalConditionalDisplay } from './conditional-display/UniversalConditionalDisplay';
 export type { ConfigVariableValue } from './ConfigVariableValue';

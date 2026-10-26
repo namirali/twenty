@@ -12,7 +12,7 @@ import { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from '@/constants/NeverAvailableC
 import { type ConditionalDisplay } from '@/types/conditional-display/ConditionalDisplay';
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
 import { type ConditionalDisplayContextKey } from '@/types/conditional-display/ConditionalDisplayContextKey';
-import { type ConditionalDisplayQuantifier } from '@/types/conditional-display/ConditionalDisplayQuantifier';
+import { type ConditionalDisplaySelectedRecordsMatch } from '@/types/conditional-display/ConditionalDisplaySelectedRecordsMatch';
 import { RecordFilterGroupLogicalOperator } from '@/types/RecordFilterGroupLogicalOperator';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
 import { conditionalAvailabilityParser } from '@/utils/command-menu-items/conditionalAvailabilityParser';
@@ -122,13 +122,13 @@ const buildContextConditionNode = ({
   subFieldName,
   operand,
   value,
-  quantifier,
+  selectedRecordsMatch,
 }: {
   contextKey: ConditionalDisplayContextKey;
   subFieldName?: string;
   operand: ViewFilterOperand;
   value?: string;
-  quantifier?: ConditionalDisplayQuantifier;
+  selectedRecordsMatch?: ConditionalDisplaySelectedRecordsMatch;
 }): ConditionalDisplayConditionNode => {
   const conditionNode: RecordFilterConditionNode = {
     kind: 'recordFilter',
@@ -143,8 +143,8 @@ const buildContextConditionNode = ({
     conditionNode.recordFilter.value = value;
   }
 
-  if (isDefined(quantifier)) {
-    conditionNode.quantifier = quantifier;
+  if (isDefined(selectedRecordsMatch)) {
+    conditionNode.selectedRecordsMatch = selectedRecordsMatch;
   }
 
   return conditionNode;
@@ -449,12 +449,12 @@ const compileUnaryOperation = ({
 
 const compileRecordTruthiness = ({
   path,
-  quantifier,
+  selectedRecordsMatch,
   isNegated,
   expression,
 }: {
   path: string;
-  quantifier: ConditionalDisplayQuantifier;
+  selectedRecordsMatch: ConditionalDisplaySelectedRecordsMatch;
   isNegated: boolean;
   expression: string;
 }): ConditionalDisplayConditionNode => {
@@ -465,7 +465,7 @@ const compileRecordTruthiness = ({
       operand: isNegated
         ? ViewFilterOperand.IS_EMPTY
         : ViewFilterOperand.IS_NOT_EMPTY,
-      quantifier,
+      selectedRecordsMatch,
     });
   }
 
@@ -475,7 +475,7 @@ const compileRecordTruthiness = ({
       subFieldName: path,
       operand: isNegated ? ViewFilterOperand.IS_NOT : ViewFilterOperand.IS,
       value: JSON.stringify(true),
-      quantifier,
+      selectedRecordsMatch,
     });
   }
 
@@ -486,7 +486,7 @@ const compileRecordTruthiness = ({
       operand: isNegated
         ? ViewFilterOperand.IS_EMPTY
         : ViewFilterOperand.IS_NOT_EMPTY,
-      quantifier,
+      selectedRecordsMatch,
     });
   }
 
@@ -510,10 +510,10 @@ const compileRecordFunctionCall = ({
   expression: string;
 }): ConditionalDisplayConditionNode | undefined => {
   const buildRecordPathConditionNode = ({
-    quantifier,
+    selectedRecordsMatch,
     operand,
   }: {
-    quantifier: ConditionalDisplayQuantifier;
+    selectedRecordsMatch: ConditionalDisplaySelectedRecordsMatch;
     operand: ViewFilterOperand;
   }) =>
     argumentCount === 2
@@ -521,15 +521,15 @@ const compileRecordFunctionCall = ({
           contextKey: 'selectedRecords',
           subFieldName: path,
           operand,
-          quantifier,
+          selectedRecordsMatch,
         })
       : undefined;
 
   const buildRecordPathValueConditionNode = ({
-    quantifier,
+    selectedRecordsMatch,
     operand,
   }: {
-    quantifier: ConditionalDisplayQuantifier;
+    selectedRecordsMatch: ConditionalDisplaySelectedRecordsMatch;
     operand: ViewFilterOperand;
   }) =>
     argumentCount === 3 && isDefined(literal)
@@ -538,81 +538,86 @@ const compileRecordFunctionCall = ({
           subFieldName: path,
           operand,
           value: JSON.stringify(literal),
-          quantifier,
+          selectedRecordsMatch,
         })
       : undefined;
 
   const buildRecordTruthinessConditionNode = ({
-    quantifier,
+    selectedRecordsMatch,
     isNegated,
   }: {
-    quantifier: ConditionalDisplayQuantifier;
+    selectedRecordsMatch: ConditionalDisplaySelectedRecordsMatch;
     isNegated: boolean;
   }) =>
     argumentCount === 2
-      ? compileRecordTruthiness({ path, quantifier, isNegated, expression })
+      ? compileRecordTruthiness({
+          path,
+          selectedRecordsMatch,
+          isNegated,
+          expression,
+        })
       : undefined;
 
   switch (functionName) {
     case 'everyDefined':
       return buildRecordPathConditionNode({
-        quantifier: 'EVERY',
+        selectedRecordsMatch: 'EVERY',
         operand: ViewFilterOperand.IS_NOT_EMPTY,
       });
     case 'noneDefined':
       return buildRecordPathConditionNode({
-        quantifier: 'EVERY',
+        selectedRecordsMatch: 'EVERY',
         operand: ViewFilterOperand.IS_EMPTY,
       });
     case 'someDefined':
     case 'someNonEmptyString':
       return buildRecordPathConditionNode({
-        quantifier: 'SOME',
+        selectedRecordsMatch: 'SOME',
         operand: ViewFilterOperand.IS_NOT_EMPTY,
       });
     case 'everyEquals':
       return buildRecordPathValueConditionNode({
-        quantifier: 'EVERY',
+        selectedRecordsMatch: 'EVERY',
         operand: ViewFilterOperand.IS,
       });
     case 'noneEquals':
       return buildRecordPathValueConditionNode({
-        quantifier: 'EVERY',
+        selectedRecordsMatch: 'EVERY',
         operand: ViewFilterOperand.IS_NOT,
       });
     case 'someEquals':
       return buildRecordPathValueConditionNode({
-        quantifier: 'SOME',
+        selectedRecordsMatch: 'SOME',
         operand: ViewFilterOperand.IS,
       });
     case 'includesEvery':
       return buildRecordPathValueConditionNode({
-        quantifier: 'EVERY',
+        selectedRecordsMatch: 'EVERY',
         operand: ViewFilterOperand.CONTAINS,
       });
     case 'includesNone':
       return buildRecordPathValueConditionNode({
-        quantifier: 'EVERY',
+        selectedRecordsMatch: 'EVERY',
         operand: ViewFilterOperand.DOES_NOT_CONTAIN,
       });
     case 'includesSome':
       return buildRecordPathValueConditionNode({
-        quantifier: 'SOME',
+        selectedRecordsMatch: 'SOME',
         operand: ViewFilterOperand.CONTAINS,
       });
     case 'every':
       return buildRecordTruthinessConditionNode({
-        quantifier: 'EVERY',
+        selectedRecordsMatch: 'EVERY',
         isNegated: false,
       });
     case 'some':
       return buildRecordTruthinessConditionNode({
-        quantifier: 'SOME',
+        selectedRecordsMatch: 'SOME',
         isNegated: false,
       });
     case 'none':
       return buildRecordTruthinessConditionNode({
-        quantifier: 'EVERY',
+        selectedRecordsMatch: 'EVERY',
         isNegated: true,
       });
     default:
@@ -813,14 +818,16 @@ const compileTokens = ({
   return result;
 };
 
-const collectQuantifiers = (
+const collectSelectedRecordsMatches = (
   conditionNode: ConditionalDisplayConditionNode,
-): ConditionalDisplayQuantifier[] => {
+): ConditionalDisplaySelectedRecordsMatch[] => {
   if (conditionNode.kind === 'recordFilterGroup') {
-    return conditionNode.children.flatMap(collectQuantifiers);
+    return conditionNode.children.flatMap(collectSelectedRecordsMatches);
   }
 
-  return isDefined(conditionNode.quantifier) ? [conditionNode.quantifier] : [];
+  return isDefined(conditionNode.selectedRecordsMatch)
+    ? [conditionNode.selectedRecordsMatch]
+    : [];
 };
 
 const referencesSelectedRecords = (
@@ -850,17 +857,17 @@ const isSingleRecordSelectionRequired = (
 
 const findGroupNotDistributingOverRecords = ({
   conditionNode,
-  quantifier,
+  selectedRecordsMatch,
 }: {
   conditionNode: ConditionalDisplayConditionNode;
-  quantifier: ConditionalDisplayQuantifier;
+  selectedRecordsMatch: ConditionalDisplaySelectedRecordsMatch;
 }): RecordFilterGroupLogicalOperator | undefined => {
   if (conditionNode.kind === 'recordFilter') {
     return undefined;
   }
 
   const nonDistributingLogicalOperator =
-    quantifier === 'SOME'
+    selectedRecordsMatch === 'SOME'
       ? RecordFilterGroupLogicalOperator.AND
       : RecordFilterGroupLogicalOperator.OR;
 
@@ -873,7 +880,10 @@ const findGroupNotDistributingOverRecords = ({
 
   return conditionNode.children
     .map((child) =>
-      findGroupNotDistributingOverRecords({ conditionNode: child, quantifier }),
+      findGroupNotDistributingOverRecords({
+        conditionNode: child,
+        selectedRecordsMatch,
+      }),
     )
     .find(isDefined);
 };
@@ -894,9 +904,11 @@ export const compileConditionalAvailabilityExpression = (
 
   const conditionNode = toConditionNode({ stackItem, expression });
 
-  const quantifiers = new Set(collectQuantifiers(conditionNode));
+  const selectedRecordsMatches = new Set(
+    collectSelectedRecordsMatches(conditionNode),
+  );
 
-  if (quantifiers.size > 1) {
+  if (selectedRecordsMatches.size > 1) {
     throw buildCompilationError({
       expression,
       offendingToken: 'mix of every and some record functions',
@@ -909,7 +921,9 @@ export const compileConditionalAvailabilityExpression = (
     ? undefined
     : findGroupNotDistributingOverRecords({
         conditionNode,
-        quantifier: quantifiers.has('SOME') ? 'SOME' : 'EVERY',
+        selectedRecordsMatch: selectedRecordsMatches.has('SOME')
+          ? 'SOME'
+          : 'EVERY',
       });
 
   if (isDefined(nonDistributingLogicalOperator)) {

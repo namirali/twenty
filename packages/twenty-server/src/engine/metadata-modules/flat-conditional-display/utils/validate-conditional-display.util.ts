@@ -468,35 +468,35 @@ export const validateConditionalDisplay = ({
   const {
     recordFilters = [],
     recordFilterGroups = [],
-    quantifier,
+    selectedRecordsMatch,
   } = conditionalDisplay as UniversalConditionalDisplay;
 
   const errors: FlatEntityValidationError[] = [];
 
-  const isQuantifierAllowed =
+  const isSelectedRecordsMatchAllowed =
     surface === 'commandMenuItem' ||
     (CONDITIONAL_DISPLAY_PROPERTIES[property].owner === 'engine' &&
       CONDITIONAL_DISPLAY_CONTEXT_KEYS.selectedRecords.surfaces.includes(
         surface,
       ));
 
-  if (isDefined(quantifier)) {
-    if (!isQuantifierAllowed) {
+  if (isDefined(selectedRecordsMatch)) {
+    if (!isSelectedRecordsMatchAllowed) {
       errors.push({
         code: invalidDataCode,
-        message: t`Conditional display quantifier is not supported in ${property} on ${surface}`,
-        userFriendlyMessage: msg`Conditional display quantifier is not available here`,
-        value: quantifier,
+        message: t`Conditional display selected records match is not supported in ${property} on ${surface}`,
+        userFriendlyMessage: msg`Conditional display selected records match is not available here`,
+        value: selectedRecordsMatch,
       });
     } else if (
-      !isString(quantifier) ||
-      !['EVERY', 'SOME'].includes(quantifier)
+      !isString(selectedRecordsMatch) ||
+      !['EVERY', 'SOME'].includes(selectedRecordsMatch)
     ) {
       errors.push({
         code: invalidDataCode,
-        message: t`Conditional display quantifier "${quantifier}" is not supported`,
-        userFriendlyMessage: msg`Conditional display quantifier is not valid`,
-        value: quantifier,
+        message: t`Conditional display selected records match "${selectedRecordsMatch}" is not supported`,
+        userFriendlyMessage: msg`Conditional display selected records match is not valid`,
+        value: selectedRecordsMatch,
       });
     }
   }

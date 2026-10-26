@@ -2012,7 +2012,6 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "payload": null,
     "hotKeys": null,
     "conditionalAvailability": {
-      "quantifier": "SOME",
       "recordFilters": [
         {
           "id": "0e697990-55eb-53aa-9265-52b769871078",
@@ -2055,7 +2054,8 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
           "id": "21ab452e-c475-59e4-ac2d-0bf38ac3b0f2",
           "logicalOperator": "OR"
         }
-      ]
+      ],
+      "selectedRecordsMatch": "SOME"
     },
     "conditionalPinned": null,
     "availabilityType": "RECORD_SELECTION",
@@ -2080,7 +2080,6 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "payload": null,
     "hotKeys": null,
     "conditionalAvailability": {
-      "quantifier": "SOME",
       "recordFilters": [
         {
           "id": "d343ba01-6b08-5226-a49e-61037dfc990d",
@@ -2089,7 +2088,8 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
           "contextKey": "selectedRecords",
           "subFieldName": "status"
         }
-      ]
+      ],
+      "selectedRecordsMatch": "SOME"
     },
     "conditionalPinned": null,
     "availabilityType": "RECORD_SELECTION",

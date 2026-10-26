@@ -1,7 +1,7 @@
 import { type RecordFilterGroupLogicalOperator } from '../RecordFilterGroupLogicalOperator';
 
-import { type ConditionalDisplayQuantifier } from './ConditionalDisplayQuantifier';
 import { type ConditionalDisplayRecordFilter } from './ConditionalDisplayRecordFilter';
+import { type ConditionalDisplaySelectedRecordsMatch } from './ConditionalDisplaySelectedRecordsMatch';
 
 export type ConditionalDisplayConditionNode =
   | {
@@ -10,7 +10,7 @@ export type ConditionalDisplayConditionNode =
         ConditionalDisplayRecordFilter,
         'id' | 'recordFilterGroupId' | 'positionInRecordFilterGroup'
       >;
-      quantifier?: ConditionalDisplayQuantifier;
+      selectedRecordsMatch?: ConditionalDisplaySelectedRecordsMatch;
     }
   | {
       kind: 'recordFilterGroup';

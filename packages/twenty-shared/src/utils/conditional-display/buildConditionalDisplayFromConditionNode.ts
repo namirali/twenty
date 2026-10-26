@@ -23,12 +23,12 @@ const isRecordFilterConditionNode = (
 ): conditionNode is RecordFilterConditionNode =>
   conditionNode.kind === 'recordFilter';
 
-const hasSomeQuantifier = (
+const hasSomeSelectedRecordsMatch = (
   conditionNode: ConditionalDisplayConditionNode,
 ): boolean =>
   isRecordFilterConditionNode(conditionNode)
-    ? conditionNode.quantifier === 'SOME'
-    : conditionNode.children.some(hasSomeQuantifier);
+    ? conditionNode.selectedRecordsMatch === 'SOME'
+    : conditionNode.children.some(hasSomeSelectedRecordsMatch);
 
 const isConjunctionOfRecordFilters = (
   recordFilterGroupConditionNode: RecordFilterGroupConditionNode,
@@ -125,8 +125,8 @@ export const buildConditionalDisplayFromConditionNode = ({
     conditionalDisplay.recordFilterGroups = recordFilterGroups;
   }
 
-  if (hasSomeQuantifier(conditionNode)) {
-    conditionalDisplay.quantifier = 'SOME';
+  if (hasSomeSelectedRecordsMatch(conditionNode)) {
+    conditionalDisplay.selectedRecordsMatch = 'SOME';
   }
 
   return conditionalDisplay;

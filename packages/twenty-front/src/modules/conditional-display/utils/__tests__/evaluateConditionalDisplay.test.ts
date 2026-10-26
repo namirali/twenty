@@ -175,7 +175,7 @@ describe('evaluateConditionalDisplay', () => {
 
   it('requires one record to satisfy every leaf with SOME', () => {
     const conditionalDisplay: ConditionalDisplay = {
-      quantifier: 'SOME',
+      selectedRecordsMatch: 'SOME',
       recordFilters: [
         nameContainsAirRecordFilter,
         employeesAtLeastFiftyRecordFilter,
@@ -425,7 +425,7 @@ describe('evaluateConditionalDisplay', () => {
       expect(
         evaluateOnCompany({
           conditionalDisplay: {
-            quantifier: 'SOME',
+            selectedRecordsMatch: 'SOME',
             recordFilters: [statusIsSentRecordFilter],
           },
           records,
@@ -440,7 +440,7 @@ describe('evaluateConditionalDisplay', () => {
       expect(
         evaluateOnCompany({
           conditionalDisplay: {
-            quantifier: 'SOME',
+            selectedRecordsMatch: 'SOME',
             recordFilters: [statusIsSentRecordFilter],
           },
           records: [],
