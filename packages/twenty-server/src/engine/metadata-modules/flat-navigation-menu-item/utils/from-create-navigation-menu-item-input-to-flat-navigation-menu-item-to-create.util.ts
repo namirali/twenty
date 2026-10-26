@@ -21,6 +21,7 @@ export const fromCreateNavigationMenuItemInputToFlatNavigationMenuItemToCreate =
     flatPageLayoutMaps,
     flatFieldMetadataMaps,
     flatRoleMaps,
+    flatAgentChatChannelMaps,
   }: {
     createNavigationMenuItemInput: CreateNavigationMenuItemInput;
     workspaceId: string;
@@ -33,6 +34,7 @@ export const fromCreateNavigationMenuItemInputToFlatNavigationMenuItemToCreate =
     | 'flatPageLayoutMaps'
     | 'flatFieldMetadataMaps'
     | 'flatRoleMaps'
+    | 'flatAgentChatChannelMaps'
   >): FlatNavigationMenuItem => {
     const id = createNavigationMenuItemInput.id ?? uuidv4();
     const now = new Date().toISOString();
@@ -62,6 +64,7 @@ export const fromCreateNavigationMenuItemInputToFlatNavigationMenuItemToCreate =
       viewUniversalIdentifier,
       folderUniversalIdentifier,
       pageLayoutUniversalIdentifier,
+      agentChatChannelUniversalIdentifier,
     } = resolveEntityRelationUniversalIdentifiers({
       metadataName: 'navigationMenuItem',
       foreignKeyValues: {
@@ -70,12 +73,14 @@ export const fromCreateNavigationMenuItemInputToFlatNavigationMenuItemToCreate =
         viewId: createNavigationMenuItemInput.viewId,
         folderId: createNavigationMenuItemInput.folderId,
         pageLayoutId: createNavigationMenuItemInput.pageLayoutId,
+        agentChatChannelId: createNavigationMenuItemInput.agentChatChannelId,
       },
       flatEntityMaps: {
         flatObjectMetadataMaps,
         flatViewMaps,
         flatNavigationMenuItemMaps,
         flatPageLayoutMaps,
+        flatAgentChatChannelMaps,
       },
     });
 
@@ -98,6 +103,9 @@ export const fromCreateNavigationMenuItemInputToFlatNavigationMenuItemToCreate =
       folderUniversalIdentifier,
       pageLayoutId: createNavigationMenuItemInput.pageLayoutId ?? null,
       pageLayoutUniversalIdentifier,
+      agentChatChannelId:
+        createNavigationMenuItemInput.agentChatChannelId ?? null,
+      agentChatChannelUniversalIdentifier,
       name: createNavigationMenuItemInput.name ?? null,
       link: createNavigationMenuItemInput.link ?? null,
       icon: createNavigationMenuItemInput.icon ?? null,

@@ -18,6 +18,7 @@ const FLAT_NAVIGATION_MENU_ITEM_ROWS_REQUIREMENT = {
   pageLayout: ['id', 'universalIdentifier'],
   fieldMetadata: ['id', 'universalIdentifier'],
   role: ['id', 'universalIdentifier'],
+  agentChatChannel: ['id', 'universalIdentifier'],
 } as const;
 
 @Injectable()
@@ -39,6 +40,7 @@ export class WorkspaceFlatNavigationMenuItemMapCacheService extends MetadataFlat
       pageLayout: pageLayouts,
       fieldMetadata: fieldMetadatas,
       role: roles,
+      agentChatChannel: agentChatChannels,
     } = rows;
 
     const applicationIdToUniversalIdentifierMap =
@@ -57,6 +59,8 @@ export class WorkspaceFlatNavigationMenuItemMapCacheService extends MetadataFlat
     const roleUniversalIdentifierById = Object.fromEntries(
       createIdToUniversalIdentifierMap(roles),
     );
+    const agentChatChannelIdToUniversalIdentifierMap =
+      createIdToUniversalIdentifierMap(agentChatChannels);
 
     const flatNavigationMenuItemMaps = {
       ...createEmptyFlatEntityMaps(),
@@ -74,6 +78,7 @@ export class WorkspaceFlatNavigationMenuItemMapCacheService extends MetadataFlat
           pageLayoutIdToUniversalIdentifierMap,
           fieldMetadataUniversalIdentifierById,
           roleUniversalIdentifierById,
+          agentChatChannelIdToUniversalIdentifierMap,
         });
 
       addFlatNavigationMenuItemToMapsAndUpdateIndex({

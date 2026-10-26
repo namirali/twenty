@@ -871,6 +871,11 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       toStringify: false,
       universalProperty: undefined,
     },
+    canAccessAllAgentChatChannels: {
+      toCompare: true,
+      toStringify: false,
+      universalProperty: undefined,
+    },
     canReadAllObjectRecords: {
       toCompare: true,
       toStringify: false,
@@ -1460,6 +1465,11 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       toStringify: false,
       universalProperty: 'pageLayoutUniversalIdentifier',
     },
+    agentChatChannelId: {
+      toCompare: false,
+      toStringify: false,
+      universalProperty: 'agentChatChannelUniversalIdentifier',
+    },
   },
   rolePermissionFlag: {
     permissionFlagId: {
@@ -1896,7 +1906,7 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       universalProperty: undefined,
     },
     isSecret: {
-      toCompare: true,
+      toCompare: false,
       toStringify: false,
       universalProperty: undefined,
     },
@@ -2267,6 +2277,65 @@ export const ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME = {
       toCompare: false,
       toStringify: false,
       universalProperty: undefined,
+    },
+    createdAt: {
+      toCompare: false,
+      toStringify: false,
+      universalProperty: undefined,
+    },
+    updatedAt: {
+      toCompare: false,
+      toStringify: false,
+      universalProperty: undefined,
+    },
+  },
+  agentChatChannel: {
+    name: {
+      toCompare: true,
+      toStringify: false,
+      universalProperty: undefined,
+    },
+    icon: {
+      toCompare: true,
+      toStringify: false,
+      universalProperty: undefined,
+    },
+    color: {
+      toCompare: true,
+      toStringify: false,
+      universalProperty: undefined,
+    },
+    position: {
+      toCompare: true,
+      toStringify: false,
+      universalProperty: undefined,
+    },
+    isCustom: {
+      toCompare: false,
+      toStringify: false,
+      universalProperty: undefined,
+    },
+    createdAt: {
+      toCompare: false,
+      toStringify: false,
+      universalProperty: undefined,
+    },
+    updatedAt: {
+      toCompare: false,
+      toStringify: false,
+      universalProperty: undefined,
+    },
+  },
+  agentChatChannelRole: {
+    channelId: {
+      toCompare: true,
+      toStringify: false,
+      universalProperty: 'channelUniversalIdentifier',
+    },
+    roleId: {
+      toCompare: true,
+      toStringify: false,
+      universalProperty: 'roleUniversalIdentifier',
     },
     createdAt: {
       toCompare: false,

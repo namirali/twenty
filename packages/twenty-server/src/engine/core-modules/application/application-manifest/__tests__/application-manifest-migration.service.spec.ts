@@ -8,6 +8,7 @@ import { type ApplicationService } from 'src/engine/core-modules/application/app
 import { type FlatApplication } from 'src/engine/core-modules/application/types/flat-application.type';
 import { type LoggerService } from 'src/engine/core-modules/logger/logger.service';
 import { type WorkflowVersionCoreSyncService } from 'src/engine/core-modules/workflow/services/workflow-version-core-sync.service';
+import { type ConnectedAccountMetadataService } from 'src/engine/metadata-modules/connected-account/connected-account-metadata.service';
 import { validateUniversalFlatEntityConditionalDisplays } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-universal-flat-entity-conditional-displays.util';
 import { createEmptyFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/constant/create-empty-flat-entity-maps.constant';
 import { type MetadataUniversalFlatEntity } from 'src/engine/metadata-modules/flat-entity/types/metadata-universal-flat-entity.type';
@@ -125,6 +126,7 @@ describe('ApplicationManifestMigrationService', () => {
         computeManifestFlatEntityMapsService,
         logger,
         {} as WorkflowVersionCoreSyncService,
+        {} as ConnectedAccountMetadataService,
       );
 
     await applicationManifestMigrationService.syncPreInstallLogicFunctionFromManifest(

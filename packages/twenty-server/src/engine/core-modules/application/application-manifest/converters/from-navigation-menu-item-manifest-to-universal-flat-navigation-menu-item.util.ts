@@ -33,6 +33,7 @@ export const fromNavigationMenuItemManifestToUniversalFlatNavigationMenuItem =
         navigationMenuItemManifest.targetObjectUniversalIdentifier ?? null,
       pageLayoutUniversalIdentifier:
         navigationMenuItemManifest.pageLayoutUniversalIdentifier ?? null,
+      agentChatChannelUniversalIdentifier: null,
       targetRecordId: null,
       userWorkspaceId: null,
       createdAt: now,
