@@ -1,4 +1,6 @@
 import { ConditionalDisplaySubjectSections } from '@/conditional-display/components/ConditionalDisplaySubjectSections';
+import { ConditionalDisplayEditorContext } from '@/conditional-display/contexts/ConditionalDisplayEditorContext';
+import { buildConditionalDisplayContextKeyRecordFilterConfig } from '@/conditional-display/utils/buildConditionalDisplayContextKeyRecordFilterConfig';
 import { ConditionalDisplayVisibilityModeSelect } from '@/conditional-display/components/ConditionalDisplayVisibilityModeSelect';
 import { type ConditionalDisplayVisibilityMode } from '@/conditional-display/types/ConditionalDisplayVisibilityMode';
 import { getConditionalDisplaySettingsLabel } from '@/conditional-display/utils/getConditionalDisplaySettingsLabel';
@@ -77,6 +79,9 @@ export const ConditionalDisplaySettings = ({
       CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey].surfaces.includes(surface),
     );
 
+  const contextKeyRecordFilterConfig =
+    buildConditionalDisplayContextKeyRecordFilterConfig(availableContextKeys);
+
   const objectMetadataItem = useAtomStateValue(
     objectMetadataItemsSelector,
   ).find((item) => item.id === objectMetadataId);
@@ -143,44 +148,50 @@ export const ConditionalDisplaySettings = ({
         value={{ instanceId }}
       >
         <RecordFiltersComponentInstanceContext.Provider value={{ instanceId }}>
-          <AdvancedFilterContext.Provider
-            value={{
-              onUpdate: readonly ? undefined : handleConditionalDisplayUpdate,
-              readonly,
-              objectMetadataItem,
-              availableContextKeys,
-            }}
+          <ConditionalDisplayEditorContext.Provider
+            value={{ availableContextKeys }}
           >
-            <ConditionalDisplayVisibilityModeSelect
-              dropdownId={`${instanceId}-visibility-mode`}
-              label={getConditionalDisplaySettingsLabel(surface)}
-              visibilityMode={visibilityMode}
-              readonly={readonly}
-              onEveryoneSelect={() => onConditionalDisplayChange?.(null)}
-            />
-            {visibilityMode === 'CUSTOM_RULE' && (
-              <>
-                {isDefined(objectMetadataItem) && (
-                  <SidePanelRecordFiltersDeletedFieldsWarning
-                    validFieldMetadataIds={validFieldMetadataIds}
-                  />
-                )}
-                <RecordFieldsComponentInstanceContext.Provider
-                  value={{ instanceId }}
-                >
-                  <AdvancedFilterSidePanelContainer
-                    readonly={readonly}
-                    onUpdate={handleConditionalDisplayUpdate}
-                    objectMetadataItem={objectMetadataItem}
-                    availableContextKeys={availableContextKeys}
-                    FieldSelectLeadingSections={
-                      ConditionalDisplaySubjectSections
-                    }
-                  />
-                </RecordFieldsComponentInstanceContext.Provider>
-              </>
-            )}
-          </AdvancedFilterContext.Provider>
+            <AdvancedFilterContext.Provider
+              value={{
+                onUpdate: readonly ? undefined : handleConditionalDisplayUpdate,
+                readonly,
+                objectMetadataItem,
+                contextKeyRecordFilterConfig,
+              }}
+            >
+              <ConditionalDisplayVisibilityModeSelect
+                dropdownId={`${instanceId}-visibility-mode`}
+                label={getConditionalDisplaySettingsLabel(surface)}
+                visibilityMode={visibilityMode}
+                readonly={readonly}
+                onEveryoneSelect={() => onConditionalDisplayChange?.(null)}
+              />
+              {visibilityMode === 'CUSTOM_RULE' && (
+                <>
+                  {isDefined(objectMetadataItem) && (
+                    <SidePanelRecordFiltersDeletedFieldsWarning
+                      validFieldMetadataIds={validFieldMetadataIds}
+                    />
+                  )}
+                  <RecordFieldsComponentInstanceContext.Provider
+                    value={{ instanceId }}
+                  >
+                    <AdvancedFilterSidePanelContainer
+                      readonly={readonly}
+                      onUpdate={handleConditionalDisplayUpdate}
+                      objectMetadataItem={objectMetadataItem}
+                      contextKeyRecordFilterConfig={
+                        contextKeyRecordFilterConfig
+                      }
+                      FieldSelectLeadingSections={
+                        ConditionalDisplaySubjectSections
+                      }
+                    />
+                  </RecordFieldsComponentInstanceContext.Provider>
+                </>
+              )}
+            </AdvancedFilterContext.Provider>
+          </ConditionalDisplayEditorContext.Provider>
           <RecordFiltersSettingsInitializeStateEffect
             initialRecordFilters={{
               recordFilters:
@@ -189,6 +200,7 @@ export const ConditionalDisplaySettings = ({
                 ),
               recordFilterGroups: conditionalDisplay?.recordFilterGroups ?? [],
             }}
+            contextKeyRecordFilterConfig={contextKeyRecordFilterConfig}
           />
         </RecordFiltersComponentInstanceContext.Provider>
       </RecordFilterGroupsComponentInstanceContext.Provider>

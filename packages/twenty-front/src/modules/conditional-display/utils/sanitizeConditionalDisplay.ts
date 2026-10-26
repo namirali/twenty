@@ -1,3 +1,4 @@
+import { findConditionalDisplayAdminContextKey } from '@/conditional-display/utils/findConditionalDisplayAdminContextKey';
 import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
 import { removeEmptyRecordFilterGroups } from '@/object-record/record-filter-group/utils/removeEmptyRecordFilterGroups';
 import { type RecordFilterGroup } from '@/object-record/record-filter-group/types/RecordFilterGroup';
@@ -35,7 +36,10 @@ export const sanitizeConditionalDisplay = ({
   const availableRecordFilters = recordFilters.filter(
     (recordFilter) =>
       !isDefined(recordFilter.contextKey) ||
-      (availableContextKeys.includes(recordFilter.contextKey) &&
+      (availableContextKeys.some(
+        (availableContextKey) =>
+          availableContextKey === recordFilter.contextKey,
+      ) &&
         isRecordFilterValueValid({
           operand: recordFilter.operand,
           value: recordFilter.value ?? '',
@@ -82,7 +86,9 @@ export const sanitizeConditionalDisplay = ({
       isDefined(recordFilter.contextKey)
         ? {
             id: recordFilter.id ?? '',
-            contextKey: recordFilter.contextKey,
+            contextKey: findConditionalDisplayAdminContextKey(
+              recordFilter.contextKey,
+            ),
             operand: recordFilter.operand,
             value: recordFilter.value,
             recordFilterGroupId: recordFilter.recordFilterGroupId,

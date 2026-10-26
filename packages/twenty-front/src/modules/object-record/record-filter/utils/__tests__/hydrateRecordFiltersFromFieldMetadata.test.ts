@@ -1,7 +1,9 @@
 import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
+import { type ContextKeyRecordFilterConfig } from '@/object-record/record-filter/types/ContextKeyRecordFilterConfig';
 import { type PersistedRecordFilter } from '@/object-record/record-filter/types/PersistedRecordFilter';
 import { hydrateRecordFiltersFromFieldMetadata } from '@/object-record/record-filter/utils/hydrateRecordFiltersFromFieldMetadata';
 import { FieldMetadataType, ViewFilterOperand } from 'twenty-shared/types';
+import { IconUser } from 'twenty-ui/icon';
 
 const ownerFieldMetadataItem = {
   id: 'owner-field-id',
@@ -56,49 +58,68 @@ describe('hydrateRecordFiltersFromFieldMetadata', () => {
     });
   });
 
-  it('should resolve context key filters without any field metadata', () => {
-    const roleRecordFilter: PersistedRecordFilter = {
-      id: 'role-filter-id',
+  describe('context key filters', () => {
+    const contextKeyRecordFilter: PersistedRecordFilter = {
+      id: 'context-key-filter-id',
       fieldMetadataId: '',
-      contextKey: 'currentRoleId',
+      contextKey: 'knownContextKey',
       operand: ViewFilterOperand.IS,
-      value: JSON.stringify(['sales-role-id']),
+      value: JSON.stringify(['value-id']),
     };
 
-    const memberRecordFilter: PersistedRecordFilter = {
-      id: 'member-filter-id',
-      fieldMetadataId: '',
-      contextKey: 'currentWorkspaceMemberId',
-      operand: ViewFilterOperand.IS,
-      value: JSON.stringify({
-        isCurrentWorkspaceMemberSelected: true,
-        selectedRecordIds: [],
-      }),
+    const unknownContextKeyRecordFilter: PersistedRecordFilter = {
+      ...contextKeyRecordFilter,
+      id: 'unknown-context-key-filter-id',
+      contextKey: 'unknownContextKey',
     };
 
-    expect(
-      hydrateRecordFiltersFromFieldMetadata({
-        persistedRecordFilters: [roleRecordFilter, memberRecordFilter],
-        fieldMetadataItems: [],
-      }),
-    ).toEqual({
-      recordFilters: [
-        expect.objectContaining({
-          id: 'role-filter-id',
-          contextKey: 'currentRoleId',
-          type: 'UUID',
-          label: '',
-          displayValue: roleRecordFilter.value,
+    const contextKeyRecordFilterConfig: ContextKeyRecordFilterConfig = {
+      getField: (contextKey) =>
+        contextKey === 'knownContextKey'
+          ? { type: 'UUID', label: 'Known', Icon: IconUser }
+          : undefined,
+      buildDefaultRecordFilter: () => undefined,
+      ValueInput: () => null,
+    };
+
+    it('should type the filters whose context key the config resolves, without any field metadata', () => {
+      expect(
+        hydrateRecordFiltersFromFieldMetadata({
+          persistedRecordFilters: [
+            contextKeyRecordFilter,
+            unknownContextKeyRecordFilter,
+          ],
+          fieldMetadataItems: [],
+          contextKeyRecordFilterConfig,
         }),
-        expect.objectContaining({
-          id: 'member-filter-id',
-          contextKey: 'currentWorkspaceMemberId',
-          type: 'RELATION',
-          label: '',
-          displayValue: memberRecordFilter.value,
+      ).toEqual({
+        recordFilters: [
+          expect.objectContaining({
+            id: 'context-key-filter-id',
+            contextKey: 'knownContextKey',
+            type: 'UUID',
+            label: '',
+            displayValue: contextKeyRecordFilter.value,
+          }),
+        ],
+        unresolvedRecordFilters: [
+          expect.objectContaining({ id: 'unknown-context-key-filter-id' }),
+        ],
+      });
+    });
+
+    it('should leave context key filters unresolved without a config', () => {
+      expect(
+        hydrateRecordFiltersFromFieldMetadata({
+          persistedRecordFilters: [contextKeyRecordFilter],
+          fieldMetadataItems: [],
         }),
-      ],
-      unresolvedRecordFilters: [],
+      ).toEqual({
+        recordFilters: [],
+        unresolvedRecordFilters: [
+          expect.objectContaining({ id: 'context-key-filter-id' }),
+        ],
+      });
     });
   });
 

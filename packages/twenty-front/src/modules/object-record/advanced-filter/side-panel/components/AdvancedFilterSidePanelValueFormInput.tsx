@@ -1,4 +1,3 @@
-import { ConditionalDisplayContextValueInput } from '@/conditional-display/components/ConditionalDisplayContextValueInput';
 import { fieldMetadataItemByIdSelector } from '@/object-metadata/states/fieldMetadataItemByIdSelector';
 import { formatFieldMetadataItemAsFieldDefinition } from '@/object-metadata/utils/formatFieldMetadataItemAsFieldDefinition';
 import { AdvancedFilterSidePanelValueFormCompositeFieldInput } from '@/object-record/advanced-filter/side-panel/components/AdvancedFilterSidePanelValueFormCompositeFieldInput';
@@ -45,6 +44,7 @@ export const AdvancedFilterSidePanelValueFormInput = ({
     VariablePicker,
     objectMetadataItem,
     isWorkflowFindRecords,
+    contextKeyRecordFilterConfig,
   } = useContext(AdvancedFilterContext);
 
   const currentRecordFilters = useAtomComponentStateValue(
@@ -140,14 +140,13 @@ export const AdvancedFilterSidePanelValueFormInput = ({
     recordFilter.operand === RecordFilterOperand.IS_RELATIVE;
 
   if (isDefined(recordFilter.contextKey)) {
-    if (operandHasNoInput) {
+    if (operandHasNoInput || !isDefined(contextKeyRecordFilterConfig)) {
       return null;
     }
 
     return (
-      <ConditionalDisplayContextValueInput
+      <contextKeyRecordFilterConfig.ValueInput
         recordFilter={recordFilter}
-        contextKey={recordFilter.contextKey}
         onChange={handleChange}
         readonly={readonly}
       />

@@ -1,5 +1,5 @@
-import { getConditionalDisplayContextRecordFilterType } from '@/conditional-display/utils/getConditionalDisplayContextRecordFilterType';
 import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
+import { type ContextKeyRecordFilterConfig } from '@/object-record/record-filter/types/ContextKeyRecordFilterConfig';
 import { type PersistedRecordFilter } from '@/object-record/record-filter/types/PersistedRecordFilter';
 import { type RecordFilter } from '@/object-record/record-filter/types/RecordFilter';
 import { getRecordFilterTypeAndLabelFromFieldMetadata } from '@/object-record/record-filter/utils/getRecordFilterTypeAndLabelFromFieldMetadata';
@@ -9,9 +9,11 @@ import { v4 } from 'uuid';
 export const hydrateRecordFiltersFromFieldMetadata = ({
   persistedRecordFilters,
   fieldMetadataItems,
+  contextKeyRecordFilterConfig,
 }: {
   persistedRecordFilters: PersistedRecordFilter[];
   fieldMetadataItems: FieldMetadataItem[];
+  contextKeyRecordFilterConfig?: ContextKeyRecordFilterConfig;
 }): {
   recordFilters: RecordFilter[];
   unresolvedRecordFilters: PersistedRecordFilter[];
@@ -36,12 +38,19 @@ export const hydrateRecordFiltersFromFieldMetadata = ({
     };
 
     if (isDefined(persistedRecordFilterWithId.contextKey)) {
+      const contextKeyField = contextKeyRecordFilterConfig?.getField(
+        persistedRecordFilterWithId.contextKey,
+      );
+
+      if (!isDefined(contextKeyField)) {
+        unresolvedRecordFilters.push(persistedRecordFilterWithId);
+        continue;
+      }
+
       recordFilters.push({
         ...persistedRecordFilterWithId,
         displayValue: persistedRecordFilterWithId.value,
-        type: getConditionalDisplayContextRecordFilterType(
-          persistedRecordFilterWithId.contextKey,
-        ),
+        type: contextKeyField.type,
         label: '',
       });
       continue;

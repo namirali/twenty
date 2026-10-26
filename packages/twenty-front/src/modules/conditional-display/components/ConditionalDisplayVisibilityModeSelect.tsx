@@ -1,6 +1,6 @@
+import { ConditionalDisplayEditorContext } from '@/conditional-display/contexts/ConditionalDisplayEditorContext';
 import { useAddConditionalDisplayRecordFilter } from '@/conditional-display/hooks/useAddConditionalDisplayRecordFilter';
 import { type ConditionalDisplayVisibilityMode } from '@/conditional-display/types/ConditionalDisplayVisibilityMode';
-import { AdvancedFilterContext } from '@/object-record/advanced-filter/states/context/AdvancedFilterContext';
 import { currentRecordFilterGroupsComponentState } from '@/object-record/record-filter-group/states/currentRecordFilterGroupsComponentState';
 import { currentRecordFiltersComponentState } from '@/object-record/record-filter/states/currentRecordFiltersComponentState';
 import { Select } from '@/ui/input/components/Select';
@@ -49,7 +49,7 @@ export const ConditionalDisplayVisibilityModeSelect = ({
 }: ConditionalDisplayVisibilityModeSelectProps) => {
   const { t } = useLingui();
 
-  const { availableContextKeys = [] } = useContext(AdvancedFilterContext);
+  const { availableContextKeys } = useContext(ConditionalDisplayEditorContext);
 
   const { addConditionalDisplayRecordFilter } =
     useAddConditionalDisplayRecordFilter();

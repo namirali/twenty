@@ -1,6 +1,5 @@
 import { type CompositeFieldSubFieldName } from '@/settings/data-model/types/CompositeFieldSubFieldName';
 import {
-  type ConditionalDisplayAdminContextKey,
   type FilterableAndTSVectorFieldType,
   type ViewFilterOperand,
 } from 'twenty-shared/types';
@@ -27,7 +26,7 @@ export type RecordFilter = {
   subFieldName?: CompositeFieldSubFieldName | null | undefined;
   relationTargetFieldMetadataId?: string | null;
   rlsDynamicValue?: RLSDynamicValue | null;
-  contextKey?: ConditionalDisplayAdminContextKey | null;
+  contextKey?: string | null;
 };
 
 export type RecordFilterToRecordInputOperand<

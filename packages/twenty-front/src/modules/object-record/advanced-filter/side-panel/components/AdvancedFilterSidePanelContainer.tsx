@@ -8,10 +8,10 @@ import { AdvancedFilterContext } from '@/object-record/advanced-filter/states/co
 import { rootLevelRecordFilterGroupComponentSelector } from '@/object-record/advanced-filter/states/rootLevelRecordFilterGroupComponentSelector';
 import { type FieldSelectLeadingSectionsComponent } from '@/object-record/advanced-filter/types/FieldSelectLeadingSectionsComponent';
 import { isRecordFilterGroupChildARecordFilterGroup } from '@/object-record/advanced-filter/utils/isRecordFilterGroupChildARecordFilterGroup';
+import { type ContextKeyRecordFilterConfig } from '@/object-record/record-filter/types/ContextKeyRecordFilterConfig';
 import { type VariablePickerComponent } from '@/ui/input/types/VariablePickerComponent';
 import { useAtomComponentSelectorValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentSelectorValue';
 import { styled } from '@linaria/react';
-import { type ConditionalDisplayAdminContextKey } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import { themeCssVariables } from 'twenty-ui/theme';
 
@@ -35,7 +35,7 @@ export type AdvancedFilterSidePanelContainerProps = {
   objectMetadataItem?: EnrichedObjectMetadataItem;
   VariablePicker?: VariablePickerComponent;
   FieldSelectLeadingSections?: FieldSelectLeadingSectionsComponent;
-  availableContextKeys?: ConditionalDisplayAdminContextKey[];
+  contextKeyRecordFilterConfig?: ContextKeyRecordFilterConfig;
   isWorkflowFindRecords?: boolean;
 };
 
@@ -45,7 +45,7 @@ export const AdvancedFilterSidePanelContainer = ({
   objectMetadataItem,
   VariablePicker,
   FieldSelectLeadingSections,
-  availableContextKeys,
+  contextKeyRecordFilterConfig,
   isWorkflowFindRecords,
 }: AdvancedFilterSidePanelContainerProps) => {
   const rootRecordFilterGroup = useAtomComponentSelectorValue(
@@ -65,7 +65,7 @@ export const AdvancedFilterSidePanelContainer = ({
         readonly,
         VariablePicker,
         FieldSelectLeadingSections,
-        availableContextKeys,
+        contextKeyRecordFilterConfig,
         objectMetadataItem,
       }}
     >

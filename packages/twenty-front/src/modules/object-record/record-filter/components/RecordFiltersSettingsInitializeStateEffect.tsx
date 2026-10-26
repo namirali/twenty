@@ -6,6 +6,7 @@ import { currentRecordFiltersComponentState } from '@/object-record/record-filte
 import { unresolvedRecordFiltersComponentState } from '@/object-record/record-filter/states/unresolvedRecordFiltersComponentState';
 import { hydrateRecordFiltersFromFieldMetadata } from '@/object-record/record-filter/utils/hydrateRecordFiltersFromFieldMetadata';
 import { hasInitializedRecordFiltersComponentState } from '@/object-record/record-filter/states/hasInitializedRecordFiltersComponentState';
+import { type ContextKeyRecordFilterConfig } from '@/object-record/record-filter/types/ContextKeyRecordFilterConfig';
 import { type RecordFiltersWithGroups } from '@/object-record/record-filter/types/RecordFiltersWithGroups';
 import { pointRecordFiltersAtMorphRelationFields } from '@/object-record/record-filter/utils/pointRecordFiltersAtMorphRelationFields';
 import { useAtomComponentState } from '@/ui/utilities/state/jotai/hooks/useAtomComponentState';
@@ -16,10 +17,12 @@ import { isDefined } from 'twenty-shared/utils';
 
 export type RecordFiltersSettingsInitializeStateEffectProps = {
   initialRecordFilters?: RecordFiltersWithGroups;
+  contextKeyRecordFilterConfig?: ContextKeyRecordFilterConfig;
 };
 
 export const RecordFiltersSettingsInitializeStateEffect = ({
   initialRecordFilters,
+  contextKeyRecordFilterConfig,
 }: RecordFiltersSettingsInitializeStateEffectProps) => {
   const [hasInitializedRecordFilters, setHasInitializedRecordFilters] =
     useAtomComponentState(hasInitializedRecordFiltersComponentState);
@@ -63,6 +66,7 @@ export const RecordFiltersSettingsInitializeStateEffect = ({
         hydrateRecordFiltersFromFieldMetadata({
           persistedRecordFilters,
           fieldMetadataItems: flattenedFieldMetadataItems,
+          contextKeyRecordFilterConfig,
         });
 
       setCurrentRecordFilters(recordFilters);
@@ -80,6 +84,7 @@ export const RecordFiltersSettingsInitializeStateEffect = ({
     hasInitializedRecordFilters,
     initialRecordFilters,
     flattenedFieldMetadataItems,
+    contextKeyRecordFilterConfig,
   ]);
 
   useEffect(() => {

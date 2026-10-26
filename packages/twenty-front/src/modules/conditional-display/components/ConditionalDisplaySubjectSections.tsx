@@ -1,9 +1,9 @@
+import { ConditionalDisplayEditorContext } from '@/conditional-display/contexts/ConditionalDisplayEditorContext';
 import { buildConditionalDisplayContextRecordFilter } from '@/conditional-display/utils/buildConditionalDisplayContextRecordFilter';
 import { getConditionalDisplayContextKeyIcon } from '@/conditional-display/utils/getConditionalDisplayContextKeyIcon';
 import { getConditionalDisplayContextKeyLabel } from '@/conditional-display/utils/getConditionalDisplayContextKeyLabel';
 import { useAdvancedFilterFieldSelectDropdown } from '@/object-record/advanced-filter/hooks/useAdvancedFilterFieldSelectDropdown';
 import { useSetRecordFilterUsedInAdvancedFilterDropdownRow } from '@/object-record/advanced-filter/hooks/useSetRecordFilterUsedInAdvancedFilterDropdownRow';
-import { AdvancedFilterContext } from '@/object-record/advanced-filter/states/context/AdvancedFilterContext';
 import { useUpsertRecordFilter } from '@/object-record/record-filter/hooks/useUpsertRecordFilter';
 import { currentRecordFiltersComponentState } from '@/object-record/record-filter/states/currentRecordFiltersComponentState';
 import { SelectOptionIcon } from '@/ui/input/components/SelectOptionIcon';
@@ -25,7 +25,7 @@ export const ConditionalDisplaySubjectSections = ({
 }: ConditionalDisplaySubjectSectionsProps) => {
   const { t } = useLingui();
 
-  const { availableContextKeys = [] } = useContext(AdvancedFilterContext);
+  const { availableContextKeys } = useContext(ConditionalDisplayEditorContext);
 
   const currentRecordFilters = useAtomComponentStateValue(
     currentRecordFiltersComponentState,
