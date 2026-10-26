@@ -1,9 +1,11 @@
 import { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from 'twenty-shared/constants';
 import { FieldMetadataType, ViewFilterOperand } from 'twenty-shared/types';
-import { compileConditionalAvailabilityExpression } from 'twenty-shared/utils';
+import {
+  compileConditionalAvailabilityExpression,
+  compileLegacyWidgetJsonLogic,
+} from 'twenty-shared/utils';
 
 import { migrateEngineGatesToConditionalDisplayTrees } from 'src/database/commands/upgrade-version-command/2-52/utils/migrate-engine-gates-to-conditional-display-trees.util';
-import { compileLegacyWidgetJsonLogic } from 'src/engine/metadata-modules/flat-conditional-display/utils/compile-legacy-widget-json-logic.util';
 
 const WORKSPACE_CUSTOM_APPLICATION_UNIVERSAL_IDENTIFIER =
   '11111111-1111-4111-8111-111111111111';

@@ -2,16 +2,16 @@ import { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from 'twenty-shared/constants';
 import { type ConditionalDisplay } from 'twenty-shared/types';
 import {
   compileConditionalAvailabilityExpression,
+  compileLegacyWidgetJsonLogic,
   fastDeepEqual,
   isDefined,
+  isLegacyJsonLogicConditionalDisplay,
   isPlainObject,
+  rewriteLegacyDeviceConditionalDisplay,
 } from 'twenty-shared/utils';
 
 import { LEGACY_WIDGET_DEVICE_VISIBILITIES } from 'src/database/commands/upgrade-version-command/2-52/constants/legacy-widget-device-visibilities.constant';
 import { type LegacyEngineGateExpressions } from 'src/database/commands/upgrade-version-command/2-52/types/legacy-engine-gate-expressions.type';
-import { compileLegacyWidgetJsonLogic } from 'src/engine/metadata-modules/flat-conditional-display/utils/compile-legacy-widget-json-logic.util';
-import { isLegacyJsonLogicConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/is-legacy-json-logic-conditional-display.util';
-import { rewriteLegacyDeviceConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/rewrite-legacy-device-conditional-display.util';
 import { type OverrideAuthorContext } from 'src/engine/metadata-modules/overrides/types/override-author-context.type';
 import { computeOverrideAuthorOrder } from 'src/engine/metadata-modules/overrides/utils/compute-override-author-order.util';
 import { dispatchUpdateToAuthoredOverride } from 'src/engine/metadata-modules/overrides/utils/dispatch-update-to-authored-override.util';

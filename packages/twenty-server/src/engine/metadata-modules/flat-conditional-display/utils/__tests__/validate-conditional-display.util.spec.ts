@@ -121,15 +121,22 @@ describe('validateConditionalDisplay', () => {
     ).toEqual([]);
   });
 
-  it('should reject a device rule on a command menu item', () => {
+  it('should accept a device rule on a command menu item', () => {
     expect(
       validate({
         conditionalDisplay: { recordFilters: [DEVICE_LEAF] },
         surface: 'commandMenuItem',
       }),
-    ).toEqual([
-      expect.objectContaining({ code: INVALID_DATA_CODE, value: 'device' }),
-    ]);
+    ).toEqual([]);
+  });
+
+  it('should accept a device rule on a navigation menu item', () => {
+    expect(
+      validate({
+        conditionalDisplay: { recordFilters: [DEVICE_LEAF] },
+        surface: 'navigationMenuItem',
+      }),
+    ).toEqual([]);
   });
 
   it('should reject a device value outside the allowed devices', () => {
