@@ -63,6 +63,7 @@ export { IANA_TIME_ZONES } from './IanaTimeZones';
 export { IMAGE_IDENTIFIER_FIELD_METADATA_TYPES } from './ImageIdentifierFieldMetadataTypes';
 export { INTERNAL_CREDITS_PER_DISPLAY_CREDIT } from './InternalCreditsPerDisplayCredit';
 export { LABEL_IDENTIFIER_FIELD_METADATA_TYPES } from './LabelIdentifierFieldMetadataTypes';
+export { LEGACY_DEVICE_CONDITIONAL_DISPLAY_REWRITES } from './LegacyDeviceConditionalDisplayRewrites';
 export { MAIL_SERVER_CERTIFICATE_INVALID_AUTH_FAILED_REASON } from './MailServerCertificateInvalidAuthFailedReason';
 export { MAX_ALLOWED_IFRAME_ORIGINS } from './MaxAllowedIframeOrigins';
 export { MAX_CORE_WORKFLOW_FILTER_RULES } from './MaxCoreWorkflowFilterRules';

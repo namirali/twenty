@@ -159,6 +159,8 @@ export { definePageLayoutWidget } from '@/sdk/define/page-layouts/define-page-la
 export type {
   PageLayoutConfig,
   PageLayoutTabConfig,
+  PageLayoutWidgetConfig,
+  StandalonePageLayoutWidgetConfig,
 } from '@/sdk/define/common/types/loose-shared-types.type';
 export {
   STANDARD_PAGE_LAYOUT_UNIVERSAL_IDENTIFIERS as STANDARD_PAGE_LAYOUT,

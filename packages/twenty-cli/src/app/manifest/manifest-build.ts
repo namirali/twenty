@@ -10,6 +10,7 @@ import {
 import { extractManifestFromFile } from '@/app/source/extract-manifest-from-file';
 import { addMissingFieldOptionIds } from '@/app/manifest/utils/add-missing-field-option-ids';
 import { fromCommandMenuItemConfigToCommandMenuItemManifest } from '@/app/manifest/utils/from-command-menu-item-config-to-command-menu-item-manifest';
+import { compilePageLayoutWidgetJsonLogic } from '@/app/manifest/utils/compile-page-layout-widget-json-logic';
 import { fromRoleConfigToRoleManifest } from '@/app/manifest/utils/from-role-config-to-role-manifest';
 import { extractFrontComponentSharedDependencies } from '@/app/manifest/utils/extract-front-component-shared-dependencies';
 import { validateConditionalAvailabilityUsage } from '@/app/manifest/utils/validate-conditional-availability-usage';
@@ -63,7 +64,11 @@ import {
   type ViewManifest,
   type WorkflowManifest,
 } from 'twenty-shared/application';
-import { assertUnreachable, isDefined } from 'twenty-shared/utils';
+import {
+  assertUnreachable,
+  isDefined,
+  isLegacyJsonLogicConditionalDisplay,
+} from 'twenty-shared/utils';
 
 const loadSources = (appPath: string): Promise<string[]> =>
   listApplicationSourceFiles(appPath);
@@ -576,6 +581,44 @@ export const buildManifest = async (
         }),
       );
     }
+  }
+
+  const widgetsWithFilePath = [
+    ...pageLayouts.flatMap((pageLayout, index) =>
+      (pageLayout.tabs ?? []).flatMap((tab) =>
+        (tab.widgets ?? []).map((widget) => ({
+          widget,
+          relativePath: pageLayoutsFilePaths[index],
+        })),
+      ),
+    ),
+    ...pageLayoutTabs.flatMap((tab, index) =>
+      (tab.widgets ?? []).map((widget) => ({
+        widget,
+        relativePath: pageLayoutTabsFilePaths[index],
+      })),
+    ),
+    ...pageLayoutWidgets.map((widget, index) => ({
+      widget,
+      relativePath: pageLayoutWidgetsFilePaths[index],
+    })),
+  ];
+
+  for (const { widget, relativePath } of widgetsWithFilePath) {
+    if (!isLegacyJsonLogicConditionalDisplay(widget.conditionalDisplay)) {
+      continue;
+    }
+
+    const { conditionalDisplay, errors: widgetErrors } =
+      compilePageLayoutWidgetJsonLogic({
+        widget,
+        objects,
+        fields,
+        relativePath,
+      });
+
+    widget.conditionalDisplay = conditionalDisplay;
+    errors.push(...widgetErrors);
   }
 
   if (postInstallLogicFunctions.length > 1) {

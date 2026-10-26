@@ -3,6 +3,7 @@ import type * as SharedTypes from 'twenty-shared/types';
 
 import { type ApplicationConfig as StrictApplicationConfig } from '@/sdk/define/application/application-config';
 import { type CommandMenuItemConfig as StrictCommandMenuItemConfig } from '@/sdk/define/command-menu-items/command-menu-item-config';
+import { type JsonLogicConditionalDisplay } from '@/sdk/define/common/types/json-logic-conditional-display.type';
 import { type LooseEnumValues } from '@/sdk/define/common/types/loose-enum-values.type';
 import { type FrontComponentConfig as StrictFrontComponentConfig } from '@/sdk/define/front-component/front-component-config';
 import { type SettingsFrontComponentConfig as StrictSettingsFrontComponentConfig } from '@/sdk/define/front-component/settings-front-component-config';
@@ -11,6 +12,8 @@ import { type HealthCheckLogicFunctionConfig as StrictHealthCheckLogicFunctionCo
 import { type LogicFunctionConfig as StrictLogicFunctionConfig } from '@/sdk/define/logic-functions/logic-function-config';
 import { type PageLayoutConfig as StrictPageLayoutConfig } from '@/sdk/define/page-layouts/page-layout-config';
 import { type PageLayoutTabConfig as StrictPageLayoutTabConfig } from '@/sdk/define/page-layouts/page-layout-tab-config';
+import { type PageLayoutWidgetConfig as StrictPageLayoutWidgetConfig } from '@/sdk/define/page-layouts/page-layout-widget-config';
+import { type StandalonePageLayoutWidgetConfig as StrictStandalonePageLayoutWidgetConfig } from '@/sdk/define/page-layouts/standalone-page-layout-widget-config';
 import { type PermissionFlagConfig as StrictPermissionFlagConfig } from '@/sdk/define/permission-flags/permission-flag-config';
 import { type SettingsMenuItemConfig as StrictSettingsMenuItemConfig } from '@/sdk/define/settings-menu-items/settings-menu-item-config';
 import { type TimelineActivityTypeConfig as StrictTimelineActivityTypeConfig } from '@/sdk/define/timeline-activity-types/timeline-activity-type-config';
@@ -46,7 +49,11 @@ export type PageLayoutTabManifest =
   LooseEnumValues<SharedApplication.PageLayoutTabManifest>;
 export type PageLayoutWidgetCanvasPosition =
   LooseEnumValues<SharedTypes.PageLayoutWidgetCanvasPosition>;
-export type PageLayoutWidgetConditionalDisplay = ConditionalDisplay;
+export type PageLayoutWidgetConditionalDisplay =
+  | ConditionalDisplay
+  | JsonLogicConditionalDisplay;
+export type PageLayoutWidgetConfig =
+  LooseEnumValues<StrictPageLayoutWidgetConfig>;
 export type PageLayoutWidgetGridPosition =
   LooseEnumValues<SharedTypes.PageLayoutWidgetGridPosition>;
 export type PageLayoutWidgetManifest =
@@ -72,6 +79,8 @@ export type SettingsMenuItemConfig =
   LooseEnumValues<StrictSettingsMenuItemConfig>;
 export type SettingsMenuItemManifest =
   LooseEnumValues<SharedApplication.SettingsMenuItemManifest>;
+export type StandalonePageLayoutWidgetConfig =
+  LooseEnumValues<StrictStandalonePageLayoutWidgetConfig>;
 export type StandalonePageLayoutWidgetManifest =
   LooseEnumValues<SharedApplication.StandalonePageLayoutWidgetManifest>;
 export type StandaloneViewFieldManifest =

@@ -7,6 +7,7 @@ import { type LogicFunctionConfig } from '@/sdk/define/logic-functions/logic-fun
 import { type ObjectConfig } from '@/sdk/define/objects/object-config';
 import { type PageLayoutConfig } from '@/sdk/define/page-layouts/page-layout-config';
 import { type PageLayoutTabConfig } from '@/sdk/define/page-layouts/page-layout-tab-config';
+import { type StandalonePageLayoutWidgetConfig } from '@/sdk/define/page-layouts/standalone-page-layout-widget-config';
 import { type PermissionFlagConfig } from '@/sdk/define/permission-flags/permission-flag-config';
 import { type ViewConfig } from '@/sdk/define/views/view-config';
 import { type PostInstallLogicFunctionConfig } from '@/sdk/define/logic-functions/post-install-logic-function-config';
@@ -20,7 +21,6 @@ import {
   type FieldManifest,
   type NavigationMenuItemManifest,
   type SkillManifest,
-  type StandalonePageLayoutWidgetManifest,
   type StandaloneViewFieldManifest,
   type WorkflowManifest,
 } from 'twenty-shared/application';
@@ -51,7 +51,7 @@ export type DefinableEntity =
   | NavigationMenuItemManifest
   | PageLayoutConfig
   | PageLayoutTabConfig
-  | StandalonePageLayoutWidgetManifest
+  | StandalonePageLayoutWidgetConfig
   | PermissionFlagConfig
   | CommandMenuItemConfig
   | SettingsMenuItemConfig

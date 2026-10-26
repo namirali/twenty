@@ -33,13 +33,16 @@ export { buildConditionalAvailabilityCompilationError } from './conditional-disp
 export { buildConditionalDisplayFromConditionNode } from './conditional-display/buildConditionalDisplayFromConditionNode';
 export { compileConditionalAvailabilityExpression } from './conditional-display/compileConditionalAvailabilityExpression';
 export { compileConditionalAvailabilityExpressionNode } from './conditional-display/compileConditionalAvailabilityExpressionNode';
+export { compileLegacyWidgetJsonLogic } from './conditional-display/compileLegacyWidgetJsonLogic';
 export { evaluateConditionalDisplay } from './conditional-display/evaluateConditionalDisplay';
 export { getConditionalDisplayContextVirtualField } from './conditional-display/getConditionalDisplayContextVirtualField';
 export { groupConditionalDisplayConditionNodes } from './conditional-display/groupConditionalDisplayConditionNodes';
 export { isConditionalDisplayAdminContextKey } from './conditional-display/isConditionalDisplayAdminContextKey';
 export { isConditionalDisplayContextKey } from './conditional-display/isConditionalDisplayContextKey';
 export { isConditionalDisplaySelectedRecordPathMatching } from './conditional-display/isConditionalDisplaySelectedRecordPathMatching';
+export { isLegacyJsonLogicConditionalDisplay } from './conditional-display/isLegacyJsonLogicConditionalDisplay';
 export { negateConditionalDisplayConditionNode } from './conditional-display/negateConditionalDisplayConditionNode';
+export { rewriteLegacyDeviceConditionalDisplay } from './conditional-display/rewriteLegacyDeviceConditionalDisplay';
 export { buildRecordExportColumns } from './csv/buildRecordExportColumns';
 export { expandRecordExportMorphFields } from './csv/expandRecordExportMorphFields';
 export { formatRecordExportHeader } from './csv/formatRecordExportHeader';
