@@ -1,18 +1,14 @@
 import { type ConditionalDisplay } from '@/types/conditional-display/ConditionalDisplay';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
-import { buildConditionalDisplayFromConditionNode } from '@/utils/conditional-display/buildConditionalDisplayFromConditionNode';
 
-export const NEVER_AVAILABLE_CONDITIONAL_DISPLAY: ConditionalDisplay =
-  Object.freeze(
-    buildConditionalDisplayFromConditionNode({
-      conditionNode: {
-        kind: 'recordFilter',
-        recordFilter: {
-          contextKey: 'selectedRecords',
-          subFieldName: 'id',
-          operand: ViewFilterOperand.IS_EMPTY,
-        },
+export const NEVER_AVAILABLE_CONDITIONAL_DISPLAY =
+  Object.freeze<ConditionalDisplay>({
+    recordFilters: [
+      {
+        id: '726bdff0-7606-565a-8be9-c8df5bcbe2c1',
+        contextKey: 'selectedRecords',
+        subFieldName: 'id',
+        operand: ViewFilterOperand.IS_EMPTY,
       },
-      source: 'false',
-    }),
-  );
+    ],
+  });
