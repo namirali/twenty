@@ -60,8 +60,9 @@ Câmpul `conditionalAvailabilityExpression` vă permite să controlați când es
 ```ts src/command-menu-items/bulk-update.command-menu-item.ts
 import {
   defineCommandMenuItem,
+  noneDefined,
   objectPermissions,
-  everyEquals,
+  selectedRecords,
 } from 'twenty-sdk/define';
 
 export default defineCommandMenuItem({
@@ -69,11 +70,9 @@ export default defineCommandMenuItem({
   label: 'Bulk Update',
   availabilityType: 'RECORD_SELECTION',
   frontComponentUniversalIdentifier: '...',
-  conditionalAvailabilityExpression: everyEquals(
-    objectPermissions,
-    'canUpdateObjectRecords',
-    true,
-  ),
+  conditionalAvailabilityExpression:
+    objectPermissions.canUpdateObjectRecords &&
+    noneDefined(selectedRecords, 'deletedAt'),
 });
 ```
 
@@ -81,13 +80,15 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` implică deja o selecție care nu este goală — folosește `numberOfSelectedRecords` doar pentru valori specifice (de ex. `>= 2`).
 </Note>
 
+Build-ul citește `conditionalAvailabilityExpression` și `conditionalPinnedExpression` din codul dumneavoastră și le compilează în arbori de condiții `conditionalAvailability` și `conditionalPinned`; manifestul generat conține doar acești arbori. Utilizarea greșită este o eroare de build care numește comanda și expresia: o variabilă necunoscută, o sintaxă diferită de variabile, `!`, `&&`, `||` și comparații, sau un operator de listă precum `everyEquals` aplicat altui argument decât `selectedRecords`. O aplicație construită cu un SDK mai vechi se instalează în continuare: Twenty îi convertește șirurile de expresii și înregistrează un avertisment care cere reconstruirea ei.
+
 ### Variabile de context
 
 Acestea reprezintă starea curentă a paginii:
 
 | Variabilă                      | Tip       | Descriere                                                              |
 | ------------------------------ | --------- | ---------------------------------------------------------------------- |
-| `pageType`                     | `string`  | Tipul paginii curente (de ex. `'RecordIndexPage'`, `'RecordShowPage'`) |
+| `pageType`                     | `string`  | Tipul paginii curente (de ex. `'INDEX_PAGE'`, `'RECORD_PAGE'`) |
 | `isInSidePanel`                | `boolean` | Dacă componenta este redată într-un panou lateral                      |
 | `numberOfSelectedRecords`      | `number`  | Numărul de înregistrări selectate în prezent                           |
 | `isSelectAll`                  | `boolean` | Dacă "select all" este activ                                           |
@@ -107,7 +108,7 @@ Combinați variabilele în expresii booleene:
 | Operator                            | Descriere                                                               |
 | ----------------------------------- | ----------------------------------------------------------------------- |
 | `isDefined(value)`                  | `true` dacă valoarea nu este null/undefined                             |
-| `isNonEmptyString(value)`           | `true` dacă o valoare text din context (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) este un șir nevid |
+| `isNonEmptyString(value)`           | `true` dacă o valoare text din context (`pageType`, `objectMetadataItem.nameSingular`) este un șir nevid |
 | `includes(list, value)`             | `true` dacă o valoare text din context este una dintre valorile listate, de ex. `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true` dacă proprietatea fiecărui element include valoarea              |
 | `every(array, prop)`                | `true` dacă proprietatea este truthy pentru fiecare element             |

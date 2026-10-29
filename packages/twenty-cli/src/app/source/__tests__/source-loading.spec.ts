@@ -172,13 +172,11 @@ describe('CLI app source loading', () => {
     });
 
     expect(result.config.conditionalAvailabilityExpression).toEqual({
-      expression: 'numberOfSelectedRecords === 1 && !isSelectAll',
       conditionalDisplay: compileConditionalAvailabilityExpression(
         'numberOfSelectedRecords == 1 and not isSelectAll',
       ),
     });
     expect(result.config.conditionalPinnedExpression).toEqual({
-      expression: 'selectedRecords.length === 1 && !isSelected',
       errorMessage: expect.stringContaining(
         'unsupported member "length" of variable "selectedRecords"',
       ),

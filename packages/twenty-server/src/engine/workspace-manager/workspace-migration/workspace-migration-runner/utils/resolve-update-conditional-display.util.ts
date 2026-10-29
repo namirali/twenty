@@ -1,10 +1,10 @@
 import {
-  type ConditionalDisplayProperty,
   type ConditionalDisplaySurface,
   type UniversalConditionalDisplay,
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
+import { type ConditionalDisplayProperty } from 'src/engine/metadata-modules/flat-conditional-display/types/conditional-display-property.type';
 import { type UniversalConditionalDisplayPropertyName } from 'src/engine/metadata-modules/flat-conditional-display/types/universal-conditional-display-property-name.type';
 import { ALL_ENTITY_PROPERTIES_CONFIGURATION_BY_METADATA_NAME } from 'src/engine/metadata-modules/flat-entity/constant/all-entity-properties-configuration-by-metadata-name.constant';
 import {

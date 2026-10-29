@@ -55,8 +55,9 @@ Mit dem Feld `conditionalAvailabilityExpression` können Sie basierend auf dem a
 ```ts src/command-menu-items/bulk-update.command-menu-item.ts
 import {
   defineCommandMenuItem,
+  noneDefined,
   objectPermissions,
-  everyEquals,
+  selectedRecords,
 } from 'twenty-sdk/define';
 
 export default defineCommandMenuItem({
@@ -64,11 +65,9 @@ export default defineCommandMenuItem({
   label: 'Bulk Update',
   availabilityType: 'RECORD_SELECTION',
   frontComponentUniversalIdentifier: '...',
-  conditionalAvailabilityExpression: everyEquals(
-    objectPermissions,
-    'canUpdateObjectRecords',
-    true,
-  ),
+  conditionalAvailabilityExpression:
+    objectPermissions.canUpdateObjectRecords &&
+    noneDefined(selectedRecords, 'deletedAt'),
 });
 ```
 
@@ -76,13 +75,15 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` impliziert bereits eine nichtleere Auswahl — verwende `numberOfSelectedRecords` nur für bestimmte Zählwerte (z. B. `>= 2`).
 </Note>
 
+Der Build liest `conditionalAvailabilityExpression` und `conditionalPinnedExpression` aus Ihrem Code und kompiliert sie zu den Bedingungsbäumen `conditionalAvailability` und `conditionalPinned`; das gebaute Manifest enthält nur diese Bäume. Eine fehlerhafte Verwendung ist ein Build-Fehler, der den Befehl und den Ausdruck nennt: eine unbekannte Variable, andere Syntax als Variablen, `!`, `&&`, `||` und Vergleiche, oder ein Listenoperator wie `everyEquals`, der auf etwas anderes als `selectedRecords` angewendet wird. Eine mit einem älteren SDK gebaute App lässt sich weiterhin installieren: Twenty konvertiert ihre Ausdrucks-Strings und protokolliert eine Warnung, die zum Neubauen auffordert.
+
 ### Kontextvariablen
 
 Diese repräsentieren den aktuellen Zustand der Seite:
 
 | Variable                       | Typ       | Beschreibung                                                    |
 | ------------------------------ | --------- | --------------------------------------------------------------- |
-| `pageType`                     | `string`  | Aktueller Seitentyp (z. B. 'RecordIndexPage', 'RecordShowPage') |
+| `pageType`                     | `string`  | Aktueller Seitentyp (z. B. 'INDEX_PAGE', 'RECORD_PAGE') |
 | `isInSidePanel`                | `boolean` | Ob die Komponente in einem Seitenpanel gerendert wird           |
 | `numberOfSelectedRecords`      | `number`  | Anzahl der aktuell ausgewählten Datensätze                      |
 | `isSelectAll`                  | `boolean` | Ob „Alle auswählen“ aktiv ist                                   |
@@ -102,7 +103,7 @@ Kombinieren Sie Variablen zu booleschen Ausdrücken:
 | Operator                            | Beschreibung                                                                                |
 | ----------------------------------- | ------------------------------------------------------------------------------------------- |
 | `isDefined(value)`                  | `true`, wenn der Wert nicht null/undefined ist                                              |
-| `isNonEmptyString(value)`           | `true`, wenn ein Text-Kontextwert (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) eine nicht leere Zeichenfolge ist |
+| `isNonEmptyString(value)`           | `true`, wenn ein Text-Kontextwert (`pageType`, `objectMetadataItem.nameSingular`) eine nicht leere Zeichenfolge ist |
 | `includes(list, value)`             | `true`, wenn ein Text-Kontextwert einer der aufgeführten Werte ist, z. B. `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true`, wenn die Eigenschaft jedes Elements den Wert enthält                                |
 | `every(array, prop)`                | `true`, wenn die Eigenschaft bei jedem Element truthy ist                                   |

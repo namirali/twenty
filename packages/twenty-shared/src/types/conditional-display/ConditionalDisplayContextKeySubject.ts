@@ -1,10 +1,10 @@
 import { type ConditionalDisplayVirtualField } from './ConditionalDisplayVirtualField';
 
 export type ConditionalDisplayContextKeySubject =
-  | { kind: 'VALUE'; field: ConditionalDisplayVirtualField }
-  | { kind: 'MAP_ENTRY'; entryField: ConditionalDisplayVirtualField }
+  | { kind: 'value'; field: ConditionalDisplayVirtualField }
+  | { kind: 'mapEntry'; entryField: ConditionalDisplayVirtualField }
   | {
-      kind: 'PROPERTY';
+      kind: 'property';
       propertyFields: Record<string, ConditionalDisplayVirtualField>;
     }
-  | { kind: 'SELECTED_RECORD_PATH' };
+  | { kind: 'selectedRecordPath' };

@@ -60,8 +60,9 @@ export default defineCommandMenuItem({
 ```ts src/command-menu-items/bulk-update.command-menu-item.ts
 import {
   defineCommandMenuItem,
+  noneDefined,
   objectPermissions,
-  everyEquals,
+  selectedRecords,
 } from 'twenty-sdk/define';
 
 export default defineCommandMenuItem({
@@ -69,11 +70,9 @@ export default defineCommandMenuItem({
   label: 'Bulk Update',
   availabilityType: 'RECORD_SELECTION',
   frontComponentUniversalIdentifier: '...',
-  conditionalAvailabilityExpression: everyEquals(
-    objectPermissions,
-    'canUpdateObjectRecords',
-    true,
-  ),
+  conditionalAvailabilityExpression:
+    objectPermissions.canUpdateObjectRecords &&
+    noneDefined(selectedRecords, 'deletedAt'),
 });
 ```
 
@@ -81,13 +80,15 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` уже подразумевает, что есть выбранные записи — используйте `numberOfSelectedRecords` только для конкретных количеств (например, `>= 2`).
 </Note>
 
+При сборке `conditionalAvailabilityExpression` и `conditionalPinnedExpression` считываются из вашего кода и компилируются в деревья условий `conditionalAvailability` и `conditionalPinned`; собранный манифест содержит только эти деревья. Неправильное использование приводит к ошибке сборки с указанием команды и выражения: неизвестная переменная, синтаксис, отличный от переменных, `!`, `&&`, `||` и сравнений, или оператор списка, например `everyEquals`, применённый к чему-либо, кроме `selectedRecords`. Приложение, собранное более старой версией SDK, по-прежнему устанавливается: Twenty преобразует его строки выражений и записывает в журнал предупреждение с просьбой пересобрать приложение.
+
 ### Переменные контекста
 
 Они представляют текущее состояние страницы:
 
 | Переменная                     | Тип       | Описание                                                                 |
 | ------------------------------ | --------- | ------------------------------------------------------------------------ |
-| `pageType`                     | `string`  | Текущий тип страницы (например, `'RecordIndexPage'`, `'RecordShowPage'`) |
+| `pageType`                     | `string`  | Текущий тип страницы (например, `'INDEX_PAGE'`, `'RECORD_PAGE'`) |
 | `isInSidePanel`                | `boolean` | Указывает, рендерится ли компонент в боковой панели                      |
 | `numberOfSelectedRecords`      | `number`  | Количество выбранных в данный момент записей                             |
 | `isSelectAll`                  | `boolean` | Активен ли режим "выбрать все"                                           |
@@ -107,7 +108,7 @@ export default defineCommandMenuItem({
 | Оператор                            | Описание                                                                  |
 | ----------------------------------- | ------------------------------------------------------------------------- |
 | `isDefined(value)`                  | `true`, если значение не null/undefined                                   |
-| `isNonEmptyString(value)`           | `true`, если текстовое значение контекста (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) является непустой строкой |
+| `isNonEmptyString(value)`           | `true`, если текстовое значение контекста (`pageType`, `objectMetadataItem.nameSingular`) является непустой строкой |
 | `includes(list, value)`             | `true`, если текстовое значение контекста входит в перечисленные значения, например `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true`, если свойство каждого элемента включает значение                  |
 | `every(array, prop)`                | `true`, если свойство истинно для каждого элемента                        |

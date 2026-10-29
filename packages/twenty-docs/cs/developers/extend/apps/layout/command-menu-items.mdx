@@ -55,8 +55,9 @@ Pole `conditionalAvailabilityExpression` vám umožní řídit viditelnost pří
 ```ts src/command-menu-items/bulk-update.command-menu-item.ts
 import {
   defineCommandMenuItem,
+  noneDefined,
   objectPermissions,
-  everyEquals,
+  selectedRecords,
 } from 'twenty-sdk/define';
 
 export default defineCommandMenuItem({
@@ -64,11 +65,9 @@ export default defineCommandMenuItem({
   label: 'Bulk Update',
   availabilityType: 'RECORD_SELECTION',
   frontComponentUniversalIdentifier: '...',
-  conditionalAvailabilityExpression: everyEquals(
-    objectPermissions,
-    'canUpdateObjectRecords',
-    true,
-  ),
+  conditionalAvailabilityExpression:
+    objectPermissions.canUpdateObjectRecords &&
+    noneDefined(selectedRecords, 'deletedAt'),
 });
 ```
 
@@ -76,13 +75,15 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` již znamená neprázdný výběr — použijte `numberOfSelectedRecords` pouze pro konkrétní počty (např. `>= 2`).
 </Note>
 
+Build načte `conditionalAvailabilityExpression` a `conditionalPinnedExpression` z vašeho kódu a zkompiluje je do stromů podmínek `conditionalAvailability` a `conditionalPinned`; sestavený manifest obsahuje pouze tyto stromy. Nesprávné použití je chybou buildu, která uvádí příkaz a výraz: neznámá proměnná, jiná syntaxe než proměnné, `!`, `&&`, `||` a porovnání, nebo operátor seznamu jako `everyEquals` použitý na cokoli jiného než `selectedRecords`. Aplikace sestavená starší verzí SDK se stále nainstaluje: Twenty převede její řetězce výrazů a zapíše do logu varování s výzvou k novému sestavení.
+
 ### Kontextové proměnné
 
 Tyto proměnné reprezentují aktuální stav stránky:
 
 | Proměnná                       | Typ       | Popis                                                                |
 | ------------------------------ | --------- | -------------------------------------------------------------------- |
-| `pageType`                     | `string`  | Aktuální typ stránky (např. `'RecordIndexPage'`, `'RecordShowPage'`) |
+| `pageType`                     | `string`  | Aktuální typ stránky (např. `'INDEX_PAGE'`, `'RECORD_PAGE'`) |
 | `isInSidePanel`                | `boolean` | Zda je komponenta vykreslena v postranním panelu                     |
 | `numberOfSelectedRecords`      | `number`  | Počet aktuálně vybraných záznamů                                     |
 | `isSelectAll`                  | `boolean` | Zda je aktivní "vybrat vše"                                          |
@@ -102,7 +103,7 @@ Kombinujte proměnné do logických výrazů:
 | Operátor                            | Popis                                                                          |
 | ----------------------------------- | ------------------------------------------------------------------------------ |
 | `isDefined(value)`                  | `true`, pokud hodnota není null/undefined                                      |
-| `isNonEmptyString(value)`           | `true`, pokud je textová hodnota kontextu (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) neprázdným řetězcem |
+| `isNonEmptyString(value)`           | `true`, pokud je textová hodnota kontextu (`pageType`, `objectMetadataItem.nameSingular`) neprázdným řetězcem |
 | `includes(list, value)`             | `true`, pokud je textová hodnota kontextu jednou z uvedených hodnot, např. `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true`, pokud vlastnost každé položky zahrnuje danou hodnotu                   |
 | `every(array, prop)`                | `true`, pokud je vlastnost u každé položky pravdivá (truthy)                   |

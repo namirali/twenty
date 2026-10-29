@@ -1,10 +1,10 @@
 import { isDefined } from 'twenty-shared/utils';
 
-import { type PageLayoutWidgetConfig } from '@/sdk/define/common/types/loose-shared-types.type';
+import { type PageLayoutWidgetManifest } from '@/sdk/define/common/types/loose-shared-types.type';
 import { isValidPostgresUuid } from '@/sdk/define/common/utils/is-valid-postgres-uuid';
 
 export const validatePageLayoutWidget = (
-  widget: PageLayoutWidgetConfig,
+  widget: PageLayoutWidgetManifest,
 ): string[] => {
   const errors: string[] = [];
 

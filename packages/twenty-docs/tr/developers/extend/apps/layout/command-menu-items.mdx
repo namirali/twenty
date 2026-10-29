@@ -55,8 +55,9 @@ export default defineCommandMenuItem({
 ```ts src/command-menu-items/bulk-update.command-menu-item.ts
 import {
   defineCommandMenuItem,
+  noneDefined,
   objectPermissions,
-  everyEquals,
+  selectedRecords,
 } from 'twenty-sdk/define';
 
 export default defineCommandMenuItem({
@@ -64,11 +65,9 @@ export default defineCommandMenuItem({
   label: 'Bulk Update',
   availabilityType: 'RECORD_SELECTION',
   frontComponentUniversalIdentifier: '...',
-  conditionalAvailabilityExpression: everyEquals(
-    objectPermissions,
-    'canUpdateObjectRecords',
-    true,
-  ),
+  conditionalAvailabilityExpression:
+    objectPermissions.canUpdateObjectRecords &&
+    noneDefined(selectedRecords, 'deletedAt'),
 });
 ```
 
@@ -76,13 +75,15 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` zaten boş olmayan bir seçim anlamına gelir — `numberOfSelectedRecords` ifadesini yalnızca belirli sayılar için kullanın (örneğin `>= 2`).
 </Note>
 
+Derleme, `conditionalAvailabilityExpression` ve `conditionalPinnedExpression` ifadelerini kodunuzdan okur ve bunları `conditionalAvailability` ve `conditionalPinned` koşul ağaçlarına derler; oluşturulan manifest yalnızca bu ağaçları içerir. Hatalı kullanım, komutu ve ifadeyi belirten bir derleme hatasıdır: bilinmeyen bir değişken, değişkenler, `!`, `&&`, `||` ve karşılaştırmalar dışında bir söz dizimi ya da `everyEquals` gibi bir liste operatörünün `selectedRecords` dışında bir şeye uygulanması. Daha eski bir SDK ile derlenmiş bir uygulama yine de yüklenir: Twenty, uygulamanın ifade dizelerini dönüştürür ve yeniden derlenmesini isteyen bir uyarıyı günlüğe kaydeder.
+
 ### Bağlam değişkenleri
 
 Bunlar sayfanın mevcut durumunu temsil eder:
 
 | Değişken                       | Tür       | Açıklama                                                          |
 | ------------------------------ | --------- | ----------------------------------------------------------------- |
-| `pageType`                     | `string`  | Geçerli sayfa türü (örn. `'RecordIndexPage'`, `'RecordShowPage'`) |
+| `pageType`                     | `string`  | Geçerli sayfa türü (örn. `'INDEX_PAGE'`, `'RECORD_PAGE'`) |
 | `isInSidePanel`                | `boolean` | Bileşenin bir yan panelde oluşturulup oluşturulmadığı             |
 | `numberOfSelectedRecords`      | `number`  | Şu anda seçili kayıt sayısı                                       |
 | `isSelectAll`                  | `boolean` | "tümünü seç" seçeneğinin etkin olup olmadığı                      |
@@ -102,7 +103,7 @@ Değişkenleri boolean ifadelere dönüştürmek için birleştirin:
 | Operatör                            | Açıklama                                                  |
 | ----------------------------------- | --------------------------------------------------------- |
 | `isDefined(value)`                  | Değer null/undefined değilse `true`                       |
-| `isNonEmptyString(value)`           | Metin türündeki bir bağlam değeri (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) boş olmayan bir string ise `true` |
+| `isNonEmptyString(value)`           | Metin türündeki bir bağlam değeri (`pageType`, `objectMetadataItem.nameSingular`) boş olmayan bir string ise `true` |
 | `includes(list, value)`             | Metin türündeki bir bağlam değeri listelenen değerlerden biriyse `true`, örn. `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | Her bir öğenin özelliği değeri içeriyorsa `true`          |
 | `every(array, prop)`                | Özellik her öğede truthy ise `true`                       |

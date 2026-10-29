@@ -1,82 +1,14 @@
 import { type CommandMenuItemConfig } from '@/app/manifest/types/command-menu-item-config.type';
-import { type CompiledConditionExpression } from '@/app/source/types/compiled-condition-expression.type';
-import { isString } from '@sniptt/guards';
+import { compileCommandMenuItemConditionExpression } from '@/app/manifest/utils/compile-command-menu-item-condition-expression';
 import { type CommandMenuItemManifest } from 'twenty-shared/application';
-import { type UniversalConditionalDisplay } from 'twenty-shared/types';
-import {
-  compileConditionalAvailabilityExpression,
-  isDefined,
-} from 'twenty-shared/utils';
-
-const compileExpressionConfig = ({
-  expression,
-  configKey,
-  manifestKey,
-  label,
-  relativePath,
-}: {
-  expression: string | CompiledConditionExpression | undefined;
-  configKey:
-    | 'conditionalAvailabilityExpression'
-    | 'conditionalPinnedExpression';
-  manifestKey: 'conditionalAvailability' | 'conditionalPinned';
-  label: string;
-  relativePath: string;
-}): {
-  conditionalDisplay: UniversalConditionalDisplay | undefined;
-  errors: string[];
-  warnings: string[];
-} => {
-  if (!isDefined(expression)) {
-    return { conditionalDisplay: undefined, errors: [], warnings: [] };
-  }
-
-  const describedExpression = `${relativePath} - ${configKey} of command menu item "${label}"`;
-
-  if (!isString(expression)) {
-    return 'errorMessage' in expression
-      ? {
-          conditionalDisplay: undefined,
-          errors: [
-            `${describedExpression} cannot be compiled into a ${manifestKey} tree: ${expression.errorMessage}`,
-          ],
-          warnings: [],
-        }
-      : {
-          conditionalDisplay: expression.conditionalDisplay ?? undefined,
-          errors: [],
-          warnings: [],
-        };
-  }
-
-  const warnings = [
-    `${describedExpression} is a formula string; write it as code (for example numberOfSelectedRecords === 1) so the build can check it.`,
-  ];
-
-  try {
-    return {
-      conditionalDisplay:
-        compileConditionalAvailabilityExpression(expression) ?? undefined,
-      errors: [],
-      warnings,
-    };
-  } catch (error) {
-    return {
-      conditionalDisplay: undefined,
-      errors: [
-        `${describedExpression} cannot be compiled into a ${manifestKey} tree: ${error instanceof Error ? error.message : String(error)}`,
-      ],
-      warnings,
-    };
-  }
-};
+import { isDefined } from 'twenty-shared/utils';
 
 export const fromCommandMenuItemConfigToCommandMenuItemManifest = ({
   commandMenuItemConfig,
-  relativePath,
+  sourcePath,
 }: {
   commandMenuItemConfig: CommandMenuItemConfig;
-  relativePath: string;
+  sourcePath: string;
 }): {
   commandMenuItemManifest: CommandMenuItemManifest;
   errors: string[];
@@ -91,20 +23,16 @@ export const fromCommandMenuItemConfigToCommandMenuItemManifest = ({
   const commandMenuItemManifest: CommandMenuItemManifest =
     commandMenuItemProperties;
 
-  const conditionalAvailability = compileExpressionConfig({
+  const conditionalAvailability = compileCommandMenuItemConditionExpression({
     expression: conditionalAvailabilityExpression,
-    configKey: 'conditionalAvailabilityExpression',
+    expressionDescription: `${sourcePath}: conditionalAvailabilityExpression of command menu item "${commandMenuItemConfig.label}"`,
     manifestKey: 'conditionalAvailability',
-    label: commandMenuItemConfig.label,
-    relativePath,
   });
 
-  const conditionalPinned = compileExpressionConfig({
+  const conditionalPinned = compileCommandMenuItemConditionExpression({
     expression: conditionalPinnedExpression,
-    configKey: 'conditionalPinnedExpression',
+    expressionDescription: `${sourcePath}: conditionalPinnedExpression of command menu item "${commandMenuItemConfig.label}"`,
     manifestKey: 'conditionalPinned',
-    label: commandMenuItemConfig.label,
-    relativePath,
   });
 
   if (isDefined(conditionalAvailability.conditionalDisplay)) {

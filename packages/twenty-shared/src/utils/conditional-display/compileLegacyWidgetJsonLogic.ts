@@ -1,130 +1,21 @@
-import {
-  isArray,
-  isBoolean,
-  isNonEmptyArray,
-  isNonEmptyString,
-  isNumber,
-  isString,
-} from '@sniptt/guards';
+import { isArray, isNonEmptyArray } from '@sniptt/guards';
 
+import { LEGACY_WIDGET_JSON_LOGIC_SELECTED_RECORD_FIELD_VARIABLE_PATTERN } from '@/constants/LegacyWidgetJsonLogicSelectedRecordFieldVariablePattern';
 import { type ConditionalDisplay } from '@/types/conditional-display/ConditionalDisplay';
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
-import { FieldMetadataType } from '@/types/FieldMetadataType';
+import { type LegacyWidgetJsonLogicField } from '@/types/conditional-display/LegacyWidgetJsonLogicField';
 import { RecordFilterGroupLogicalOperator } from '@/types/RecordFilterGroupLogicalOperator';
-import { ViewFilterOperand } from '@/types/ViewFilterOperand';
 import { buildConditionalDisplayFromConditionNode } from '@/utils/conditional-display/buildConditionalDisplayFromConditionNode';
 import { groupConditionalDisplayConditionNodes } from '@/utils/conditional-display/groupConditionalDisplayConditionNodes';
+import { compileLegacyWidgetJsonLogicDeviceEquality } from '@/utils/conditional-display/internal/compileLegacyWidgetJsonLogicDeviceEquality';
+import { compileLegacyWidgetJsonLogicFieldEquality } from '@/utils/conditional-display/internal/compileLegacyWidgetJsonLogicFieldEquality';
+import { compileLegacyWidgetJsonLogicFieldInclusion } from '@/utils/conditional-display/internal/compileLegacyWidgetJsonLogicFieldInclusion';
+import { getLegacyWidgetJsonLogicEqualityOperand } from '@/utils/conditional-display/internal/getLegacyWidgetJsonLogicEqualityOperand';
+import { getLegacyWidgetJsonLogicSingleEntry } from '@/utils/conditional-display/internal/getLegacyWidgetJsonLogicSingleEntry';
+import { getLegacyWidgetJsonLogicVariableName } from '@/utils/conditional-display/internal/getLegacyWidgetJsonLogicVariableName';
+import { isLegacyWidgetJsonLogicLiteral } from '@/utils/conditional-display/internal/isLegacyWidgetJsonLogicLiteral';
 import { negateConditionalDisplayConditionNode } from '@/utils/conditional-display/negateConditionalDisplayConditionNode';
-import { rewriteLegacyDeviceConditionalDisplay } from '@/utils/conditional-display/rewriteLegacyDeviceConditionalDisplay';
-import { isPlainObject } from '@/utils/typeguard/isPlainObject';
 import { isDefined } from '@/utils/validation/isDefined';
-
-type LegacyWidgetJsonLogicField = {
-  fieldMetadataId: string;
-  type: FieldMetadataType;
-};
-
-type JsonLogicLiteral = string | number | boolean;
-
-const SELECTED_RECORD_FIELD_VARIABLE_PATTERN =
-  /^selectedRecords\.0\.([a-zA-Z_][a-zA-Z0-9_]*)$/;
-
-const isConditionalDisplay = (value: unknown): value is ConditionalDisplay =>
-  isPlainObject(value) && isArray(value.recordFilters);
-
-const getSingleEntry = (node: unknown): [string, unknown] | undefined => {
-  if (!isPlainObject(node)) {
-    return undefined;
-  }
-
-  const [entry, ...otherEntries] = Object.entries(node);
-
-  return otherEntries.length === 0 ? entry : undefined;
-};
-
-const getVariableName = (operand: unknown): string | undefined => {
-  const entry = getSingleEntry(operand);
-
-  return entry?.[0] === 'var' && isNonEmptyString(entry[1])
-    ? entry[1]
-    : undefined;
-};
-
-const isJsonLogicLiteral = (value: unknown): value is JsonLogicLiteral =>
-  isString(value) || isNumber(value) || isBoolean(value);
-
-const getEqualityOperand = (
-  operator: string,
-): ViewFilterOperand | undefined => {
-  switch (operator) {
-    case '==':
-    case '===':
-      return ViewFilterOperand.IS;
-    case '!=':
-    case '!==':
-      return ViewFilterOperand.IS_NOT;
-    default:
-      return undefined;
-  }
-};
-
-const compileSelectedRecordFieldEquality = ({
-  field,
-  operand,
-  literal,
-}: {
-  field: LegacyWidgetJsonLogicField;
-  operand: ViewFilterOperand;
-  literal: JsonLogicLiteral;
-}): ConditionalDisplayConditionNode | undefined => {
-  if (field.type !== FieldMetadataType.SELECT || !isString(literal)) {
-    return undefined;
-  }
-
-  return {
-    kind: 'recordFilter',
-    recordFilter: {
-      fieldMetadataId: field.fieldMetadataId,
-      operand,
-      value: JSON.stringify([literal]),
-    },
-  };
-};
-
-const compileSelectedRecordFieldInclusion = ({
-  field,
-  literal,
-}: {
-  field: LegacyWidgetJsonLogicField;
-  literal: JsonLogicLiteral;
-}): ConditionalDisplayConditionNode | undefined => {
-  if (!isString(literal)) {
-    return undefined;
-  }
-
-  switch (field.type) {
-    case FieldMetadataType.MULTI_SELECT:
-      return {
-        kind: 'recordFilter',
-        recordFilter: {
-          fieldMetadataId: field.fieldMetadataId,
-          operand: ViewFilterOperand.CONTAINS,
-          value: JSON.stringify([literal]),
-        },
-      };
-    case FieldMetadataType.SELECT:
-      return {
-        kind: 'recordFilter',
-        recordFilter: {
-          fieldMetadataId: field.fieldMetadataId,
-          operand: ViewFilterOperand.IS,
-          value: JSON.stringify([literal]),
-        },
-      };
-    default:
-      return undefined;
-  }
-};
 
 export const compileLegacyWidgetJsonLogic = ({
   jsonLogic,
@@ -133,16 +24,6 @@ export const compileLegacyWidgetJsonLogic = ({
   jsonLogic: unknown;
   resolveField: (fieldName: string) => LegacyWidgetJsonLogicField | undefined;
 }): ConditionalDisplay => {
-  const deviceConditionalDisplay =
-    rewriteLegacyDeviceConditionalDisplay(jsonLogic);
-
-  if (
-    deviceConditionalDisplay !== jsonLogic &&
-    isConditionalDisplay(deviceConditionalDisplay)
-  ) {
-    return deviceConditionalDisplay;
-  }
-
   const buildConversionError = (reason: string) =>
     new Error(
       `Cannot convert legacy widget json-logic ${JSON.stringify(jsonLogic)}: ${reason}`,
@@ -152,7 +33,9 @@ export const compileLegacyWidgetJsonLogic = ({
     variableName: string,
   ): LegacyWidgetJsonLogicField | undefined => {
     const fieldName =
-      SELECTED_RECORD_FIELD_VARIABLE_PATTERN.exec(variableName)?.[1];
+      LEGACY_WIDGET_JSON_LOGIC_SELECTED_RECORD_FIELD_VARIABLE_PATTERN.exec(
+        variableName,
+      )?.[1];
 
     if (!isDefined(fieldName)) {
       return undefined;
@@ -181,31 +64,41 @@ export const compileLegacyWidgetJsonLogic = ({
     const [firstOperand, secondOperand] = operands;
 
     if (operator === 'in') {
-      const variableName = getVariableName(secondOperand);
+      const variableName = getLegacyWidgetJsonLogicVariableName(secondOperand);
       const field = isDefined(variableName)
         ? resolveSelectedRecordField(variableName)
         : undefined;
 
-      return isDefined(field) && isJsonLogicLiteral(firstOperand)
-        ? compileSelectedRecordFieldInclusion({ field, literal: firstOperand })
+      return isDefined(field) && isLegacyWidgetJsonLogicLiteral(firstOperand)
+        ? compileLegacyWidgetJsonLogicFieldInclusion({
+            field,
+            literal: firstOperand,
+          })
         : undefined;
     }
 
-    const operand = getEqualityOperand(operator);
-    const variableName = getVariableName(firstOperand);
+    const operand = getLegacyWidgetJsonLogicEqualityOperand(operator);
+    const variableName = getLegacyWidgetJsonLogicVariableName(firstOperand);
 
     if (
       !isDefined(operand) ||
       !isDefined(variableName) ||
-      !isJsonLogicLiteral(secondOperand)
+      !isLegacyWidgetJsonLogicLiteral(secondOperand)
     ) {
       return undefined;
+    }
+
+    if (variableName === 'device') {
+      return compileLegacyWidgetJsonLogicDeviceEquality({
+        operand,
+        literal: secondOperand,
+      });
     }
 
     const field = resolveSelectedRecordField(variableName);
 
     return isDefined(field)
-      ? compileSelectedRecordFieldEquality({
+      ? compileLegacyWidgetJsonLogicFieldEquality({
           field,
           operand,
           literal: secondOperand,
@@ -214,7 +107,7 @@ export const compileLegacyWidgetJsonLogic = ({
   };
 
   const compileNode = (node: unknown): ConditionalDisplayConditionNode => {
-    const entry = getSingleEntry(node);
+    const entry = getLegacyWidgetJsonLogicSingleEntry(node);
 
     if (!isDefined(entry)) {
       throw buildConversionError(`unsupported ${JSON.stringify(node)}`);

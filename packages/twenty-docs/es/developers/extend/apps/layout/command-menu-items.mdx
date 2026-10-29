@@ -60,8 +60,9 @@ El campo `conditionalAvailabilityExpression` te permite controlar cuándo es vis
 ```ts src/command-menu-items/bulk-update.command-menu-item.ts
 import {
   defineCommandMenuItem,
+  noneDefined,
   objectPermissions,
-  everyEquals,
+  selectedRecords,
 } from 'twenty-sdk/define';
 
 export default defineCommandMenuItem({
@@ -69,11 +70,9 @@ export default defineCommandMenuItem({
   label: 'Bulk Update',
   availabilityType: 'RECORD_SELECTION',
   frontComponentUniversalIdentifier: '...',
-  conditionalAvailabilityExpression: everyEquals(
-    objectPermissions,
-    'canUpdateObjectRecords',
-    true,
-  ),
+  conditionalAvailabilityExpression:
+    objectPermissions.canUpdateObjectRecords &&
+    noneDefined(selectedRecords, 'deletedAt'),
 });
 ```
 
@@ -81,13 +80,15 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` ya implica una selección no vacía; usa `numberOfSelectedRecords` solo para recuentos específicos (por ejemplo, `>= 2`).
 </Note>
 
+El build lee `conditionalAvailabilityExpression` y `conditionalPinnedExpression` de tu código y los compila en árboles de condiciones `conditionalAvailability` y `conditionalPinned`; el manifiesto generado solo contiene esos árboles. Un uso incorrecto es un error de build que indica el comando y la expresión: una variable desconocida, una sintaxis distinta de variables, `!`, `&&`, `||` y comparaciones, o un operador de lista como `everyEquals` aplicado a algo que no sea `selectedRecords`. Una app compilada con un SDK anterior se sigue instalando: Twenty convierte sus cadenas de expresión y registra una advertencia que pide volver a compilarla.
+
 ### Variables de contexto
 
 Estas representan el estado actual de la página:
 
 | Variable                       | Tipo      | Descripción                                                         |
 | ------------------------------ | --------- | ------------------------------------------------------------------- |
-| `pageType`                     | `string`  | Tipo de página actual (p. ej., 'RecordIndexPage', 'RecordShowPage') |
+| `pageType`                     | `string`  | Tipo de página actual (p. ej., 'INDEX_PAGE', 'RECORD_PAGE') |
 | `isInSidePanel`                | `boolean` | Si el componente se renderiza en un panel lateral                   |
 | `numberOfSelectedRecords`      | `number`  | Número de registros seleccionados actualmente                       |
 | `isSelectAll`                  | `boolean` | Si "seleccionar todo" está activo                                   |
@@ -107,7 +108,7 @@ Combina variables en expresiones booleanas:
 | Operador                            | Descripción                                                           |
 | ----------------------------------- | --------------------------------------------------------------------- |
 | `isDefined(value)`                  | `true` si el valor no es null/undefined                               |
-| `isNonEmptyString(value)`           | `true` si un valor de texto del contexto (`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`) es una cadena no vacía |
+| `isNonEmptyString(value)`           | `true` si un valor de texto del contexto (`pageType`, `objectMetadataItem.nameSingular`) es una cadena no vacía |
 | `includes(list, value)`             | `true` si un valor de texto del contexto es uno de los valores de la lista, p. ej. `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true` si la propiedad de cada elemento incluye el valor              |
 | `every(array, prop)`                | `true` si la propiedad es truthy en cada elemento                     |

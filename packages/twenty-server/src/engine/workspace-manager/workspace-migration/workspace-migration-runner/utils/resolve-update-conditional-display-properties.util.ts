@@ -1,11 +1,11 @@
-import { CONDITIONAL_DISPLAY_PROPERTIES } from 'twenty-shared/constants';
 import {
-  type ConditionalDisplayProperty,
   type ConditionalDisplaySurface,
   type UniversalConditionalDisplay,
 } from 'twenty-shared/types';
-import { typedObjectEntries } from 'twenty-shared/utils';
 
+import { CONDITIONAL_DISPLAY_PROPERTIES } from 'src/engine/metadata-modules/flat-conditional-display/constants/conditional-display-properties.constant';
+import { type ConditionalDisplayProperty } from 'src/engine/metadata-modules/flat-conditional-display/types/conditional-display-property.type';
+import { getConditionalDisplayPropertySurfaces } from 'src/engine/metadata-modules/flat-conditional-display/utils/get-conditional-display-property-surfaces.util';
 import { type MetadataFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/metadata-flat-entity-maps.type';
 import { resolveUpdateConditionalDisplay } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/resolve-update-conditional-display.util';
 
@@ -27,16 +27,16 @@ export const resolveUpdateConditionalDisplayProperties = <
   flatFieldMetadataMaps: MetadataFlatEntityMaps<'fieldMetadata'>;
   flatRoleMaps: MetadataFlatEntityMaps<'role'>;
 }): TUpdate =>
-  typedObjectEntries(CONDITIONAL_DISPLAY_PROPERTIES)
-    .filter(([, { surfaces }]) => surfaces.includes(metadataName))
-    .reduce(
-      (resolvedUpdate, [property]) =>
-        resolveUpdateConditionalDisplay({
-          update: resolvedUpdate,
-          metadataName,
-          property,
-          flatFieldMetadataMaps,
-          flatRoleMaps,
-        }),
-      update,
-    );
+  CONDITIONAL_DISPLAY_PROPERTIES.filter((property) =>
+    getConditionalDisplayPropertySurfaces(property).includes(metadataName),
+  ).reduce(
+    (resolvedUpdate, property) =>
+      resolveUpdateConditionalDisplay({
+        update: resolvedUpdate,
+        metadataName,
+        property,
+        flatFieldMetadataMaps,
+        flatRoleMaps,
+      }),
+    update,
+  );

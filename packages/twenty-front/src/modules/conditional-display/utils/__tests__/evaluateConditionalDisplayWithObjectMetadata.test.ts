@@ -1,8 +1,8 @@
+import { type ConditionalDisplayEvaluationContext } from '@/conditional-display/types/ConditionalDisplayEvaluationContext';
 import { evaluateConditionalDisplayWithObjectMetadata } from '@/conditional-display/utils/evaluateConditionalDisplayWithObjectMetadata';
 import {
   type ConditionalDisplay,
   type ConditionalDisplayContextKey,
-  type ConditionalDisplayEvaluationContext,
   type ConditionalDisplayRecordFilter,
   ContextStorePageType,
   RecordFilterGroupLogicalOperator,

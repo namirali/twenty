@@ -1,41 +1,14 @@
-import { v5 } from 'uuid';
-
-import { CONDITIONAL_DISPLAY_COMPILATION_NAMESPACE } from '@/constants/ConditionalDisplayCompilationNamespace';
+import { TWENTY_STANDARD_APPLICATION_UNIVERSAL_IDENTIFIER } from '@/application/constants/TwentyStandardApplicationUniversalIdentifier';
+import { computeDeterministicUuid } from '@/application/deterministic-identifier/compute-deterministic-uuid.util';
 import { type ConditionalDisplay } from '@/types/conditional-display/ConditionalDisplay';
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
 import { type ConditionalDisplayRecordFilter } from '@/types/conditional-display/ConditionalDisplayRecordFilter';
 import { type ConditionalDisplayRecordFilterGroup } from '@/types/conditional-display/ConditionalDisplayRecordFilterGroup';
-import { RecordFilterGroupLogicalOperator } from '@/types/RecordFilterGroupLogicalOperator';
+import { type ConditionalDisplayRecordFilterGroupConditionNode } from '@/types/conditional-display/ConditionalDisplayRecordFilterGroupConditionNode';
+import { hasConditionalDisplaySomeSelectedRecordsMatch } from '@/utils/conditional-display/internal/hasConditionalDisplaySomeSelectedRecordsMatch';
+import { isConditionalDisplayConjunctionOfRecordFilters } from '@/utils/conditional-display/internal/isConditionalDisplayConjunctionOfRecordFilters';
+import { isConditionalDisplayRecordFilterConditionNode } from '@/utils/conditional-display/internal/isConditionalDisplayRecordFilterConditionNode';
 import { isDefined } from '@/utils/validation/isDefined';
-
-type RecordFilterConditionNode = Extract<
-  ConditionalDisplayConditionNode,
-  { kind: 'recordFilter' }
->;
-
-type RecordFilterGroupConditionNode = Extract<
-  ConditionalDisplayConditionNode,
-  { kind: 'recordFilterGroup' }
->;
-
-const isRecordFilterConditionNode = (
-  conditionNode: ConditionalDisplayConditionNode,
-): conditionNode is RecordFilterConditionNode =>
-  conditionNode.kind === 'recordFilter';
-
-const hasSomeSelectedRecordsMatch = (
-  conditionNode: ConditionalDisplayConditionNode,
-): boolean =>
-  isRecordFilterConditionNode(conditionNode)
-    ? conditionNode.selectedRecordsMatch === 'SOME'
-    : conditionNode.children.some(hasSomeSelectedRecordsMatch);
-
-const isConjunctionOfRecordFilters = (
-  recordFilterGroupConditionNode: RecordFilterGroupConditionNode,
-): boolean =>
-  recordFilterGroupConditionNode.logicalOperator ===
-    RecordFilterGroupLogicalOperator.AND &&
-  recordFilterGroupConditionNode.children.every(isRecordFilterConditionNode);
 
 export const buildConditionalDisplayFromConditionNode = ({
   conditionNode,
@@ -47,10 +20,12 @@ export const buildConditionalDisplayFromConditionNode = ({
   let index = 0;
 
   const generateId = () => {
-    const id = v5(
-      `${source}:${index}`,
-      CONDITIONAL_DISPLAY_COMPILATION_NAMESPACE,
-    );
+    const id = computeDeterministicUuid({
+      entityNamespace: 'conditionalDisplay',
+      value: `${source}:${index}`,
+      applicationUniversalIdentifier:
+        TWENTY_STANDARD_APPLICATION_UNIVERSAL_IDENTIFIER,
+    });
 
     index += 1;
 
@@ -65,7 +40,7 @@ export const buildConditionalDisplayFromConditionNode = ({
     parentRecordFilterGroupId,
     positionInRecordFilterGroup,
   }: {
-    recordFilterGroupConditionNode: RecordFilterGroupConditionNode;
+    recordFilterGroupConditionNode: ConditionalDisplayRecordFilterGroupConditionNode;
     parentRecordFilterGroupId?: string;
     positionInRecordFilterGroup?: number;
   }) => {
@@ -83,7 +58,7 @@ export const buildConditionalDisplayFromConditionNode = ({
     recordFilterGroups.push(recordFilterGroup);
 
     recordFilterGroupConditionNode.children.forEach((child, position) => {
-      if (isRecordFilterConditionNode(child)) {
+      if (isConditionalDisplayRecordFilterConditionNode(child)) {
         recordFilters.push({
           id: generateId(),
           ...child.recordFilter,
@@ -103,16 +78,17 @@ export const buildConditionalDisplayFromConditionNode = ({
   };
 
   if (
-    !isRecordFilterConditionNode(conditionNode) &&
-    !isConjunctionOfRecordFilters(conditionNode)
+    !isConditionalDisplayRecordFilterConditionNode(conditionNode) &&
+    !isConditionalDisplayConjunctionOfRecordFilters(conditionNode)
   ) {
     emitRecordFilterGroup({ recordFilterGroupConditionNode: conditionNode });
   } else {
-    const ungroupedRecordFilterConditionNodes = isRecordFilterConditionNode(
-      conditionNode,
-    )
-      ? [conditionNode]
-      : conditionNode.children.filter(isRecordFilterConditionNode);
+    const ungroupedRecordFilterConditionNodes =
+      isConditionalDisplayRecordFilterConditionNode(conditionNode)
+        ? [conditionNode]
+        : conditionNode.children.filter(
+            isConditionalDisplayRecordFilterConditionNode,
+          );
 
     ungroupedRecordFilterConditionNodes.forEach(({ recordFilter }) =>
       recordFilters.push({ id: generateId(), ...recordFilter }),
@@ -125,7 +101,7 @@ export const buildConditionalDisplayFromConditionNode = ({
     conditionalDisplay.recordFilterGroups = recordFilterGroups;
   }
 
-  if (hasSomeSelectedRecordsMatch(conditionNode)) {
+  if (hasConditionalDisplaySomeSelectedRecordsMatch(conditionNode)) {
     conditionalDisplay.selectedRecordsMatch = 'SOME';
   }
 

@@ -55,8 +55,9 @@ export default defineCommandMenuItem({
 ```ts src/command-menu-items/bulk-update.command-menu-item.ts
 import {
   defineCommandMenuItem,
+  noneDefined,
   objectPermissions,
-  everyEquals,
+  selectedRecords,
 } from 'twenty-sdk/define';
 
 export default defineCommandMenuItem({
@@ -64,11 +65,9 @@ export default defineCommandMenuItem({
   label: 'Bulk Update',
   availabilityType: 'RECORD_SELECTION',
   frontComponentUniversalIdentifier: '...',
-  conditionalAvailabilityExpression: everyEquals(
-    objectPermissions,
-    'canUpdateObjectRecords',
-    true,
-  ),
+  conditionalAvailabilityExpression:
+    objectPermissions.canUpdateObjectRecords &&
+    noneDefined(selectedRecords, 'deletedAt'),
 });
 ```
 
@@ -76,13 +75,15 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION`은 이미 비어 있지 않은 선택을 의미하므로, 특정 개수를 나타낼 때만(예: `>= 2`) `numberOfSelectedRecords`를 사용하세요.
 </Note>
 
+빌드는 코드에서 `conditionalAvailabilityExpression`과 `conditionalPinnedExpression`을 읽어 `conditionalAvailability` 및 `conditionalPinned` 조건 트리로 컴파일하며, 빌드된 매니페스트에는 이 트리만 포함됩니다. 잘못 사용하면 명령과 표현식을 명시하는 빌드 오류가 발생합니다: 알 수 없는 변수, 변수·`!`·`&&`·`||`·비교 이외의 구문, 또는 `everyEquals` 같은 목록 연산자를 `selectedRecords`가 아닌 대상에 적용한 경우입니다. 이전 SDK로 빌드된 앱도 계속 설치됩니다: Twenty는 해당 표현식 문자열을 변환하고 다시 빌드하라는 경고를 로그에 남깁니다.
+
 ### 컨텍스트 변수
 
 이는 현재 페이지의 상태를 나타냅니다:
 
 | 변수                             | 유형        | 설명                                                |
 | ------------------------------ | --------- | ------------------------------------------------- |
-| `pageType`                     | `string`  | 현재 페이지 타입(예: 'RecordIndexPage', 'RecordShowPage') |
+| `pageType`                     | `string`  | 현재 페이지 타입(예: 'INDEX_PAGE', 'RECORD_PAGE') |
 | `isInSidePanel`                | `boolean` | 컴포넌트가 사이드 패널에서 렌더링되는지 여부                          |
 | `numberOfSelectedRecords`      | `number`  | 현재 선택된 레코드 수                                      |
 | `isSelectAll`                  | `boolean` | "전체 선택"이 활성화되었는지 여부                               |
@@ -102,7 +103,7 @@ export default defineCommandMenuItem({
 | 연산자                                 | 설명                                      |
 | ----------------------------------- | --------------------------------------- |
 | `isDefined(value)`                  | 값이 null/undefined가 아니면 `true`           |
-| `isNonEmptyString(value)`           | 텍스트 컨텍스트 값(`pageType`, `objectMetadataItem.nameSingular`, `objectMetadataItem.readability`)이 비어 있지 않은 문자열이면 `true` |
+| `isNonEmptyString(value)`           | 텍스트 컨텍스트 값(`pageType`, `objectMetadataItem.nameSingular`)이 비어 있지 않은 문자열이면 `true` |
 | `includes(list, value)`             | 텍스트 컨텍스트 값이 나열된 값 중 하나이면 `true` (예: `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)`) |
 | `includesEvery(array, prop, value)` | 모든 항목의 속성에 해당 값이 포함되어 있으면 `true`        |
 | `every(array, prop)`                | 모든 항목에서 해당 속성이 truthy이면 `true`          |

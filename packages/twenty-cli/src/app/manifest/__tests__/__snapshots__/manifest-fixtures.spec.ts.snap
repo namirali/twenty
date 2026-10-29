@@ -18,6 +18,8 @@ exports[`CLI manifest fixtures and worker transport > matches the manifest, file
     "frontComponents": [],
     "indexes": [],
     "logicFunctions": [],
+    "mcpServers": [],
+    "messagingProviders": [],
     "navigationMenuItems": [],
     "objects": [],
     "pageLayoutTabs": [],
@@ -42,7 +44,7 @@ exports[`CLI manifest fixtures and worker transport > matches the manifest, file
       "description": "Commands gated by conditional availability expressions",
       "displayName": "Conditional Availability App",
       "galleryImages": [],
-      "packageJsonChecksum": null,
+      "packageJsonChecksum": "",
       "requiredServerVersionRange": null,
       "universalIdentifier": "c0a1b2c3-0000-4000-8000-000000000001",
       "yarnLockChecksum": null,
@@ -115,6 +117,8 @@ exports[`CLI manifest fixtures and worker transport > matches the manifest, file
     "frontComponents": [],
     "indexes": [],
     "logicFunctions": [],
+    "mcpServers": [],
+    "messagingProviders": [],
     "navigationMenuItems": [],
     "objects": [],
     "pageLayoutTabs": [],
@@ -152,7 +156,7 @@ exports[`CLI manifest fixtures and worker transport > matches the manifest, file
   "success": true,
   "warnings": [
     "\`defaultRoleUniversalIdentifier\` on defineApplication() is deprecated. Use defineApplicationRole() in your role file instead.",
-    "src/command-menu-items/selected-records-count.command-menu-item.ts - conditionalPinnedExpression of command menu item "Selected records count" is a formula string; write it as code (for example numberOfSelectedRecords === 1) so the build can check it.",
+    "src/command-menu-items/selected-records-count.command-menu-item.ts: conditionalPinnedExpression of command menu item "Selected records count" is a formula string; write it as code (for example numberOfSelectedRecords === 1) so the build can check it.",
     ""twenty-sdk" is listed under "dependencies" in package.json. It is a build-time only tool and should be moved to "devDependencies".",
     ""twenty-client-sdk" is listed under "dependencies" in package.json. It is provided at runtime by Twenty's injected SDK and should be moved to "devDependencies".",
   ],
@@ -1695,8 +1699,8 @@ exports[`CLI manifest fixtures and worker transport > matches the manifest, file
 exports[`CLI manifest fixtures and worker transport > matches the manifest, file paths, errors and warnings for unmapped-conditional-availability-app 1`] = `
 {
   "errors": [
-    "src/command-menu-items/favorite-count.command-menu-item.ts - conditionalAvailabilityExpression of command menu item "Favorite count" cannot be compiled into a conditionalAvailability tree: Cannot compile conditional availability expression "favoriteRecordIds.length > 0": unsupported comparison of favoriteRecordIds.length: write favoriteRecordIds.length == numberOfSelectedRecords when every selected record is a favorite, or favoriteRecordIds.length < numberOfSelectedRecords when at least one is not",
-    "src/command-menu-items/selected-records-pinned.command-menu-item.ts - conditionalPinnedExpression of command menu item "Selected records pinned" cannot be compiled into a conditionalPinned tree: Cannot compile conditional availability expression "arrayLength(selectedRecords) == 1": unsupported call of arrayLength(variable "selectedRecords")",
+    "src/command-menu-items/favorite-count.command-menu-item.ts: conditionalAvailabilityExpression of command menu item "Favorite count" cannot be compiled into a conditionalAvailability tree: Cannot compile conditional availability expression "favoriteRecordIds.length > 0": unsupported comparison of favoriteRecordIds.length: write favoriteRecordIds.length == numberOfSelectedRecords when every selected record is a favorite, or favoriteRecordIds.length < numberOfSelectedRecords when at least one is not",
+    "src/command-menu-items/selected-records-pinned.command-menu-item.ts: conditionalPinnedExpression of command menu item "Selected records pinned" cannot be compiled into a conditionalPinned tree: Cannot compile conditional availability expression "arrayLength(selectedRecords) == 1": unsupported call of arrayLength(variable "selectedRecords")",
   ],
   "success": false,
 }

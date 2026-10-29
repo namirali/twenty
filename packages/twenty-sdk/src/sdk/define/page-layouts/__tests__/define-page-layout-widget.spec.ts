@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 
 import {
   definePageLayoutWidget,
-  type PageLayoutWidgetConditionalDisplay,
   type StandalonePageLayoutWidgetManifest,
 } from '@/sdk/define';
 
@@ -40,31 +39,6 @@ describe('definePageLayoutWidget', () => {
       'PageLayoutWidget must have a position when defined standalone (its tab is not in the manifest, so the layout mode cannot be inferred)',
     ]);
   });
-
-  it.each([
-    { and: [{ '===': [{ var: 'device' }, 'MOBILE'] }] },
-    {
-      recordFilters: [
-        {
-          id: '0',
-          contextKey: 'device',
-          operand: 'IS',
-          value: '["MOBILE"]',
-        },
-      ],
-    },
-  ] satisfies PageLayoutWidgetConditionalDisplay[])(
-    'accepts the conditional display %j',
-    (conditionalDisplay) => {
-      const result = definePageLayoutWidget({
-        ...WIDGET_CONFIG,
-        conditionalDisplay,
-      });
-
-      expect(result.success).toBe(true);
-      expect(result.config.conditionalDisplay).toEqual(conditionalDisplay);
-    },
-  );
 
   it('rejects invalid header command menu item references like the other page layout definers', () => {
     const result = definePageLayoutWidget({

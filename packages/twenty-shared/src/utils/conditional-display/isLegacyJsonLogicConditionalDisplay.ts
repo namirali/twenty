@@ -1,13 +1,8 @@
-import { isArray } from '@sniptt/guards';
-
+import { isConditionalDisplay } from '@/utils/conditional-display/isConditionalDisplay';
 import { isPlainObject } from '@/utils/typeguard/isPlainObject';
-import { isDefined } from '@/utils/validation/isDefined';
 
 export const isLegacyJsonLogicConditionalDisplay = (
   conditionalDisplay: unknown,
-): boolean =>
-  isDefined(conditionalDisplay) &&
-  !(
-    isPlainObject(conditionalDisplay) &&
-    isArray(conditionalDisplay.recordFilters)
-  );
+): conditionalDisplay is Record<string, unknown> =>
+  isPlainObject(conditionalDisplay) &&
+  !isConditionalDisplay(conditionalDisplay);

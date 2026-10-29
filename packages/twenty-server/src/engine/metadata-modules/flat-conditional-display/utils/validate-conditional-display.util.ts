@@ -1,11 +1,7 @@
 import { msg, t } from '@lingui/core/macro';
 import { isArray, isNonEmptyString, isString } from '@sniptt/guards';
+import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from 'twenty-shared/constants';
 import {
-  CONDITIONAL_DISPLAY_CONTEXT_KEYS,
-  CONDITIONAL_DISPLAY_PROPERTIES,
-} from 'twenty-shared/constants';
-import {
-  type ConditionalDisplayProperty,
   type ConditionalDisplaySurface,
   RecordFilterGroupLogicalOperator,
   type UniversalConditionalDisplay,
@@ -17,6 +13,8 @@ import {
   isPlainObject,
 } from 'twenty-shared/utils';
 
+import { type ConditionalDisplayProperty } from 'src/engine/metadata-modules/flat-conditional-display/types/conditional-display-property.type';
+import { getConditionalDisplayPropertyOwner } from 'src/engine/metadata-modules/flat-conditional-display/utils/get-conditional-display-property-owner.util';
 import { validateConditionalDisplayContextLeaf } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-conditional-display-context-leaf.util';
 import { parseConditionalDisplayRoleIds } from 'src/engine/metadata-modules/flat-conditional-display/utils/parse-conditional-display-role-ids.util';
 import { findFlatEntityByUniversalIdentifier } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-universal-identifier.util';
@@ -73,9 +71,11 @@ const validateContextRecordFilter = ({
     ];
   }
 
-  const { owner, surfaces } = CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey];
+  const contextKeyDefinition = CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey];
 
-  if (owner !== CONDITIONAL_DISPLAY_PROPERTIES[property].owner) {
+  if (
+    contextKeyDefinition.owner !== getConditionalDisplayPropertyOwner(property)
+  ) {
     return [
       {
         code: invalidDataCode,
@@ -86,7 +86,10 @@ const validateContextRecordFilter = ({
     ];
   }
 
-  if (!surfaces.includes(surface)) {
+  if (
+    contextKeyDefinition.owner === 'engine' &&
+    !contextKeyDefinition.surfaces.includes(surface)
+  ) {
     return [
       {
         code: invalidDataCode,
@@ -148,7 +151,7 @@ const validateFieldRecordFilter = ({
   | 'invalidDataCode'
   | 'flatFieldMetadataMaps'
 >): FlatEntityValidationError[] => {
-  if (CONDITIONAL_DISPLAY_PROPERTIES[property].owner === 'engine') {
+  if (getConditionalDisplayPropertyOwner(property) === 'engine') {
     return [
       {
         code: invalidDataCode,
@@ -417,7 +420,7 @@ export const validateConditionalDisplay = ({
 
   const isSelectedRecordsMatchAllowed =
     surface === 'commandMenuItem' ||
-    (CONDITIONAL_DISPLAY_PROPERTIES[property].owner === 'engine' &&
+    (getConditionalDisplayPropertyOwner(property) === 'engine' &&
       CONDITIONAL_DISPLAY_CONTEXT_KEYS.selectedRecords.surfaces.includes(
         surface,
       ));

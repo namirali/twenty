@@ -1,4 +1,5 @@
 import { useConditionalDisplayCurrentUserContext } from '@/conditional-display/hooks/useConditionalDisplayCurrentUserContext';
+import { type ConditionalDisplayEvaluationContext } from '@/conditional-display/types/ConditionalDisplayEvaluationContext';
 import { evaluateConditionalDisplayWithObjectMetadata } from '@/conditional-display/utils/evaluateConditionalDisplayWithObjectMetadata';
 import { getConditionalDisplayDevice } from '@/conditional-display/utils/getConditionalDisplayDevice';
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
@@ -7,7 +8,6 @@ import { useIsMobile } from 'twenty-ui/utilities';
 import {
   type CommandMenuContextApi,
   type ConditionalDisplay,
-  type ConditionalDisplayEvaluationContext,
 } from 'twenty-shared/types';
 import { type CommandMenuItemFieldsFragment } from '~/generated-metadata/graphql';
 

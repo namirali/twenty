@@ -29,7 +29,7 @@ const GENERIC_APP_CORPUS = [
 const DOCUMENTED_HELPER_CORPUS = [
   'isNonEmptyString(objectMetadataItem.nameSingular)',
   'isNonEmptyString(objectMetadataLabel) and numberOfSelectedRecords == 1',
-  'pageType == "RECORD_PAGE" and isNonEmptyString(objectMetadataItem.readability)',
+  'pageType == "RECORD_PAGE" and isNonEmptyString(objectMetadataItem.nameSingular)',
   'includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)',
   'includes(["company", "person"], objectMetadataItem.nameSingular) and not isSelectAll',
   'arrayLength(favoriteRecordIds) == numberOfSelectedRecords',
@@ -157,7 +157,6 @@ const expectSameAsFormulaString = ({
       compileConditionalAvailabilityExpression(formulaString);
   } catch {
     expect(buildFromSource(expression)).toEqual({
-      expression,
       errorMessage: expect.any(String),
     });
 
@@ -165,7 +164,6 @@ const expectSameAsFormulaString = ({
   }
 
   expect(buildFromSource(expression)).toEqual({
-    expression,
     conditionalDisplay: expectedConditionalDisplay,
   });
 };
@@ -206,7 +204,6 @@ describe('conditional availability built from source code', () => {
       const expression = toTypeScriptSource(formulaString);
 
       expect(buildFromSource(expression)).toEqual({
-        expression,
         conditionalDisplay:
           compileConditionalAvailabilityExpression(formulaString),
       });
@@ -217,7 +214,6 @@ describe('conditional availability built from source code', () => {
     'fails the build of %s with what to write instead',
     (expression, expectedMessage) => {
       expect(buildFromSource(expression)).toEqual({
-        expression,
         errorMessage: expect.stringContaining(expectedMessage),
       });
     },

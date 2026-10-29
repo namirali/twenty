@@ -1,27 +1,6 @@
 import { type ConditionalAvailabilityExpressionNode } from 'twenty-shared/types';
-import {
-  buildConditionalAvailabilityCompilationError,
-  isDefined,
-} from 'twenty-shared/utils';
+import { isDefined } from 'twenty-shared/utils';
 import ts from 'typescript';
-
-type ComparisonOperator = Extract<
-  ConditionalAvailabilityExpressionNode,
-  { kind: 'comparison' }
->['operator'];
-
-const COMPARISON_OPERATOR_BY_TOKEN_KIND: Partial<
-  Record<ts.SyntaxKind, ComparisonOperator>
-> = {
-  [ts.SyntaxKind.EqualsEqualsEqualsToken]: '==',
-  [ts.SyntaxKind.EqualsEqualsToken]: '==',
-  [ts.SyntaxKind.ExclamationEqualsEqualsToken]: '!=',
-  [ts.SyntaxKind.ExclamationEqualsToken]: '!=',
-  [ts.SyntaxKind.LessThanToken]: '<',
-  [ts.SyntaxKind.LessThanEqualsToken]: '<=',
-  [ts.SyntaxKind.GreaterThanToken]: '>',
-  [ts.SyntaxKind.GreaterThanEqualsToken]: '>=',
-};
 
 export const toConditionalAvailabilityExpressionNode = ({
   node,
@@ -36,10 +15,9 @@ export const toConditionalAvailabilityExpressionNode = ({
     childNode: ts.Expression,
   ): ConditionalAvailabilityExpressionNode => {
     const throwUnsupported = (reason: string): never => {
-      throw buildConditionalAvailabilityCompilationError({
-        expression,
-        reason: `unsupported ${reason} \`${childNode.getText(sourceFile)}\``,
-      });
+      throw new Error(
+        `Cannot compile conditional availability expression "${expression}": unsupported ${reason} \`${childNode.getText(sourceFile)}\``,
+      );
     };
 
     if (ts.isParenthesizedExpression(childNode)) {
@@ -103,28 +81,33 @@ export const toConditionalAvailabilityExpressionNode = ({
     }
 
     if (ts.isBinaryExpression(childNode)) {
-      const operatorKind = childNode.operatorToken.kind;
       const left = convert(childNode.left);
       const right = convert(childNode.right);
 
-      if (operatorKind === ts.SyntaxKind.AmpersandAmpersandToken) {
-        return { kind: 'logicalOperation', operator: 'and', left, right };
+      switch (childNode.operatorToken.kind) {
+        case ts.SyntaxKind.AmpersandAmpersandToken:
+          return { kind: 'logicalOperation', operator: 'and', left, right };
+        case ts.SyntaxKind.BarBarToken:
+          return { kind: 'logicalOperation', operator: 'or', left, right };
+        case ts.SyntaxKind.EqualsEqualsEqualsToken:
+        case ts.SyntaxKind.EqualsEqualsToken:
+          return { kind: 'comparison', operator: '==', left, right };
+        case ts.SyntaxKind.ExclamationEqualsEqualsToken:
+        case ts.SyntaxKind.ExclamationEqualsToken:
+          return { kind: 'comparison', operator: '!=', left, right };
+        case ts.SyntaxKind.LessThanToken:
+          return { kind: 'comparison', operator: '<', left, right };
+        case ts.SyntaxKind.LessThanEqualsToken:
+          return { kind: 'comparison', operator: '<=', left, right };
+        case ts.SyntaxKind.GreaterThanToken:
+          return { kind: 'comparison', operator: '>', left, right };
+        case ts.SyntaxKind.GreaterThanEqualsToken:
+          return { kind: 'comparison', operator: '>=', left, right };
+        default:
+          return throwUnsupported(
+            `operator "${childNode.operatorToken.getText(sourceFile)}"`,
+          );
       }
-
-      if (operatorKind === ts.SyntaxKind.BarBarToken) {
-        return { kind: 'logicalOperation', operator: 'or', left, right };
-      }
-
-      const comparisonOperator =
-        COMPARISON_OPERATOR_BY_TOKEN_KIND[operatorKind];
-
-      if (!isDefined(comparisonOperator)) {
-        return throwUnsupported(
-          `operator "${childNode.operatorToken.getText(sourceFile)}"`,
-        );
-      }
-
-      return { kind: 'comparison', operator: comparisonOperator, left, right };
     }
 
     if (ts.isCallExpression(childNode)) {

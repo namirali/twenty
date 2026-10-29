@@ -79,7 +79,7 @@ describe('compileLegacyWidgetJsonLogic', () => {
     ).toEqual({
       recordFilters: [
         {
-          id: '0',
+          id: expect.any(String),
           contextKey: 'device',
           operand: ViewFilterOperand.IS,
           value: '["DESKTOP"]',
@@ -150,7 +150,7 @@ describe('compileLegacyWidgetJsonLogic', () => {
     ],
     [
       { '!': { '===': [{ var: 'device' }, 'MOBILE'] } },
-      'unsupported {"===":[{"var":"device"},"MOBILE"]}',
+      'unsupported {"!":{"===":[{"var":"device"},"MOBILE"]}}',
     ],
   ])('should throw on %j', (jsonLogic, expectedMessage) => {
     expect(() =>

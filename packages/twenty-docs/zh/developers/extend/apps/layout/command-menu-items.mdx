@@ -55,8 +55,9 @@ export default defineCommandMenuItem({
 ```ts src/command-menu-items/bulk-update.command-menu-item.ts
 import {
   defineCommandMenuItem,
+  noneDefined,
   objectPermissions,
-  everyEquals,
+  selectedRecords,
 } from 'twenty-sdk/define';
 
 export default defineCommandMenuItem({
@@ -64,11 +65,9 @@ export default defineCommandMenuItem({
   label: 'Bulk Update',
   availabilityType: 'RECORD_SELECTION',
   frontComponentUniversalIdentifier: '...',
-  conditionalAvailabilityExpression: everyEquals(
-    objectPermissions,
-    'canUpdateObjectRecords',
-    true,
-  ),
+  conditionalAvailabilityExpression:
+    objectPermissions.canUpdateObjectRecords &&
+    noneDefined(selectedRecords, 'deletedAt'),
 });
 ```
 
@@ -76,13 +75,15 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` 已经意味着非空选择 — 仅在需要表达具体数量时使用 `numberOfSelectedRecords`（例如 `>= 2`）。
 </Note>
 
+构建时会从您的代码中读取 `conditionalAvailabilityExpression` 和 `conditionalPinnedExpression`，并将它们编译为 `conditionalAvailability` 和 `conditionalPinned` 条件树，构建出的清单只包含这些树。 误用会导致构建错误，并指出对应的命令和表达式：未知变量、变量、`!`、`&&`、`||` 和比较之外的语法，或将 `everyEquals` 等列表运算符用于 `selectedRecords` 以外的对象。 使用旧版 SDK 构建的应用仍可安装：Twenty 会转换其表达式字符串，并在日志中记录一条要求重新构建的警告。
+
 ### 上下文变量
 
 这些变量表示页面的当前状态：
 
 | 变量                             | 类型        | 描述                                            |
 | ------------------------------ | --------- | --------------------------------------------- |
-| `pageType`                     | `string`  | 当前页面类型（例如 'RecordIndexPage'、'RecordShowPage'） |
+| `pageType`                     | `string`  | 当前页面类型（例如 'INDEX_PAGE'、'RECORD_PAGE'） |
 | `isInSidePanel`                | `boolean` | 组件是否在侧边栏中渲染                                   |
 | `numberOfSelectedRecords`      | `number`  | 当前选中的记录数量                                     |
 | `isSelectAll`                  | `boolean` | “全选”是否已激活                                     |
@@ -102,7 +103,7 @@ export default defineCommandMenuItem({
 | 运算符                                 | 描述                               |
 | ----------------------------------- | -------------------------------- |
 | `isDefined(value)`                  | 当该值不是 null/undefined 时为 `true`   |
-| `isNonEmptyString(value)`           | 当文本上下文值（`pageType`、`objectMetadataItem.nameSingular`、`objectMetadataItem.readability`）为非空字符串时为 `true` |
+| `isNonEmptyString(value)`           | 当文本上下文值（`pageType`、`objectMetadataItem.nameSingular`）为非空字符串时为 `true` |
 | `includes(list, value)`             | 当文本上下文值是所列值之一时为 `true`，例如 `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | 当每个条目的属性都包含该值时为 `true`           |
 | `every(array, prop)`                | 当该属性在每个条目上都为 truthy 时为 `true`    |

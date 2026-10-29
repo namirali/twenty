@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 
 import { msg, t } from '@lingui/core/macro';
-import { CONDITIONAL_DISPLAY_PROPERTIES } from 'twenty-shared/constants';
 import { ALL_METADATA_NAME } from 'twenty-shared/metadata';
 import {
   PageLayoutTabLayoutMode,
   PageLayoutWidgetPosition,
 } from 'twenty-shared/types';
-import { isDefined, typedObjectEntries } from 'twenty-shared/utils';
+import { isDefined } from 'twenty-shared/utils';
 
+import { CONDITIONAL_DISPLAY_PROPERTIES } from 'src/engine/metadata-modules/flat-conditional-display/constants/conditional-display-properties.constant';
+import { getConditionalDisplayPropertySurfaces } from 'src/engine/metadata-modules/flat-conditional-display/utils/get-conditional-display-property-surfaces.util';
 import { validateUniversalFlatEntityConditionalDisplays } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-universal-flat-entity-conditional-displays.util';
 import { validateTabViewportConstraints } from 'src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-tab-viewport-constraints.util';
 import { findFlatEntityByUniversalIdentifier } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-universal-identifier.util';
@@ -317,21 +318,23 @@ export class FlatPageLayoutWidgetValidatorService {
         })
       : undefined;
 
-    return typedObjectEntries(CONDITIONAL_DISPLAY_PROPERTIES)
-      .filter(([, { surfaces }]) => surfaces.includes('pageLayoutWidget'))
-      .flatMap(([property]) =>
-        validateUniversalFlatEntityConditionalDisplays({
-          flatEntity: flatPageLayoutWidget,
-          property,
-          surface: 'pageLayoutWidget',
-          objectMetadataUniversalIdentifier:
-            pageLayout?.objectMetadataUniversalIdentifier ?? null,
-          invalidDataCode:
-            PageLayoutWidgetExceptionCode.INVALID_PAGE_LAYOUT_WIDGET_DATA,
-          flatFieldMetadataMaps,
-          flatRoleMaps,
-        }),
-      );
+    return CONDITIONAL_DISPLAY_PROPERTIES.filter((property) =>
+      getConditionalDisplayPropertySurfaces(property).includes(
+        'pageLayoutWidget',
+      ),
+    ).flatMap((property) =>
+      validateUniversalFlatEntityConditionalDisplays({
+        flatEntity: flatPageLayoutWidget,
+        property,
+        surface: 'pageLayoutWidget',
+        objectMetadataUniversalIdentifier:
+          pageLayout?.objectMetadataUniversalIdentifier ?? null,
+        invalidDataCode:
+          PageLayoutWidgetExceptionCode.INVALID_PAGE_LAYOUT_WIDGET_DATA,
+        flatFieldMetadataMaps,
+        flatRoleMaps,
+      }),
+    );
   }
 
   private getEffectiveWidget(

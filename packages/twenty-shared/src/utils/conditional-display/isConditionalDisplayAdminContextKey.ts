@@ -1,8 +1,9 @@
 import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from '@/constants/ConditionalDisplayContextKeys';
 import { type ConditionalDisplayAdminContextKey } from '@/types/conditional-display/ConditionalDisplayAdminContextKey';
-import { type ConditionalDisplayContextKey } from '@/types/conditional-display/ConditionalDisplayContextKey';
+import { isConditionalDisplayContextKey } from '@/utils/conditional-display/isConditionalDisplayContextKey';
 
 export const isConditionalDisplayAdminContextKey = (
-  contextKey: ConditionalDisplayContextKey,
+  contextKey: string,
 ): contextKey is ConditionalDisplayAdminContextKey =>
+  isConditionalDisplayContextKey(contextKey) &&
   CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey].owner === 'admin';

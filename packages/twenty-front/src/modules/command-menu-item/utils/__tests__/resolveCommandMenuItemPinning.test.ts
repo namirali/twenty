@@ -1,10 +1,10 @@
 import {
   type ConditionalDisplay,
-  type ConditionalDisplayEvaluationContext,
   ViewFilterOperand,
 } from 'twenty-shared/types';
 
 import { resolveCommandMenuItemPinning } from '@/command-menu-item/utils/resolveCommandMenuItemPinning';
+import { type ConditionalDisplayEvaluationContext } from '@/conditional-display/types/ConditionalDisplayEvaluationContext';
 
 const STATUS_IS_SENT: ConditionalDisplay = {
   recordFilters: [

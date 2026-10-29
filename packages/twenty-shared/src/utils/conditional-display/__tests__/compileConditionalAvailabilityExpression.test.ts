@@ -358,7 +358,7 @@ describe('compileConditionalAvailabilityExpression', () => {
     ]);
   });
 
-  it('should compile isNonEmptyString(objectMetadataLabel) into a check that an object is set', () => {
+  it('should compile isNonEmptyString(objectMetadataLabel) into a not empty row on objectMetadataLabel', () => {
     expect(
       compileConditionalAvailabilityExpression(
         'isNonEmptyString(objectMetadataLabel)',
@@ -366,8 +366,7 @@ describe('compileConditionalAvailabilityExpression', () => {
     ).toEqual([
       {
         id: expect.any(String),
-        contextKey: 'objectMetadataItem',
-        subFieldName: 'nameSingular',
+        contextKey: 'objectMetadataLabel',
         operand: ViewFilterOperand.IS_NOT_EMPTY,
       },
     ]);
@@ -406,7 +405,7 @@ describe('compileConditionalAvailabilityExpression', () => {
   it.each([
     [
       'isNonEmptyString(isSelectAll)',
-      'isNonEmptyString accepts a text context value (pageType, objectMetadataItem.nameSingular, objectMetadataItem.readability or objectMetadataLabel); use isDefined(...) for other context values and someNonEmptyString(selectedRecords, "path") for record fields',
+      'isNonEmptyString accepts a text context value (pageType, objectMetadataItem.nameSingular or objectMetadataLabel); use isDefined(...) for other context values and someNonEmptyString(selectedRecords, "path") for record fields',
     ],
     [
       'includes(favoriteRecordIds, "record-id")',
@@ -418,7 +417,7 @@ describe('compileConditionalAvailabilityExpression', () => {
     ],
     [
       'objectMetadataLabel == "Companies"',
-      'use isNonEmptyString(objectMetadataLabel) to require an object, or compare objectMetadataItem.nameSingular instead (e.g. objectMetadataItem.nameSingular == "company")',
+      'unsupported operator "==" between variable "objectMetadataLabel" and',
     ],
     [
       'arrayLength(favoriteRecordIds) > 0',
@@ -459,14 +458,25 @@ describe('compileConditionalAvailabilityExpression', () => {
     ).toThrow('operator "not"');
   });
 
-  it('should throw on the truthiness of a record path outside the accepted forms', () => {
-    expect(() =>
+  it('should compile the truthiness of any record path into an emptiness row', () => {
+    expect(
       compileConditionalAvailabilityExpression(
-        'every(selectedRecords, "isActive")',
-      ),
-    ).toThrow(
-      'truthiness of record path "isActive": every, some and none accept a path ending in ".length", a boolean path (canChangeVisibility, inboxStatus.isUnread) or an identifier path (lastPublishedVersionId)',
-    );
+        'every(selectedRecords, "isActive") and none(selectedRecords, "deletedAt")',
+      )?.recordFilters,
+    ).toEqual([
+      {
+        id: expect.any(String),
+        contextKey: 'selectedRecords',
+        subFieldName: 'isActive',
+        operand: ViewFilterOperand.IS_NOT_EMPTY,
+      },
+      {
+        id: expect.any(String),
+        contextKey: 'selectedRecords',
+        subFieldName: 'deletedAt',
+        operand: ViewFilterOperand.IS_EMPTY,
+      },
+    ]);
   });
 
   it('should throw on a list function over anything but selectedRecords', () => {

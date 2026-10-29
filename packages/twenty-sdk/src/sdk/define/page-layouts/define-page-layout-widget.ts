@@ -1,10 +1,11 @@
+import { type StandalonePageLayoutWidgetManifest } from 'twenty-shared/application';
+
 import { type DefineEntity } from '@/sdk/define/common/types/define-entity.type';
 import { createValidationResult } from '@/sdk/define/common/utils/create-validation-result';
-import { type StandalonePageLayoutWidgetConfig } from '@/sdk/define/page-layouts/standalone-page-layout-widget-config';
 import { validatePageLayoutWidget } from '@/sdk/define/page-layouts/validate-page-layout-widget';
 
 export const definePageLayoutWidget: DefineEntity<
-  StandalonePageLayoutWidgetConfig
+  StandalonePageLayoutWidgetManifest
 > = (config) => {
   const errors = validatePageLayoutWidget(config);
 

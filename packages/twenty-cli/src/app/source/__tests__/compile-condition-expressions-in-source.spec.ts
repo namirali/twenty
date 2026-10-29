@@ -54,8 +54,8 @@ describe('compileConditionExpressionsInSource', () => {
       "objectMetadataItem.nameSingular != 'messageCampaign'",
     ],
     [
-      'isDefined(objectMetadataItem.duplicateCriteria)',
-      'isDefined(objectMetadataItem.duplicateCriteria)',
+      'isDefined(objectMetadataItem.nameSingular)',
+      'isDefined(objectMetadataItem.nameSingular)',
     ],
     [
       "everyEquals(\n  selectedRecords,\n  'status',\n  'DRAFT',\n)",
@@ -71,7 +71,6 @@ describe('compileConditionExpressionsInSource', () => {
     'compiles %s to the tree, ids included, of the formula string %s',
     (expression, legacyExpression) => {
       expect(compile(expression)).toEqual({
-        expression,
         conditionalDisplay:
           compileConditionalAvailabilityExpression(legacyExpression),
       });
@@ -118,7 +117,6 @@ describe('compileConditionExpressionsInSource', () => {
     const compiled = compile(expression);
 
     expect(compiled).toEqual({
-      expression,
       errorMessage: expect.stringContaining(reason),
     });
     expect('errorMessage' in compiled && compiled.errorMessage).toContain(

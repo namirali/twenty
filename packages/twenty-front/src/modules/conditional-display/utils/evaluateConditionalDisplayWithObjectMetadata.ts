@@ -1,15 +1,11 @@
+import { type ConditionalDisplayEvaluationContext } from '@/conditional-display/types/ConditionalDisplayEvaluationContext';
+import { evaluateConditionalDisplay } from '@/conditional-display/utils/evaluateConditionalDisplay';
 import { isConditionalDisplayContextRecordFilterMatching } from '@/conditional-display/utils/isConditionalDisplayContextRecordFilterMatching';
 import { isConditionalDisplayFieldRecordFilterMatching } from '@/conditional-display/utils/isConditionalDisplayFieldRecordFilterMatching';
+import { isConditionalDisplaySelectedRecordPathMatching } from '@/conditional-display/utils/isConditionalDisplaySelectedRecordPathMatching';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
-import {
-  type ConditionalDisplay,
-  type ConditionalDisplayEvaluationContext,
-} from 'twenty-shared/types';
-import {
-  evaluateConditionalDisplay,
-  isConditionalDisplaySelectedRecordPathMatching,
-  isDefined,
-} from 'twenty-shared/utils';
+import { type ConditionalDisplay } from 'twenty-shared/types';
+import { isDefined } from 'twenty-shared/utils';
 
 type EvaluateConditionalDisplayWithObjectMetadataParams = {
   conditionalDisplay: ConditionalDisplay | null | undefined;

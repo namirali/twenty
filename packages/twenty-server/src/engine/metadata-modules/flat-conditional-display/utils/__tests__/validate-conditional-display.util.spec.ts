@@ -1,10 +1,10 @@
 import {
-  type ConditionalDisplayProperty,
   type ConditionalDisplaySurface,
   FieldMetadataType,
   ViewFilterOperand,
 } from 'twenty-shared/types';
 
+import { type ConditionalDisplayProperty } from 'src/engine/metadata-modules/flat-conditional-display/types/conditional-display-property.type';
 import { validateConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-conditional-display.util';
 import { type MetadataUniversalFlatEntityMaps } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/types/metadata-universal-flat-entity-maps.type';
 

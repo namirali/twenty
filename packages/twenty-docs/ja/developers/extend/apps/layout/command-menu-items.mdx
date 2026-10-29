@@ -55,8 +55,9 @@ export default defineCommandMenuItem({
 ```ts src/command-menu-items/bulk-update.command-menu-item.ts
 import {
   defineCommandMenuItem,
+  noneDefined,
   objectPermissions,
-  everyEquals,
+  selectedRecords,
 } from 'twenty-sdk/define';
 
 export default defineCommandMenuItem({
@@ -64,11 +65,9 @@ export default defineCommandMenuItem({
   label: 'Bulk Update',
   availabilityType: 'RECORD_SELECTION',
   frontComponentUniversalIdentifier: '...',
-  conditionalAvailabilityExpression: everyEquals(
-    objectPermissions,
-    'canUpdateObjectRecords',
-    true,
-  ),
+  conditionalAvailabilityExpression:
+    objectPermissions.canUpdateObjectRecords &&
+    noneDefined(selectedRecords, 'deletedAt'),
 });
 ```
 
@@ -76,13 +75,15 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` は、すでに空ではない選択状態を意味します。特定の件数を示す場合にのみ `numberOfSelectedRecords` を使用してください（例: `>= 2`）。
 </Note>
 
+ビルドはコード内の `conditionalAvailabilityExpression` と `conditionalPinnedExpression` を読み取り、`conditionalAvailability` と `conditionalPinned` の条件ツリーにコンパイルします。ビルドされたマニフェストにはこれらのツリーのみが含まれます。 誤った使い方は、コマンドと式を示すビルドエラーになります：未知の変数、変数・`!`・`&&`・`||`・比較以外の構文、または `everyEquals` などのリスト演算子を `selectedRecords` 以外に適用した場合です。 古い SDK でビルドされたアプリも引き続きインストールできます：Twenty はその式文字列を変換し、再ビルドを求める警告をログに記録します。
+
 ### コンテキスト変数
 
 これらは現在のページの状態を表します：
 
 | 変数                             | タイプ       | 説明                                              |
 | ------------------------------ | --------- | ----------------------------------------------- |
-| `pageType`                     | `string`  | 現在のページタイプ（例：'RecordIndexPage'、'RecordShowPage'） |
+| `pageType`                     | `string`  | 現在のページタイプ（例：'INDEX_PAGE'、'RECORD_PAGE'） |
 | `isInSidePanel`                | `boolean` | コンポーネントがサイドパネル内でレンダリングされているかどうか                 |
 | `numberOfSelectedRecords`      | `number`  | 現在選択されているレコード数                                  |
 | `isSelectAll`                  | `boolean` | 「すべて選択」が有効かどうか                                  |
@@ -102,7 +103,7 @@ export default defineCommandMenuItem({
 | 演算子                                 | 説明                                        |
 | ----------------------------------- | ----------------------------------------- |
 | `isDefined(value)`                  | 値が null/undefined でない場合は `true`           |
-| `isNonEmptyString(value)`           | テキストのコンテキスト値（`pageType`、`objectMetadataItem.nameSingular`、`objectMetadataItem.readability`）が空でない文字列の場合は `true` |
+| `isNonEmptyString(value)`           | テキストのコンテキスト値（`pageType`、`objectMetadataItem.nameSingular`）が空でない文字列の場合は `true` |
 | `includes(list, value)`             | テキストのコンテキスト値が列挙した値のいずれかである場合は `true`（例: `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)`） |
 | `includesEvery(array, prop, value)` | すべての要素のプロパティに値が含まれている場合は `true`           |
 | `every(array, prop)`                | すべての要素でそのプロパティが truthy の場合は `true`        |

@@ -1,8 +1,8 @@
+import { type ConditionalDisplayEvaluationContext } from '@/conditional-display/types/ConditionalDisplayEvaluationContext';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
 import { getRecordFilterOperands } from '@/object-record/record-filter/utils/getRecordFilterOperands';
 import { isRecordMatchingFilter } from '@/object-record/record-filter/utils/isRecordMatchingFilter';
 import {
-  type ConditionalDisplayEvaluationContext,
   type ConditionalDisplayRecordFilter,
   FieldMetadataType,
 } from 'twenty-shared/types';

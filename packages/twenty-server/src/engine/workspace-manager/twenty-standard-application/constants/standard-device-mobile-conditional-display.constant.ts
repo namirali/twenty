@@ -1,18 +1,5 @@
-import {
-  type ConditionalDisplay,
-  type ConditionalDisplayDevice,
-  ViewFilterOperand,
-} from 'twenty-shared/types';
+import { type ConditionalDisplay } from 'twenty-shared/types';
+import { buildDeviceConditionalDisplay } from 'twenty-shared/utils';
 
-const MOBILE_DEVICES: ConditionalDisplayDevice[] = ['MOBILE'];
-
-export const STANDARD_DEVICE_MOBILE_CONDITIONAL_DISPLAY: ConditionalDisplay = {
-  recordFilters: [
-    {
-      id: '0',
-      contextKey: 'device',
-      operand: ViewFilterOperand.IS,
-      value: JSON.stringify(MOBILE_DEVICES),
-    },
-  ],
-};
+export const STANDARD_DEVICE_MOBILE_CONDITIONAL_DISPLAY: ConditionalDisplay =
+  buildDeviceConditionalDisplay('MOBILE');

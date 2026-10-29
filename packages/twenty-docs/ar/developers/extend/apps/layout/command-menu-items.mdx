@@ -60,8 +60,9 @@ export default defineCommandMenuItem({
 ```ts src/command-menu-items/bulk-update.command-menu-item.ts
 import {
   defineCommandMenuItem,
+  noneDefined,
   objectPermissions,
-  everyEquals,
+  selectedRecords,
 } from 'twenty-sdk/define';
 
 export default defineCommandMenuItem({
@@ -69,11 +70,9 @@ export default defineCommandMenuItem({
   label: 'Bulk Update',
   availabilityType: 'RECORD_SELECTION',
   frontComponentUniversalIdentifier: '...',
-  conditionalAvailabilityExpression: everyEquals(
-    objectPermissions,
-    'canUpdateObjectRecords',
-    true,
-  ),
+  conditionalAvailabilityExpression:
+    objectPermissions.canUpdateObjectRecords &&
+    noneDefined(selectedRecords, 'deletedAt'),
 });
 ```
 
@@ -81,13 +80,15 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` تعني بالفعل وجود تحديد غير فارغ — استخدم `numberOfSelectedRecords` فقط لعرض الأعداد المحددة (على سبيل المثال `>= 2`).
 </Note>
 
+يقرأ البناء `conditionalAvailabilityExpression` و`conditionalPinnedExpression` من الكود الخاص بك ويحوّلهما إلى شجرتي الشروط `conditionalAvailability` و`conditionalPinned`، ولا يحمل البيان (manifest) المبني سوى هاتين الشجرتين. يؤدي سوء الاستخدام إلى خطأ في البناء يذكر الأمر والتعبير: متغيّر غير معروف، أو صياغة غير المتغيّرات و`!` و`&&` و`||` والمقارنات، أو مُشغِّل قوائم مثل `everyEquals` مطبَّق على أي شيء غير `selectedRecords`. لا يزال التطبيق المبني بإصدار أقدم من SDK قابلاً للتثبيت: يحوّل Twenty سلاسل التعابير الخاصة به ويسجّل تحذيرًا يطلب إعادة بنائه.
+
 ### متغيّرات السياق
 
 تُمثّل هذه المتغيّرات الحالة الحالية للصفحة:
 
 | المتغيّر                       | النوع     | الوصف                                                           |
 | ------------------------------ | --------- | --------------------------------------------------------------- |
-| `pageType`                     | `string`  | نوع الصفحة الحالي (مثل `'RecordIndexPage'` و`'RecordShowPage'`) |
+| `pageType`                     | `string`  | نوع الصفحة الحالي (مثل `'INDEX_PAGE'` و`'RECORD_PAGE'`) |
 | `isInSidePanel`                | `boolean` | ما إذا كان المكوّن معروضًا في لوحة جانبية                       |
 | `numberOfSelectedRecords`      | `number`  | عدد السجلات المحدّدة حاليًا                                     |
 | `isSelectAll`                  | `boolean` | ما إذا كان "تحديد الكل" مفعّلًا                                 |
@@ -107,7 +108,7 @@ export default defineCommandMenuItem({
 | المُشغِّل                           | الوصف                                                              |
 | ----------------------------------- | ------------------------------------------------------------------ |
 | `isDefined(value)`                  | `true` إذا لم تكن القيمة null/undefined                            |
-| `isNonEmptyString(value)`           | `true` إذا كانت قيمة سياق نصية (`pageType` أو `objectMetadataItem.nameSingular` أو `objectMetadataItem.readability`) سلسلة غير فارغة |
+| `isNonEmptyString(value)`           | `true` إذا كانت قيمة سياق نصية (`pageType` أو `objectMetadataItem.nameSingular`) سلسلة غير فارغة |
 | `includes(list, value)`             | `true` إذا كانت قيمة سياق نصية إحدى القيم المدرجة، مثل `includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)` |
 | `includesEvery(array, prop, value)` | `true` إذا كانت خاصية كل عنصر تتضمن القيمة                         |
 | `every(array, prop)`                | `true` إذا كانت الخاصية تُقيَّم كقيمة صادقة في كل عنصر             |

@@ -161,8 +161,6 @@ export { definePageLayoutWidget } from '@/sdk/define/page-layouts/define-page-la
 export type {
   PageLayoutConfig,
   PageLayoutTabConfig,
-  PageLayoutWidgetConfig,
-  StandalonePageLayoutWidgetConfig,
 } from '@/sdk/define/common/types/loose-shared-types.type';
 export {
   STANDARD_PAGE_LAYOUT_UNIVERSAL_IDENTIFIERS as STANDARD_PAGE_LAYOUT,
@@ -238,6 +236,7 @@ export {
   PageLayoutTabLayoutMode,
   PageLayoutWidgetVerticalListHeightBehavior,
   PageLayoutType,
+  RecordFilterGroupLogicalOperator,
   ViewCalendarLayout,
   ViewFilterGroupLogicalOperator,
   ViewFilterOperand,
@@ -248,11 +247,11 @@ export {
   WidgetType,
 } from 'twenty-shared/types';
 export type {
-  ConditionalDisplay,
   PageLayoutWidgetCanvasPosition,
   PageLayoutWidgetConditionalDisplay,
   PageLayoutWidgetGridPosition,
   PageLayoutWidgetPosition,
   PageLayoutWidgetUniversalConfiguration,
   PageLayoutWidgetVerticalListPosition,
+  UniversalConditionalDisplay,
 } from '@/sdk/define/common/types/loose-shared-types.type';

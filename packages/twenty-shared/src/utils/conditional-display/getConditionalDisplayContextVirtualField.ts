@@ -15,15 +15,19 @@ export const getConditionalDisplayContextVirtualField = ({
   const { subject } = CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey];
 
   switch (subject.kind) {
-    case 'VALUE':
+    case 'value':
       return isDefined(subFieldName) ? undefined : subject.field;
-    case 'MAP_ENTRY':
+    case 'mapEntry':
       return isNonEmptyString(subFieldName) ? subject.entryField : undefined;
-    case 'PROPERTY':
-      return Object.entries(subject.propertyFields).find(
-        ([propertyName]) => propertyName === subFieldName,
-      )?.[1];
-    case 'SELECTED_RECORD_PATH':
+    case 'property':
+      return isNonEmptyString(subFieldName) &&
+        Object.prototype.hasOwnProperty.call(
+          subject.propertyFields,
+          subFieldName,
+        )
+        ? subject.propertyFields[subFieldName]
+        : undefined;
+    case 'selectedRecordPath':
       return undefined;
   }
 };

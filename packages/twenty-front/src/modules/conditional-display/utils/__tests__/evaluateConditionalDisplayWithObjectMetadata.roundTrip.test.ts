@@ -1,3 +1,4 @@
+import { type ConditionalDisplayEvaluationContext } from '@/conditional-display/types/ConditionalDisplayEvaluationContext';
 import { evaluateConditionalDisplayWithObjectMetadata } from '@/conditional-display/utils/evaluateConditionalDisplayWithObjectMetadata';
 import { isArray, isBoolean, isNumber, isString } from '@sniptt/guards';
 import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from 'twenty-shared/constants';
@@ -7,11 +8,9 @@ import {
 } from 'twenty-shared/testing';
 import {
   type ConditionalDisplay,
-  type ConditionalDisplayEvaluationContext,
   type ConditionalDisplayRecordFilter,
   ContextStorePageType,
   FieldMetadataType,
-  MetadataReadability,
   type ObjectRecord,
   RecordFilterGroupLogicalOperator,
   ViewFilterOperand,
@@ -183,7 +182,7 @@ const getMatrixSubjects = ({
     const { subject } = CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey];
 
     switch (subject.kind) {
-      case 'VALUE':
+      case 'value':
         if (
           subject.field.type === FieldMetadataType.BOOLEAN &&
           contextKey !== 'areAllSelectedRecordsFavorites'
@@ -198,9 +197,13 @@ const getMatrixSubjects = ({
           });
         }
 
+        if (subject.field.type === FieldMetadataType.TEXT) {
+          contextSubjects.push({ name: subjectName, values: ['Label', ''] });
+        }
+
         return;
-      case 'MAP_ENTRY':
-      case 'PROPERTY':
+      case 'mapEntry':
+      case 'property':
         contextSubjects.push({
           name: subjectName,
           values:
@@ -210,7 +213,7 @@ const getMatrixSubjects = ({
         });
 
         return;
-      case 'SELECTED_RECORD_PATH':
+      case 'selectedRecordPath':
         recordPathSubjects.push({
           name: subFieldName ?? '',
           values: getRecordPathValues({
@@ -374,6 +377,8 @@ const buildRoundTripContext = ({
       contextStorePageType === assignments.get('pageType'),
   );
 
+  const objectMetadataLabel = assignments.get('objectMetadataLabel');
+
   return {
     pageType: pageType ?? ContextStorePageType.Index,
     isInSidePanel: readBoolean('isInSidePanel'),
@@ -405,7 +410,9 @@ const buildRoundTripContext = ({
     canImpersonate: readBoolean('canImpersonate'),
     canAccessFullAdminPanel: readBoolean('canAccessFullAdminPanel'),
     objectMetadataItem,
-    objectMetadataLabel: '',
+    objectMetadataLabel: isString(objectMetadataLabel)
+      ? objectMetadataLabel
+      : '',
     areAllSelectedRecordsFavorites:
       favoriteRecordIds.length === numberOfSelectedRecords,
   };
@@ -648,7 +655,6 @@ describe('evaluateConditionalDisplayWithObjectMetadata round trip', () => {
     'isNonEmptyString(pageType)',
     'isNonEmptyString(objectMetadataItem.nameSingular)',
     'isNonEmptyString(objectMetadataLabel)',
-    'isNonEmptyString(objectMetadataItem.readability)',
     'includes(["INDEX_PAGE", "RECORD_PAGE"], pageType)',
     'includes(["company", "person"], objectMetadataItem.nameSingular)',
     'arrayLength(favoriteRecordIds) != numberOfSelectedRecords',
@@ -665,32 +671,28 @@ describe('evaluateConditionalDisplayWithObjectMetadata round trip', () => {
           objectMetadataLabel: 'Companies',
         },
         {
-          objectMetadataItem: {
-            nameSingular: 'note',
-            readability: MetadataReadability.OPEN,
-          },
+          objectMetadataItem: { nameSingular: 'note' },
           objectMetadataLabel: 'Note',
         },
       ];
 
-      const contexts = Object.values(ContextStorePageType).flatMap(
-        (pageType) =>
-          objectMetadataItemCases.flatMap((objectMetadataItemCase) =>
-            [0, 1, 2].flatMap((numberOfSelectedRecords) =>
-              FAVORITE_RECORD_COUNTS.filter(
-                (favoriteRecordCount) =>
-                  favoriteRecordCount <= numberOfSelectedRecords,
-              ).map((favoriteRecordCount) => ({
-                ...buildRoundTripContext({
-                  assignments: new Map([['pageType', pageType]]),
-                  selectedRecords: [],
-                  numberOfSelectedRecords,
-                  favoriteRecordCount,
-                }),
-                ...objectMetadataItemCase,
-              })),
-            ),
+      const contexts = Object.values(ContextStorePageType).flatMap((pageType) =>
+        objectMetadataItemCases.flatMap((objectMetadataItemCase) =>
+          [0, 1, 2].flatMap((numberOfSelectedRecords) =>
+            FAVORITE_RECORD_COUNTS.filter(
+              (favoriteRecordCount) =>
+                favoriteRecordCount <= numberOfSelectedRecords,
+            ).map((favoriteRecordCount) => ({
+              ...buildRoundTripContext({
+                assignments: new Map([['pageType', pageType]]),
+                selectedRecords: [],
+                numberOfSelectedRecords,
+                favoriteRecordCount,
+              }),
+              ...objectMetadataItemCase,
+            })),
           ),
+        ),
       );
 
       const mismatchingContexts = contexts.filter(

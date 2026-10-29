@@ -302,10 +302,10 @@ describe('CLI manifest fixtures and worker transport', () => {
     if (!unmappedResult.success) {
       expect(unmappedResult.errors).toEqual([
         expect.stringContaining(
-          'src/command-menu-items/favorite-count.command-menu-item.ts - conditionalAvailabilityExpression of command menu item "Favorite count" cannot be compiled into a conditionalAvailability tree: Cannot compile conditional availability expression "favoriteRecordIds.length > 0"',
+          'src/command-menu-items/favorite-count.command-menu-item.ts: conditionalAvailabilityExpression of command menu item "Favorite count" cannot be compiled into a conditionalAvailability tree: Cannot compile conditional availability expression "favoriteRecordIds.length > 0"',
         ),
         expect.stringContaining(
-          'src/command-menu-items/selected-records-pinned.command-menu-item.ts - conditionalPinnedExpression of command menu item "Selected records pinned" cannot be compiled into a conditionalPinned tree:',
+          'src/command-menu-items/selected-records-pinned.command-menu-item.ts: conditionalPinnedExpression of command menu item "Selected records pinned" cannot be compiled into a conditionalPinned tree:',
         ),
       ]);
     }
@@ -429,137 +429,6 @@ export default defineWorkflow({
       expect(invalidResult.errors.join('\n')).toContain(
         'Unsupported step type',
       );
-    }
-  }, 60000);
-
-  it('compiles json-logic widget rules on the device and on app fields into trees', async () => {
-    const appPath = await copyFixture('minimal-app');
-    const writeSelectField = (
-      fileName: string,
-      universalIdentifier: string,
-      type: string,
-      name: string,
-    ) =>
-      writeFile(
-        join(appPath, fileName),
-        `import { defineField, FieldType } from 'twenty-sdk/define';
-
-export default defineField({
-  objectUniversalIdentifier: 'e1e2e3e4-e5e6-4000-8000-000000000030',
-  universalIdentifier: '${universalIdentifier}',
-  type: FieldType.${type},
-  name: '${name}',
-  label: '${name}',
-  options: [
-    { value: 'VALUE_1', label: 'Value 1', color: 'blue', position: 0 },
-    { value: 'VALUE_2', label: 'Value 2', color: 'green', position: 1 },
-  ],
-});
-`,
-      );
-    const writeTab = (multiSelectFieldName: string) =>
-      writeFile(
-        join(appPath, 'my.page-layout-tab.ts'),
-        `import {
-  definePageLayoutTab,
-  STANDARD_PAGE_LAYOUT_UNIVERSAL_IDENTIFIERS,
-} from 'twenty-sdk/define';
-
-const widget = (index: number, conditionalDisplay: object) => ({
-  universalIdentifier: \`e1e2e3e4-e5e6-4000-8000-00000000007\${index}\`,
-  title: \`Widget \${index}\`,
-  type: 'FRONT_COMPONENT' as const,
-  objectUniversalIdentifier: 'e1e2e3e4-e5e6-4000-8000-000000000030',
-  conditionalDisplay,
-  configuration: {
-    configurationType: 'FRONT_COMPONENT' as const,
-    frontComponentUniversalIdentifier: 'e1e2e3e4-e5e6-4000-8000-000000000020',
-  },
-});
-
-export default definePageLayoutTab({
-  universalIdentifier: 'e1e2e3e4-e5e6-4000-8000-000000000070',
-  pageLayoutUniversalIdentifier:
-    STANDARD_PAGE_LAYOUT_UNIVERSAL_IDENTIFIERS.companyRecordPage
-      .universalIdentifier,
-  title: 'My tab',
-  position: 1000,
-  widgets: [
-    widget(1, { and: [{ '===': [{ var: 'device' }, 'MOBILE'] }] }),
-    widget(2, { in: ['VALUE_1', { var: 'selectedRecords.0.${multiSelectFieldName}' }] }),
-    widget(3, { '!==': [{ var: 'selectedRecords.0.mySelect' }, 'VALUE_2'] }),
-  ],
-});
-`,
-      );
-
-    await writeSelectField(
-      'my-select.field.ts',
-      'e1e2e3e4-e5e6-4000-8000-000000000081',
-      'SELECT',
-      'mySelect',
-    );
-    await writeSelectField(
-      'my-multi-select.field.ts',
-      'e1e2e3e4-e5e6-4000-8000-000000000082',
-      'MULTI_SELECT',
-      'myMultiSelect',
-    );
-    await writeTab('myMultiSelect');
-    const result = await compareManifest(appPath);
-
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(
-        result.manifest.pageLayoutTabs[0].widgets?.map(
-          ({ conditionalDisplay }) => conditionalDisplay,
-        ),
-      ).toEqual([
-        {
-          recordFilters: [
-            {
-              id: '0',
-              contextKey: 'device',
-              operand: 'IS',
-              value: '["MOBILE"]',
-            },
-          ],
-        },
-        {
-          recordFilters: [
-            {
-              id: expect.any(String),
-              fieldMetadataUniversalIdentifier:
-                'e1e2e3e4-e5e6-4000-8000-000000000082',
-              operand: 'CONTAINS',
-              value: '["VALUE_1"]',
-            },
-          ],
-        },
-        {
-          recordFilters: [
-            {
-              id: expect.any(String),
-              fieldMetadataUniversalIdentifier:
-                'e1e2e3e4-e5e6-4000-8000-000000000081',
-              operand: 'IS_NOT',
-              value: '["VALUE_2"]',
-            },
-          ],
-        },
-      ]);
-    }
-
-    await writeTab('missingField');
-    const invalidResult = await compareManifest(appPath);
-
-    expect(invalidResult.success).toBe(false);
-    if (!invalidResult.success) {
-      expect(invalidResult.errors).toEqual([
-        expect.stringContaining(
-          'my.page-layout-tab.ts - conditionalDisplay of page layout widget "Widget 2" cannot be compiled into a tree: Cannot convert legacy widget json-logic {"in":["VALUE_1",{"var":"selectedRecords.0.missingField"}]}: unknown field "missingField"',
-        ),
-      ]);
     }
   }, 60000);
 

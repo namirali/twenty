@@ -1,18 +1,6 @@
-export type ConditionalDisplayEngineContextKey =
-  | 'pageType'
-  | 'isInSidePanel'
-  | 'isDashboardPageLayoutInEditMode'
-  | 'isLayoutCustomizationModeEnabled'
-  | 'isSelectAll'
-  | 'hasAnySoftDeleteFilterOnView'
-  | 'numberOfSelectedRecords'
-  | 'canImpersonate'
-  | 'canAccessFullAdminPanel'
-  | 'areAllSelectedRecordsFavorites'
-  | 'featureFlags'
-  | 'permissionFlags'
-  | 'objectPermissions'
-  | 'targetObjectReadPermissions'
-  | 'targetObjectWritePermissions'
-  | 'objectMetadataItem'
-  | 'selectedRecords';
+import { type CommandMenuContextApi } from '../CommandMenuContextApi';
+
+export type ConditionalDisplayEngineContextKey = Exclude<
+  keyof CommandMenuContextApi,
+  'favoriteRecordIds'
+>;

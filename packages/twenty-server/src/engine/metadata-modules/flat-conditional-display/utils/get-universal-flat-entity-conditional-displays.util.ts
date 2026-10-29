@@ -1,9 +1,7 @@
-import {
-  type ConditionalDisplayProperty,
-  type ConditionalDisplaySurface,
-} from 'twenty-shared/types';
+import { type ConditionalDisplaySurface } from 'twenty-shared/types';
 import { isPlainObject } from 'twenty-shared/utils';
 
+import { type ConditionalDisplayProperty } from 'src/engine/metadata-modules/flat-conditional-display/types/conditional-display-property.type';
 import { isLegacyNonAuthoredOverride } from 'src/engine/metadata-modules/overrides/utils/is-legacy-non-authored-override.util';
 
 export const getUniversalFlatEntityConditionalDisplays = ({

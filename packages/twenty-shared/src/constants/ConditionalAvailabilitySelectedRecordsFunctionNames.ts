@@ -1,0 +1,15 @@
+export const CONDITIONAL_AVAILABILITY_SELECTED_RECORDS_FUNCTION_NAMES = [
+  'every',
+  'everyDefined',
+  'everyEquals',
+  'some',
+  'someDefined',
+  'someEquals',
+  'someNonEmptyString',
+  'none',
+  'noneDefined',
+  'noneEquals',
+  'includesEvery',
+  'includesSome',
+  'includesNone',
+];

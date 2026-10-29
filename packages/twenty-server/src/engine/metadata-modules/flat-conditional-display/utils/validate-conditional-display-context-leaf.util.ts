@@ -5,10 +5,7 @@ import {
   isNumber,
   isString,
 } from '@sniptt/guards';
-import {
-  CONDITIONAL_DISPLAY_CONTEXT_KEYS,
-  CONDITIONAL_DISPLAY_SELECTED_RECORD_PATH_OPERANDS,
-} from 'twenty-shared/constants';
+import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from 'twenty-shared/constants';
 import {
   type ConditionalDisplayContextKey,
   type ConditionalDisplayVirtualField,
@@ -24,6 +21,7 @@ import {
   parseJson,
 } from 'twenty-shared/utils';
 
+import { CONDITIONAL_DISPLAY_SELECTED_RECORD_PATH_OPERANDS } from 'src/engine/metadata-modules/flat-conditional-display/constants/conditional-display-selected-record-path-operands.constant';
 import { parseSelectFilterValues } from 'src/engine/metadata-modules/flat-field-metadata/utils/get-invalid-select-filter-option-values.util';
 import { validateRecordFilterFieldLeaf } from 'src/engine/metadata-modules/flat-field-metadata/utils/validate-record-filter-field-leaf.util';
 import { type FlatEntityValidationError } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/builders/types/failed-flat-entity-validation.type';
@@ -50,7 +48,7 @@ const validateContextLeafSubFieldName = ({
 }): FlatEntityValidationError[] => {
   const { subject } = CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey];
 
-  if (subject.kind === 'VALUE') {
+  if (subject.kind === 'value') {
     if (!isDefined(subFieldName)) {
       return [];
     }
@@ -77,7 +75,7 @@ const validateContextLeafSubFieldName = ({
   }
 
   switch (subject.kind) {
-    case 'MAP_ENTRY': {
+    case 'mapEntry': {
       if (SUB_FIELD_NAME_IDENTIFIER_PATTERN.test(subFieldName)) {
         return [];
       }
@@ -91,7 +89,7 @@ const validateContextLeafSubFieldName = ({
         },
       ];
     }
-    case 'PROPERTY': {
+    case 'property': {
       if (
         isDefined(
           getConditionalDisplayContextVirtualField({
@@ -112,7 +110,7 @@ const validateContextLeafSubFieldName = ({
         },
       ];
     }
-    case 'SELECTED_RECORD_PATH': {
+    case 'selectedRecordPath': {
       if (SUB_FIELD_NAME_PATH_PATTERN.test(subFieldName)) {
         return [];
       }
