@@ -6,7 +6,7 @@ import { mapAuthoredOverrideEntries } from 'src/engine/metadata-modules/override
 
 export const restoreLegacyConditionalDisplayOverrides = (
   overrides: FlatPageLayoutWidget['overrides'],
-): unknown =>
+): FlatPageLayoutWidget['overrides'] =>
   isDefined(overrides)
     ? mapAuthoredOverrideEntries({
         metadataName: 'pageLayoutWidget',
