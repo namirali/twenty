@@ -74,7 +74,10 @@ describe('buildEditLayoutCommandMenuItemUpdate', () => {
     },
   ])('skips $name', ({ existingCommandMenuItem }) => {
     expect(
-      buildEditLayoutCommandMenuItemUpdate({ existingCommandMenuItem, now: NOW }),
+      buildEditLayoutCommandMenuItemUpdate({
+        existingCommandMenuItem,
+        now: NOW,
+      }),
     ).toBeUndefined();
   });
 
