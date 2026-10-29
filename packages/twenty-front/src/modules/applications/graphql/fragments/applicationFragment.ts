@@ -67,7 +67,6 @@ export const APPLICATION_FRAGMENT = gql`
       availabilityType
       conditionalAvailability
       conditionalDisplay
-      availabilityObjectMetadataId
       frontComponentId
       universalIdentifier
       applicationId

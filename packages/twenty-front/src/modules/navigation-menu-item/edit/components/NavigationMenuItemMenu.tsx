@@ -1,7 +1,7 @@
 import { NavigationMenuItemMenuModeEffect } from '@/navigation-menu-item/edit/effect-components/NavigationMenuItemMenuModeEffect';
 import { type ComponentProps, type ReactElement, type ReactNode } from 'react';
 import { useLingui } from '@lingui/react/macro';
-import { isDefined } from 'twenty-shared/utils';
+import { assertUnreachable, isDefined } from 'twenty-shared/utils';
 import { doNotTranslate } from 'twenty-shared/i18n';
 import { Dropdown, type DropdownType } from 'twenty-ui/components/navigation';
 import { useTheme } from 'twenty-ui/theme';
@@ -83,11 +83,20 @@ export const NavigationMenuItemMenu = ({
   const isEditing = mode.type === 'edit';
   const dropdownType = DROPDOWN_TYPE_BY_MENU_MODE[mode.type];
   const isPanel = dropdownType === 'panel';
-  const menuAriaLabel = isEditing
-    ? t`Edit link`
-    : mode.type === 'visibility'
-      ? t`Visibility`
-      : t`Menu item actions`;
+  const getMenuAriaLabel = () => {
+    switch (mode.type) {
+      case 'edit':
+        return t`Edit link`;
+      case 'visibility':
+        return t`Visibility restriction`;
+      case 'actions':
+      case 'add':
+        return t`Menu item actions`;
+      default:
+        return assertUnreachable(mode);
+    }
+  };
+  const menuAriaLabel = getMenuAriaLabel();
   const openAddMenu = (target: NavigationMenuItemAddTarget) => {
     const { folderId } = target;
 

@@ -75,7 +75,7 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` implique déjà une sélection non vide — utilisez `numberOfSelectedRecords` uniquement pour des décomptes spécifiques (par exemple `>= 2`).
 </Note>
 
-Le build lit `conditionalAvailabilityExpression` et `conditionalPinnedExpression` dans votre code et les compile en arbres de conditions `conditionalAvailability` et `conditionalPinned` ; le manifeste généré ne contient que ces arbres. Une mauvaise utilisation provoque une erreur de build qui nomme la commande et l'expression : une variable inconnue, une syntaxe autre que des variables, `!`, `&&`, `||` et des comparaisons, ou un opérateur de liste comme `everyEquals` appliqué à autre chose que `selectedRecords`. Une app construite avec un SDK plus ancien s'installe toujours : Twenty convertit ses chaînes d'expression et journalise un avertissement demandant de la reconstruire.
+Le build lit `conditionalAvailabilityExpression` et `conditionalPinnedExpression` dans votre code et les compile en arbres de conditions `conditionalAvailability` et `conditionalPinned` ; le manifeste généré ne contient que ces arbres. Une mauvaise utilisation provoque une erreur de build qui nomme la commande et l'expression : une variable inconnue, une syntaxe autre que des variables, l'accès aux membres, les helpers ci-dessous, `!`, `&&`, `||` et des comparaisons, ou un opérateur de liste comme `everyEquals` appliqué à autre chose que `selectedRecords`. Une app construite avec un SDK plus ancien s'installe toujours : Twenty convertit ses chaînes d'expression et journalise un avertissement demandant de la reconstruire.
 
 ### Variables de contexte
 

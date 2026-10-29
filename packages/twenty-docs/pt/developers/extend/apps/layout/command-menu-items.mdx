@@ -75,7 +75,7 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` já implica uma seleção não vazia — use `numberOfSelectedRecords` apenas para contagens específicas (por exemplo, `>= 2`).
 </Note>
 
-O build lê `conditionalAvailabilityExpression` e `conditionalPinnedExpression` do seu código e os compila em árvores de condições `conditionalAvailability` e `conditionalPinned`; o manifesto gerado contém apenas essas árvores. O uso incorreto é um erro de build que indica o comando e a expressão: uma variável desconhecida, uma sintaxe diferente de variáveis, `!`, `&&`, `||` e comparações, ou um operador de lista como `everyEquals` aplicado a algo que não seja `selectedRecords`. Um app criado com um SDK mais antigo ainda é instalado: o Twenty converte suas strings de expressão e registra um aviso pedindo para recompilá-lo.
+O build lê `conditionalAvailabilityExpression` e `conditionalPinnedExpression` do seu código e os compila em árvores de condições `conditionalAvailability` e `conditionalPinned`; o manifesto gerado contém apenas essas árvores. O uso incorreto é um erro de build que indica o comando e a expressão: uma variável desconhecida, uma sintaxe diferente de variáveis, o acesso a membros, os helpers abaixo, `!`, `&&`, `||` e comparações, ou um operador de lista como `everyEquals` aplicado a algo que não seja `selectedRecords`. Um app criado com um SDK mais antigo ainda é instalado: o Twenty converte suas strings de expressão e registra um aviso pedindo para recompilá-lo.
 
 ### Variáveis de contexto
 

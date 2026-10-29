@@ -100,7 +100,7 @@ export const NavigationMenuItemActions = ({
       ? [
           {
             id: 'visibility',
-            label: t`Visibility`,
+            label: t`Visibility restriction`,
             Icon: IconEyeX,
             contextualText: getConditionalDisplaySummaryLabel({
               conditionName: 'conditionalDisplay',

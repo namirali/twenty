@@ -59,11 +59,8 @@ export const validateConditionalDisplay = ({
   const errors: FlatEntityValidationError[] = [];
 
   const isSelectedRecordsMatchAllowed =
-    surface === 'commandMenuItem' ||
-    (getConditionalDisplayPropertyOwner(property) === 'engine' &&
-      CONDITIONAL_DISPLAY_CONTEXT_KEYS.selectedRecords.surfaces.includes(
-        surface,
-      ));
+    getConditionalDisplayPropertyOwner(property) === 'engine' &&
+    CONDITIONAL_DISPLAY_CONTEXT_KEYS.selectedRecords.surfaces.includes(surface);
 
   if (isDefined(selectedRecordsMatch)) {
     if (!isSelectedRecordsMatchAllowed) {

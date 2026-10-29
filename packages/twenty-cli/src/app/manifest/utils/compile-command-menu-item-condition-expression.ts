@@ -1,5 +1,5 @@
 import { type CompiledConditionExpression } from '@/app/source/types/compiled-condition-expression.type';
-import { isString } from '@sniptt/guards';
+import { isObject, isString } from '@sniptt/guards';
 import { type UniversalConditionalDisplay } from 'twenty-shared/types';
 import {
   compileConditionalAvailabilityExpression,
@@ -23,7 +23,7 @@ export const compileCommandMenuItemConditionExpression = ({
     return { errors: [], warnings: [] };
   }
 
-  if (!isString(expression) && 'errorMessage' in expression) {
+  if (isObject(expression) && 'errorMessage' in expression) {
     return {
       errors: [
         `${expressionDescription} cannot be compiled into a ${manifestKey} tree: ${expression.errorMessage}`,

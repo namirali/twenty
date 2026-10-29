@@ -84,11 +84,13 @@ export const CommandMenuItemOptionsDropdown = ({
             })}
             descriptionPlacement="end"
             onClick={handleOpenVisibility}
-          >{t`Visibility`}</Dropdown.ActionItem>
-          <Dropdown.ActionItem
-            startIcon={<IconRefresh />}
-            onClick={() => resetCommandMenuItemToDefault(itemId)}
-          >{t`Reset to default`}</Dropdown.ActionItem>
+          >{t`Visibility restriction`}</Dropdown.ActionItem>
+          {isPinned && (
+            <Dropdown.ActionItem
+              startIcon={<IconRefresh />}
+              onClick={() => resetCommandMenuItemToDefault(itemId)}
+            >{t`Reset to default`}</Dropdown.ActionItem>
+          )}
         </Dropdown.Section>
       </DropdownContent>
     </DropdownRoot>

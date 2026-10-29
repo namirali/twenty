@@ -77,7 +77,7 @@ export const StandalonePageCommandMenu = () => {
     targetObjectWritePermissions,
   ]);
 
-  const { conditionalDisplayContext, isCommandMenuItemShown } =
+  const { isCommandMenuItemShown, resolvePinnedCommandMenuItem } =
     useCommandMenuItemConditionalDisplay(commandMenuContextApi);
 
   const filteredCommandMenuItems = useMemo(() => {
@@ -98,18 +98,16 @@ export const StandalonePageCommandMenu = () => {
       )
       .filter(doesCommandMenuItemMatchPageLayoutId(currentPageLayoutId))
       .filter(isCommandMenuItemShown)
-      .map((item) =>
-        resolveCommandMenuItemPinning(item, conditionalDisplayContext),
-      )
+      .map(resolvePinnedCommandMenuItem)
       .sort(
         (firstItem, secondItem) => firstItem.position - secondItem.position,
       );
   }, [
     commandMenuItems,
-    conditionalDisplayContext,
     currentPageLayoutId,
     isLayoutCustomizationAllowedOnCurrentPage,
     isCommandMenuItemShown,
+    resolvePinnedCommandMenuItem,
   ]);
 
   return (

@@ -1,3 +1,4 @@
+import { resolveCommandMenuItemPinning } from '@/command-menu-item/utils/resolveCommandMenuItemPinning';
 import { useConditionalDisplayCurrentUserContext } from '@/conditional-display/hooks/useConditionalDisplayCurrentUserContext';
 import { type ConditionalDisplayEvaluationContext } from '@/conditional-display/types/ConditionalDisplayEvaluationContext';
 import { evaluateConditionalDisplayWithObjectMetadata } from '@/conditional-display/utils/evaluateConditionalDisplayWithObjectMetadata';
@@ -32,6 +33,14 @@ export const useCommandMenuItemConditionalDisplay = (
       }),
     };
 
+    const findAvailabilityObjectMetadataItem = (
+      item: Pick<CommandMenuItemFieldsFragment, 'availabilityObjectMetadataId'>,
+    ) =>
+      objectMetadataItems.find(
+        (objectMetadataItem) =>
+          objectMetadataItem.id === item.availabilityObjectMetadataId,
+      );
+
     const evaluateForCommandMenuItem = (
       conditionalDisplay: ConditionalDisplay | null | undefined,
       item: CommandMenuItemFieldsFragment,
@@ -40,10 +49,7 @@ export const useCommandMenuItemConditionalDisplay = (
         conditionalDisplay,
         context: conditionalDisplayContext,
         records: commandMenuContextApi.selectedRecords,
-        objectMetadataItem: objectMetadataItems.find(
-          (objectMetadataItem) =>
-            objectMetadataItem.id === item.availabilityObjectMetadataId,
-        ),
+        objectMetadataItem: findAvailabilityObjectMetadataItem(item),
         objectMetadataItems,
       });
 
@@ -55,10 +61,23 @@ export const useCommandMenuItemConditionalDisplay = (
       evaluateForCommandMenuItem(item.conditionalAvailability, item) &&
       doesCommandMenuItemMatchConditionalDisplay(item);
 
+    const resolvePinnedCommandMenuItem = <
+      TCommandMenuItem extends CommandMenuItemFieldsFragment,
+    >(
+      item: TCommandMenuItem,
+    ) =>
+      resolveCommandMenuItemPinning({
+        commandMenuItem: item,
+        conditionalDisplayContext,
+        objectMetadataItem: findAvailabilityObjectMetadataItem(item),
+        objectMetadataItems,
+      });
+
     return {
       conditionalDisplayContext,
       doesCommandMenuItemMatchConditionalDisplay,
       isCommandMenuItemShown,
+      resolvePinnedCommandMenuItem,
     };
   }, [
     commandMenuContextApi,

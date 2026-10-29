@@ -75,7 +75,7 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` již znamená neprázdný výběr — použijte `numberOfSelectedRecords` pouze pro konkrétní počty (např. `>= 2`).
 </Note>
 
-Build načte `conditionalAvailabilityExpression` a `conditionalPinnedExpression` z vašeho kódu a zkompiluje je do stromů podmínek `conditionalAvailability` a `conditionalPinned`; sestavený manifest obsahuje pouze tyto stromy. Nesprávné použití je chybou buildu, která uvádí příkaz a výraz: neznámá proměnná, jiná syntaxe než proměnné, `!`, `&&`, `||` a porovnání, nebo operátor seznamu jako `everyEquals` použitý na cokoli jiného než `selectedRecords`. Aplikace sestavená starší verzí SDK se stále nainstaluje: Twenty převede její řetězce výrazů a zapíše do logu varování s výzvou k novému sestavení.
+Build načte `conditionalAvailabilityExpression` a `conditionalPinnedExpression` z vašeho kódu a zkompiluje je do stromů podmínek `conditionalAvailability` a `conditionalPinned`; sestavený manifest obsahuje pouze tyto stromy. Nesprávné použití je chybou buildu, která uvádí příkaz a výraz: neznámá proměnná, jiná syntaxe než proměnné, přístup ke členům, níže uvedené helpery, `!`, `&&`, `||` a porovnání, nebo operátor seznamu jako `everyEquals` použitý na cokoli jiného než `selectedRecords`. Aplikace sestavená starší verzí SDK se stále nainstaluje: Twenty převede její řetězce výrazů a zapíše do logu varování s výzvou k novému sestavení.
 
 ### Kontextové proměnné
 

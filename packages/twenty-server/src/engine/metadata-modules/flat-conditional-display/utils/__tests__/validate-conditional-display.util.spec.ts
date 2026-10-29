@@ -346,7 +346,7 @@ describe('validateConditionalDisplay', () => {
     ).toEqual([]);
   });
 
-  it('should accept selectedRecordsMatch on a command menu item', () => {
+  it('should reject selectedRecordsMatch on the admin rule of a command menu item', () => {
     expect(
       validate({
         conditionalDisplay: {
@@ -362,7 +362,12 @@ describe('validateConditionalDisplay', () => {
         },
         surface: 'commandMenuItem',
       }),
-    ).toEqual([]);
+    ).toEqual([
+      expect.objectContaining({
+        code: 'INVALID_DATA',
+        value: 'SOME',
+      }),
+    ]);
   });
 
   it('should reject a rule with both a field and a context key', () => {

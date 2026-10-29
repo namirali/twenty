@@ -55,7 +55,7 @@ exports[`CLI manifest fixtures and worker transport > matches the manifest, file
           "recordFilters": [
             {
               "contextKey": "isInSidePanel",
-              "id": "34c126d8-40e1-515b-afae-143e04bdb81e",
+              "id": "9880c046-4871-519b-8821-cfd41773f030",
               "operand": "IS",
               "value": "true",
             },
@@ -70,7 +70,7 @@ exports[`CLI manifest fixtures and worker transport > matches the manifest, file
           "recordFilters": [
             {
               "contextKey": "numberOfSelectedRecords",
-              "id": "ed0d2928-8258-5b3f-bc7b-0a8ead99b3c2",
+              "id": "41fcc848-16a7-545b-9137-4655164a7756",
               "operand": "GREATER_THAN_OR_EQUAL",
               "value": "1",
             },
@@ -80,7 +80,7 @@ exports[`CLI manifest fixtures and worker transport > matches the manifest, file
           "recordFilters": [
             {
               "contextKey": "numberOfSelectedRecords",
-              "id": "7cfa5a0c-74b8-5a51-86c7-30569681ac76",
+              "id": "0bc55c03-ca36-56ad-8eca-1e6da50b571b",
               "operand": "IS",
               "value": "1",
             },
@@ -96,7 +96,7 @@ exports[`CLI manifest fixtures and worker transport > matches the manifest, file
           "recordFilters": [
             {
               "contextKey": "isSelectAll",
-              "id": "7b5bd338-5179-5392-93a7-2194d4626ead",
+              "id": "15d675c7-966f-59e1-801c-2766caef8f93",
               "operand": "IS",
               "value": "false",
             },

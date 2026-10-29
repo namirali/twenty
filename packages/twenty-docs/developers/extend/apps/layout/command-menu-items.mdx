@@ -80,7 +80,7 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` already implies a non-empty selection — use `numberOfSelectedRecords` only for specific counts (e.g. `>= 2`).
 </Note>
 
-The build reads `conditionalAvailabilityExpression` and `conditionalPinnedExpression` from your code and compiles them into `conditionalAvailability` and `conditionalPinned` condition trees, and the built manifest carries only those trees. Misuse is a build error naming the command and the expression: an unknown variable, syntax other than variables, `!`, `&&`, `||` and comparisons, or a list operator such as `everyEquals` applied to anything but `selectedRecords`. An app built with an older SDK still installs: Twenty converts its expression strings and logs a warning asking to rebuild it.
+The build reads `conditionalAvailabilityExpression` and `conditionalPinnedExpression` from your code and compiles them into `conditionalAvailability` and `conditionalPinned` condition trees, and the built manifest carries only those trees. Misuse is a build error naming the command and the expression: an unknown variable, syntax other than variables, member access, the helpers below, `!`, `&&`, `||` and comparisons, or a list operator such as `everyEquals` applied to anything but `selectedRecords`. An app built with an older SDK still installs: Twenty converts its expression strings and logs a warning asking to rebuild it.
 
 ### Context variables
 

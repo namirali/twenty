@@ -75,7 +75,7 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` impliziert bereits eine nichtleere Auswahl — verwende `numberOfSelectedRecords` nur für bestimmte Zählwerte (z. B. `>= 2`).
 </Note>
 
-Der Build liest `conditionalAvailabilityExpression` und `conditionalPinnedExpression` aus Ihrem Code und kompiliert sie zu den Bedingungsbäumen `conditionalAvailability` und `conditionalPinned`; das gebaute Manifest enthält nur diese Bäume. Eine fehlerhafte Verwendung ist ein Build-Fehler, der den Befehl und den Ausdruck nennt: eine unbekannte Variable, andere Syntax als Variablen, `!`, `&&`, `||` und Vergleiche, oder ein Listenoperator wie `everyEquals`, der auf etwas anderes als `selectedRecords` angewendet wird. Eine mit einem älteren SDK gebaute App lässt sich weiterhin installieren: Twenty konvertiert ihre Ausdrucks-Strings und protokolliert eine Warnung, die zum Neubauen auffordert.
+Der Build liest `conditionalAvailabilityExpression` und `conditionalPinnedExpression` aus Ihrem Code und kompiliert sie zu den Bedingungsbäumen `conditionalAvailability` und `conditionalPinned`; das gebaute Manifest enthält nur diese Bäume. Eine fehlerhafte Verwendung ist ein Build-Fehler, der den Befehl und den Ausdruck nennt: eine unbekannte Variable, andere Syntax als Variablen, Member-Zugriffe, die unten aufgeführten Helfer, `!`, `&&`, `||` und Vergleiche, oder ein Listenoperator wie `everyEquals`, der auf etwas anderes als `selectedRecords` angewendet wird. Eine mit einem älteren SDK gebaute App lässt sich weiterhin installieren: Twenty konvertiert ihre Ausdrucks-Strings und protokolliert eine Warnung, die zum Neubauen auffordert.
 
 ### Kontextvariablen
 

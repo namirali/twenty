@@ -13,6 +13,7 @@ import { currentRecordFilterGroupsComponentState } from '@/object-record/record-
 import { RecordFiltersSettingsInitializeStateEffect } from '@/object-record/record-filter/components/RecordFiltersSettingsInitializeStateEffect';
 import { RecordFiltersComponentInstanceContext } from '@/object-record/record-filter/states/context/RecordFiltersComponentInstanceContext';
 import { currentRecordFiltersComponentState } from '@/object-record/record-filter/states/currentRecordFiltersComponentState';
+import { unresolvedRecordFiltersComponentState } from '@/object-record/record-filter/states/unresolvedRecordFiltersComponentState';
 import { mapRecordFiltersToPersistedRecordFilters } from '@/object-record/record-filter/utils/mapRecordFiltersToPersistedRecordFilters';
 import { SidePanelRecordFiltersDeletedFieldsWarning } from '@/side-panel/components/SidePanelRecordFiltersDeletedFieldsWarning';
 import { useAtomComponentStateCallbackState } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateCallbackState';
@@ -98,13 +99,20 @@ export const ConditionalDisplaySettings = ({
 
   const store = useStore();
 
+  const setUnresolvedRecordFilters = useSetAtomComponentState(
+    unresolvedRecordFiltersComponentState,
+    instanceId,
+  );
+
   const [selectedRuleMode, setSelectedRuleMode] =
-    useState<ConditionalDisplayRuleMode>('EVERYONE');
+    useState<ConditionalDisplayRuleMode>(
+      isNonEmptyArray(conditionalDisplay?.recordFilters)
+        ? 'CUSTOM_RULE'
+        : 'EVERYONE',
+    );
 
   const ruleMode: ConditionalDisplayRuleMode =
-    selectedRuleMode === 'CUSTOM_RULE' ||
-    isNonEmptyArray(currentRecordFilters) ||
-    isNonEmptyArray(conditionalDisplay?.recordFilters)
+    selectedRuleMode === 'CUSTOM_RULE' || isNonEmptyArray(currentRecordFilters)
       ? 'CUSTOM_RULE'
       : 'EVERYONE';
 
@@ -136,6 +144,7 @@ export const ConditionalDisplaySettings = ({
       case 'EVERYONE':
         setCurrentRecordFilters([]);
         setCurrentRecordFilterGroups([]);
+        setUnresolvedRecordFilters([]);
         onConditionalDisplayChange?.(null);
         return;
       case 'CUSTOM_RULE':

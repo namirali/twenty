@@ -2,6 +2,7 @@ import {
   type ConditionalDisplay,
   type UniversalConditionalDisplay,
 } from 'twenty-shared/types';
+import { isUndefined } from '@sniptt/guards';
 import { isDefined } from 'twenty-shared/utils';
 
 import { mapConditionalDisplayRoleIdsValue } from 'src/engine/metadata-modules/flat-conditional-display/utils/map-conditional-display-role-ids-value.util';
@@ -43,7 +44,7 @@ export const fromUniversalConditionalDisplayToConditionalDisplay = ({
               }),
             }
           : {}),
-        ...(fieldMetadataUniversalIdentifier !== undefined
+        ...(!isUndefined(fieldMetadataUniversalIdentifier)
           ? {
               fieldMetadataId: resolveFieldMetadataIdOrThrow({
                 fieldMetadataUniversalIdentifier,

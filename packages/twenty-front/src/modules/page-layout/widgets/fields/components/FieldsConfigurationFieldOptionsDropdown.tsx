@@ -1,6 +1,7 @@
 import { getConditionalDisplaySummaryLabel } from '@/conditional-display/utils/getConditionalDisplaySummaryLabel';
 import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
 import { fieldsWidgetEditingFieldMetadataIdComponentState } from '@/page-layout/states/fieldsWidgetEditingFieldMetadataIdComponentState';
+import { getFieldsConfigurationFieldOptionsDropdownId } from '@/page-layout/widgets/fields/utils/getFieldsConfigurationFieldOptionsDropdownId';
 import { useSidePanelSubPageHistory } from '@/side-panel/hooks/useSidePanelSubPageHistory';
 import { usePageLayoutSidePanelTarget } from '@/side-panel/pages/page-layout/hooks/usePageLayoutSidePanelTarget';
 import { SidePanelSubPages } from '@/side-panel/types/SidePanelSubPages';
@@ -35,18 +36,14 @@ export const FieldsConfigurationFieldOptionsDropdown = ({
 
   const handleOpenVisibility = () => {
     setFieldsWidgetEditingFieldMetadataId(fieldMetadataItem.id);
-
-    const fieldLabel = fieldMetadataItem.label;
-
-    navigateToSidePanelSubPage(
-      SidePanelSubPages.PageLayoutFieldVisibility,
-      t`${fieldLabel} · Visibility`,
-    );
+    navigateToSidePanelSubPage(SidePanelSubPages.PageLayoutFieldVisibility);
   };
 
   return (
     <DropdownRoot
-      dropdownId={`fields-configuration-field-options-${fieldMetadataItem.id}`}
+      dropdownId={getFieldsConfigurationFieldOptionsDropdownId(
+        fieldMetadataItem.id,
+      )}
       type="menu"
     >
       <Dropdown.Trigger
@@ -70,7 +67,7 @@ export const FieldsConfigurationFieldOptionsDropdown = ({
             })}
             descriptionPlacement="end"
             onClick={handleOpenVisibility}
-          >{t`Visibility`}</Dropdown.ActionItem>
+          >{t`Visibility restriction`}</Dropdown.ActionItem>
         </Dropdown.Section>
       </DropdownContent>
     </DropdownRoot>

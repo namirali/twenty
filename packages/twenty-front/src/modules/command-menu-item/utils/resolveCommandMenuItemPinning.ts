@@ -1,5 +1,6 @@
 import { type ConditionalDisplayEvaluationContext } from '@/conditional-display/types/ConditionalDisplayEvaluationContext';
 import { evaluateConditionalDisplayWithObjectMetadata } from '@/conditional-display/utils/evaluateConditionalDisplayWithObjectMetadata';
+import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
 import { type CommandMenuItemFieldsFragment } from '~/generated-metadata/graphql';
 
 type PinnableCommandMenuItem = Pick<
@@ -11,10 +12,17 @@ type PinnableCommandMenuItem = Pick<
 // reading isPinned as a plain boolean.
 export const resolveCommandMenuItemPinning = <
   TCommandMenuItem extends PinnableCommandMenuItem,
->(
-  commandMenuItem: TCommandMenuItem,
-  conditionalDisplayContext: ConditionalDisplayEvaluationContext,
-): TCommandMenuItem => ({
+>({
+  commandMenuItem,
+  conditionalDisplayContext,
+  objectMetadataItem,
+  objectMetadataItems,
+}: {
+  commandMenuItem: TCommandMenuItem;
+  conditionalDisplayContext: ConditionalDisplayEvaluationContext;
+  objectMetadataItem?: EnrichedObjectMetadataItem;
+  objectMetadataItems: EnrichedObjectMetadataItem[];
+}): TCommandMenuItem => ({
   ...commandMenuItem,
   isPinned:
     commandMenuItem.isPinned &&
@@ -22,6 +30,7 @@ export const resolveCommandMenuItemPinning = <
       conditionalDisplay: commandMenuItem.conditionalPinned,
       context: conditionalDisplayContext,
       records: conditionalDisplayContext.selectedRecords ?? [],
-      objectMetadataItems: [],
+      objectMetadataItem,
+      objectMetadataItems,
     }),
 });

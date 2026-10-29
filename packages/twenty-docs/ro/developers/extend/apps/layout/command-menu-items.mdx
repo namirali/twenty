@@ -80,7 +80,7 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` implică deja o selecție care nu este goală — folosește `numberOfSelectedRecords` doar pentru valori specifice (de ex. `>= 2`).
 </Note>
 
-Build-ul citește `conditionalAvailabilityExpression` și `conditionalPinnedExpression` din codul dumneavoastră și le compilează în arbori de condiții `conditionalAvailability` și `conditionalPinned`; manifestul generat conține doar acești arbori. Utilizarea greșită este o eroare de build care numește comanda și expresia: o variabilă necunoscută, o sintaxă diferită de variabile, `!`, `&&`, `||` și comparații, sau un operator de listă precum `everyEquals` aplicat altui argument decât `selectedRecords`. O aplicație construită cu un SDK mai vechi se instalează în continuare: Twenty îi convertește șirurile de expresii și înregistrează un avertisment care cere reconstruirea ei.
+Build-ul citește `conditionalAvailabilityExpression` și `conditionalPinnedExpression` din codul dumneavoastră și le compilează în arbori de condiții `conditionalAvailability` și `conditionalPinned`; manifestul generat conține doar acești arbori. Utilizarea greșită este o eroare de build care numește comanda și expresia: o variabilă necunoscută, o sintaxă diferită de variabile, accesul la membri, helperii de mai jos, `!`, `&&`, `||` și comparații, sau un operator de listă precum `everyEquals` aplicat altui argument decât `selectedRecords`. O aplicație construită cu un SDK mai vechi se instalează în continuare: Twenty îi convertește șirurile de expresii și înregistrează un avertisment care cere reconstruirea ei.
 
 ### Variabile de context
 

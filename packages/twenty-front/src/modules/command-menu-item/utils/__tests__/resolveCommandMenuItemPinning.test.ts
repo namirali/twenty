@@ -27,34 +27,37 @@ const buildContext = (status: string): ConditionalDisplayEvaluationContext => ({
   selectedRecords: [{ id: 'campaign-id', status }],
 });
 
+const resolvePinning = (
+  commandMenuItem: {
+    isPinned: boolean;
+    conditionalPinned: ConditionalDisplay | null;
+  },
+  status: string,
+) =>
+  resolveCommandMenuItemPinning({
+    commandMenuItem,
+    conditionalDisplayContext: buildContext(status),
+    objectMetadataItems: [],
+  });
+
 describe('resolveCommandMenuItemPinning', () => {
   it('keeps the pin while the pinned condition holds', () => {
-    expect(
-      resolveCommandMenuItemPinning(COMMAND_MENU_ITEM, buildContext('SENT'))
-        .isPinned,
-    ).toBe(true);
+    expect(resolvePinning(COMMAND_MENU_ITEM, 'SENT').isPinned).toBe(true);
   });
 
   it('unpins without hiding when the pinned condition fails', () => {
-    expect(
-      resolveCommandMenuItemPinning(COMMAND_MENU_ITEM, buildContext('DRAFT'))
-        .isPinned,
-    ).toBe(false);
+    expect(resolvePinning(COMMAND_MENU_ITEM, 'DRAFT').isPinned).toBe(false);
   });
 
   it('leaves an item without a pinned condition alone', () => {
     const item = { ...COMMAND_MENU_ITEM, conditionalPinned: null };
 
-    expect(
-      resolveCommandMenuItemPinning(item, buildContext('DRAFT')).isPinned,
-    ).toBe(true);
+    expect(resolvePinning(item, 'DRAFT').isPinned).toBe(true);
   });
 
   it('never pins an item that is not pinned to begin with', () => {
     const item = { ...COMMAND_MENU_ITEM, isPinned: false };
 
-    expect(
-      resolveCommandMenuItemPinning(item, buildContext('SENT')).isPinned,
-    ).toBe(false);
+    expect(resolvePinning(item, 'SENT').isPinned).toBe(false);
   });
 });

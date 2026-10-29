@@ -75,7 +75,7 @@ export default defineCommandMenuItem({
   `RECORD_SELECTION` zaten boş olmayan bir seçim anlamına gelir — `numberOfSelectedRecords` ifadesini yalnızca belirli sayılar için kullanın (örneğin `>= 2`).
 </Note>
 
-Derleme, `conditionalAvailabilityExpression` ve `conditionalPinnedExpression` ifadelerini kodunuzdan okur ve bunları `conditionalAvailability` ve `conditionalPinned` koşul ağaçlarına derler; oluşturulan manifest yalnızca bu ağaçları içerir. Hatalı kullanım, komutu ve ifadeyi belirten bir derleme hatasıdır: bilinmeyen bir değişken, değişkenler, `!`, `&&`, `||` ve karşılaştırmalar dışında bir söz dizimi ya da `everyEquals` gibi bir liste operatörünün `selectedRecords` dışında bir şeye uygulanması. Daha eski bir SDK ile derlenmiş bir uygulama yine de yüklenir: Twenty, uygulamanın ifade dizelerini dönüştürür ve yeniden derlenmesini isteyen bir uyarıyı günlüğe kaydeder.
+Derleme, `conditionalAvailabilityExpression` ve `conditionalPinnedExpression` ifadelerini kodunuzdan okur ve bunları `conditionalAvailability` ve `conditionalPinned` koşul ağaçlarına derler; oluşturulan manifest yalnızca bu ağaçları içerir. Hatalı kullanım, komutu ve ifadeyi belirten bir derleme hatasıdır: bilinmeyen bir değişken, değişkenler, üye erişimi, aşağıdaki yardımcılar, `!`, `&&`, `||` ve karşılaştırmalar dışında bir söz dizimi ya da `everyEquals` gibi bir liste operatörünün `selectedRecords` dışında bir şeye uygulanması. Daha eski bir SDK ile derlenmiş bir uygulama yine de yüklenir: Twenty, uygulamanın ifade dizelerini dönüştürür ve yeniden derlenmesini isteyen bir uyarıyı günlüğe kaydeder.
 
 ### Bağlam değişkenleri
 

@@ -44,7 +44,7 @@ const UNMAPPED_HELPER_EXPRESSIONS: [string, string][] = [
   ],
   [
     'objectMetadataLabel === "Companies"',
-    'compare objectMetadataItem.nameSingular instead (e.g. objectMetadataItem.nameSingular == "company")',
+    'unsupported operator "==" between variable "objectMetadataLabel" and literal "Companies"',
   ],
   [
     'includes(favoriteRecordIds, "record-id")',

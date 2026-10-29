@@ -89,7 +89,7 @@ describe('compileConditionExpressionsInSource', () => {
     ['isSelected && isSelectAll', 'unknown variable "isSelected"'],
     [
       'objectMetadataLabel === "Company"',
-      'compare objectMetadataItem.nameSingular instead',
+      'unsupported operator "==" between variable "objectMetadataLabel" and literal "Company"',
     ],
     [
       'isSelectAll ? isInSidePanel : false',

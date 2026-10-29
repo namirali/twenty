@@ -94,7 +94,7 @@ export const CommandMenuContextProviderContent = ({
     [commandMenuContextApi, containerType],
   );
 
-  const { conditionalDisplayContext, isCommandMenuItemShown } =
+  const { isCommandMenuItemShown, resolvePinnedCommandMenuItem } =
     useCommandMenuItemConditionalDisplay(commandMenuContextApiForAvailability);
 
   const filteredCommandMenuItems = useMemo(() => {
@@ -142,16 +142,13 @@ export const CommandMenuContextProviderContent = ({
       .filter(doesCommandMenuItemMatchPageLayoutId(effectivePageLayoutId))
       .filter(isCommandMenuItemShown)
       .map((item) =>
-        resolveCommandMenuItemPinning(
-          {
-            ...item,
-            isPinned:
-              item.isPinned ||
-              (isAiChatInboxHeader &&
-                item.engineComponentKey === EngineComponentKey.SHARE_RECORD),
-          },
-          conditionalDisplayContext,
-        ),
+        resolvePinnedCommandMenuItem({
+          ...item,
+          isPinned:
+            item.isPinned ||
+            (isAiChatInboxHeader &&
+              item.engineComponentKey === EngineComponentKey.SHARE_RECORD),
+        }),
       );
 
     return mergeGlobalRecordCreationCommandMenuItems({
@@ -165,7 +162,7 @@ export const CommandMenuContextProviderContent = ({
   }, [
     containerType,
     commandMenuContextApi,
-    conditionalDisplayContext,
+    resolvePinnedCommandMenuItem,
     globalRecordCreationCommandMenuItems,
     shouldDisplayGlobalRecordCreationCommands,
     isCoreWorkflow,
