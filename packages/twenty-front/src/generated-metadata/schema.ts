@@ -1451,8 +1451,9 @@ export type CommandMenuItem = {
   applicationId?: Maybe<Scalars['UUID']['output']>;
   availabilityObjectMetadataId?: Maybe<Scalars['UUID']['output']>;
   availabilityType: CommandMenuItemAvailabilityType;
-  conditionalAvailabilityExpression?: Maybe<Scalars['String']['output']>;
-  conditionalPinnedExpression?: Maybe<Scalars['String']['output']>;
+  conditionalAvailability?: Maybe<Scalars['JSON']['output']>;
+  conditionalDisplay?: Maybe<Scalars['JSON']['output']>;
+  conditionalPinned?: Maybe<Scalars['JSON']['output']>;
   coreWorkflowVersionId?: Maybe<Scalars['UUID']['output']>;
   createdAt: Scalars['DateTime']['output'];
   engineComponentKey: EngineComponentKey;
@@ -1626,8 +1627,9 @@ export type CreateCalendarEventOutput = {
 export type CreateCommandMenuItemInput = {
   availabilityObjectMetadataId?: InputMaybe<Scalars['UUID']['input']>;
   availabilityType?: InputMaybe<CommandMenuItemAvailabilityType>;
-  conditionalAvailabilityExpression?: InputMaybe<Scalars['String']['input']>;
-  conditionalPinnedExpression?: InputMaybe<Scalars['String']['input']>;
+  conditionalAvailability?: InputMaybe<Scalars['JSON']['input']>;
+  conditionalDisplay?: InputMaybe<Scalars['JSON']['input']>;
+  conditionalPinned?: InputMaybe<Scalars['JSON']['input']>;
   coreWorkflowVersionId?: InputMaybe<Scalars['UUID']['input']>;
   engineComponentKey: EngineComponentKey;
   frontComponentId?: InputMaybe<Scalars['UUID']['input']>;
@@ -1735,6 +1737,7 @@ export type CreateMessageSuppressionInput = {
 export type CreateNavigationMenuItemInput = {
   agentChatChannelId?: InputMaybe<Scalars['UUID']['input']>;
   color?: InputMaybe<Scalars['String']['input']>;
+  conditionalDisplay?: InputMaybe<Scalars['JSON']['input']>;
   folderId?: InputMaybe<Scalars['UUID']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
@@ -1787,6 +1790,7 @@ export type CreatePageLayoutInput = {
 };
 
 export type CreatePageLayoutTabInput = {
+  conditionalDisplay?: InputMaybe<Scalars['JSON']['input']>;
   layoutMode?: InputMaybe<PageLayoutTabLayoutMode>;
   pageLayoutId: Scalars['UUID']['input'];
   position?: InputMaybe<Scalars['Float']['input']>;
@@ -1875,6 +1879,7 @@ export type CreateViewFieldGroupInput = {
 
 export type CreateViewFieldInput = {
   aggregateOperation?: InputMaybe<AggregateOperations>;
+  conditionalDisplay?: InputMaybe<Scalars['JSON']['input']>;
   fieldMetadataId: Scalars['UUID']['input'];
   id?: InputMaybe<Scalars['UUID']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3346,6 +3351,7 @@ export type MinimalMetadata = {
   __typename?: 'MinimalMetadata';
   collectionHashes: Array<CollectionHash>;
   objectMetadataItems: Array<MinimalObjectMetadata>;
+  roles: Array<MinimalRole>;
   views: Array<MinimalView>;
 };
 
@@ -3361,6 +3367,13 @@ export type MinimalObjectMetadata = {
   labelSingular: Scalars['String']['output'];
   namePlural: Scalars['String']['output'];
   nameSingular: Scalars['String']['output'];
+};
+
+export type MinimalRole = {
+  __typename?: 'MinimalRole';
+  icon?: Maybe<Scalars['String']['output']>;
+  id: Scalars['UUID']['output'];
+  label: Scalars['String']['output'];
 };
 
 export type MinimalView = {
@@ -5166,6 +5179,7 @@ export type NavigationMenuItem = {
   agentChatChannelId?: Maybe<Scalars['UUID']['output']>;
   applicationId?: Maybe<Scalars['UUID']['output']>;
   color?: Maybe<Scalars['String']['output']>;
+  conditionalDisplay?: Maybe<Scalars['JSON']['output']>;
   createdAt: Scalars['DateTime']['output'];
   folderId?: Maybe<Scalars['UUID']['output']>;
   icon?: Maybe<Scalars['String']['output']>;
@@ -5439,6 +5453,7 @@ export type PageLayout = {
 export type PageLayoutTab = {
   __typename?: 'PageLayoutTab';
   applicationId: Scalars['UUID']['output'];
+  conditionalDisplay?: Maybe<Scalars['JSON']['output']>;
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   icon?: Maybe<Scalars['String']['output']>;
@@ -5474,7 +5489,7 @@ export enum PageLayoutType {
 export type PageLayoutWidget = {
   __typename?: 'PageLayoutWidget';
   applicationId: Scalars['UUID']['output'];
-  conditionalAvailabilityExpression?: Maybe<Scalars['String']['output']>;
+  conditionalAvailability?: Maybe<Scalars['JSON']['output']>;
   conditionalDisplay?: Maybe<Scalars['JSON']['output']>;
   configuration: WidgetConfiguration;
   createdAt: Scalars['DateTime']['output'];
@@ -7283,6 +7298,7 @@ export type UpdateCalendarChannelInputUpdates = {
 export type UpdateCommandMenuItemInput = {
   availabilityObjectMetadataId?: InputMaybe<Scalars['UUID']['input']>;
   availabilityType?: InputMaybe<CommandMenuItemAvailabilityType>;
+  conditionalDisplay?: InputMaybe<Scalars['JSON']['input']>;
   engineComponentKey?: InputMaybe<EngineComponentKey>;
   hotKeys?: InputMaybe<Array<Scalars['String']['input']>>;
   icon?: InputMaybe<Scalars['String']['input']>;
@@ -7404,6 +7420,7 @@ export type UpdateMessageFoldersInput = {
 
 export type UpdateNavigationMenuItemInput = {
   color?: InputMaybe<Scalars['String']['input']>;
+  conditionalDisplay?: InputMaybe<Scalars['JSON']['input']>;
   folderId?: InputMaybe<Scalars['UUID']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   link?: InputMaybe<Scalars['String']['input']>;
@@ -7459,6 +7476,7 @@ export type UpdatePageLayoutInput = {
 };
 
 export type UpdatePageLayoutTabInput = {
+  conditionalDisplay?: InputMaybe<Scalars['JSON']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   layoutMode?: InputMaybe<PageLayoutTabLayoutMode>;
   position?: InputMaybe<Scalars['Float']['input']>;
@@ -7466,6 +7484,7 @@ export type UpdatePageLayoutTabInput = {
 };
 
 export type UpdatePageLayoutTabWithWidgetsInput = {
+  conditionalDisplay?: InputMaybe<Scalars['JSON']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['UUID']['input'];
   layoutMode?: InputMaybe<PageLayoutTabLayoutMode>;
@@ -7475,7 +7494,6 @@ export type UpdatePageLayoutTabWithWidgetsInput = {
 };
 
 export type UpdatePageLayoutWidgetInput = {
-  conditionalAvailabilityExpression?: InputMaybe<Scalars['String']['input']>;
   conditionalDisplay?: InputMaybe<Scalars['JSON']['input']>;
   configuration?: InputMaybe<Scalars['JSON']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
@@ -7487,7 +7505,6 @@ export type UpdatePageLayoutWidgetInput = {
 };
 
 export type UpdatePageLayoutWidgetWithIdInput = {
-  conditionalAvailabilityExpression?: InputMaybe<Scalars['String']['input']>;
   conditionalDisplay?: InputMaybe<Scalars['JSON']['input']>;
   configuration?: InputMaybe<Scalars['JSON']['input']>;
   id: Scalars['UUID']['input'];
@@ -7595,6 +7612,7 @@ export type UpdateViewFieldInput = {
 
 export type UpdateViewFieldInputUpdates = {
   aggregateOperation?: InputMaybe<AggregateOperations>;
+  conditionalDisplay?: InputMaybe<Scalars['JSON']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   position?: InputMaybe<Scalars['Float']['input']>;
   size?: InputMaybe<Scalars['Float']['input']>;
@@ -7736,6 +7754,7 @@ export type UpsertFieldPermissionsInput = {
 };
 
 export type UpsertFieldsWidgetFieldInput = {
+  conditionalDisplay?: InputMaybe<Scalars['JSON']['input']>;
   /** The id of the field metadata. Used to create a new view field when viewFieldId is not provided. */
   fieldMetadataId?: InputMaybe<Scalars['UUID']['input']>;
   isVisible: Scalars['Boolean']['input'];
@@ -7801,6 +7820,7 @@ export type UpsertViewWidgetInput = {
 
 export type UpsertViewWidgetViewFieldInput = {
   aggregateOperation?: InputMaybe<AggregateOperations>;
+  conditionalDisplay?: InputMaybe<Scalars['JSON']['input']>;
   /** The field metadata id. Used to create a new view field when viewFieldId is not provided. */
   fieldMetadataId?: InputMaybe<Scalars['UUID']['input']>;
   isVisible: Scalars['Boolean']['input'];
@@ -8206,6 +8226,7 @@ export type ViewField = {
   __typename?: 'ViewField';
   aggregateOperation?: Maybe<AggregateOperations>;
   applicationId: Scalars['UUID']['output'];
+  conditionalDisplay?: Maybe<Scalars['JSON']['output']>;
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   fieldMetadataId: Scalars['UUID']['output'];
