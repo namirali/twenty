@@ -1,5 +1,5 @@
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
-import { type ConditionalDisplayRecordFilterConditionNode } from '@/types/conditional-display/ConditionalDisplayRecordFilterConditionNode';
+import { type ConditionalDisplayRecordFilterConditionNode } from '@/types/conditional-display/internal/ConditionalDisplayRecordFilterConditionNode';
 
 export const isConditionalDisplayRecordFilterConditionNode = (
   conditionNode: ConditionalDisplayConditionNode,

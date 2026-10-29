@@ -3,7 +3,6 @@ import { isNonEmptyString } from '@sniptt/guards';
 import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from '@/constants/ConditionalDisplayContextKeys';
 import { type ConditionalDisplayContextKey } from '@/types/conditional-display/ConditionalDisplayContextKey';
 import { type ConditionalDisplayVirtualField } from '@/types/conditional-display/ConditionalDisplayVirtualField';
-import { isDefined } from '@/utils/validation/isDefined';
 
 export const getConditionalDisplayContextVirtualField = ({
   contextKey,
@@ -16,7 +15,7 @@ export const getConditionalDisplayContextVirtualField = ({
 
   switch (subject.kind) {
     case 'value':
-      return isDefined(subFieldName) ? undefined : subject.field;
+      return isNonEmptyString(subFieldName) ? undefined : subject.field;
     case 'mapEntry':
       return isNonEmptyString(subFieldName) ? subject.entryField : undefined;
     case 'property':

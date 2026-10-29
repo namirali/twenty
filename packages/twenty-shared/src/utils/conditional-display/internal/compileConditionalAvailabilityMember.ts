@@ -1,5 +1,6 @@
-import { CONDITIONAL_AVAILABILITY_FAVORITE_RECORD_IDS_VARIABLE_NAME } from '@/constants/ConditionalAvailabilityFavoriteRecordIdsVariableName';
-import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/ConditionalAvailabilityCompiledItem';
+import { CONDITIONAL_AVAILABILITY_FAVORITE_RECORD_IDS_VARIABLE_NAME } from '@/constants/internal/ConditionalAvailabilityFavoriteRecordIdsVariableName';
+import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/internal/ConditionalAvailabilityCompiledItem';
+import { buildConditionalAvailabilityCompilationError } from '@/utils/conditional-display/internal/buildConditionalAvailabilityCompilationError';
 import { getConditionalDisplayContextVirtualField } from '@/utils/conditional-display/getConditionalDisplayContextVirtualField';
 import { describeConditionalAvailabilityCompiledItem } from '@/utils/conditional-display/internal/describeConditionalAvailabilityCompiledItem';
 import { isConditionalDisplayContextKey } from '@/utils/conditional-display/isConditionalDisplayContextKey';
@@ -33,9 +34,10 @@ export const compileConditionalAvailabilityMember = ({
       }),
     )
   ) {
-    throw new Error(
-      `Cannot compile conditional availability expression "${expression}": unsupported member "${memberName}" of ${describeConditionalAvailabilityCompiledItem(object)}`,
-    );
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: `unsupported member "${memberName}" of ${describeConditionalAvailabilityCompiledItem(object)}`,
+    });
   }
 
   return { kind: 'mapEntry', contextKey: object.name, entryName: memberName };

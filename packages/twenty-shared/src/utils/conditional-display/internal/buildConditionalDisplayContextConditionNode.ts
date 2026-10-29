@@ -1,5 +1,5 @@
 import { type ConditionalDisplayContextKey } from '@/types/conditional-display/ConditionalDisplayContextKey';
-import { type ConditionalDisplayRecordFilterConditionNode } from '@/types/conditional-display/ConditionalDisplayRecordFilterConditionNode';
+import { type ConditionalDisplayRecordFilterConditionNode } from '@/types/conditional-display/internal/ConditionalDisplayRecordFilterConditionNode';
 import { type ConditionalDisplaySelectedRecordsMatch } from '@/types/conditional-display/ConditionalDisplaySelectedRecordsMatch';
 import { type ViewFilterOperand } from '@/types/ViewFilterOperand';
 import { isDefined } from '@/utils/validation/isDefined';

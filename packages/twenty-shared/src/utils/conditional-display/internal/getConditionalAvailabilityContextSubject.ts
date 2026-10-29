@@ -1,5 +1,5 @@
-import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/ConditionalAvailabilityCompiledItem';
-import { type ConditionalAvailabilityContextSubject } from '@/types/conditional-display/ConditionalAvailabilityContextSubject';
+import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/internal/ConditionalAvailabilityCompiledItem';
+import { type ConditionalAvailabilityContextSubject } from '@/types/conditional-display/internal/ConditionalAvailabilityContextSubject';
 import { getConditionalDisplayContextVirtualField } from '@/utils/conditional-display/getConditionalDisplayContextVirtualField';
 import { isConditionalDisplayContextKey } from '@/utils/conditional-display/isConditionalDisplayContextKey';
 import { isDefined } from '@/utils/validation/isDefined';

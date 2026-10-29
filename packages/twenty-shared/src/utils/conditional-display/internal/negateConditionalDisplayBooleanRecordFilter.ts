@@ -1,4 +1,4 @@
-import { type ConditionalDisplayRecordFilterConditionNode } from '@/types/conditional-display/ConditionalDisplayRecordFilterConditionNode';
+import { type ConditionalDisplayRecordFilterConditionNode } from '@/types/conditional-display/internal/ConditionalDisplayRecordFilterConditionNode';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
 import { booleanFilterValueSchema } from '@/utils/filter/utils/validation-schemas/filterValueScalarSchemas';
 

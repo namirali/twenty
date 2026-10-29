@@ -1,40 +1,9 @@
 import { isArray } from '@sniptt/guards';
-import { MEMBER_ROLE_UNIVERSAL_IDENTIFIER } from 'twenty-shared/constants';
-import {
-  isDefined,
-  isNonEmptyArray,
-  isPlainObject,
-  jsonRelationFilterValueSchema,
-} from 'twenty-shared/utils';
+import { isDefined, isPlainObject } from 'twenty-shared/utils';
 
+import { PORTABLE_ROLE_UNIVERSAL_IDENTIFIERS } from 'src/engine/core-modules/application/application-manifest/constants/portable-role-universal-identifiers.constant';
+import { hasSpecificWorkspaceMemberSelection } from 'src/engine/core-modules/application/application-manifest/utils/has-specific-workspace-member-selection.util';
 import { getConditionalDisplayRoleUniversalIdentifiers } from 'src/engine/metadata-modules/flat-conditional-display/utils/get-conditional-display-role-universal-identifiers.util';
-import { STANDARD_ROLE } from 'src/engine/workspace-manager/twenty-standard-application/constants/standard-role.constant';
-
-const PORTABLE_ROLE_UNIVERSAL_IDENTIFIERS = [
-  MEMBER_ROLE_UNIVERSAL_IDENTIFIER,
-  STANDARD_ROLE.admin.universalIdentifier,
-];
-
-const hasSpecificWorkspaceMemberSelection = (
-  recordFilters: unknown[],
-): boolean =>
-  recordFilters.some((recordFilter) => {
-    if (
-      !isPlainObject(recordFilter) ||
-      recordFilter.contextKey !== 'currentWorkspaceMemberId'
-    ) {
-      return false;
-    }
-
-    const parsedValue = jsonRelationFilterValueSchema.safeParse(
-      recordFilter.value,
-    );
-
-    return (
-      !parsedValue.success ||
-      isNonEmptyArray(parsedValue.data.selectedRecordIds)
-    );
-  });
 
 export const getUnsupportedConditionalDisplayReason = ({
   entityLabel,

@@ -1,3 +1,4 @@
+import { buildConditionalAvailabilityCompilationError } from '@/utils/conditional-display/internal/buildConditionalAvailabilityCompilationError';
 import { conditionalAvailabilityParser } from '@/utils/command-menu-items/conditionalAvailabilityParser';
 
 export const parseConditionalAvailabilityExpressionTokens = (
@@ -8,8 +9,9 @@ export const parseConditionalAvailabilityExpressionTokens = (
 
     return 'tokens' in parsedExpression ? parsedExpression.tokens : undefined;
   } catch (error) {
-    throw new Error(
-      `Cannot compile conditional availability expression "${expression}": unsupported syntax (${error instanceof Error ? error.message : String(error)})`,
-    );
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: `unsupported syntax (${error instanceof Error ? error.message : String(error)})`,
+    });
   }
 };

@@ -1,6 +1,7 @@
-import { CONDITIONAL_AVAILABILITY_FAVORITE_RECORD_IDS_VARIABLE_NAME } from '@/constants/ConditionalAvailabilityFavoriteRecordIdsVariableName';
-import { CONDITIONAL_AVAILABILITY_SELECTED_RECORDS_FUNCTION_NAMES } from '@/constants/ConditionalAvailabilitySelectedRecordsFunctionNames';
-import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/ConditionalAvailabilityCompiledItem';
+import { CONDITIONAL_AVAILABILITY_FAVORITE_RECORD_IDS_VARIABLE_NAME } from '@/constants/internal/ConditionalAvailabilityFavoriteRecordIdsVariableName';
+import { CONDITIONAL_AVAILABILITY_SELECTED_RECORDS_FUNCTION_NAMES } from '@/constants/internal/ConditionalAvailabilitySelectedRecordsFunctionNames';
+import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/internal/ConditionalAvailabilityCompiledItem';
+import { buildConditionalAvailabilityCompilationError } from '@/utils/conditional-display/internal/buildConditionalAvailabilityCompilationError';
 import { compileConditionalAvailabilityIncludesCall } from '@/utils/conditional-display/internal/compileConditionalAvailabilityIncludesCall';
 import { compileConditionalAvailabilityIsDefinedCall } from '@/utils/conditional-display/internal/compileConditionalAvailabilityIsDefinedCall';
 import { compileConditionalAvailabilityIsNonEmptyStringCall } from '@/utils/conditional-display/internal/compileConditionalAvailabilityIsNonEmptyStringCall';
@@ -63,9 +64,10 @@ export const compileConditionalAvailabilityFunctionCall = ({
         : undefined;
 
   if (!isDefined(conditionNode)) {
-    throw new Error(
-      `Cannot compile conditional availability expression "${expression}": unsupported call of ${functionName}(${functionArguments.map(describeConditionalAvailabilityCompiledItem).join(', ')})`,
-    );
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: `unsupported call of ${functionName}(${functionArguments.map(describeConditionalAvailabilityCompiledItem).join(', ')})`,
+    });
   }
 
   return { kind: 'condition', conditionNode };

@@ -4,8 +4,8 @@ import { type ConditionalDisplay } from '@/types/conditional-display/Conditional
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
 import { type ConditionalDisplayRecordFilter } from '@/types/conditional-display/ConditionalDisplayRecordFilter';
 import { type ConditionalDisplayRecordFilterGroup } from '@/types/conditional-display/ConditionalDisplayRecordFilterGroup';
-import { type ConditionalDisplayRecordFilterGroupConditionNode } from '@/types/conditional-display/ConditionalDisplayRecordFilterGroupConditionNode';
-import { hasConditionalDisplaySomeSelectedRecordsMatch } from '@/utils/conditional-display/internal/hasConditionalDisplaySomeSelectedRecordsMatch';
+import { type ConditionalDisplayRecordFilterGroupConditionNode } from '@/types/conditional-display/internal/ConditionalDisplayRecordFilterGroupConditionNode';
+import { collectConditionalDisplaySelectedRecordsMatches } from '@/utils/conditional-display/internal/collectConditionalDisplaySelectedRecordsMatches';
 import { isConditionalDisplayConjunctionOfRecordFilters } from '@/utils/conditional-display/internal/isConditionalDisplayConjunctionOfRecordFilters';
 import { isConditionalDisplayRecordFilterConditionNode } from '@/utils/conditional-display/internal/isConditionalDisplayRecordFilterConditionNode';
 import { isDefined } from '@/utils/validation/isDefined';
@@ -101,7 +101,11 @@ export const buildConditionalDisplayFromConditionNode = ({
     conditionalDisplay.recordFilterGroups = recordFilterGroups;
   }
 
-  if (hasConditionalDisplaySomeSelectedRecordsMatch(conditionNode)) {
+  if (
+    collectConditionalDisplaySelectedRecordsMatches(conditionNode).includes(
+      'SOME',
+    )
+  ) {
     conditionalDisplay.selectedRecordsMatch = 'SOME';
   }
 

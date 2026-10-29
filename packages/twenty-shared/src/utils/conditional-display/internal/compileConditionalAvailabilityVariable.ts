@@ -1,5 +1,6 @@
-import { CONDITIONAL_AVAILABILITY_FAVORITE_RECORD_IDS_VARIABLE_NAME } from '@/constants/ConditionalAvailabilityFavoriteRecordIdsVariableName';
-import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/ConditionalAvailabilityCompiledItem';
+import { CONDITIONAL_AVAILABILITY_FAVORITE_RECORD_IDS_VARIABLE_NAME } from '@/constants/internal/ConditionalAvailabilityFavoriteRecordIdsVariableName';
+import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/internal/ConditionalAvailabilityCompiledItem';
+import { buildConditionalAvailabilityCompilationError } from '@/utils/conditional-display/internal/buildConditionalAvailabilityCompilationError';
 import { isConditionalDisplayAdminContextKey } from '@/utils/conditional-display/isConditionalDisplayAdminContextKey';
 import { isConditionalDisplayContextKey } from '@/utils/conditional-display/isConditionalDisplayContextKey';
 
@@ -11,18 +12,20 @@ export const compileConditionalAvailabilityVariable = ({
   expression: string;
 }): ConditionalAvailabilityCompiledItem => {
   if (isConditionalDisplayAdminContextKey(name)) {
-    throw new Error(
-      `Cannot compile conditional availability expression "${expression}": unsupported admin subject "${name}": engine conditions cannot carry admin subjects`,
-    );
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: `unsupported admin subject "${name}": engine conditions cannot carry admin subjects`,
+    });
   }
 
   if (
     !isConditionalDisplayContextKey(name) &&
     name !== CONDITIONAL_AVAILABILITY_FAVORITE_RECORD_IDS_VARIABLE_NAME
   ) {
-    throw new Error(
-      `Cannot compile conditional availability expression "${expression}": unknown variable "${name}"`,
-    );
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: `unknown variable "${name}"`,
+    });
   }
 
   return { kind: 'variable', name };

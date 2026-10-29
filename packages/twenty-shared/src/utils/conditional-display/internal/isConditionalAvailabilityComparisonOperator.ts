@@ -1,5 +1,5 @@
-import { CONDITIONAL_AVAILABILITY_COMPARISON_OPERATORS } from '@/constants/ConditionalAvailabilityComparisonOperators';
-import { type ConditionalAvailabilityComparisonOperator } from '@/types/conditional-display/ConditionalAvailabilityComparisonOperator';
+import { CONDITIONAL_AVAILABILITY_COMPARISON_OPERATORS } from '@/constants/internal/ConditionalAvailabilityComparisonOperators';
+import { type ConditionalAvailabilityComparisonOperator } from '@/types/conditional-display/internal/ConditionalAvailabilityComparisonOperator';
 
 export const isConditionalAvailabilityComparisonOperator = (
   value: unknown,

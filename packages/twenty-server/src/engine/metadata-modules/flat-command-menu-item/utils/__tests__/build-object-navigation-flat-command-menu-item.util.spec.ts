@@ -11,6 +11,7 @@ import {
   NAVIGATION_INTERPOLATED_SHORT_LABEL,
 } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-object-navigation-universal-flat-command-menu-item.util';
 import { buildObjectNavigationFlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-object-navigation-flat-command-menu-item.util';
+import { createEmptyFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/constant/create-empty-flat-entity-maps.constant';
 
 const APPLICATION_UNIVERSAL_IDENTIFIER = 'a1a2a3a4-a5a6-4000-8000-000000000001';
 const OTHER_APPLICATION_UNIVERSAL_IDENTIFIER =
@@ -32,6 +33,10 @@ const baseArgs = {
   workspaceId: 'ws-id-1',
   position: 5,
   now: '2026-01-01T00:00:00.000Z',
+  dependencyFlatEntityMaps: {
+    flatFieldMetadataMaps: createEmptyFlatEntityMaps(),
+    flatRoleMaps: createEmptyFlatEntityMaps(),
+  },
 };
 
 describe('buildObjectNavigationFlatCommandMenuItem', () => {

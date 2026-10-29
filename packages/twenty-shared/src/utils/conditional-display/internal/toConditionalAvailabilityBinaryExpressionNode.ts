@@ -1,4 +1,5 @@
 import { type ConditionalAvailabilityExpressionNode } from '@/types/conditional-display/ConditionalAvailabilityExpressionNode';
+import { buildConditionalAvailabilityCompilationError } from '@/utils/conditional-display/internal/buildConditionalAvailabilityCompilationError';
 import { isConditionalAvailabilityComparisonOperator } from '@/utils/conditional-display/internal/isConditionalAvailabilityComparisonOperator';
 
 export const toConditionalAvailabilityBinaryExpressionNode = ({
@@ -20,7 +21,8 @@ export const toConditionalAvailabilityBinaryExpressionNode = ({
     return { kind: 'comparison', operator, left, right };
   }
 
-  throw new Error(
-    `Cannot compile conditional availability expression "${expression}": unsupported operator "${String(operator)}"`,
-  );
+  throw buildConditionalAvailabilityCompilationError({
+    expression,
+    reason: `unsupported operator "${String(operator)}"`,
+  });
 };

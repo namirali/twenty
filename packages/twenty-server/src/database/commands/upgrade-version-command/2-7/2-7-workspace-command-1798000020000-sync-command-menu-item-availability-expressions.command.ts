@@ -4,7 +4,7 @@ import { isDefined } from 'twenty-shared/utils';
 import { ProvisionedWorkspaceCommandRunner } from 'src/database/commands/command-runners/provisioned-workspace.command-runner';
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import { type RunOnWorkspaceArgs } from 'src/database/commands/command-runners/workspace.command-runner';
-import { getStandardCommandMenuItemConditionalAvailabilityExpression } from 'src/database/commands/upgrade-version-command/utils/get-standard-command-menu-item-conditional-availability-expression.util';
+import { fillStandardConditionalExpressions } from 'src/database/commands/upgrade-version-command/utils/fill-standard-conditional-expressions.util';
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { RegisteredWorkspaceCommand } from 'src/engine/core-modules/upgrade/decorators/registered-workspace-command.decorator';
 import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
@@ -47,12 +47,14 @@ export class SyncCommandMenuItemAvailabilityExpressionsCommand extends Provision
         'flatCommandMenuItemMaps',
       ]);
 
-    const { allFlatEntityMaps: standardAllFlatEntityMaps } =
+    const { allFlatEntityMaps } =
       computeTwentyStandardApplicationAllFlatEntityMaps({
         now: new Date().toISOString(),
         workspaceId,
         twentyStandardApplicationId: twentyStandardFlatApplication.id,
       });
+    const standardAllFlatEntityMaps =
+      fillStandardConditionalExpressions(allFlatEntityMaps);
 
     const itemsToUpdate = Object.values(
       standardAllFlatEntityMaps.flatCommandMenuItemMaps.byUniversalIdentifier,
@@ -67,9 +69,7 @@ export class SyncCommandMenuItemAvailabilityExpressionsCommand extends Provision
         if (
           !isDefined(existingItem) ||
           existingItem.conditionalAvailabilityExpression ===
-            getStandardCommandMenuItemConditionalAvailabilityExpression(
-              standardItem.universalIdentifier,
-            )
+            standardItem.conditionalAvailabilityExpression
         ) {
           return undefined;
         }
@@ -77,9 +77,7 @@ export class SyncCommandMenuItemAvailabilityExpressionsCommand extends Provision
         return {
           ...existingItem,
           conditionalAvailabilityExpression:
-            getStandardCommandMenuItemConditionalAvailabilityExpression(
-              standardItem.universalIdentifier,
-            ),
+            standardItem.conditionalAvailabilityExpression,
           updatedAt: new Date().toISOString(),
         };
       })

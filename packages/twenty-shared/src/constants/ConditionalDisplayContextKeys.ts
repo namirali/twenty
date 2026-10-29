@@ -1,7 +1,7 @@
 import { CONDITIONAL_DISPLAY_DEVICES } from '@/constants/ConditionalDisplayDevices';
 import { type ConditionalDisplayAdminContextKey } from '@/types/conditional-display/ConditionalDisplayAdminContextKey';
 import { type ConditionalDisplayContextKeyDefinition } from '@/types/conditional-display/ConditionalDisplayContextKeyDefinition';
-import { type ConditionalDisplayEngineContextKey } from '@/types/conditional-display/ConditionalDisplayEngineContextKey';
+import { type ConditionalDisplayEngineContextKey } from '@/types/conditional-display/internal/ConditionalDisplayEngineContextKey';
 import { ContextStorePageType } from '@/types/ContextStorePageType';
 import { FieldMetadataType } from '@/types/FieldMetadataType';
 

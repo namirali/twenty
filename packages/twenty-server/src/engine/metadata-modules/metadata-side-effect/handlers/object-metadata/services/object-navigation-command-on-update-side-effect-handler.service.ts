@@ -109,8 +109,11 @@ export class ObjectNavigationCommandOnUpdateSideEffectHandlerService extends Met
             universalConditionalAvailability:
               fromConditionalDisplayToUniversalConditionalDisplay({
                 conditionalDisplay: navigationConditionalAvailability,
-                fieldMetadataUniversalIdentifierById: {},
-                roleUniversalIdentifierById: {},
+                fieldMetadataUniversalIdentifierById:
+                  relatedFlatEntityMaps.flatFieldMetadataMaps
+                    .universalIdentifierById,
+                roleUniversalIdentifierById:
+                  relatedFlatEntityMaps.flatRoleMaps.universalIdentifierById,
               }),
           }
         : {}),

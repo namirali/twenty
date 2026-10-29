@@ -1,6 +1,7 @@
 import { isArray } from '@sniptt/guards';
 
-import { type ConditionalAvailabilityExpressionToken } from '@/types/conditional-display/ConditionalAvailabilityExpressionToken';
+import { type ConditionalAvailabilityExpressionToken } from '@/types/conditional-display/internal/ConditionalAvailabilityExpressionToken';
+import { buildConditionalAvailabilityCompilationError } from '@/utils/conditional-display/internal/buildConditionalAvailabilityCompilationError';
 import { isConditionalAvailabilityExpressionToken } from '@/utils/conditional-display/internal/isConditionalAvailabilityExpressionToken';
 
 export const getConditionalAvailabilityExpressionTokens = ({
@@ -14,9 +15,10 @@ export const getConditionalAvailabilityExpressionTokens = ({
     !isArray(tokens) ||
     !tokens.every(isConditionalAvailabilityExpressionToken)
   ) {
-    throw new Error(
-      `Cannot compile conditional availability expression "${expression}": unsupported parsed token list`,
-    );
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: 'unsupported parsed token list',
+    });
   }
 
   return tokens;

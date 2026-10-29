@@ -1,5 +1,5 @@
-import { CONDITIONAL_AVAILABILITY_LENGTH_PATH_SUFFIX } from '@/constants/ConditionalAvailabilityLengthPathSuffix';
-import { type ConditionalAvailabilityExpressionLiteral } from '@/types/conditional-display/ConditionalAvailabilityExpressionLiteral';
+import { CONDITIONAL_AVAILABILITY_LENGTH_PATH_SUFFIX } from '@/constants/internal/ConditionalAvailabilityLengthPathSuffix';
+import { type ConditionalAvailabilityExpressionLiteral } from '@/types/conditional-display/internal/ConditionalAvailabilityExpressionLiteral';
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
 import { type ConditionalDisplaySelectedRecordsMatch } from '@/types/conditional-display/ConditionalDisplaySelectedRecordsMatch';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';

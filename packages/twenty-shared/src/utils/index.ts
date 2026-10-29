@@ -31,15 +31,13 @@ export { safeGetNestedProperty } from './command-menu-items/safeGetNestedPropert
 export { computeDiffBetweenObjects } from './compute-diff-between-objects';
 export { buildConditionalDisplayFromConditionNode } from './conditional-display/buildConditionalDisplayFromConditionNode';
 export { buildDeviceConditionalDisplay } from './conditional-display/buildDeviceConditionalDisplay';
+export { buildDeviceConditionalDisplayConditionNode } from './conditional-display/buildDeviceConditionalDisplayConditionNode';
 export { compileConditionalAvailabilityExpression } from './conditional-display/compileConditionalAvailabilityExpression';
 export { compileConditionalAvailabilityExpressionNode } from './conditional-display/compileConditionalAvailabilityExpressionNode';
-export { compileLegacyWidgetJsonLogic } from './conditional-display/compileLegacyWidgetJsonLogic';
 export { getConditionalDisplayContextVirtualField } from './conditional-display/getConditionalDisplayContextVirtualField';
 export { groupConditionalDisplayConditionNodes } from './conditional-display/groupConditionalDisplayConditionNodes';
-export { isConditionalDisplay } from './conditional-display/isConditionalDisplay';
 export { isConditionalDisplayAdminContextKey } from './conditional-display/isConditionalDisplayAdminContextKey';
 export { isConditionalDisplayContextKey } from './conditional-display/isConditionalDisplayContextKey';
-export { isLegacyJsonLogicConditionalDisplay } from './conditional-display/isLegacyJsonLogicConditionalDisplay';
 export { negateConditionalDisplayConditionNode } from './conditional-display/negateConditionalDisplayConditionNode';
 export { buildRecordExportColumns } from './csv/buildRecordExportColumns';
 export { expandRecordExportMorphFields } from './csv/expandRecordExportMorphFields';

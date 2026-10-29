@@ -3,6 +3,7 @@ import { isBoolean } from '@sniptt/guards';
 import { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from '@/constants/NeverAvailableConditionalDisplay';
 import { type ConditionalAvailabilityExpressionNode } from '@/types/conditional-display/ConditionalAvailabilityExpressionNode';
 import { type ConditionalDisplay } from '@/types/conditional-display/ConditionalDisplay';
+import { buildConditionalAvailabilityCompilationError } from '@/utils/conditional-display/internal/buildConditionalAvailabilityCompilationError';
 import { buildConditionalDisplayFromConditionNode } from '@/utils/conditional-display/buildConditionalDisplayFromConditionNode';
 import { collectConditionalDisplaySelectedRecordsMatches } from '@/utils/conditional-display/internal/collectConditionalDisplaySelectedRecordsMatches';
 import { compileConditionalAvailabilityCompiledItem } from '@/utils/conditional-display/internal/compileConditionalAvailabilityCompiledItem';
@@ -39,9 +40,10 @@ export const compileConditionalAvailabilityExpressionNode = ({
   );
 
   if (selectedRecordsMatches.size > 1) {
-    throw new Error(
-      `Cannot compile conditional availability expression "${expression}": unsupported mix of every and some record functions`,
-    );
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: 'unsupported mix of every and some record functions',
+    });
   }
 
   const nonDistributingLogicalOperator =
@@ -55,9 +57,10 @@ export const compileConditionalAvailabilityExpressionNode = ({
         });
 
   if (isDefined(nonDistributingLogicalOperator)) {
-    throw new Error(
-      `Cannot compile conditional availability expression "${expression}": unsupported "${nonDistributingLogicalOperator.toLowerCase()}" between record functions over several selected records; guard the formula with \`numberOfSelectedRecords == 1\` at the top level, or express it as a single every/some over one path`,
-    );
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: `unsupported "${nonDistributingLogicalOperator.toLowerCase()}" between record functions over several selected records; guard the formula with \`numberOfSelectedRecords == 1\` at the top level, or express it as a single every/some over one path`,
+    });
   }
 
   return buildConditionalDisplayFromConditionNode({ conditionNode, source });

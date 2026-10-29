@@ -2,7 +2,6 @@ import { InjectDataSource } from '@nestjs/typeorm';
 
 import { Command } from 'nest-commander';
 import { TWENTY_STANDARD_APPLICATION_UNIVERSAL_IDENTIFIER } from 'twenty-shared/application';
-import { type LegacyWidgetJsonLogicField } from 'twenty-shared/types';
 import { fastDeepEqual, isDefined, isNonEmptyArray } from 'twenty-shared/utils';
 import { DataSource } from 'typeorm';
 
@@ -10,17 +9,14 @@ import { ProvisionedWorkspaceCommandRunner } from 'src/database/commands/command
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import { type RunOnWorkspaceArgs } from 'src/database/commands/command-runners/workspace.command-runner';
 import { compileLegacyConditionalExpression } from 'src/database/commands/upgrade-version-command/2-54/utils/compile-legacy-conditional-expression.util';
-import { findLegacyDeviceConditionalExpression } from 'src/database/commands/upgrade-version-command/2-54/utils/find-legacy-device-conditional-expression.util';
 import { migrateConditionalDisplayOverrides } from 'src/database/commands/upgrade-version-command/2-54/utils/migrate-conditional-display-overrides.util';
 import { migratePageLayoutWidgetConditionalDisplay } from 'src/database/commands/upgrade-version-command/2-54/utils/migrate-page-layout-widget-conditional-display.util';
-import { buildNavigationConditionalAvailabilityExpression } from 'src/database/commands/upgrade-version-command/utils/build-navigation-conditional-availability-expression.util';
-import { getStandardCommandMenuItemConditionalAvailabilityExpression } from 'src/database/commands/upgrade-version-command/utils/get-standard-command-menu-item-conditional-availability-expression.util';
-import { getStandardCommandMenuItemConditionalPinnedExpression } from 'src/database/commands/upgrade-version-command/utils/get-standard-command-menu-item-conditional-pinned-expression.util';
-import { STANDARD_PAGE_LAYOUT_WIDGET_CONDITIONAL_AVAILABILITY_EXPRESSIONS } from 'src/database/commands/upgrade-version-command/utils/standard-page-layout-widget-conditional-availability-expressions.constant';
+import { restoreLegacyConditionalDisplayOverrides } from 'src/database/commands/upgrade-version-command/2-54/utils/restore-legacy-conditional-display-overrides.util';
+import { restoreLegacyPageLayoutWidgetConditionalDisplay } from 'src/database/commands/upgrade-version-command/2-54/utils/restore-legacy-page-layout-widget-conditional-display.util';
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { RegisteredWorkspaceCommand } from 'src/engine/core-modules/upgrade/decorators/registered-workspace-command.decorator';
-import { EngineComponentKey } from 'src/engine/metadata-modules/command-menu-item/enums/engine-component-key.enum';
 import { type FlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/types/flat-command-menu-item.type';
+import { type LegacyWidgetJsonLogicField } from 'src/engine/metadata-modules/flat-conditional-display/types/legacy-widget-json-logic-field.type';
 import { fromConditionalDisplayToUniversalConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/from-conditional-display-to-universal-conditional-display.util';
 import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
 import { findFlatEntityByIdInFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-id-in-flat-entity-maps.util';
@@ -37,7 +33,7 @@ import { WorkspaceMigrationValidateBuildAndRunService } from 'src/engine/workspa
 @Command({
   name: 'upgrade:2-54:migrate-conditional-expressions-to-conditional-display',
   description:
-    'Compile the conditional expressions and legacy json-logic of command menu items and page layout widgets into conditional display trees, where a non-zero dry run failure count means those workspaces need a hand review before the real run',
+    'Compile the conditional expressions and legacy json-logic of command menu items and page layout widgets into conditional display trees, where a non-zero dry run failure count means those workspaces need a hand review before the real run; down restores device rules only, other converted json-logic stays a tree',
 })
 export class MigrateConditionalExpressionsToConditionalDisplayCommand extends ProvisionedWorkspaceCommandRunner {
   constructor(
@@ -82,6 +78,7 @@ export class MigrateConditionalExpressionsToConditionalDisplayCommand extends Pr
       commandsWithPinned: 0,
       widgetsWithAvailability: 0,
       widgetsConvertedFromJsonLogic: 0,
+      widgetsMovedFromDeviceExpression: 0,
       overrideEntriesConverted: 0,
       failures: 0,
     };
@@ -93,25 +90,6 @@ export class MigrateConditionalExpressionsToConditionalDisplayCommand extends Pr
     )
       .filter(isDefined)
       .flatMap((flatCommandMenuItem): FlatCommandMenuItem[] => {
-        const isStandardCommandMenuItem =
-          flatCommandMenuItem.applicationUniversalIdentifier ===
-          TWENTY_STANDARD_APPLICATION_UNIVERSAL_IDENTIFIER;
-        const conditionalAvailabilityExpression =
-          flatCommandMenuItem.conditionalAvailabilityExpression ??
-          (isStandardCommandMenuItem
-            ? this.getStandardConditionalAvailabilityExpression({
-                flatCommandMenuItem,
-                flatObjectMetadataMaps,
-              })
-            : null);
-        const conditionalPinnedExpression =
-          flatCommandMenuItem.conditionalPinnedExpression ??
-          (isStandardCommandMenuItem
-            ? getStandardCommandMenuItemConditionalPinnedExpression(
-                flatCommandMenuItem.universalIdentifier,
-              )
-            : null);
-
         const migrated = this.migrateOrCollectFailure({
           workspaceId,
           description: `commandMenuItem ${flatCommandMenuItem.universalIdentifier}`,
@@ -120,11 +98,13 @@ export class MigrateConditionalExpressionsToConditionalDisplayCommand extends Pr
             conditionalAvailability:
               flatCommandMenuItem.conditionalAvailability ??
               compileLegacyConditionalExpression(
-                conditionalAvailabilityExpression,
+                flatCommandMenuItem.conditionalAvailabilityExpression,
               ),
             conditionalPinned:
               flatCommandMenuItem.conditionalPinned ??
-              compileLegacyConditionalExpression(conditionalPinnedExpression),
+              compileLegacyConditionalExpression(
+                flatCommandMenuItem.conditionalPinnedExpression,
+              ),
           }),
         });
 
@@ -203,14 +183,6 @@ export class MigrateConditionalExpressionsToConditionalDisplayCommand extends Pr
     )
       .filter(isDefined)
       .flatMap((flatPageLayoutWidget): FlatPageLayoutWidget[] => {
-        const conditionalAvailabilityExpression =
-          flatPageLayoutWidget.conditionalAvailabilityExpression ??
-          (flatPageLayoutWidget.applicationUniversalIdentifier ===
-          TWENTY_STANDARD_APPLICATION_UNIVERSAL_IDENTIFIER
-            ? (STANDARD_PAGE_LAYOUT_WIDGET_CONDITIONAL_AVAILABILITY_EXPRESSIONS[
-                flatPageLayoutWidget.universalIdentifier
-              ] ?? null)
-            : null);
         const resolveField = this.buildResolveField({
           objectMetadataId: flatPageLayoutWidget.objectMetadataId,
           flatObjectMetadataMaps,
@@ -224,7 +196,8 @@ export class MigrateConditionalExpressionsToConditionalDisplayCommand extends Pr
           migrate: () => {
             const migratedConditionalDisplay =
               migratePageLayoutWidgetConditionalDisplay({
-                conditionalAvailabilityExpression,
+                conditionalAvailabilityExpression:
+                  flatPageLayoutWidget.conditionalAvailabilityExpression,
                 conditionalAvailability:
                   flatPageLayoutWidget.conditionalAvailability,
                 conditionalDisplay: flatPageLayoutWidget.conditionalDisplay,
@@ -241,14 +214,6 @@ export class MigrateConditionalExpressionsToConditionalDisplayCommand extends Pr
               },
               resolveField,
             });
-
-            if (
-              isNonEmptyArray(migratedOverrides.unconvertibleOverrideEntries)
-            ) {
-              throw new Error(
-                migratedOverrides.unconvertibleOverrideEntries.join('; '),
-              );
-            }
 
             return { ...migratedConditionalDisplay, ...migratedOverrides };
           },
@@ -281,8 +246,15 @@ export class MigrateConditionalExpressionsToConditionalDisplayCommand extends Pr
           counts.widgetsWithAvailability += 1;
         }
 
-        if (migrated.isConditionalDisplayConvertedFromJsonLogic) {
-          counts.widgetsConvertedFromJsonLogic += 1;
+        switch (migrated.conditionalDisplayConversion) {
+          case 'jsonLogic':
+            counts.widgetsConvertedFromJsonLogic += 1;
+            break;
+          case 'deviceExpression':
+            counts.widgetsMovedFromDeviceExpression += 1;
+            break;
+          case 'none':
+            break;
         }
 
         counts.overrideEntriesConverted += migrated.convertedOverrideEntryCount;
@@ -328,7 +300,7 @@ export class MigrateConditionalExpressionsToConditionalDisplayCommand extends Pr
       });
 
     this.logger.log(
-      `${options.dryRun ? '[DRY RUN] ' : ''}Workspace ${workspaceId}: ${counts.commandsWithAvailability} command(s) with availability, ${counts.commandsWithPinned} command(s) with pinned, ${counts.widgetsWithAvailability} widget(s) with availability, ${counts.widgetsConvertedFromJsonLogic} widget(s) converted from json-logic, ${counts.overrideEntriesConverted} override entr(ies) converted, ${counts.failures} failure(s), updating ${commandMenuItemsToUpdate.length} command menu item(s) and ${pageLayoutWidgetsToUpdate.length} page layout widget(s)`,
+      `${options.dryRun ? '[DRY RUN] ' : ''}Workspace ${workspaceId}: ${counts.commandsWithAvailability} command(s) with availability, ${counts.commandsWithPinned} command(s) with pinned, ${counts.widgetsWithAvailability} widget(s) with availability, ${counts.widgetsConvertedFromJsonLogic} widget(s) converted from json-logic, ${counts.widgetsMovedFromDeviceExpression} widget(s) moved from device expression to display, ${counts.overrideEntriesConverted} override entr(ies) converted, ${counts.failures} failure(s), updating ${commandMenuItemsToUpdate.length} command menu item(s) and ${pageLayoutWidgetsToUpdate.length} page layout widget(s)`,
     );
 
     if (options.dryRun) {
@@ -387,18 +359,15 @@ export class MigrateConditionalExpressionsToConditionalDisplayCommand extends Pr
     )
       .filter(isDefined)
       .flatMap((flatPageLayoutWidget) => {
-        const legacyDeviceConditionalExpression =
-          findLegacyDeviceConditionalExpression(
-            flatPageLayoutWidget.conditionalAvailabilityExpression,
-          );
         const conditionalDisplay =
-          isDefined(legacyDeviceConditionalExpression) &&
-          fastDeepEqual(
-            flatPageLayoutWidget.conditionalDisplay,
-            legacyDeviceConditionalExpression.conditionalDisplay,
-          )
-            ? legacyDeviceConditionalExpression.legacyConditionalDisplay
-            : flatPageLayoutWidget.conditionalDisplay;
+          restoreLegacyPageLayoutWidgetConditionalDisplay({
+            conditionalAvailabilityExpression:
+              flatPageLayoutWidget.conditionalAvailabilityExpression,
+            conditionalDisplay: flatPageLayoutWidget.conditionalDisplay,
+          });
+        const overrides = restoreLegacyConditionalDisplayOverrides(
+          flatPageLayoutWidget.overrides,
+        );
         const conditionalAvailability = isDefined(
           flatPageLayoutWidget.conditionalAvailabilityExpression,
         )
@@ -408,7 +377,8 @@ export class MigrateConditionalExpressionsToConditionalDisplayCommand extends Pr
         if (
           conditionalAvailability ===
             flatPageLayoutWidget.conditionalAvailability &&
-          conditionalDisplay === flatPageLayoutWidget.conditionalDisplay
+          conditionalDisplay === flatPageLayoutWidget.conditionalDisplay &&
+          fastDeepEqual(overrides, flatPageLayoutWidget.overrides)
         ) {
           return [];
         }
@@ -418,6 +388,7 @@ export class MigrateConditionalExpressionsToConditionalDisplayCommand extends Pr
             id: flatPageLayoutWidget.id,
             conditionalAvailability,
             conditionalDisplay,
+            overrides,
           },
         ];
       });
@@ -444,8 +415,9 @@ export class MigrateConditionalExpressionsToConditionalDisplayCommand extends Pr
         `UPDATE core."pageLayoutWidget" AS "pageLayoutWidget"
          SET "conditionalAvailability" = restored."conditionalAvailability",
              "conditionalDisplay" = restored."conditionalDisplay",
+             "overrides" = restored."overrides",
              "updatedAt" = now()
-         FROM jsonb_to_recordset($1::jsonb) AS restored(id uuid, "conditionalAvailability" jsonb, "conditionalDisplay" jsonb)
+         FROM jsonb_to_recordset($1::jsonb) AS restored(id uuid, "conditionalAvailability" jsonb, "conditionalDisplay" jsonb, "overrides" jsonb)
          WHERE "pageLayoutWidget".id = restored.id AND "pageLayoutWidget"."workspaceId" = $2`,
         [JSON.stringify(pageLayoutWidgetsToRestore), workspaceId],
       );
@@ -455,39 +427,6 @@ export class MigrateConditionalExpressionsToConditionalDisplayCommand extends Pr
       'flatCommandMenuItemMaps',
       'flatPageLayoutWidgetMaps',
     ]);
-  }
-
-  private getStandardConditionalAvailabilityExpression({
-    flatCommandMenuItem,
-    flatObjectMetadataMaps,
-  }: {
-    flatCommandMenuItem: FlatCommandMenuItem;
-    flatObjectMetadataMaps: FlatEntityMaps<FlatObjectMetadata>;
-  }): string | null {
-    if (
-      flatCommandMenuItem.engineComponentKey !== EngineComponentKey.NAVIGATION
-    ) {
-      return getStandardCommandMenuItemConditionalAvailabilityExpression(
-        flatCommandMenuItem.universalIdentifier,
-      );
-    }
-
-    const navigationTargetFlatObjectMetadata = isDefined(
-      flatCommandMenuItem.navigationTargetObjectMetadataId,
-    )
-      ? findFlatEntityByIdInFlatEntityMaps({
-          flatEntityId: flatCommandMenuItem.navigationTargetObjectMetadataId,
-          flatEntityMaps: flatObjectMetadataMaps,
-        })
-      : undefined;
-
-    return isDefined(navigationTargetFlatObjectMetadata)
-      ? buildNavigationConditionalAvailabilityExpression({
-          universalIdentifier:
-            navigationTargetFlatObjectMetadata.universalIdentifier,
-          nameSingular: navigationTargetFlatObjectMetadata.nameSingular,
-        })
-      : null;
   }
 
   private buildResolveField({

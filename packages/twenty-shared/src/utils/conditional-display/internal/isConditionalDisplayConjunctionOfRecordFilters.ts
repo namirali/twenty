@@ -1,4 +1,4 @@
-import { type ConditionalDisplayRecordFilterGroupConditionNode } from '@/types/conditional-display/ConditionalDisplayRecordFilterGroupConditionNode';
+import { type ConditionalDisplayRecordFilterGroupConditionNode } from '@/types/conditional-display/internal/ConditionalDisplayRecordFilterGroupConditionNode';
 import { RecordFilterGroupLogicalOperator } from '@/types/RecordFilterGroupLogicalOperator';
 import { isConditionalDisplayRecordFilterConditionNode } from '@/utils/conditional-display/internal/isConditionalDisplayRecordFilterConditionNode';
 

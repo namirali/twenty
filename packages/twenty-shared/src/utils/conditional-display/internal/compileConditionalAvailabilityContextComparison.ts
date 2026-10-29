@@ -1,8 +1,8 @@
 import { isBoolean, isNumber, isString } from '@sniptt/guards';
 
-import { type ConditionalAvailabilityComparisonOperator } from '@/types/conditional-display/ConditionalAvailabilityComparisonOperator';
-import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/ConditionalAvailabilityCompiledItem';
-import { type ConditionalAvailabilityExpressionLiteral } from '@/types/conditional-display/ConditionalAvailabilityExpressionLiteral';
+import { type ConditionalAvailabilityComparisonOperator } from '@/types/conditional-display/internal/ConditionalAvailabilityComparisonOperator';
+import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/internal/ConditionalAvailabilityCompiledItem';
+import { type ConditionalAvailabilityExpressionLiteral } from '@/types/conditional-display/internal/ConditionalAvailabilityExpressionLiteral';
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
 import { FieldMetadataType } from '@/types/FieldMetadataType';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';

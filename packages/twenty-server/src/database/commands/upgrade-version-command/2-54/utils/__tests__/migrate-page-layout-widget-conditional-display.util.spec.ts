@@ -3,10 +3,10 @@ import { FieldMetadataType } from 'twenty-shared/types';
 import {
   buildDeviceConditionalDisplay,
   compileConditionalAvailabilityExpression,
-  compileLegacyWidgetJsonLogic,
 } from 'twenty-shared/utils';
 
 import { migratePageLayoutWidgetConditionalDisplay } from 'src/database/commands/upgrade-version-command/2-54/utils/migrate-page-layout-widget-conditional-display.util';
+import { compileLegacyWidgetJsonLogic } from 'src/engine/metadata-modules/flat-conditional-display/utils/compile-legacy-widget-json-logic.util';
 import { type FlatPageLayoutWidget } from 'src/engine/metadata-modules/flat-page-layout-widget/types/flat-page-layout-widget.type';
 
 const SELECT_FIELD_ID = '20202020-1111-4111-8111-000000000002';
@@ -43,7 +43,7 @@ describe('migratePageLayoutWidgetConditionalDisplay', () => {
         jsonLogic: SELECT_FIELD_JSON_LOGIC,
         resolveField,
       }),
-      isConditionalDisplayConvertedFromJsonLogic: true,
+      conditionalDisplayConversion: 'jsonLogic',
     });
   });
 
@@ -84,7 +84,7 @@ describe('migratePageLayoutWidgetConditionalDisplay', () => {
     ).toEqual({
       conditionalAvailability: null,
       conditionalDisplay: buildDeviceConditionalDisplay('MOBILE'),
-      isConditionalDisplayConvertedFromJsonLogic: false,
+      conditionalDisplayConversion: 'deviceExpression',
     });
   });
 
@@ -101,7 +101,7 @@ describe('migratePageLayoutWidgetConditionalDisplay', () => {
     ).toEqual({
       conditionalAvailability: null,
       conditionalDisplay,
-      isConditionalDisplayConvertedFromJsonLogic: false,
+      conditionalDisplayConversion: 'none',
     });
   });
 

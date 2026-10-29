@@ -1,9 +1,10 @@
 import { isString } from '@sniptt/guards';
 
-import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/ConditionalAvailabilityCompiledItem';
+import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/internal/ConditionalAvailabilityCompiledItem';
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
 import { FieldMetadataType } from '@/types/FieldMetadataType';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
+import { buildConditionalAvailabilityCompilationError } from '@/utils/conditional-display/internal/buildConditionalAvailabilityCompilationError';
 import { buildConditionalDisplayContextConditionNode } from '@/utils/conditional-display/internal/buildConditionalDisplayContextConditionNode';
 import { describeConditionalAvailabilityCompiledItem } from '@/utils/conditional-display/internal/describeConditionalAvailabilityCompiledItem';
 import { getConditionalAvailabilityContextSubject } from '@/utils/conditional-display/internal/getConditionalAvailabilityContextSubject';
@@ -33,9 +34,10 @@ export const compileConditionalAvailabilityIncludesCall = ({
     values.length === 0 ||
     (isDefined(options) && !values.every((value) => options.includes(value)))
   ) {
-    throw new Error(
-      `Cannot compile conditional availability expression "${expression}": unsupported call of includes(${functionArguments.map(describeConditionalAvailabilityCompiledItem).join(', ')}): includes accepts a list of values followed by a text context value, e.g. includes(["INDEX_PAGE", "RECORD_PAGE"], pageType); use someEquals or includesSome(selectedRecords, "path", value) for record fields`,
-    );
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: `unsupported call of includes(${functionArguments.map(describeConditionalAvailabilityCompiledItem).join(', ')}): includes accepts a list of values followed by a text context value, e.g. includes(["INDEX_PAGE", "RECORD_PAGE"], pageType); use someEquals or includesSome(selectedRecords, "path", value) for record fields`,
+    });
   }
 
   return buildConditionalDisplayContextConditionNode({

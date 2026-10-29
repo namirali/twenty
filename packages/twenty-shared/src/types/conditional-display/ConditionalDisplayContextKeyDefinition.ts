@@ -1,4 +1,4 @@
-import { type ConditionalDisplayContextKeySubject } from './ConditionalDisplayContextKeySubject';
+import { type ConditionalDisplayContextKeySubject } from './internal/ConditionalDisplayContextKeySubject';
 import { type ConditionalDisplaySurface } from './ConditionalDisplaySurface';
 
 export type ConditionalDisplayContextKeyDefinition =

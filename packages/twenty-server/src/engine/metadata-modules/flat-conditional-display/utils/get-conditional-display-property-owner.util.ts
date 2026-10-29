@@ -1,10 +1,10 @@
-import { type ConditionalDisplayOwner } from 'twenty-shared/types';
+import { type ConditionalDisplayContextKeyDefinition } from 'twenty-shared/types';
 
 import { type ConditionalDisplayProperty } from 'src/engine/metadata-modules/flat-conditional-display/types/conditional-display-property.type';
 
 export const getConditionalDisplayPropertyOwner = (
   property: ConditionalDisplayProperty,
-): ConditionalDisplayOwner => {
+): ConditionalDisplayContextKeyDefinition['owner'] => {
   switch (property) {
     case 'conditionalAvailability':
     case 'conditionalPinned':

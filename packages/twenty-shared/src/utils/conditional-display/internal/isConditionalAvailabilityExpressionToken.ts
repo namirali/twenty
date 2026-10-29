@@ -1,6 +1,6 @@
 import { isObject, isString } from '@sniptt/guards';
 
-import { type ConditionalAvailabilityExpressionToken } from '@/types/conditional-display/ConditionalAvailabilityExpressionToken';
+import { type ConditionalAvailabilityExpressionToken } from '@/types/conditional-display/internal/ConditionalAvailabilityExpressionToken';
 
 export const isConditionalAvailabilityExpressionToken = (
   value: unknown,

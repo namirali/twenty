@@ -6,7 +6,8 @@ import {
 } from '@sniptt/guards';
 
 import { type ConditionalAvailabilityExpressionNode } from '@/types/conditional-display/ConditionalAvailabilityExpressionNode';
-import { type ConditionalAvailabilityExpressionToken } from '@/types/conditional-display/ConditionalAvailabilityExpressionToken';
+import { type ConditionalAvailabilityExpressionToken } from '@/types/conditional-display/internal/ConditionalAvailabilityExpressionToken';
+import { buildConditionalAvailabilityCompilationError } from '@/utils/conditional-display/internal/buildConditionalAvailabilityCompilationError';
 import { getConditionalAvailabilityExpressionTokens } from '@/utils/conditional-display/internal/getConditionalAvailabilityExpressionTokens';
 import { toConditionalAvailabilityBinaryExpressionNode } from '@/utils/conditional-display/internal/toConditionalAvailabilityBinaryExpressionNode';
 import { isDefined } from '@/utils/validation/isDefined';
@@ -18,11 +19,6 @@ export const buildConditionalAvailabilityExpressionNodeFromTokens = ({
   tokens: ConditionalAvailabilityExpressionToken[];
   expression: string;
 }): ConditionalAvailabilityExpressionNode => {
-  const buildCompilationError = (reason: string) =>
-    new Error(
-      `Cannot compile conditional availability expression "${expression}": ${reason}`,
-    );
-
   const stack: ConditionalAvailabilityExpressionNode[] = [];
 
   const popExpressionNode = (
@@ -31,9 +27,10 @@ export const buildConditionalAvailabilityExpressionNodeFromTokens = ({
     const expressionNode = stack.pop();
 
     if (!isDefined(expressionNode)) {
-      throw buildCompilationError(
-        `unsupported token ${token.type} without operand`,
-      );
+      throw buildConditionalAvailabilityCompilationError({
+        expression,
+        reason: `unsupported token ${token.type} without operand`,
+      });
     }
 
     return expressionNode;
@@ -47,18 +44,20 @@ export const buildConditionalAvailabilityExpressionNodeFromTokens = ({
           !isNumber(token.value) &&
           !isBoolean(token.value)
         ) {
-          throw buildCompilationError(
-            `unsupported literal ${JSON.stringify(token.value)}`,
-          );
+          throw buildConditionalAvailabilityCompilationError({
+            expression,
+            reason: `unsupported literal ${JSON.stringify(token.value)}`,
+          });
         }
 
         stack.push({ kind: 'literal', value: token.value });
         break;
       case 'IVAR':
         if (!isNonEmptyString(token.value)) {
-          throw buildCompilationError(
-            `unsupported variable ${JSON.stringify(token.value)}`,
-          );
+          throw buildConditionalAvailabilityCompilationError({
+            expression,
+            reason: `unsupported variable ${JSON.stringify(token.value)}`,
+          });
         }
 
         stack.push({ kind: 'variable', name: token.value });
@@ -67,9 +66,10 @@ export const buildConditionalAvailabilityExpressionNodeFromTokens = ({
         const object = popExpressionNode(token);
 
         if (!isNonEmptyString(token.value)) {
-          throw buildCompilationError(
-            `unsupported member ${JSON.stringify(token.value)}`,
-          );
+          throw buildConditionalAvailabilityCompilationError({
+            expression,
+            reason: `unsupported member ${JSON.stringify(token.value)}`,
+          });
         }
 
         stack.push({ kind: 'member', object, memberName: token.value });
@@ -90,9 +90,10 @@ export const buildConditionalAvailabilityExpressionNodeFromTokens = ({
         const operand = popExpressionNode(token);
 
         if (token.value !== 'not') {
-          throw buildCompilationError(
-            `unsupported operator "${String(token.value)}"`,
-          );
+          throw buildConditionalAvailabilityCompilationError({
+            expression,
+            reason: `unsupported operator "${String(token.value)}"`,
+          });
         }
 
         stack.push({ kind: 'not', operand });
@@ -129,7 +130,10 @@ export const buildConditionalAvailabilityExpressionNodeFromTokens = ({
         const callee = popExpressionNode(token);
 
         if (callee.kind !== 'variable') {
-          throw buildCompilationError('unsupported call of a non-function');
+          throw buildConditionalAvailabilityCompilationError({
+            expression,
+            reason: 'unsupported call of a non-function',
+          });
         }
 
         stack.push({
@@ -140,14 +144,20 @@ export const buildConditionalAvailabilityExpressionNodeFromTokens = ({
         break;
       }
       default:
-        throw buildCompilationError(`unsupported token ${token.type}`);
+        throw buildConditionalAvailabilityCompilationError({
+          expression,
+          reason: `unsupported token ${token.type}`,
+        });
     }
   }
 
   const [expressionNode, ...remainingExpressionNodes] = stack;
 
   if (!isDefined(expressionNode) || remainingExpressionNodes.length > 0) {
-    throw buildCompilationError('unsupported statement sequence');
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: 'unsupported statement sequence',
+    });
   }
 
   return expressionNode;

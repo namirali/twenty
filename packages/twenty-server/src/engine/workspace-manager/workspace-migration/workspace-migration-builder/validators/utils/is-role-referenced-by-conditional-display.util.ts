@@ -1,8 +1,5 @@
-import { isDefined } from 'twenty-shared/utils';
-
-import { getConditionalDisplayRoleUniversalIdentifiers } from 'src/engine/metadata-modules/flat-conditional-display/utils/get-conditional-display-role-universal-identifiers.util';
-import { getUniversalFlatEntityConditionalDisplays } from 'src/engine/metadata-modules/flat-conditional-display/utils/get-universal-flat-entity-conditional-displays.util';
 import { type AllUniversalFlatEntityMaps } from 'src/engine/workspace-manager/workspace-migration/universal-flat-entity/types/all-universal-flat-entity-maps.type';
+import { isRoleReferencedByUniversalFlatEntityMaps } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/is-role-referenced-by-universal-flat-entity-maps.util';
 
 export const isRoleReferencedByConditionalDisplay = ({
   roleUniversalIdentifier,
@@ -21,42 +18,28 @@ export const isRoleReferencedByConditionalDisplay = ({
   | 'flatCommandMenuItemMaps'
   | 'flatNavigationMenuItemMaps'
 >): boolean =>
-  (
-    [
-      {
-        metadataName: 'pageLayoutWidget',
-        flatEntityMaps: flatPageLayoutWidgetMaps,
-      },
-      { metadataName: 'pageLayoutTab', flatEntityMaps: flatPageLayoutTabMaps },
-      { metadataName: 'viewField', flatEntityMaps: flatViewFieldMaps },
-      {
-        metadataName: 'commandMenuItem',
-        flatEntityMaps: flatCommandMenuItemMaps,
-      },
-      {
-        metadataName: 'navigationMenuItem',
-        flatEntityMaps: flatNavigationMenuItemMaps,
-      },
-    ] as const
-  ).some(({ metadataName, flatEntityMaps }) =>
-    Object.values<
-      | {
-          universalConditionalDisplay: unknown;
-          universalOverrides?: unknown;
-        }
-      | undefined
-    >(flatEntityMaps.byUniversalIdentifier)
-      .filter(isDefined)
-      .some(({ universalConditionalDisplay, universalOverrides }) =>
-        getUniversalFlatEntityConditionalDisplays({
-          metadataName,
-          property: 'conditionalDisplay',
-          universalConditionalDisplay,
-          universalOverrides,
-        }).some((conditionalDisplay) =>
-          getConditionalDisplayRoleUniversalIdentifiers(
-            conditionalDisplay,
-          ).includes(roleUniversalIdentifier),
-        ),
-      ),
-  );
+  isRoleReferencedByUniversalFlatEntityMaps({
+    roleUniversalIdentifier,
+    metadataName: 'pageLayoutWidget',
+    flatEntityMaps: flatPageLayoutWidgetMaps,
+  }) ||
+  isRoleReferencedByUniversalFlatEntityMaps({
+    roleUniversalIdentifier,
+    metadataName: 'pageLayoutTab',
+    flatEntityMaps: flatPageLayoutTabMaps,
+  }) ||
+  isRoleReferencedByUniversalFlatEntityMaps({
+    roleUniversalIdentifier,
+    metadataName: 'viewField',
+    flatEntityMaps: flatViewFieldMaps,
+  }) ||
+  isRoleReferencedByUniversalFlatEntityMaps({
+    roleUniversalIdentifier,
+    metadataName: 'commandMenuItem',
+    flatEntityMaps: flatCommandMenuItemMaps,
+  }) ||
+  isRoleReferencedByUniversalFlatEntityMaps({
+    roleUniversalIdentifier,
+    metadataName: 'navigationMenuItem',
+    flatEntityMaps: flatNavigationMenuItemMaps,
+  });

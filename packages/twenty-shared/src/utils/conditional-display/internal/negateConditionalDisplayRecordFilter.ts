@@ -1,4 +1,4 @@
-import { type ConditionalDisplayRecordFilterConditionNode } from '@/types/conditional-display/ConditionalDisplayRecordFilterConditionNode';
+import { type ConditionalDisplayRecordFilterConditionNode } from '@/types/conditional-display/internal/ConditionalDisplayRecordFilterConditionNode';
 import { FieldMetadataType } from '@/types/FieldMetadataType';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
 import { getConditionalDisplayContextVirtualField } from '@/utils/conditional-display/getConditionalDisplayContextVirtualField';

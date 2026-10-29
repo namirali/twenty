@@ -1,5 +1,6 @@
-import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/ConditionalAvailabilityCompiledItem';
+import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/internal/ConditionalAvailabilityCompiledItem';
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
+import { buildConditionalAvailabilityCompilationError } from '@/utils/conditional-display/internal/buildConditionalAvailabilityCompilationError';
 import { describeConditionalAvailabilityCompiledItem } from '@/utils/conditional-display/internal/describeConditionalAvailabilityCompiledItem';
 import { toConditionalAvailabilityConditionNode } from '@/utils/conditional-display/internal/toConditionalAvailabilityConditionNode';
 import { negateConditionalDisplayConditionNode } from '@/utils/conditional-display/negateConditionalDisplayConditionNode';
@@ -20,9 +21,10 @@ export const compileConditionalAvailabilityNegation = ({
   );
 
   if (!isDefined(conditionNode)) {
-    throw new Error(
-      `Cannot compile conditional availability expression "${expression}": unsupported operator "not" on ${describeConditionalAvailabilityCompiledItem(operand)}`,
-    );
+    throw buildConditionalAvailabilityCompilationError({
+      expression,
+      reason: `unsupported operator "not" on ${describeConditionalAvailabilityCompiledItem(operand)}`,
+    });
   }
 
   return conditionNode;

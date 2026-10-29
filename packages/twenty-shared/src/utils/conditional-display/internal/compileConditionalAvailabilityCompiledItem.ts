@@ -1,6 +1,7 @@
-import { CONDITIONAL_AVAILABILITY_SUPPORTED_FUNCTION_NAMES } from '@/constants/ConditionalAvailabilitySupportedFunctionNames';
-import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/ConditionalAvailabilityCompiledItem';
+import { CONDITIONAL_AVAILABILITY_SUPPORTED_FUNCTION_NAMES } from '@/constants/internal/ConditionalAvailabilitySupportedFunctionNames';
+import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/internal/ConditionalAvailabilityCompiledItem';
 import { type ConditionalAvailabilityExpressionNode } from '@/types/conditional-display/ConditionalAvailabilityExpressionNode';
+import { buildConditionalAvailabilityCompilationError } from '@/utils/conditional-display/internal/buildConditionalAvailabilityCompilationError';
 import { compileConditionalAvailabilityComparison } from '@/utils/conditional-display/internal/compileConditionalAvailabilityComparison';
 import { compileConditionalAvailabilityFunctionCall } from '@/utils/conditional-display/internal/compileConditionalAvailabilityFunctionCall';
 import { compileConditionalAvailabilityLogicalOperation } from '@/utils/conditional-display/internal/compileConditionalAvailabilityLogicalOperation';
@@ -29,9 +30,10 @@ export const compileConditionalAvailabilityCompiledItem = ({
         kind: 'list',
         values: expressionNode.elements.map((element) => {
           if (element.kind !== 'literal') {
-            throw new Error(
-              `Cannot compile conditional availability expression "${expression}": unsupported list element: lists only accept literals`,
-            );
+            throw buildConditionalAvailabilityCompilationError({
+              expression,
+              reason: 'unsupported list element: lists only accept literals',
+            });
           }
 
           return element.value;
@@ -82,9 +84,10 @@ export const compileConditionalAvailabilityCompiledItem = ({
           expressionNode.functionName,
         )
       ) {
-        throw new Error(
-          `Cannot compile conditional availability expression "${expression}": unsupported function "${expressionNode.functionName}"`,
-        );
+        throw buildConditionalAvailabilityCompilationError({
+          expression,
+          reason: `unsupported function "${expressionNode.functionName}"`,
+        });
       }
 
       return compileConditionalAvailabilityFunctionCall({

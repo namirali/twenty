@@ -1,4 +1,4 @@
-import { type ConditionalAvailabilityComparisonOperator } from '@/types/conditional-display/ConditionalAvailabilityComparisonOperator';
+import { type ConditionalAvailabilityComparisonOperator } from '@/types/conditional-display/internal/ConditionalAvailabilityComparisonOperator';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
 
 export const getConditionalAvailabilityEqualityOperand = (

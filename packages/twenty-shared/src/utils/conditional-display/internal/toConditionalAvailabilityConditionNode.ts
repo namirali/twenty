@@ -1,7 +1,8 @@
-import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/ConditionalAvailabilityCompiledItem';
+import { type ConditionalAvailabilityCompiledItem } from '@/types/conditional-display/internal/ConditionalAvailabilityCompiledItem';
 import { type ConditionalDisplayConditionNode } from '@/types/conditional-display/ConditionalDisplayConditionNode';
 import { FieldMetadataType } from '@/types/FieldMetadataType';
 import { ViewFilterOperand } from '@/types/ViewFilterOperand';
+import { buildConditionalAvailabilityCompilationError } from '@/utils/conditional-display/internal/buildConditionalAvailabilityCompilationError';
 import { buildConditionalDisplayContextConditionNode } from '@/utils/conditional-display/internal/buildConditionalDisplayContextConditionNode';
 import { describeConditionalAvailabilityCompiledItem } from '@/utils/conditional-display/internal/describeConditionalAvailabilityCompiledItem';
 import { getConditionalAvailabilityContextSubject } from '@/utils/conditional-display/internal/getConditionalAvailabilityContextSubject';
@@ -28,7 +29,8 @@ export const toConditionalAvailabilityConditionNode = ({
     });
   }
 
-  throw new Error(
-    `Cannot compile conditional availability expression "${expression}": unsupported ${describeConditionalAvailabilityCompiledItem(compiledItem)}`,
-  );
+  throw buildConditionalAvailabilityCompilationError({
+    expression,
+    reason: `unsupported ${describeConditionalAvailabilityCompiledItem(compiledItem)}`,
+  });
 };

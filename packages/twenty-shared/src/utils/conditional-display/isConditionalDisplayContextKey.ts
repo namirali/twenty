@@ -4,4 +4,7 @@ import { type ConditionalDisplayContextKey } from '@/types/conditional-display/C
 export const isConditionalDisplayContextKey = (
   contextKey: string,
 ): contextKey is ConditionalDisplayContextKey =>
-  Object.keys(CONDITIONAL_DISPLAY_CONTEXT_KEYS).includes(contextKey);
+  Object.prototype.hasOwnProperty.call(
+    CONDITIONAL_DISPLAY_CONTEXT_KEYS,
+    contextKey,
+  );

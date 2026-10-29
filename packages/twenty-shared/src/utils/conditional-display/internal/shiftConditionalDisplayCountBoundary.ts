@@ -1,6 +1,6 @@
 import { isNumber } from '@sniptt/guards';
 
-import { type ConditionalDisplayRecordFilterConditionNode } from '@/types/conditional-display/ConditionalDisplayRecordFilterConditionNode';
+import { type ConditionalDisplayRecordFilterConditionNode } from '@/types/conditional-display/internal/ConditionalDisplayRecordFilterConditionNode';
 import { parseJson } from '@/utils/parseJson';
 
 export const shiftConditionalDisplayCountBoundary = ({
