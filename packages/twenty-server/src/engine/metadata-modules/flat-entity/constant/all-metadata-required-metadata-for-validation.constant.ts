@@ -130,8 +130,15 @@ export const ALL_METADATA_REQUIRED_METADATA_FOR_VALIDATION = {
     objectMetadata: true,
   },
   webhook: {},
+  mcpServer: {
+    connectionProvider: true,
+  },
   applicationVariable: {},
   connectionProvider: {},
+  messagingProvider: {
+    connectionProvider: true,
+    logicFunction: true,
+  },
   searchFieldMetadata: {
     objectMetadata: true,
     fieldMetadata: true,
@@ -143,6 +150,10 @@ export const ALL_METADATA_REQUIRED_METADATA_FOR_VALIDATION = {
   },
   settingsMenuItem: {
     frontComponent: true,
+  },
+  relatedRecordPath: {
+    objectMetadata: true,
+    fieldMetadata: true,
   },
   validationRule: {
     objectMetadata: true,

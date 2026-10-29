@@ -22,13 +22,6 @@ describe('buildNavigationConditionalAvailability', () => {
     });
   });
 
-  it('builds the compiled tree of a feature flag and read-permission gate', () => {
-    expectSameTreeAsTheCompiledLegacyExpression({
-      universalIdentifier: STANDARD_OBJECTS.messageCampaign.universalIdentifier,
-      nameSingular: 'messageCampaign',
-    });
-  });
-
   it('builds the compiled tree of a hidden navigation', () => {
     expectSameTreeAsTheCompiledLegacyExpression({
       universalIdentifier: STANDARD_OBJECTS.workflowVersion.universalIdentifier,

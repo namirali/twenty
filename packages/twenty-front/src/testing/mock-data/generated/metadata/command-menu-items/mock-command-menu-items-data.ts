@@ -3167,18 +3167,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": false,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailability": {
-      "recordFilters": [
-        {
-          "id": "b701694e-ba2b-5185-a126-9a1e0194dc62",
-          "value": "true",
-          "operand": "IS",
-          "contextKey": "featureFlags",
-          "subFieldName": "IS_MESSAGE_CAMPAIGN_ENABLED"
-        }
-      ]
-    },
-    "conditionalPinned": null,
+    "conditionalAvailabilityExpression": null,
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "navigationTargetObjectMetadataId": null,
@@ -3239,33 +3228,7 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "isPinned": true,
     "payload": null,
     "hotKeys": null,
-    "conditionalAvailability": {
-      "recordFilters": [
-        {
-          "id": "831e405d-adf6-55f5-a1a7-ffc744aad4ec",
-          "value": "[\"INDEX_PAGE\"]",
-          "operand": "IS",
-          "contextKey": "pageType"
-        },
-        {
-          "id": "dd79a6ef-18f8-5558-a70e-b668158f6c2f",
-          "value": "true",
-          "operand": "IS",
-          "contextKey": "featureFlags",
-          "subFieldName": "IS_MESSAGE_CAMPAIGN_ENABLED"
-        }
-      ]
-    },
-    "conditionalPinned": {
-      "recordFilters": [
-        {
-          "id": "eb320d5e-0d23-57f8-a05d-f7f8972f1f52",
-          "value": "0",
-          "operand": "IS",
-          "contextKey": "numberOfSelectedRecords"
-        }
-      ]
-    },
+    "conditionalAvailabilityExpression": "pageType == \"INDEX_PAGE\"",
     "availabilityType": "GLOBAL_OBJECT_CONTEXT",
     "availabilityObjectMetadataId": "e5c52c5f-caa7-4e0c-9148-66c792e129a8",
     "navigationTargetObjectMetadataId": null,
@@ -4547,22 +4510,8 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "position": 84,
     "isPinned": false,
     "payload": null,
-    "hotKeys": [
-      "G",
-      "O"
-    ],
-    "conditionalAvailability": {
-      "recordFilters": [
-        {
-          "id": "ec39dbcd-94b5-5baa-8047-c2a22d826787",
-          "value": "true",
-          "operand": "IS",
-          "contextKey": "targetObjectReadPermissions",
-          "subFieldName": "opportunity"
-        }
-      ]
-    },
-    "conditionalPinned": null,
+    "hotKeys": null,
+    "conditionalAvailabilityExpression": "targetObjectReadPermissions.messageCampaign",
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "navigationTargetObjectMetadataId": "1e504af1-5e0d-423b-ad2f-a2fde63a9a9f",
@@ -4583,22 +4532,8 @@ export const mockedCommandMenuItems: CommandMenuItemFieldsFragment[] =
     "position": 85,
     "isPinned": false,
     "payload": null,
-    "hotKeys": [
-      "G",
-      "P"
-    ],
-    "conditionalAvailability": {
-      "recordFilters": [
-        {
-          "id": "2bfd8eb5-da6b-526b-870d-fd41cee25d85",
-          "value": "true",
-          "operand": "IS",
-          "contextKey": "targetObjectReadPermissions",
-          "subFieldName": "person"
-        }
-      ]
-    },
-    "conditionalPinned": null,
+    "hotKeys": null,
+    "conditionalAvailabilityExpression": "targetObjectReadPermissions.messageList",
     "availabilityType": "GLOBAL",
     "availabilityObjectMetadataId": null,
     "navigationTargetObjectMetadataId": "be84f510-e44f-45f8-baa7-63ed01fb2d0a",
