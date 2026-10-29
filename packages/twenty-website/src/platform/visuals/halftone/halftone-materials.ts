@@ -452,7 +452,7 @@ class TransmissionMaterial extends THREE.MeshPhysicalMaterial {
         enumerable: true,
         get: () => this.halftoneUniforms[key]?.value,
         set: (value) => {
-          this.halftoneUniforms[key].value = value;
+          this.halftoneUniforms[key]!.value = value;
         },
       });
     });

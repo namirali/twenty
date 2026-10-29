@@ -1167,7 +1167,7 @@ export function HalftoneStudio() {
               void handleExportHalftoneImage(width, height);
             }}
             onExportHalftoneSvg={(width, height) => {
-              handleExportHalftoneSvg(width, height);
+              void handleExportHalftoneSvg(width, height);
             }}
             onCopyHalftoneSvg={(width, height) => {
               void handleCopyHalftoneSvg(width, height);
@@ -1197,7 +1197,7 @@ export function HalftoneStudio() {
             }
             onPreviewDistanceChange={setPreviewDistance}
             onShapeChange={(value) => {
-              handleShapeChange(value);
+              void handleShapeChange(value);
             }}
             onSourceModeChange={handleSourceModeChange}
             onTabChange={(value) => dispatch({ type: 'setTab', value })}
