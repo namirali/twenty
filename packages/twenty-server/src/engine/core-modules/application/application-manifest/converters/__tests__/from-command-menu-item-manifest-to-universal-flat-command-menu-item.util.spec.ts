@@ -78,8 +78,6 @@ describe('fromCommandMenuItemManifestToUniversalFlatCommandMenuItem', () => {
         conditionalPinnedExpression: 'numberOfSelectedRecords == 1',
       }),
     ).toMatchObject({
-      conditionalAvailabilityExpression: null,
-      conditionalPinnedExpression: null,
       universalConditionalAvailability:
         compileConditionalAvailabilityExpression('not isSelectAll'),
       universalConditionalPinned: compileConditionalAvailabilityExpression(

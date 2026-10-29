@@ -434,8 +434,6 @@ const computeRecordPageWidgets = ({
                   roleUniversalIdentifierById:
                     flatRoleMaps.universalIdentifierById,
                 }),
-              conditionalAvailabilityExpression:
-                widget.conditionalAvailabilityExpression ?? null,
               conditionalAvailability,
               universalConditionalAvailability:
                 fromConditionalDisplayToUniversalConditionalDisplay({

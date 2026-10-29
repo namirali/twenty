@@ -1,12 +1,10 @@
 import { useFieldMetadataItemById } from '@/object-metadata/hooks/useFieldMetadataItemById';
-import { AdvancedFilterContext } from '@/object-record/advanced-filter/states/context/AdvancedFilterContext';
 import { getCompositeSubFieldLabel } from '@/object-record/object-filter-dropdown/utils/getCompositeSubFieldLabel';
 import { isCompositeFieldType } from '@/object-record/object-filter-dropdown/utils/isCompositeFieldType';
 import { currentRecordFiltersComponentState } from '@/object-record/record-filter/states/currentRecordFiltersComponentState';
 import { isValidSubFieldName } from '@/settings/data-model/utils/isValidSubFieldName';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
 import { isNonEmptyString } from '@sniptt/guards';
-import { useContext } from 'react';
 import { isDefined } from 'twenty-shared/utils';
 import { useIcons } from 'twenty-ui/icon';
 
@@ -27,19 +25,6 @@ export const useRecordFilterField = (recordFilterId: string) => {
     useFieldMetadataItemById(recordFilter?.relationTargetFieldMetadataId ?? '');
 
   const { getIcon } = useIcons();
-
-  const { contextKeyRecordFilterConfig } = useContext(AdvancedFilterContext);
-
-  if (isDefined(recordFilter?.contextKey)) {
-    const contextKeyField = contextKeyRecordFilterConfig?.getField(
-      recordFilter.contextKey,
-    );
-
-    return {
-      label: contextKeyField?.label ?? '',
-      icon: contextKeyField?.Icon,
-    };
-  }
 
   const icon = isDefined(fieldMetadataItem?.icon)
     ? getIcon(fieldMetadataItem?.icon)

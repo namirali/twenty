@@ -13,5 +13,4 @@ export const mapRecordFiltersToPersistedRecordFilters = (
     positionInRecordFilterGroup: recordFilter.positionInRecordFilterGroup,
     subFieldName: recordFilter.subFieldName,
     relationTargetFieldMetadataId: recordFilter.relationTargetFieldMetadataId,
-    contextKey: recordFilter.contextKey,
   }));

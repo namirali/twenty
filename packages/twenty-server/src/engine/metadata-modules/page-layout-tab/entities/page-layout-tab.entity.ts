@@ -19,7 +19,7 @@ import {
 } from 'typeorm';
 
 import { ADD_IS_SYSTEM_SIDE_EFFECT_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-15/is-system-side-effect-upgrade-command-name.constant';
-import { ADD_CONDITIONAL_DISPLAY_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-52/constants/add-conditional-display-upgrade-command-name.constant';
+import { ADD_CONDITIONAL_DISPLAY_COLUMNS_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-54/add-conditional-display-columns-upgrade-command-name.constant';
 import { WasIntroducedInUpgrade } from 'src/engine/core-modules/upgrade/decorators/was-introduced-in-upgrade.decorator';
 import { PageLayoutWidgetEntity } from 'src/engine/metadata-modules/page-layout-widget/entities/page-layout-widget.entity';
 import { PageLayoutEntity } from 'src/engine/metadata-modules/page-layout/entities/page-layout.entity';
@@ -82,7 +82,7 @@ export class PageLayoutTabEntity
   layoutMode: PageLayoutTabLayoutMode;
 
   @WasIntroducedInUpgrade({
-    upgradeCommandName: ADD_CONDITIONAL_DISPLAY_UPGRADE_COMMAND_NAME,
+    upgradeCommandName: ADD_CONDITIONAL_DISPLAY_COLUMNS_UPGRADE_COMMAND_NAME,
   })
   @Column({ type: 'jsonb', nullable: true })
   conditionalDisplay: JsonbProperty<ConditionalDisplay | null>;

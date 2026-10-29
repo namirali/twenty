@@ -14,7 +14,7 @@ import {
   WorkspaceMigrationActionRunnerArgs,
   WorkspaceMigrationActionRunnerContext,
 } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/types/workspace-migration-action-runner-args.type';
-import { resolveUpdateConditionalDisplayProperties } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/resolve-update-conditional-display-properties.util';
+import { fromUniversalConditionalDisplayToConditionalDisplay } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/from-universal-conditional-display-to-conditional-display.util';
 
 @Injectable()
 export class UpdatePageLayoutTabActionHandlerService extends WorkspaceMigrationRunnerActionHandler(
@@ -31,20 +31,28 @@ export class UpdatePageLayoutTabActionHandlerService extends WorkspaceMigrationR
       universalIdentifier: action.universalIdentifier,
     });
 
-    const { universalOverrides, ...updateWithResolvedForeignKeys } =
-      resolveUniversalUpdateRelationIdentifiersToIds({
-        metadataName: 'pageLayoutTab',
-        universalUpdate: action.update,
-        allFlatEntityMaps,
-      });
+    const {
+      universalConditionalDisplay,
+      universalOverrides,
+      ...updateWithResolvedForeignKeys
+    } = resolveUniversalUpdateRelationIdentifiersToIds({
+      metadataName: 'pageLayoutTab',
+      universalUpdate: action.update,
+      allFlatEntityMaps,
+    });
 
     const updateWithConditionalDisplay =
-      resolveUpdateConditionalDisplayProperties({
-        update: updateWithResolvedForeignKeys,
-        metadataName: 'pageLayoutTab',
-        flatFieldMetadataMaps: allFlatEntityMaps.flatFieldMetadataMaps,
-        flatRoleMaps: allFlatEntityMaps.flatRoleMaps,
-      });
+      universalConditionalDisplay === undefined
+        ? updateWithResolvedForeignKeys
+        : {
+            ...updateWithResolvedForeignKeys,
+            conditionalDisplay:
+              fromUniversalConditionalDisplayToConditionalDisplay({
+                universalConditionalDisplay,
+                flatFieldMetadataMaps: allFlatEntityMaps.flatFieldMetadataMaps,
+                flatRoleMaps: allFlatEntityMaps.flatRoleMaps,
+              }),
+          };
 
     const update =
       universalOverrides === undefined

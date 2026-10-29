@@ -1,6 +1,6 @@
-import { isDefined } from 'twenty-shared/utils';
+import { isNonEmptyArray } from 'twenty-shared/utils';
 
-import { parseConditionalDisplayRoleIds } from 'src/engine/metadata-modules/flat-conditional-display/utils/parse-conditional-display-role-ids.util';
+import { parseSelectFilterValues } from 'src/engine/metadata-modules/flat-field-metadata/utils/get-invalid-select-filter-option-values.util';
 
 export const mapConditionalDisplayRoleIdsValue = ({
   value,
@@ -9,9 +9,9 @@ export const mapConditionalDisplayRoleIdsValue = ({
   value: string | null | undefined;
   mapRoleId: (roleId: string) => string;
 }): string | null | undefined => {
-  const roleIds = parseConditionalDisplayRoleIds(value);
+  const roleIds = parseSelectFilterValues(value ?? null);
 
-  if (!isDefined(roleIds)) {
+  if (!isNonEmptyArray(roleIds)) {
     return value;
   }
 

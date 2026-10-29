@@ -24,31 +24,29 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     position: 1,
     shortLabel: null,
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'pageType == "RECORD_PAGE" and not isInSidePanel and objectMetadataItem.nameSingular != "messageCampaign" and objectMetadataItem.nameSingular != "agentChatThread"',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'c8d0b8c3-2d35-5ea1-bff3-153cdf8f0be4',
+          id: '37662ccb-0b6a-5864-bac2-a7881e27b313',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["RECORD_PAGE"]',
         },
         {
-          id: '9a600a0c-4386-5250-a4c5-61860730986b',
+          id: '117e1f2d-4e9d-51bc-8f82-cd40296fba5d',
           contextKey: 'isInSidePanel',
           operand: ViewFilterOperand.IS,
           value: 'false',
         },
         {
-          id: 'f1a4844c-9cb3-57fc-82ee-1ab95462cef2',
+          id: '23d30e54-4a17-54f7-919e-c93d995a31c2',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'nameSingular',
           value: '["messageCampaign"]',
         },
         {
-          id: 'e3278481-99a6-54cd-bfc6-5ba1a4d67cac',
+          id: '4c444fc0-902b-5096-bb6f-34ec100fb634',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'nameSingular',
@@ -74,31 +72,29 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     position: 2,
     shortLabel: null,
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'pageType == "RECORD_PAGE" and not isInSidePanel and objectMetadataItem.nameSingular != "messageCampaign" and objectMetadataItem.nameSingular != "agentChatThread"',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'c8d0b8c3-2d35-5ea1-bff3-153cdf8f0be4',
+          id: '37662ccb-0b6a-5864-bac2-a7881e27b313',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["RECORD_PAGE"]',
         },
         {
-          id: '9a600a0c-4386-5250-a4c5-61860730986b',
+          id: '117e1f2d-4e9d-51bc-8f82-cd40296fba5d',
           contextKey: 'isInSidePanel',
           operand: ViewFilterOperand.IS,
           value: 'false',
         },
         {
-          id: 'f1a4844c-9cb3-57fc-82ee-1ab95462cef2',
+          id: '23d30e54-4a17-54f7-919e-c93d995a31c2',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'nameSingular',
           value: '["messageCampaign"]',
         },
         {
-          id: 'e3278481-99a6-54cd-bfc6-5ba1a4d67cac',
+          id: '4c444fc0-902b-5096-bb6f-34ec100fb634',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'nameSingular',
@@ -129,45 +125,43 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL_OBJECT_CONTEXT,
-    conditionalAvailabilityExpression:
-      'pageType == "INDEX_PAGE" and objectPermissions.canUpdateObjectRecords and not hasAnySoftDeleteFilterOnView and objectMetadataItem.isUICreatable and objectMetadataItem.isUIEditable and not objectMetadataItem.isRemote',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'd918b256-4f26-554f-9a75-56eba5b948fc',
+          id: '3cb253a5-d948-5398-a6be-31afd3582a63',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["INDEX_PAGE"]',
         },
         {
-          id: '54984bd9-1409-57f9-b352-06383620f177',
+          id: '9f767143-9220-5e8b-b3d4-c42051554ed7',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canUpdateObjectRecords',
           value: 'true',
         },
         {
-          id: '46ebd89a-f3b5-5df0-89cc-daa112146e30',
+          id: 'a8772fc6-1682-5fa4-9bda-5a913d68381b',
           contextKey: 'hasAnySoftDeleteFilterOnView',
           operand: ViewFilterOperand.IS,
           value: 'false',
         },
         {
-          id: '09d8c74d-5afb-527a-a12a-a57091015234',
+          id: '844e248a-8af5-5001-ac11-fce9d3a25479',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS,
           subFieldName: 'isUICreatable',
           value: 'true',
         },
         {
-          id: '45daee2c-a34d-5ae2-afe0-472be989b0d5',
+          id: '96f9348a-78a3-5e1a-ac66-704c4c2fe57a',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS,
           subFieldName: 'isUIEditable',
           value: 'true',
         },
         {
-          id: '356b1b85-5efa-52df-8917-36252a0abd5f',
+          id: '8a055885-4b71-58e8-9d6f-15c7c6eaea08',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS,
           subFieldName: 'isRemote',
@@ -175,11 +169,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
         },
       ],
     } satisfies ConditionalDisplay,
-    conditionalPinnedExpression: 'numberOfSelectedRecords == 0',
     conditionalPinned: {
       recordFilters: [
         {
-          id: 'eb320d5e-0d23-57f8-a05d-f7f8972f1f52',
+          id: 'd7dcba01-724a-5a9f-ac3a-feefb2e78263',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '0',
@@ -206,84 +199,82 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Delete`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 1 and not hasAnySoftDeleteFilterOnView and objectPermissions.canSoftDeleteObjectRecords and (isSelectAll or noneDefined(selectedRecords, "deletedAt")) and (isSelectAll or noneEquals(selectedRecords, "recordPermissions.canSoftDelete", false))',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'ee8fc1b3-1945-5270-b122-6195b75436a5',
+          id: '4cc11987-937e-51f2-b941-402d7b45d68b',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
-          recordFilterGroupId: '8c09f2f1-b559-535c-8382-c6d7cf7a0805',
+          recordFilterGroupId: 'edeceebd-071a-51e1-8529-9ba90768c48d',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: 'bcc5b074-d7a2-5a0c-a8b6-c7194225c721',
+          id: 'e83077f6-ece0-5ee1-b4c7-7dac5057038d',
           contextKey: 'hasAnySoftDeleteFilterOnView',
           operand: ViewFilterOperand.IS,
           value: 'false',
-          recordFilterGroupId: '8c09f2f1-b559-535c-8382-c6d7cf7a0805',
+          recordFilterGroupId: 'edeceebd-071a-51e1-8529-9ba90768c48d',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: 'bd287d44-6665-5978-8742-b7614596fe8d',
+          id: 'e08042ed-c29a-5acb-80e6-3b9a40b2cbb2',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canSoftDeleteObjectRecords',
           value: 'true',
-          recordFilterGroupId: '8c09f2f1-b559-535c-8382-c6d7cf7a0805',
+          recordFilterGroupId: 'edeceebd-071a-51e1-8529-9ba90768c48d',
           positionInRecordFilterGroup: 2,
         },
         {
-          id: '0be12531-269d-5409-bfd5-f45cf1fbe5e0',
+          id: 'f94f83d7-6362-5af3-9cd7-43657080e33c',
           contextKey: 'isSelectAll',
           operand: ViewFilterOperand.IS,
           value: 'true',
-          recordFilterGroupId: '292c4ea7-6f0f-5b9e-a107-300e171c38d0',
+          recordFilterGroupId: '382bba64-62d6-5894-80a8-b9d7a79d7357',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '386d0124-18c3-54a4-8373-f7ad896ca69b',
+          id: '69363a59-be07-5106-8224-365f1a5a4982',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
-          recordFilterGroupId: '292c4ea7-6f0f-5b9e-a107-300e171c38d0',
+          recordFilterGroupId: '382bba64-62d6-5894-80a8-b9d7a79d7357',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: '21048ff8-ce8f-5f8e-8588-5c0e01cdcb81',
+          id: '28f13837-2ed5-5508-b78e-17bff46867f8',
           contextKey: 'isSelectAll',
           operand: ViewFilterOperand.IS,
           value: 'true',
-          recordFilterGroupId: '9ff0909c-ecb9-5993-b859-225ae6e3ac6b',
+          recordFilterGroupId: 'c9140669-e8de-5937-b2f6-1605b6a02443',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '528ddfdf-5768-538d-bb43-9805b57db5bd',
+          id: 'f45ac983-08cb-59e0-9485-bb6748f06859',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'recordPermissions.canSoftDelete',
           value: 'false',
-          recordFilterGroupId: '9ff0909c-ecb9-5993-b859-225ae6e3ac6b',
+          recordFilterGroupId: 'c9140669-e8de-5937-b2f6-1605b6a02443',
           positionInRecordFilterGroup: 1,
         },
       ],
       recordFilterGroups: [
         {
-          id: '8c09f2f1-b559-535c-8382-c6d7cf7a0805',
+          id: 'edeceebd-071a-51e1-8529-9ba90768c48d',
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
         },
         {
-          id: '292c4ea7-6f0f-5b9e-a107-300e171c38d0',
+          id: '382bba64-62d6-5894-80a8-b9d7a79d7357',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: '8c09f2f1-b559-535c-8382-c6d7cf7a0805',
+          parentRecordFilterGroupId: 'edeceebd-071a-51e1-8529-9ba90768c48d',
           positionInRecordFilterGroup: 3,
         },
         {
-          id: '9ff0909c-ecb9-5993-b859-225ae6e3ac6b',
+          id: 'c9140669-e8de-5937-b2f6-1605b6a02443',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: '8c09f2f1-b559-535c-8382-c6d7cf7a0805',
+          parentRecordFilterGroupId: 'edeceebd-071a-51e1-8529-9ba90768c48d',
           positionInRecordFilterGroup: 4,
         },
       ],
@@ -308,98 +299,96 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Restore`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 1 and (isSelectAll or everyDefined(selectedRecords, "deletedAt")) and objectPermissions.canSoftDeleteObjectRecords and (pageType == "RECORD_PAGE" or hasAnySoftDeleteFilterOnView) and (isSelectAll or noneEquals(selectedRecords, "recordPermissions.canSoftDelete", false))',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '12fc1ef3-6fa2-54d4-8629-f22ba0f9507c',
+          id: '6b9c3ddf-94ee-5b53-9911-23e6e2340294',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
-          recordFilterGroupId: 'cb991a43-30e7-5a14-a5b0-03c7a808dec1',
+          recordFilterGroupId: '883436e4-03e1-57ae-b995-26c3f1c9f28c',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: 'e4523e9f-0bac-5212-afaa-01659441935e',
+          id: '1765cf21-9577-55a8-9320-953bbf74dd58',
           contextKey: 'isSelectAll',
           operand: ViewFilterOperand.IS,
           value: 'true',
-          recordFilterGroupId: '33cab78c-99f7-52a2-be78-41216ab68c46',
+          recordFilterGroupId: '16d4a651-c50f-5e12-b302-35fb733d9347',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '8341ced7-12dd-5528-ac87-a95ad33dead4',
+          id: '518841ab-f3f9-5675-8966-c940080263f7',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'deletedAt',
-          recordFilterGroupId: '33cab78c-99f7-52a2-be78-41216ab68c46',
+          recordFilterGroupId: '16d4a651-c50f-5e12-b302-35fb733d9347',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: '1d6e018c-5ade-5485-85be-db4457f69a2e',
+          id: '56a23a46-3b7c-5944-81ba-68e025a8889e',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canSoftDeleteObjectRecords',
           value: 'true',
-          recordFilterGroupId: 'cb991a43-30e7-5a14-a5b0-03c7a808dec1',
+          recordFilterGroupId: '883436e4-03e1-57ae-b995-26c3f1c9f28c',
           positionInRecordFilterGroup: 2,
         },
         {
-          id: 'db880ca8-7236-59ca-9d15-46082efbbb0c',
+          id: '298ed392-0d58-5cd6-81f0-1a06829d506f',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["RECORD_PAGE"]',
-          recordFilterGroupId: '1a9b483e-4da7-52fd-82c2-117c69b5ce8e',
+          recordFilterGroupId: 'a60e8a81-89db-55ac-8396-34ce903b8889',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: 'f7721f6c-9269-511e-859d-4527cf3ebe8a',
+          id: '4d5b9221-dfe5-5e75-8b30-6894ee8e0a85',
           contextKey: 'hasAnySoftDeleteFilterOnView',
           operand: ViewFilterOperand.IS,
           value: 'true',
-          recordFilterGroupId: '1a9b483e-4da7-52fd-82c2-117c69b5ce8e',
+          recordFilterGroupId: 'a60e8a81-89db-55ac-8396-34ce903b8889',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: 'dae1da73-2da1-540a-90eb-20641933ae41',
+          id: '565ff6f3-13d5-5040-95d7-60073286c201',
           contextKey: 'isSelectAll',
           operand: ViewFilterOperand.IS,
           value: 'true',
-          recordFilterGroupId: 'be7316e2-47a7-5d9b-8a25-139909681a0c',
+          recordFilterGroupId: 'feab0801-8cae-5530-be97-fe987711331c',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: 'a80fb1f5-aca4-52aa-9cfd-6dec2df90176',
+          id: 'fd37bf7d-aeed-56f6-b9a5-c67424d3d772',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'recordPermissions.canSoftDelete',
           value: 'false',
-          recordFilterGroupId: 'be7316e2-47a7-5d9b-8a25-139909681a0c',
+          recordFilterGroupId: 'feab0801-8cae-5530-be97-fe987711331c',
           positionInRecordFilterGroup: 1,
         },
       ],
       recordFilterGroups: [
         {
-          id: 'cb991a43-30e7-5a14-a5b0-03c7a808dec1',
+          id: '883436e4-03e1-57ae-b995-26c3f1c9f28c',
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
         },
         {
-          id: '33cab78c-99f7-52a2-be78-41216ab68c46',
+          id: '16d4a651-c50f-5e12-b302-35fb733d9347',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: 'cb991a43-30e7-5a14-a5b0-03c7a808dec1',
+          parentRecordFilterGroupId: '883436e4-03e1-57ae-b995-26c3f1c9f28c',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: '1a9b483e-4da7-52fd-82c2-117c69b5ce8e',
+          id: 'a60e8a81-89db-55ac-8396-34ce903b8889',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: 'cb991a43-30e7-5a14-a5b0-03c7a808dec1',
+          parentRecordFilterGroupId: '883436e4-03e1-57ae-b995-26c3f1c9f28c',
           positionInRecordFilterGroup: 3,
         },
         {
-          id: 'be7316e2-47a7-5d9b-8a25-139909681a0c',
+          id: 'feab0801-8cae-5530-be97-fe987711331c',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: 'cb991a43-30e7-5a14-a5b0-03c7a808dec1',
+          parentRecordFilterGroupId: '883436e4-03e1-57ae-b995-26c3f1c9f28c',
           positionInRecordFilterGroup: 4,
         },
       ],
@@ -424,98 +413,96 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Destroy`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 1 and objectPermissions.canDestroyObjectRecords and (isSelectAll or everyDefined(selectedRecords, "deletedAt")) and (pageType == "RECORD_PAGE" or hasAnySoftDeleteFilterOnView) and (isSelectAll or noneEquals(selectedRecords, "recordPermissions.canDelete", false))',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '10fabfb4-99ed-5273-a429-f935588d5ab3',
+          id: 'e63def19-eead-5b14-bf23-2820fb57c669',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
-          recordFilterGroupId: '9506897d-3057-52b3-a2c2-fb78bfb4d68e',
+          recordFilterGroupId: 'cf6528d1-c8ec-5a0c-a6cf-ea67de972ba9',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '0a04c515-84fc-5886-80fb-18fc0b86b67a',
+          id: '9d517851-cdef-554c-89e5-47c4fe2e44e2',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canDestroyObjectRecords',
           value: 'true',
-          recordFilterGroupId: '9506897d-3057-52b3-a2c2-fb78bfb4d68e',
+          recordFilterGroupId: 'cf6528d1-c8ec-5a0c-a6cf-ea67de972ba9',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: '046f0293-1fb2-5371-8c02-513bb5744316',
+          id: '2c86dbd1-a60e-591f-9f48-02269c01c09e',
           contextKey: 'isSelectAll',
           operand: ViewFilterOperand.IS,
           value: 'true',
-          recordFilterGroupId: '7e65b191-8be7-5f09-a9af-3ee51ad44371',
+          recordFilterGroupId: '05b621f2-1084-5c6e-bb66-d1b928f2b866',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '316b5869-7025-5815-a203-ecc4ec8d6165',
+          id: '8449bc34-4cde-53d8-9431-3840ac1c7ee4',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'deletedAt',
-          recordFilterGroupId: '7e65b191-8be7-5f09-a9af-3ee51ad44371',
+          recordFilterGroupId: '05b621f2-1084-5c6e-bb66-d1b928f2b866',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: 'cff7fc35-d03e-5549-84a9-25c0376837e8',
+          id: '74bb5522-21f0-5353-93b4-a226a8f15a86',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["RECORD_PAGE"]',
-          recordFilterGroupId: '59f04802-6855-5855-a226-200b013f088f',
+          recordFilterGroupId: '15184e5d-2755-54a4-963e-e54d76ed0a49',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: 'e362d059-d847-5b21-a44e-cbe8b789b266',
+          id: '5da08cd2-7726-5135-aef3-4c6b66ad6ff2',
           contextKey: 'hasAnySoftDeleteFilterOnView',
           operand: ViewFilterOperand.IS,
           value: 'true',
-          recordFilterGroupId: '59f04802-6855-5855-a226-200b013f088f',
+          recordFilterGroupId: '15184e5d-2755-54a4-963e-e54d76ed0a49',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: '2ba64dc7-1207-5b79-a933-a781412f2942',
+          id: '261854e2-0e0a-59e0-a38a-baf52eafcd9b',
           contextKey: 'isSelectAll',
           operand: ViewFilterOperand.IS,
           value: 'true',
-          recordFilterGroupId: '9fa398ce-0560-5ce0-ad7b-80cbf74ea157',
+          recordFilterGroupId: '463bc03c-7511-5f27-bb7d-aed7d4dbeb3a',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: 'da7f6a58-175a-5532-94f9-13c9eea3eea3',
+          id: '9a9074fb-eae2-532a-a195-709c12323534',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'recordPermissions.canDelete',
           value: 'false',
-          recordFilterGroupId: '9fa398ce-0560-5ce0-ad7b-80cbf74ea157',
+          recordFilterGroupId: '463bc03c-7511-5f27-bb7d-aed7d4dbeb3a',
           positionInRecordFilterGroup: 1,
         },
       ],
       recordFilterGroups: [
         {
-          id: '9506897d-3057-52b3-a2c2-fb78bfb4d68e',
+          id: 'cf6528d1-c8ec-5a0c-a6cf-ea67de972ba9',
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
         },
         {
-          id: '7e65b191-8be7-5f09-a9af-3ee51ad44371',
+          id: '05b621f2-1084-5c6e-bb66-d1b928f2b866',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: '9506897d-3057-52b3-a2c2-fb78bfb4d68e',
+          parentRecordFilterGroupId: 'cf6528d1-c8ec-5a0c-a6cf-ea67de972ba9',
           positionInRecordFilterGroup: 2,
         },
         {
-          id: '59f04802-6855-5855-a226-200b013f088f',
+          id: '15184e5d-2755-54a4-963e-e54d76ed0a49',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: '9506897d-3057-52b3-a2c2-fb78bfb4d68e',
+          parentRecordFilterGroupId: 'cf6528d1-c8ec-5a0c-a6cf-ea67de972ba9',
           positionInRecordFilterGroup: 3,
         },
         {
-          id: '9fa398ce-0560-5ce0-ad7b-80cbf74ea157',
+          id: '463bc03c-7511-5f27-bb7d-aed7d4dbeb3a',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: '9506897d-3057-52b3-a2c2-fb78bfb4d68e',
+          parentRecordFilterGroupId: 'cf6528d1-c8ec-5a0c-a6cf-ea67de972ba9',
           positionInRecordFilterGroup: 4,
         },
       ],
@@ -535,37 +522,35 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     position: 7,
     shortLabel: null,
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'arrayLength(favoriteRecordIds) < numberOfSelectedRecords and noneDefined(selectedRecords, "deletedAt") and not hasAnySoftDeleteFilterOnView and objectMetadataItem.nameSingular != "messageCampaign" and objectMetadataItem.nameSingular != "workflow"',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'b67003b3-c5ad-5ec6-896c-026595443413',
+          id: '22634b05-8fe6-5518-8229-0e3c836af794',
           contextKey: 'areAllSelectedRecordsFavorites',
           operand: ViewFilterOperand.IS,
           value: 'false',
         },
         {
-          id: '7aeec769-65f9-5dff-9b96-a8b252635c48',
+          id: '1b74c5e0-29c5-55ee-9acc-020402ec9486',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: 'b60e2336-5796-5d68-a27d-48845bf6ec07',
+          id: 'e1205eb8-f123-5067-8471-f44bc57a69e1',
           contextKey: 'hasAnySoftDeleteFilterOnView',
           operand: ViewFilterOperand.IS,
           value: 'false',
         },
         {
-          id: '4850da95-60ad-5105-9a4f-32955b7ffd00',
+          id: 'd8d4cc26-fb99-57ba-a97d-d458147a08b0',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'nameSingular',
           value: '["messageCampaign"]',
         },
         {
-          id: '6f14cef3-c8b2-58d0-9275-161702fba3ec',
+          id: '77930661-74d9-56ed-8f5b-6c5479a32883',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'nameSingular',
@@ -591,37 +576,35 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     position: 8,
     shortLabel: null,
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'arrayLength(favoriteRecordIds) == numberOfSelectedRecords and noneDefined(selectedRecords, "deletedAt") and not hasAnySoftDeleteFilterOnView and objectMetadataItem.nameSingular != "messageCampaign" and objectMetadataItem.nameSingular != "workflow"',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '23959f62-7700-50be-bbb2-6c251549afed',
+          id: '04890e3f-bcec-5b1a-9fae-2976a637182d',
           contextKey: 'areAllSelectedRecordsFavorites',
           operand: ViewFilterOperand.IS,
           value: 'true',
         },
         {
-          id: '8608c896-a4c9-5e0d-aeee-6e9f31df9e88',
+          id: 'f6a1fe70-5415-54b5-81b7-0da1046a6189',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: '37ecfc4f-72c0-52e5-97da-aacf0ecd5b86',
+          id: 'f3a780d6-ea10-5f77-9a1a-15f1167b5f4e',
           contextKey: 'hasAnySoftDeleteFilterOnView',
           operand: ViewFilterOperand.IS,
           value: 'false',
         },
         {
-          id: 'b8e89a2e-868f-5e3a-b426-0b7c01ea73ce',
+          id: '6f9ae387-0804-53ce-b1e1-3e4fbb769059',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'nameSingular',
           value: '["messageCampaign"]',
         },
         {
-          id: '8c19c5fd-2030-5da4-ae12-ace8cb6fa5f5',
+          id: '59abccbe-6259-534e-9bec-f1aa9da5a811',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'nameSingular',
@@ -649,18 +632,16 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Export`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'pageType == "INDEX_PAGE" and permissionFlags.EXPORT_CSV',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '0cba3098-85f1-51fe-a92d-e223e6ba6081',
+          id: 'b0039b05-5fb3-5575-affc-97794cdc7365',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["INDEX_PAGE"]',
         },
         {
-          id: 'c7628efd-b3ff-5f67-b3cc-a89534e9e5c5',
+          id: '14b335f3-b9e8-5cbd-80cb-1e0c776461ef',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'EXPORT_CSV',
@@ -688,18 +669,16 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Update`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 2 and objectPermissions.canUpdateObjectRecords',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '855cab9b-03e6-5a12-835a-65d76d06453a',
+          id: '21bf01f2-7220-5f4d-8a1d-ac3517af75bb',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '2',
         },
         {
-          id: '0c95de7c-5b96-523f-ba3b-6c718023b841',
+          id: '95021152-acee-5dc7-9b5b-ac57c5b5799d',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canUpdateObjectRecords',
@@ -727,72 +706,70 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Merge`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'not isSelectAll and numberOfSelectedRecords >= 2 and not objectMetadataItem.isSystem and objectMetadataItem.nameSingular != "workflow" and objectMetadataItem.nameSingular != "dashboard" and objectPermissions.canUpdateObjectRecords and objectPermissions.canDestroyObjectRecords and numberOfSelectedRecords <= 9 and noneEquals(selectedRecords, "recordPermissions.canUpdate", false) and noneEquals(selectedRecords, "recordPermissions.canDelete", false)',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'b97657d4-9375-5020-a4d5-e0b64d8593a7',
+          id: '374306d0-6cdd-5ac6-a812-8f4a8234f75e',
           contextKey: 'isSelectAll',
           operand: ViewFilterOperand.IS,
           value: 'false',
         },
         {
-          id: '1d59fd75-9c57-525d-88f4-03bada43affb',
+          id: '45d2f728-2000-51ab-91df-cfc03b65abf3',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '2',
         },
         {
-          id: '970edecf-c7ee-508f-95c6-2a980ff73577',
+          id: '3ada5adb-db1a-5b49-80a6-330d2926be4e',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS,
           subFieldName: 'isSystem',
           value: 'false',
         },
         {
-          id: '456a2fed-4323-5fcc-bf1e-e0782b58ff84',
+          id: 'dfa15eb2-b0d8-5d24-b847-20b81cca2651',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'nameSingular',
           value: '["workflow"]',
         },
         {
-          id: '107ea04e-1b4a-51b5-a105-97715df76262',
+          id: '5a3ef48a-8d8f-5701-a3e9-682013265da0',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'nameSingular',
           value: '["dashboard"]',
         },
         {
-          id: '244b66fa-e192-5893-8c5c-990ce38d6b1d',
+          id: '45eee304-de65-5ef7-b6fa-79e399354ba4',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canUpdateObjectRecords',
           value: 'true',
         },
         {
-          id: 'b2b14071-ab68-5ecd-853b-257c79eaa9ad',
+          id: 'b6477a22-ec91-530c-91c0-7f53dd96178f',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canDestroyObjectRecords',
           value: 'true',
         },
         {
-          id: 'a9709fb5-dd68-5d30-b3e0-f2a4d17d3a61',
+          id: 'd67f05f4-651f-5a26-89bc-d30a05c8c4d9',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.LESS_THAN_OR_EQUAL,
           value: '9',
         },
         {
-          id: '9b0171b4-a5c7-5070-95f3-b32d8464fa36',
+          id: 'e18706e8-f0bc-516b-9431-ff51138777cd',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'recordPermissions.canUpdate',
           value: 'false',
         },
         {
-          id: '3feacbf7-c034-581c-9897-bb2ef20c5a6d',
+          id: 'dcab3fa0-573c-591d-99cd-b747b0a6096d',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'recordPermissions.canDelete',
@@ -820,72 +797,70 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Merge`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'pageType == "RECORD_PAGE" and numberOfSelectedRecords == 1 and noneDefined(selectedRecords, "deletedAt") and not objectMetadataItem.isSystem and objectMetadataItem.nameSingular != "workflow" and objectMetadataItem.nameSingular != "dashboard" and objectPermissions.canUpdateObjectRecords and objectPermissions.canDestroyObjectRecords and noneEquals(selectedRecords, "recordPermissions.canUpdate", false) and noneEquals(selectedRecords, "recordPermissions.canDelete", false)',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'e987a416-0262-51a0-9d0a-06bbe460b61d',
+          id: '86d73737-c945-5ba5-9860-328dac4a4ce2',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["RECORD_PAGE"]',
         },
         {
-          id: 'c9e31569-3836-5a7b-98bb-d676594231ac',
+          id: 'cd90af74-ff17-5838-a062-2d9a69ab05f9',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
         },
         {
-          id: '54ca148c-29b2-50fb-b1a8-21fe240ff8f1',
+          id: '75d0a7ad-c0d2-5c51-a907-036c894cfb25',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: 'a445e41c-8196-5e56-8016-e81388ce77b1',
+          id: '8d205690-0c94-530f-8a37-b9867a9b1e6e',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS,
           subFieldName: 'isSystem',
           value: 'false',
         },
         {
-          id: '31936cf7-f5c8-52f7-8f13-369a7a4b5682',
+          id: '5273ecbd-afd3-51f9-b72a-e21da541c510',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'nameSingular',
           value: '["workflow"]',
         },
         {
-          id: '360f5162-1c29-513b-b43f-059b106fa4b4',
+          id: '31097ee1-df28-5d97-83bb-508af04609e9',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'nameSingular',
           value: '["dashboard"]',
         },
         {
-          id: '7454dd6e-a486-55f8-97de-4999ff4a4bac',
+          id: '45579e4c-0686-510e-aa8c-a789d372eaed',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canUpdateObjectRecords',
           value: 'true',
         },
         {
-          id: '671cd2f4-f8b1-5a3f-a81a-213ee31363ce',
+          id: '0bfdcbeb-a7c4-5b48-9128-e3e79752deab',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canDestroyObjectRecords',
           value: 'true',
         },
         {
-          id: '0a019b17-238c-51b0-8acb-b5b2cb84f35a',
+          id: '735bff1a-140c-570d-a241-d2c624c1347d',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'recordPermissions.canUpdate',
           value: 'false',
         },
         {
-          id: 'ce061156-d350-5106-8afa-afbadce7daf5',
+          id: 'e1cd3db6-bb2c-5247-b878-5eb5a67ab8f3',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'recordPermissions.canDelete',
@@ -913,24 +888,22 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Import`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL_OBJECT_CONTEXT,
-    conditionalAvailabilityExpression:
-      'pageType == "INDEX_PAGE" and not hasAnySoftDeleteFilterOnView and permissionFlags.IMPORT_CSV',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '5d36cee8-ebc6-54a8-9105-0f6de34cf04b',
+          id: 'ade15ccc-e7d3-5861-bd97-e6de58cdac81',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["INDEX_PAGE"]',
         },
         {
-          id: '2d27d4f4-1456-5c8b-b9d3-a839cc93949a',
+          id: '9cf29ebe-36ec-5d2f-b35c-a4b8003aa75b',
           contextKey: 'hasAnySoftDeleteFilterOnView',
           operand: ViewFilterOperand.IS,
           value: 'false',
         },
         {
-          id: 'c87eed9d-b634-52fa-af81-d38a417f300b',
+          id: '2b68ba47-e40e-5806-b2a2-48aef1c37d04',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'IMPORT_CSV',
@@ -955,18 +928,16 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Export`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL_OBJECT_CONTEXT,
-    conditionalAvailabilityExpression:
-      'pageType == "INDEX_PAGE" and permissionFlags.EXPORT_CSV',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '0cba3098-85f1-51fe-a92d-e223e6ba6081',
+          id: 'b0039b05-5fb3-5575-affc-97794cdc7365',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["INDEX_PAGE"]',
         },
         {
-          id: 'c7628efd-b3ff-5f67-b3cc-a89534e9e5c5',
+          id: '14b335f3-b9e8-5cbd-80cb-1e0c776461ef',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'EXPORT_CSV',
@@ -997,18 +968,16 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL_OBJECT_CONTEXT,
-    conditionalAvailabilityExpression:
-      'pageType == "INDEX_PAGE" and not hasAnySoftDeleteFilterOnView',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '55364171-1160-5b80-b33c-f3a59be908e2',
+          id: '199e8485-002e-550e-b715-a70d3c46765f',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["INDEX_PAGE"]',
         },
         {
-          id: '2ac8c799-c880-5874-a026-ae895f5c0c7a',
+          id: 'dcb45951-06d8-511d-9190-2707fd3117c1',
           contextKey: 'hasAnySoftDeleteFilterOnView',
           operand: ViewFilterOperand.IS,
           value: 'false',
@@ -1032,18 +1001,16 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Create View`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL_OBJECT_CONTEXT,
-    conditionalAvailabilityExpression:
-      'pageType == "INDEX_PAGE" and not hasAnySoftDeleteFilterOnView',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '55364171-1160-5b80-b33c-f3a59be908e2',
+          id: '199e8485-002e-550e-b715-a70d3c46765f',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["INDEX_PAGE"]',
         },
         {
-          id: '2ac8c799-c880-5874-a026-ae895f5c0c7a',
+          id: 'dcb45951-06d8-511d-9190-2707fd3117c1',
           contextKey: 'hasAnySoftDeleteFilterOnView',
           operand: ViewFilterOperand.IS,
           value: 'false',
@@ -1070,18 +1037,16 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Hide deleted`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL_OBJECT_CONTEXT,
-    conditionalAvailabilityExpression:
-      'pageType == "INDEX_PAGE" and hasAnySoftDeleteFilterOnView',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'a8f16ded-2de3-5b3d-9ad6-08fac474a5d5',
+          id: '301152f2-3242-5e20-a7dd-e097bfa08c42',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["INDEX_PAGE"]',
         },
         {
-          id: '514fd09c-4c8b-55ab-a459-003085bfd318',
+          id: '40c604ee-ce94-5932-b86a-31e569bb025b',
           contextKey: 'hasAnySoftDeleteFilterOnView',
           operand: ViewFilterOperand.IS,
           value: 'true',
@@ -1105,24 +1070,22 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Edit Layout`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression:
-      'pageType != "SETTINGS_PAGE" and not isLayoutCustomizationModeEnabled and permissionFlags.LAYOUTS',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '6ea01273-2c68-5f20-86ed-8a82421cb526',
+          id: '49a5e553-ad5b-542d-b5bc-45e6e2734bfb',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS_NOT,
           value: '["SETTINGS_PAGE"]',
         },
         {
-          id: 'cfade857-4a77-51e8-b8ef-c411a608e223',
+          id: 'f371e46b-d471-5a5a-9afc-0650a98de21a',
           contextKey: 'isLayoutCustomizationModeEnabled',
           operand: ViewFilterOperand.IS,
           value: 'false',
         },
         {
-          id: 'a81d9ec7-ae18-53a4-9465-ff7b5c24ccb0',
+          id: '8893490b-fdeb-5ebc-acdf-2ae2be1bbef3',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'LAYOUTS',
@@ -1147,42 +1110,40 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Edit`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'pageType == "RECORD_PAGE" and not isDashboardPageLayoutInEditMode and not isLayoutCustomizationModeEnabled and noneDefined(selectedRecords, "deletedAt") and everyDefined(selectedRecords, "pageLayoutId") and objectPermissions.canUpdateObjectRecords',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'bda7d4d4-75fe-5f42-b9ea-8802a1c568a0',
+          id: '89da22af-3eca-53ec-b11c-7c086c0e3f78',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["RECORD_PAGE"]',
         },
         {
-          id: 'f5177bc2-6c2e-59c1-8cd2-359ed8563059',
+          id: '293ac7e1-243e-5fe5-9b19-9055d92c7188',
           contextKey: 'isDashboardPageLayoutInEditMode',
           operand: ViewFilterOperand.IS,
           value: 'false',
         },
         {
-          id: '74772b21-f647-5c7d-a142-11a6ded10ea3',
+          id: 'e43f0110-84a1-550b-8ccb-aaf7c757aa0a',
           contextKey: 'isLayoutCustomizationModeEnabled',
           operand: ViewFilterOperand.IS,
           value: 'false',
         },
         {
-          id: '2c306ef6-8833-5039-b957-f2a386cfc9fc',
+          id: '172ab618-1e62-5e86-b40c-b6342a02bff0',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: 'f004b04b-5104-5887-9920-346dea4118b6',
+          id: '1bc2fd01-4ce2-5780-ba48-257ef45e5fbe',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'pageLayoutId',
         },
         {
-          id: '54ac1921-0d38-563e-96b1-81cb633475cf',
+          id: '581dc8d4-f962-5779-965e-5128a89e12dd',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canUpdateObjectRecords',
@@ -1208,36 +1169,34 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Save`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'pageType == "RECORD_PAGE" and isDashboardPageLayoutInEditMode and noneDefined(selectedRecords, "deletedAt") and everyDefined(selectedRecords, "pageLayoutId") and objectPermissions.canUpdateObjectRecords',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '1c85fe87-c264-5b1d-9f64-efedd590ce78',
+          id: '36bab48d-6519-5f64-9716-fff559cf51f1',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["RECORD_PAGE"]',
         },
         {
-          id: '69007a31-7838-5ff8-9e48-3deedfbaa88f',
+          id: '7ff7f78c-9fd1-51f4-b00a-051d5552c48a',
           contextKey: 'isDashboardPageLayoutInEditMode',
           operand: ViewFilterOperand.IS,
           value: 'true',
         },
         {
-          id: 'fdc8603a-a56d-5658-8a34-8d20043edcbb',
+          id: 'b3fed787-76f2-56d9-8ae1-020d673233c6',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: 'da4e21f5-1954-5454-b468-b8a9c8472898',
+          id: '669eef60-29bb-5ad9-8268-e71a21de5d68',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'pageLayoutId',
         },
         {
-          id: '435c6e0f-3336-5c8f-988b-7ea8357a0d0e',
+          id: 'e81fce7e-1b0b-5774-a883-102af21e0627',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canUpdateObjectRecords',
@@ -1263,36 +1222,34 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Cancel`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'pageType == "RECORD_PAGE" and isDashboardPageLayoutInEditMode and noneDefined(selectedRecords, "deletedAt") and everyDefined(selectedRecords, "pageLayoutId") and objectPermissions.canUpdateObjectRecords',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '1c85fe87-c264-5b1d-9f64-efedd590ce78',
+          id: '36bab48d-6519-5f64-9716-fff559cf51f1',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["RECORD_PAGE"]',
         },
         {
-          id: '69007a31-7838-5ff8-9e48-3deedfbaa88f',
+          id: '7ff7f78c-9fd1-51f4-b00a-051d5552c48a',
           contextKey: 'isDashboardPageLayoutInEditMode',
           operand: ViewFilterOperand.IS,
           value: 'true',
         },
         {
-          id: 'fdc8603a-a56d-5658-8a34-8d20043edcbb',
+          id: 'b3fed787-76f2-56d9-8ae1-020d673233c6',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: 'da4e21f5-1954-5454-b468-b8a9c8472898',
+          id: '669eef60-29bb-5ad9-8268-e71a21de5d68',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'pageLayoutId',
         },
         {
-          id: '435c6e0f-3336-5c8f-988b-7ea8357a0d0e',
+          id: 'e81fce7e-1b0b-5774-a883-102af21e0627',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canUpdateObjectRecords',
@@ -1318,18 +1275,16 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Duplicate`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'noneDefined(selectedRecords, "deletedAt") and objectPermissions.canUpdateObjectRecords',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '09ae8267-43b6-5a20-b7d5-8776c0da721f',
+          id: 'f0cb0a7f-6187-5c93-ba7c-c48700b8b9a8',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: 'd2fb8f22-6e00-50a8-b5c9-5dcf4be902f0',
+          id: '5a5c4b4d-ed12-59fa-a539-a8a44baa23ab',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canUpdateObjectRecords',
@@ -1355,78 +1310,76 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Activate`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and everyDefined(selectedRecords, "currentVersion.trigger") and everyDefined(selectedRecords, "currentVersion.steps") and every(selectedRecords, "currentVersion.steps.length") and (everyEquals(selectedRecords, "currentVersion.status", "DRAFT") or includesNone(selectedRecords, "statuses", "ACTIVE")) and noneDefined(selectedRecords, "deletedAt")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'd3f6f4fc-5781-5166-aac9-8d9f31cb20ed',
+          id: 'c49c5602-dc61-5a63-a0dd-75ee9e542d21',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
-          recordFilterGroupId: '61c485e6-aa84-5d57-98aa-efc0407b31ce',
+          recordFilterGroupId: '3ff49a61-bf4e-577b-9b1b-77f92c5eafb1',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '244c32eb-8179-5a9e-8a96-ae7a4736a00b',
+          id: '660e4346-f7bd-5e64-a14f-16913a875ac5',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'currentVersion.trigger',
-          recordFilterGroupId: '61c485e6-aa84-5d57-98aa-efc0407b31ce',
+          recordFilterGroupId: '3ff49a61-bf4e-577b-9b1b-77f92c5eafb1',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: 'b1688102-0d2f-548f-801c-89eba8d6f0a0',
+          id: '5b7be750-b902-50c3-b19c-87f82b77beb4',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'currentVersion.steps',
-          recordFilterGroupId: '61c485e6-aa84-5d57-98aa-efc0407b31ce',
+          recordFilterGroupId: '3ff49a61-bf4e-577b-9b1b-77f92c5eafb1',
           positionInRecordFilterGroup: 2,
         },
         {
-          id: '6a9abbd8-4c35-53e6-aafe-7720f5b8ff10',
+          id: '4a1797ae-aa9e-518b-9d6c-c727a60e17cd',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'currentVersion.steps',
-          recordFilterGroupId: '61c485e6-aa84-5d57-98aa-efc0407b31ce',
+          recordFilterGroupId: '3ff49a61-bf4e-577b-9b1b-77f92c5eafb1',
           positionInRecordFilterGroup: 3,
         },
         {
-          id: '52e92b6f-b17c-57bf-af02-be54ea2808f4',
+          id: '2802f26e-b605-5970-b4b7-c6b63128843d',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'currentVersion.status',
           value: '"DRAFT"',
-          recordFilterGroupId: '37e4bc91-09bd-517a-8b6f-ea7301440c52',
+          recordFilterGroupId: '29924f2a-c72b-5686-bc37-70f8ccf211ff',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '156e356d-2d0e-5220-ac6e-50c09ee965cb',
+          id: 'ada59c64-2fc9-5680-9fb8-622fc3af4295',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.DOES_NOT_CONTAIN,
           subFieldName: 'statuses',
           value: '"ACTIVE"',
-          recordFilterGroupId: '37e4bc91-09bd-517a-8b6f-ea7301440c52',
+          recordFilterGroupId: '29924f2a-c72b-5686-bc37-70f8ccf211ff',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: '211d5470-01f1-5d3d-bf1a-5a1d03378ccf',
+          id: 'f13a1680-7e23-53bc-bf20-94fdf2de061f',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
-          recordFilterGroupId: '61c485e6-aa84-5d57-98aa-efc0407b31ce',
+          recordFilterGroupId: '3ff49a61-bf4e-577b-9b1b-77f92c5eafb1',
           positionInRecordFilterGroup: 5,
         },
       ],
       recordFilterGroups: [
         {
-          id: '61c485e6-aa84-5d57-98aa-efc0407b31ce',
+          id: '3ff49a61-bf4e-577b-9b1b-77f92c5eafb1',
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
         },
         {
-          id: '37e4bc91-09bd-517a-8b6f-ea7301440c52',
+          id: '29924f2a-c72b-5686-bc37-70f8ccf211ff',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: '61c485e6-aa84-5d57-98aa-efc0407b31ce',
+          parentRecordFilterGroupId: '3ff49a61-bf4e-577b-9b1b-77f92c5eafb1',
           positionInRecordFilterGroup: 4,
         },
       ],
@@ -1449,63 +1402,61 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Deactivate`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and (everyEquals(selectedRecords, "currentVersion.status", "ACTIVE") or includesEvery(selectedRecords, "statuses", "ACTIVE")) and noneDefined(selectedRecords, "deletedAt") and noneEquals(selectedRecords, "recordPermissions.canUpdate", false)',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '935cbcb1-323f-578f-87d8-ece70c5d4dc2',
+          id: '5efada72-46cb-5b33-9e54-fded92159ff7',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
-          recordFilterGroupId: '49be7794-f709-53b6-9499-8d62227fb359',
+          recordFilterGroupId: 'dbdb1357-0c0d-5d7c-a2bc-ed745e28356f',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '2e0ded69-ec57-5bbe-8f9b-8cdcb0151acf',
+          id: 'fcd5d9ea-8f9e-5077-a4a2-612719c46711',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'currentVersion.status',
           value: '"ACTIVE"',
-          recordFilterGroupId: 'a71ca65d-6e2a-5616-94f8-1d9b6c4f6c84',
+          recordFilterGroupId: 'd7521f62-256f-5a1a-a0af-673297a15484',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '056c1709-191a-57b9-a92c-e36be6ff34fd',
+          id: '340fae1e-13c4-53ef-a2dc-bcb2f331b9cd',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.CONTAINS,
           subFieldName: 'statuses',
           value: '"ACTIVE"',
-          recordFilterGroupId: 'a71ca65d-6e2a-5616-94f8-1d9b6c4f6c84',
+          recordFilterGroupId: 'd7521f62-256f-5a1a-a0af-673297a15484',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: 'aa0a3794-dbdf-555c-8895-af4415fd3f3c',
+          id: '50104b6f-3542-5987-8f5c-4c41efbea1ea',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
-          recordFilterGroupId: '49be7794-f709-53b6-9499-8d62227fb359',
+          recordFilterGroupId: 'dbdb1357-0c0d-5d7c-a2bc-ed745e28356f',
           positionInRecordFilterGroup: 2,
         },
         {
-          id: '0360c9a0-b6f5-53f6-a269-c0513d4702ff',
+          id: '711efe9d-f458-5dd4-bdde-f485edab01a4',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'recordPermissions.canUpdate',
           value: 'false',
-          recordFilterGroupId: '49be7794-f709-53b6-9499-8d62227fb359',
+          recordFilterGroupId: 'dbdb1357-0c0d-5d7c-a2bc-ed745e28356f',
           positionInRecordFilterGroup: 3,
         },
       ],
       recordFilterGroups: [
         {
-          id: '49be7794-f709-53b6-9499-8d62227fb359',
+          id: 'dbdb1357-0c0d-5d7c-a2bc-ed745e28356f',
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
         },
         {
-          id: 'a71ca65d-6e2a-5616-94f8-1d9b6c4f6c84',
+          id: 'd7521f62-256f-5a1a-a0af-673297a15484',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: '49be7794-f709-53b6-9499-8d62227fb359',
+          parentRecordFilterGroupId: 'dbdb1357-0c0d-5d7c-a2bc-ed745e28356f',
           positionInRecordFilterGroup: 1,
         },
       ],
@@ -1528,25 +1479,23 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Discard Draft`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'every(selectedRecords, "lastPublishedVersionId") and everyEquals(selectedRecords, "currentVersion.status", "DRAFT") and noneDefined(selectedRecords, "deletedAt")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '36e3ad72-6ddd-5df5-85ac-cad556bb3ad1',
+          id: 'f4beb6e3-a6c3-5e6c-88b4-3c1fadc656ae',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'lastPublishedVersionId',
         },
         {
-          id: '65e880a0-4fbe-5312-9fa9-fb2d119c5c0d',
+          id: 'cfd1dea2-e676-5743-bc93-dbc70608f005',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'currentVersion.status',
           value: '"DRAFT"',
         },
         {
-          id: '8c50e428-9bf0-5428-87b5-174cdf6ed077',
+          id: 'ba6fb6b0-2221-524a-8571-43d2b17bf943',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
@@ -1571,101 +1520,99 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Test`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and everyDefined(selectedRecords, "currentVersion.trigger") and everyDefined(selectedRecords, "currentVersion.steps") and every(selectedRecords, "currentVersion.steps.length") and ((everyEquals(selectedRecords, "currentVersion.trigger.type", "MANUAL") and noneDefined(selectedRecords, "currentVersion.trigger.settings.objectType")) or everyEquals(selectedRecords, "currentVersion.trigger.type", "WEBHOOK") or everyEquals(selectedRecords, "currentVersion.trigger.type", "CRON")) and noneDefined(selectedRecords, "deletedAt")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '218d7cde-f4d6-511d-99c6-bf623bb19664',
+          id: '72fe74ad-14b8-570c-9a5b-9abe7ce20554',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
-          recordFilterGroupId: '25e1b770-00e9-5b26-9a39-fe66154591cc',
+          recordFilterGroupId: 'c7f7a79d-2962-5445-a810-5154aa00e4e2',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: 'eb466879-ce37-5992-9b25-7570b6b1c9a2',
+          id: 'a6cc0375-9d20-5f98-84ef-0e868e8a1cf0',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'currentVersion.trigger',
-          recordFilterGroupId: '25e1b770-00e9-5b26-9a39-fe66154591cc',
+          recordFilterGroupId: 'c7f7a79d-2962-5445-a810-5154aa00e4e2',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: 'acc18934-c7cc-5de4-a86c-7c7d6bd85f4d',
+          id: '04993444-28fa-558b-831c-0c63a0b9fbce',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'currentVersion.steps',
-          recordFilterGroupId: '25e1b770-00e9-5b26-9a39-fe66154591cc',
+          recordFilterGroupId: 'c7f7a79d-2962-5445-a810-5154aa00e4e2',
           positionInRecordFilterGroup: 2,
         },
         {
-          id: '6ac18d4c-eabc-5ca7-a7a4-f6fcf8da3d92',
+          id: 'd73c8321-ba63-5d25-9aa3-3a475dd328e1',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'currentVersion.steps',
-          recordFilterGroupId: '25e1b770-00e9-5b26-9a39-fe66154591cc',
+          recordFilterGroupId: 'c7f7a79d-2962-5445-a810-5154aa00e4e2',
           positionInRecordFilterGroup: 3,
         },
         {
-          id: '80b1e899-199f-5a8a-aa2d-140f79a50ddc',
+          id: '51867da4-1fd2-58d4-b5df-91dae83432b9',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'currentVersion.trigger.type',
           value: '"MANUAL"',
-          recordFilterGroupId: 'bf9c58b8-22c3-5f6a-9140-269abf596d85',
+          recordFilterGroupId: 'd86031aa-a3cd-56d5-bc78-f729f2feb006',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: 'd221ec12-cbe6-53f1-b037-ede8e313fc8e',
+          id: 'fdadd068-4757-57f1-a11b-8624f666a1b6',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'currentVersion.trigger.settings.objectType',
-          recordFilterGroupId: 'bf9c58b8-22c3-5f6a-9140-269abf596d85',
+          recordFilterGroupId: 'd86031aa-a3cd-56d5-bc78-f729f2feb006',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: '9e71619e-607b-517b-86a4-ebb34d19738c',
+          id: '029f27be-387d-50ac-8f15-641eedc79c2b',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'currentVersion.trigger.type',
           value: '"WEBHOOK"',
-          recordFilterGroupId: '82a57ba3-ade9-53b2-b32d-a41fbc1af2af',
+          recordFilterGroupId: 'ce81afdc-0593-5831-a5e8-dbe16ccf38dc',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: '51b3471b-71f5-5b6a-9cbe-659953fea33e',
+          id: '1a32b2ce-e30c-5239-ad94-d9411179597f',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'currentVersion.trigger.type',
           value: '"CRON"',
-          recordFilterGroupId: '82a57ba3-ade9-53b2-b32d-a41fbc1af2af',
+          recordFilterGroupId: 'ce81afdc-0593-5831-a5e8-dbe16ccf38dc',
           positionInRecordFilterGroup: 2,
         },
         {
-          id: '71b9b11f-622a-5fad-98a3-79223378d402',
+          id: '1d0f17f4-e917-532d-8eda-45af44c66e4f',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
-          recordFilterGroupId: '25e1b770-00e9-5b26-9a39-fe66154591cc',
+          recordFilterGroupId: 'c7f7a79d-2962-5445-a810-5154aa00e4e2',
           positionInRecordFilterGroup: 5,
         },
       ],
       recordFilterGroups: [
         {
-          id: '25e1b770-00e9-5b26-9a39-fe66154591cc',
+          id: 'c7f7a79d-2962-5445-a810-5154aa00e4e2',
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
         },
         {
-          id: '82a57ba3-ade9-53b2-b32d-a41fbc1af2af',
+          id: 'ce81afdc-0593-5831-a5e8-dbe16ccf38dc',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: '25e1b770-00e9-5b26-9a39-fe66154591cc',
+          parentRecordFilterGroupId: 'c7f7a79d-2962-5445-a810-5154aa00e4e2',
           positionInRecordFilterGroup: 4,
         },
         {
-          id: 'bf9c58b8-22c3-5f6a-9140-269abf596d85',
+          id: 'd86031aa-a3cd-56d5-bc78-f729f2feb006',
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
-          parentRecordFilterGroupId: '82a57ba3-ade9-53b2-b32d-a41fbc1af2af',
+          parentRecordFilterGroupId: 'ce81afdc-0593-5831-a5e8-dbe16ccf38dc',
           positionInRecordFilterGroup: 0,
         },
       ],
@@ -1688,18 +1635,16 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `See Runs`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and noneDefined(selectedRecords, "deletedAt")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '05a4bf32-444d-51c6-a702-8274d8c71173',
+          id: '07e92a54-c129-513d-8280-dc8a2938a40a',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
         },
         {
-          id: '1f028c27-934e-518b-9668-16413de17446',
+          id: '5f2c8176-e0a3-50d2-9ff6-1b7c2d306fe4',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
@@ -1727,18 +1672,16 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `See Versions`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and noneDefined(selectedRecords, "deletedAt")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '05a4bf32-444d-51c6-a702-8274d8c71173',
+          id: '07e92a54-c129-513d-8280-dc8a2938a40a',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
         },
         {
-          id: '1f028c27-934e-518b-9668-16413de17446',
+          id: '5f2c8176-e0a3-50d2-9ff6-1b7c2d306fe4',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
@@ -1763,42 +1706,40 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Tidy up`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'pageType == "RECORD_PAGE" and everyDefined(selectedRecords, "currentVersion.trigger") and everyDefined(selectedRecords, "currentVersion.steps") and every(selectedRecords, "currentVersion.steps.length") and noneDefined(selectedRecords, "deletedAt") and noneEquals(selectedRecords, "recordPermissions.canUpdate", false)',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'a2a69433-23a8-5218-ad8b-ddfefe5bf0c3',
+          id: '18d8cfdb-1e3d-5c07-9f20-2cb519b9ea99',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["RECORD_PAGE"]',
         },
         {
-          id: 'b0888b13-1db5-5fb5-b685-60c7aad2f7c2',
+          id: '033a7578-86f2-5d0b-bc94-ae32ab34460f',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'currentVersion.trigger',
         },
         {
-          id: '14c286e6-54bc-565a-b441-835af354560f',
+          id: '4bd7fe81-4a1c-5963-8169-4d4d24590231',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'currentVersion.steps',
         },
         {
-          id: '0a1d168b-acf4-5072-b71a-cfe51ca704fb',
+          id: '4aade542-4faf-5874-bae6-5757fe098404',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'currentVersion.steps',
         },
         {
-          id: '4de134c3-1db8-5f97-b749-ec8f292c72bb',
+          id: '9e297768-eec1-5223-b986-2bb2cdf2e483',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: '60957185-7c32-5a80-aae3-34d75bb93e8c',
+          id: '96003c98-280b-5ab2-a564-c2aae4111e51',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'recordPermissions.canUpdate',
@@ -1824,24 +1765,22 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Duplicate`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'everyDefined(selectedRecords, "currentVersion") and noneDefined(selectedRecords, "deletedAt") and noneEquals(selectedRecords, "recordPermissions.canUpdate", false)',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '5adfcdbd-e8a7-5d68-846d-afd51a6e576e',
+          id: 'd0dc218d-01a8-56b0-8862-ec6473fc19c5',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'currentVersion',
         },
         {
-          id: 'fa362867-1bbf-5924-9b2f-b6946ff4b92c',
+          id: 'b5cb5e82-5ee7-5001-ab32-a18256215dd0',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: '1036ca83-acf7-5548-83b1-bd52e3827416',
+          id: '0680a231-a943-5ceb-baaa-391095dcf87c',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'recordPermissions.canUpdate',
@@ -1870,38 +1809,35 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Make Private`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and everyEquals(selectedRecords, "visibility", "WORKSPACE") and every(selectedRecords, "canChangeVisibility") and noneDefined(selectedRecords, "deletedAt") and noneEquals(selectedRecords, "recordPermissions.canUpdate", false)',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '10feda32-2eee-5370-8099-4fdaeb6eae29',
+          id: '6809c8b4-fb56-5009-ae0f-db24bff6e765',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
         },
         {
-          id: '083d20e7-8b25-57c3-aa3b-8ee2a96f4980',
+          id: '08ccb09c-aac1-5ec0-913f-9613abe81504',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'visibility',
           value: '"WORKSPACE"',
         },
         {
-          id: '138fed2b-41f4-51c2-b012-cd6fc1640b22',
+          id: '86f214ea-713c-5205-9e0a-14d93d366a27',
           contextKey: 'selectedRecords',
-          operand: ViewFilterOperand.IS,
+          operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'canChangeVisibility',
-          value: 'true',
         },
         {
-          id: 'aec1c4e7-29e2-5880-9a25-79e1f33ed7b3',
+          id: '2469509b-2ae1-526f-8670-75b8cac231fe',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: '4f060606-e6d5-53a6-b5a5-6d362f9cb71f',
+          id: 'bd00401d-2d45-5553-9db1-d2644e160aae',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'recordPermissions.canUpdate',
@@ -1933,32 +1869,29 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and everyEquals(selectedRecords, "visibility", "PRIVATE") and every(selectedRecords, "canChangeVisibility") and noneDefined(selectedRecords, "deletedAt")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '46a494ac-eb28-5967-b786-4f1fb5f07c1f',
+          id: 'df62e6ea-807a-5b58-abb6-c797658cfe19',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
         },
         {
-          id: 'dd1eea1d-945e-5e0f-bc01-ee9779bb222c',
+          id: '07c36aa9-a89c-56ba-92fb-1e3e53dc7992',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'visibility',
           value: '"PRIVATE"',
         },
         {
-          id: 'b28441f5-798d-535c-9740-e01df8ddbc88',
+          id: '7865d6c7-6ac6-596d-8d3f-e2e5643e98da',
           contextKey: 'selectedRecords',
-          operand: ViewFilterOperand.IS,
+          operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'canChangeVisibility',
-          value: 'true',
         },
         {
-          id: 'b67d4986-21c4-5d33-9bd9-4de5bba69396',
+          id: '77da003d-7644-5c99-8c8f-66068dd4b929',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
@@ -1983,7 +1916,6 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `See Workflow`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression: null,
     conditionalAvailability: null,
     availabilityObjectMetadataUniversalIdentifier:
       STANDARD_OBJECTS.workflowRun.universalIdentifier,
@@ -2003,49 +1935,47 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Stop`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'isSelectAll or someEquals(selectedRecords, "status", "NOT_STARTED") or someEquals(selectedRecords, "status", "ENQUEUED") or someEquals(selectedRecords, "status", "RUNNING")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '0e697990-55eb-53aa-9265-52b769871078',
+          id: 'cbdabac2-8f64-538d-aacd-bc5db2f0ba67',
           contextKey: 'isSelectAll',
           operand: ViewFilterOperand.IS,
           value: 'true',
-          recordFilterGroupId: '21ab452e-c475-59e4-ac2d-0bf38ac3b0f2',
+          recordFilterGroupId: 'c0f4b484-614d-566e-b254-a99e4d1a51f9',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '67f8a70d-3b35-55b5-b3c9-7918af43bec5',
+          id: '7039b1da-d71b-573a-a7a9-dddfa7f06ca0',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'status',
           value: '"NOT_STARTED"',
-          recordFilterGroupId: '21ab452e-c475-59e4-ac2d-0bf38ac3b0f2',
+          recordFilterGroupId: 'c0f4b484-614d-566e-b254-a99e4d1a51f9',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: '77a7c3a8-ae07-5275-9cf2-e76752ce7e00',
+          id: '318fe83b-d3cd-5c80-8da3-c9347db87d25',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'status',
           value: '"ENQUEUED"',
-          recordFilterGroupId: '21ab452e-c475-59e4-ac2d-0bf38ac3b0f2',
+          recordFilterGroupId: 'c0f4b484-614d-566e-b254-a99e4d1a51f9',
           positionInRecordFilterGroup: 2,
         },
         {
-          id: 'c0447d6b-d7de-5871-a3ba-963ac8c78b29',
+          id: 'b75ae3c7-0031-5d54-9639-c1ec42e3b46e',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'status',
           value: '"RUNNING"',
-          recordFilterGroupId: '21ab452e-c475-59e4-ac2d-0bf38ac3b0f2',
+          recordFilterGroupId: 'c0f4b484-614d-566e-b254-a99e4d1a51f9',
           positionInRecordFilterGroup: 3,
         },
       ],
       recordFilterGroups: [
         {
-          id: '21ab452e-c475-59e4-ac2d-0bf38ac3b0f2',
+          id: 'c0f4b484-614d-566e-b254-a99e4d1a51f9',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
         },
       ],
@@ -2069,12 +1999,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Retry`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'someEquals(selectedRecords, "status", "FAILED")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'd343ba01-6b08-5226-a49e-61037dfc990d',
+          id: '2167d9ee-6747-581b-a4d3-9c64eb898b1e',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'status',
@@ -2101,12 +2029,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `See Runs`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'everyDefined(selectedRecords, "workflow")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'a20750ba-20b5-554b-ac64-ead1a7832009',
+          id: '8ee0f153-6bcd-50eb-8d00-798d3396fef3',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'workflow',
@@ -2131,12 +2057,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `See Workflow`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'everyDefined(selectedRecords, "workflow.id")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '045b84e1-d67e-5ba8-a9d1-1fd3633afe01',
+          id: '663e3abf-1ea9-5fbe-933d-4eef451aff4f',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'workflow.id',
@@ -2161,12 +2085,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Use as Draft`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'noneEquals(selectedRecords, "status", "DRAFT")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '7bf58db2-b61d-5a32-bede-c2e272e38840',
+          id: 'db01bb10-8a45-5a81-a699-098a3dc06600',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'status',
@@ -2195,12 +2117,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `See Versions`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'everyDefined(selectedRecords, "workflow")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'a20750ba-20b5-554b-ac64-ead1a7832009',
+          id: '8ee0f153-6bcd-50eb-8d00-798d3396fef3',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'workflow',
@@ -2225,7 +2145,6 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Search`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: null,
     conditionalAvailability: null,
     availabilityObjectMetadataUniversalIdentifier: null,
     frontComponentUniversalIdentifier: null,
@@ -2244,7 +2163,6 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Search`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.FALLBACK,
-    conditionalAvailabilityExpression: null,
     conditionalAvailability: null,
     availabilityObjectMetadataUniversalIdentifier: null,
     frontComponentUniversalIdentifier: null,
@@ -2261,25 +2179,23 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     position: 43,
     shortLabel: null,
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression:
-      'permissionFlags.AI and not isInSidePanel and objectMetadataItem.nameSingular != "agentChatThread"',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '8c8038fe-f9ab-5125-930d-12b91e10a432',
+          id: '4b975042-bf92-5e95-aa01-ca7fb0fc8007',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'AI',
           value: 'true',
         },
         {
-          id: '5a5c8642-bfa6-5c21-8693-1673f91621ba',
+          id: '448ac662-6ec0-5ec1-82a9-b8441aa44059',
           contextKey: 'isInSidePanel',
           operand: ViewFilterOperand.IS,
           value: 'false',
         },
         {
-          id: 'd171285a-a7e7-5a0f-ba45-ea065731034d',
+          id: '8e205b23-e19a-5a22-9dac-5d9dc45379bf',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'nameSingular',
@@ -2310,11 +2226,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.AI',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'afc05440-4386-5b1b-84ad-c381d7b587c0',
+          id: '04716c91-fa12-519c-8604-0ffdfec4c60a',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'AI',
@@ -2339,11 +2254,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `New chat`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.AI',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'afc05440-4386-5b1b-84ad-c381d7b587c0',
+          id: '04716c91-fa12-519c-8604-0ffdfec4c60a',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'AI',
@@ -2351,25 +2265,23 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
         },
       ],
     } satisfies ConditionalDisplay,
-    conditionalPinnedExpression:
-      'pageType == "RECORD_PAGE" and objectMetadataItem.nameSingular == "agentChatThread" and not isInSidePanel',
     conditionalPinned: {
       recordFilters: [
         {
-          id: '4684c8b1-8266-5e3a-87b6-33c17d956ec5',
+          id: 'cc97ceaa-7fc6-5940-b9fc-16f67d3c9d26',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["RECORD_PAGE"]',
         },
         {
-          id: '89522170-9fb1-59cf-b6b3-3b8e488ce8dc',
+          id: '1b32a4bb-b8e3-54f3-963d-e6fca73f5917',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS,
           subFieldName: 'nameSingular',
           value: '["agentChatThread"]',
         },
         {
-          id: '9c875df4-0641-56c5-bd2c-ad2deb63a1b8',
+          id: 'b3c7e551-62d4-5d9f-9532-b1798d243090',
           contextKey: 'isInSidePanel',
           operand: ViewFilterOperand.IS,
           value: 'false',
@@ -2396,18 +2308,16 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Share`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and noneDefined(selectedRecords, "deletedAt")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '05a4bf32-444d-51c6-a702-8274d8c71173',
+          id: '07e92a54-c129-513d-8280-dc8a2938a40a',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
         },
         {
-          id: '1f028c27-934e-518b-9668-16413de17446',
+          id: '5f2c8176-e0a3-50d2-9ff6-1b7c2d306fe4',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
@@ -2432,42 +2342,39 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Mark as read`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 1 and permissionFlags.AI and featureFlags.IS_AI_CHAT_INBOX_ENABLED and noneDefined(selectedRecords, "deletedAt") and every(selectedRecords, "inboxStatus.isUnread")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '95c54f55-a47c-5ecb-b708-7e761a48285d',
+          id: '22c04b9a-0704-5418-ac3f-d8dc39d6f00a',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
         },
         {
-          id: '04460dda-5d50-533e-8e1b-a6987c27fbee',
+          id: 'ed6afdaf-7da4-54f8-a30a-44a092b6bc26',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'AI',
           value: 'true',
         },
         {
-          id: '88a7bbb3-bec3-52b5-8988-f94acd0ba827',
+          id: 'd21d5700-88bd-5c5d-8040-2507a11654e3',
           contextKey: 'featureFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'IS_AI_CHAT_INBOX_ENABLED',
           value: 'true',
         },
         {
-          id: 'e0118054-2527-5856-b312-b7b583f820a1',
+          id: '11adc863-c9a6-5d90-b8e1-d4d4e610e73b',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: '404803b8-b72d-56b9-9f11-f41c542b7d31',
+          id: '90a7ce7f-32d8-5ee1-aada-8ac5da288624',
           contextKey: 'selectedRecords',
-          operand: ViewFilterOperand.IS,
+          operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'inboxStatus.isUnread',
-          value: 'true',
         },
       ],
     } satisfies ConditionalDisplay,
@@ -2489,38 +2396,36 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Mark as unread`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 1 and permissionFlags.AI and featureFlags.IS_AI_CHAT_INBOX_ENABLED and noneDefined(selectedRecords, "deletedAt") and everyEquals(selectedRecords, "inboxStatus.isUnread", false)',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '853773b0-abb4-55ae-acb4-d000901e0b30',
+          id: 'f43baa68-b936-56f9-9983-bd3ca0b3690a',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
         },
         {
-          id: '5ff8a8c7-29f4-5965-96d2-bc2d2956edc2',
+          id: 'f559b0f8-d7b2-53b3-8431-b46334f40948',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'AI',
           value: 'true',
         },
         {
-          id: '1df8422b-a332-508c-bfa5-abd265c95dcd',
+          id: '14597421-d206-585f-b1ae-a4056737bad8',
           contextKey: 'featureFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'IS_AI_CHAT_INBOX_ENABLED',
           value: 'true',
         },
         {
-          id: 'fee08ec1-02e1-5dd6-bf5b-04357930e8b9',
+          id: 'ae2f10f6-2028-53a0-9874-cc63fd1cb3ad',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: 'f27755b6-8d85-51ec-8c94-f7ddb7a8632d',
+          id: 'f3519e77-af08-5bfb-8976-c6b2c7c27ac6',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'inboxStatus.isUnread',
@@ -2546,38 +2451,36 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Done`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 1 and permissionFlags.AI and featureFlags.IS_AI_CHAT_INBOX_ENABLED and noneDefined(selectedRecords, "deletedAt") and everyEquals(selectedRecords, "inboxStatus.scope", "INBOX")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'a92fb117-91e4-5fb6-8c7f-7fad51b884ad',
+          id: '1357176a-571a-52af-bd0f-adb0e4da5792',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
         },
         {
-          id: '7aa16418-e41b-5e96-b420-292f6472d4e3',
+          id: 'a8cc854c-73a4-5719-a386-81b8b061c157',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'AI',
           value: 'true',
         },
         {
-          id: 'd9d800e0-c6fe-538c-bf6e-dc459519e967',
+          id: '427e7c63-07e5-5310-8c9a-d27b5be124cc',
           contextKey: 'featureFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'IS_AI_CHAT_INBOX_ENABLED',
           value: 'true',
         },
         {
-          id: '53649bf4-40e2-5fc4-a103-f6f7f0e12393',
+          id: 'faa97ae9-225a-5bc9-b0e8-13184fda0014',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: 'bdeb7b6e-75b2-5576-b138-dabc8fd864f1',
+          id: '9c872899-9d82-54e0-b89a-4e7a71348f68',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'inboxStatus.scope',
@@ -2603,38 +2506,36 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Reopen`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 1 and permissionFlags.AI and featureFlags.IS_AI_CHAT_INBOX_ENABLED and noneDefined(selectedRecords, "deletedAt") and everyEquals(selectedRecords, "inboxStatus.scope", "ARCHIVED")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '1da37393-2127-532d-8860-330d439b3d3e',
+          id: '805e4667-2259-5695-b333-766f726ef0db',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
         },
         {
-          id: '41a63404-74fb-5279-b624-fb529c0fd691',
+          id: '08035929-19b8-5f9d-aacc-3921c80de034',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'AI',
           value: 'true',
         },
         {
-          id: '033d4163-6129-55bd-90a7-782d75216cbe',
+          id: '10bc51f2-a187-5c31-ba3c-438f83f3e47d',
           contextKey: 'featureFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'IS_AI_CHAT_INBOX_ENABLED',
           value: 'true',
         },
         {
-          id: 'a567793e-b7da-5f1c-bc04-a41ca9e195d7',
+          id: 'afbbebf6-881b-5f65-b9f0-d45e309f8dbf',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: '89431652-9eef-5c52-8bf2-b5f84e9cfb3b',
+          id: 'c8dc2002-1a63-5654-adc2-f0759322266f',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'inboxStatus.scope',
@@ -2660,38 +2561,36 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Unsnooze`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 1 and permissionFlags.AI and featureFlags.IS_AI_CHAT_INBOX_ENABLED and noneDefined(selectedRecords, "deletedAt") and everyEquals(selectedRecords, "inboxStatus.scope", "SNOOZED")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '64404efc-bad2-5f59-a921-4987ad45f293',
+          id: 'ac713890-1c73-5e75-b69f-96b6e699b307',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
         },
         {
-          id: 'c56cc21f-12b1-50d3-a365-d1be50177489',
+          id: '7ccc825f-c05c-5bd8-8a6c-d9e0ed4be5cb',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'AI',
           value: 'true',
         },
         {
-          id: '698b8f3a-6607-57dc-b929-b182f610dff9',
+          id: '1889c9dd-0e87-51d6-b7ba-19ddb4e0b53a',
           contextKey: 'featureFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'IS_AI_CHAT_INBOX_ENABLED',
           value: 'true',
         },
         {
-          id: '1c152a38-8fd4-585c-92ff-b321787c5be2',
+          id: 'c0360796-9523-5cc0-b01e-854971338cc2',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: '357724c2-c26f-5c14-b04c-3a358582a265',
+          id: '8dfb0b66-5158-59c0-874c-7c857fb8d471',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'inboxStatus.scope',
@@ -2717,44 +2616,42 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Snooze`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 1 and permissionFlags.AI and featureFlags.IS_AI_CHAT_INBOX_ENABLED and noneDefined(selectedRecords, "deletedAt") and everyDefined(selectedRecords, "inboxStatus") and noneEquals(selectedRecords, "inboxStatus.scope", "SNOOZED")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '007c20f6-4678-5a75-bd2e-5c7705e6fee9',
+          id: '52f659ed-6a54-580f-a19f-ffd584deb478',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
         },
         {
-          id: 'ab52d416-890a-589a-9612-0fa3896e198f',
+          id: 'd4280929-1ca3-5d8e-9da9-a4e9d3a4e60b',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'AI',
           value: 'true',
         },
         {
-          id: '1ad96fa6-6f09-5aa1-8a24-b1ad8b60b303',
+          id: '515e13ad-4671-5971-b68e-ce5f9512e663',
           contextKey: 'featureFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'IS_AI_CHAT_INBOX_ENABLED',
           value: 'true',
         },
         {
-          id: '5e0b2718-1826-594c-86f4-becf51cb2f37',
+          id: '2c3c9d15-334a-5979-8c6f-34f37c06c8c7',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: 'b932f9eb-f0ac-5605-a0c7-3c5b6b963b10',
+          id: '69ecc3a2-188e-5347-a7c4-23fe1f04af4f',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT_EMPTY,
           subFieldName: 'inboxStatus',
         },
         {
-          id: '0c4ca071-0f22-50a5-aef1-6c6f4defe1cd',
+          id: 'ab01a650-81f1-5396-8069-4711b0f31f50',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'inboxStatus.scope',
@@ -2780,38 +2677,36 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Subscribe`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 1 and permissionFlags.AI and featureFlags.IS_AI_CHAT_INBOX_ENABLED and noneDefined(selectedRecords, "deletedAt") and everyEquals(selectedRecords, "inboxStatus.isSubscribed", false)',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '12928afd-d09a-5e3a-b4da-9a97de16e9e5',
+          id: '3d1313d4-b69b-548f-9357-570b9f900038',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
         },
         {
-          id: '962be05b-0f4a-5103-b6e5-9d44210b5fda',
+          id: 'e166a6a3-de37-538e-bcc1-69a628c5539f',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'AI',
           value: 'true',
         },
         {
-          id: 'e1418927-b741-5fe6-a386-3972882e51fa',
+          id: '052b7b57-4b8e-5611-b016-1e865ee95651',
           contextKey: 'featureFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'IS_AI_CHAT_INBOX_ENABLED',
           value: 'true',
         },
         {
-          id: '58b7fb02-b5c5-5021-b2df-94797e2d57ae',
+          id: '97e7f065-ab41-5dd5-b902-1b38d800e7ba',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: 'd9afff0a-4de0-5b59-a7c2-8755a0cbc5c3',
+          id: '4ef86358-eb93-5903-bec0-686684717075',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'inboxStatus.isSubscribed',
@@ -2837,45 +2732,43 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Unsubscribe`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 1 and permissionFlags.AI and featureFlags.IS_AI_CHAT_INBOX_ENABLED and noneDefined(selectedRecords, "deletedAt") and everyEquals(selectedRecords, "inboxStatus.isSubscribed", true) and noneEquals(selectedRecords, "inboxStatus.isAssignedToMe", true)',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'a99ca67f-d1bb-5314-8cdd-cd1138be03c7',
+          id: 'f12994ad-a56f-5597-a900-50e49a4f076f',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
         },
         {
-          id: '435b6a21-4518-55a8-bc71-d1fff4cf4cf1',
+          id: '57b55932-25a2-50d3-8b44-e68a996bc982',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'AI',
           value: 'true',
         },
         {
-          id: '8a703288-177d-530c-af40-cff7de736908',
+          id: 'f31938ae-7de1-5469-826c-a55f40e2df19',
           contextKey: 'featureFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'IS_AI_CHAT_INBOX_ENABLED',
           value: 'true',
         },
         {
-          id: 'c0fd757e-aa15-59a6-b95b-a4ea749dbf91',
+          id: '61dcef69-18e6-5971-9e5e-c1370379e3bd',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: 'fc36ec99-42a0-5d87-8063-c57956477a80',
+          id: '36f0790a-9339-5120-8351-8e0f1bf10fbc',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'inboxStatus.isSubscribed',
           value: 'true',
         },
         {
-          id: 'fa89b8a6-cb63-5009-954b-18859e78d63c',
+          id: 'bd070d32-811b-5aaa-83ef-f551021b914d',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'inboxStatus.isAssignedToMe',
@@ -2901,38 +2794,36 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Assign`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 1 and permissionFlags.AI and featureFlags.IS_AI_CHAT_INBOX_ENABLED and noneDefined(selectedRecords, "deletedAt") and noneEquals(selectedRecords, "recordPermissions.canUpdate", false)',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '60df2fd6-92e3-557b-b396-a7b74c41ac13',
+          id: '0d6dc6c5-fe1e-500d-97aa-745c42fda349',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
         },
         {
-          id: '44de86df-252d-5ef1-a0aa-7590524a4c2b',
+          id: 'a911468d-e82b-5791-8c2d-074e0c39c6d4',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'AI',
           value: 'true',
         },
         {
-          id: '5632450a-3dd6-51f2-95d0-1d847c5421bd',
+          id: '8a0ed405-a545-523c-867d-524dca576fa3',
           contextKey: 'featureFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'IS_AI_CHAT_INBOX_ENABLED',
           value: 'true',
         },
         {
-          id: '878d42ea-aa23-519a-bd01-faedf66d3f76',
+          id: '06ac3893-f194-5e58-a502-3e984dd9bc5c',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: 'af10ecb8-9136-5f29-a86d-aaaec0b64205',
+          id: '7c3727fe-05ad-5723-9fdf-23d2004a91fc',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_NOT,
           subFieldName: 'recordPermissions.canUpdate',
@@ -2946,7 +2837,6 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
     engineComponentKey: EngineComponentKey.ASSIGN_AI_CHAT,
     hotKeys: ['A'],
   },
-  // Chats have their own Share item; it is a system object, so this one never shows there
   shareAnyRecord: {
     universalIdentifier: '1e703e2c-9f3a-4a23-8448-107b01be509c',
     label: i18nLabel(
@@ -2962,32 +2852,30 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Share`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and featureFlags.IS_RECORD_LEVEL_SHARING_ENABLED and not objectMetadataItem.isSystem and noneDefined(selectedRecords, "deletedAt")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '1013aef2-9abe-5f12-8248-ba4a90d00230',
+          id: '70f3136f-3ad5-5c63-bcc3-1f662e2b85ef',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
         },
         {
-          id: 'd38e3d73-3e18-5efc-855c-259a58b49365',
+          id: 'dbc35ac6-f905-5e3f-8e7a-a49ba3a34d8d',
           contextKey: 'featureFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'IS_RECORD_LEVEL_SHARING_ENABLED',
           value: 'true',
         },
         {
-          id: 'd1e45727-9003-5551-8886-db77b78d2dbf',
+          id: '8172273b-a1ce-549a-9be4-13f0b2bd3c1a',
           contextKey: 'objectMetadataItem',
           operand: ViewFilterOperand.IS,
           subFieldName: 'isSystem',
           value: 'false',
         },
         {
-          id: 'd4525c33-480f-5238-9ade-a907463876e4',
+          id: '1f826621-3a78-55d4-b88c-c3454f336f7a',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
@@ -3011,11 +2899,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Reply`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression: 'numberOfSelectedRecords == 1',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '7cfa5a0c-74b8-5a51-86c7-30569681ac76',
+          id: '0bc55c03-ca36-56ad-8eca-1e6da50b571b',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
@@ -3040,11 +2927,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Compose`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.SEND_EMAIL_TOOL',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'f70ffa4a-c8e1-5c1e-97b8-d13848cc9be4',
+          id: '694d99e8-6a28-5091-af56-a86296e7b166',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'SEND_EMAIL_TOOL',
@@ -3069,7 +2955,6 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Campaign`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: null,
     conditionalAvailability: null,
     availabilityObjectMetadataUniversalIdentifier: null,
     frontComponentUniversalIdentifier: null,
@@ -3088,22 +2973,20 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Create`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL_OBJECT_CONTEXT,
-    conditionalAvailabilityExpression: 'pageType == "INDEX_PAGE"',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '5871ac47-aeee-570d-8c84-e4d95d37ec9c',
+          id: '8ec62229-ee83-5d7e-b27c-fc1337c95555',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["INDEX_PAGE"]',
         },
       ],
     } satisfies ConditionalDisplay,
-    conditionalPinnedExpression: 'numberOfSelectedRecords == 0',
     conditionalPinned: {
       recordFilters: [
         {
-          id: 'eb320d5e-0d23-57f8-a05d-f7f8972f1f52',
+          id: 'd7dcba01-724a-5a9f-ac3a-feefb2e78263',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '0',
@@ -3128,54 +3011,52 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Send`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and (everyEquals(selectedRecords, "status", "DRAFT") or everyEquals(selectedRecords, "status", "SCHEDULED")) and noneDefined(selectedRecords, "deletedAt")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '9b7a5651-9b18-5445-ac20-124bc62e7bb7',
+          id: '03a70e06-9cb1-55d1-85cf-74ce5e7ab83d',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
-          recordFilterGroupId: '55c7aa9e-2838-570b-8fc9-3091f4e36395',
+          recordFilterGroupId: '564b10df-4216-5ab3-b6ba-f6f4ba97110c',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '458e1a9b-2b31-5a73-ba62-c0269606de97',
+          id: 'fb0c0318-8e01-523f-ae57-02f14263ab83',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'status',
           value: '"DRAFT"',
-          recordFilterGroupId: 'bae2535a-309a-50d7-88f7-c7cc6bfdcf31',
+          recordFilterGroupId: 'c9f4f94f-34f8-59aa-93c9-2e6de1a09a1f',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '902b4b95-77e2-59b9-bb74-8dd35db15621',
+          id: '6b6f8725-a1eb-5434-93e2-ee8c947e331e',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'status',
           value: '"SCHEDULED"',
-          recordFilterGroupId: 'bae2535a-309a-50d7-88f7-c7cc6bfdcf31',
+          recordFilterGroupId: 'c9f4f94f-34f8-59aa-93c9-2e6de1a09a1f',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: '83d65bba-fb6e-51e0-8150-ce6ca715be26',
+          id: '820d9792-f62a-5e5f-9d12-4f3dfd8d87ce',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
-          recordFilterGroupId: '55c7aa9e-2838-570b-8fc9-3091f4e36395',
+          recordFilterGroupId: '564b10df-4216-5ab3-b6ba-f6f4ba97110c',
           positionInRecordFilterGroup: 2,
         },
       ],
       recordFilterGroups: [
         {
-          id: '55c7aa9e-2838-570b-8fc9-3091f4e36395',
+          id: '564b10df-4216-5ab3-b6ba-f6f4ba97110c',
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
         },
         {
-          id: 'bae2535a-309a-50d7-88f7-c7cc6bfdcf31',
+          id: 'c9f4f94f-34f8-59aa-93c9-2e6de1a09a1f',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: '55c7aa9e-2838-570b-8fc9-3091f4e36395',
+          parentRecordFilterGroupId: '564b10df-4216-5ab3-b6ba-f6f4ba97110c',
           positionInRecordFilterGroup: 1,
         },
       ],
@@ -3198,54 +3079,52 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Test`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and (everyEquals(selectedRecords, "status", "DRAFT") or everyEquals(selectedRecords, "status", "SCHEDULED")) and noneDefined(selectedRecords, "deletedAt")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '9b7a5651-9b18-5445-ac20-124bc62e7bb7',
+          id: '03a70e06-9cb1-55d1-85cf-74ce5e7ab83d',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
-          recordFilterGroupId: '55c7aa9e-2838-570b-8fc9-3091f4e36395',
+          recordFilterGroupId: '564b10df-4216-5ab3-b6ba-f6f4ba97110c',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '458e1a9b-2b31-5a73-ba62-c0269606de97',
+          id: 'fb0c0318-8e01-523f-ae57-02f14263ab83',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'status',
           value: '"DRAFT"',
-          recordFilterGroupId: 'bae2535a-309a-50d7-88f7-c7cc6bfdcf31',
+          recordFilterGroupId: 'c9f4f94f-34f8-59aa-93c9-2e6de1a09a1f',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '902b4b95-77e2-59b9-bb74-8dd35db15621',
+          id: '6b6f8725-a1eb-5434-93e2-ee8c947e331e',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'status',
           value: '"SCHEDULED"',
-          recordFilterGroupId: 'bae2535a-309a-50d7-88f7-c7cc6bfdcf31',
+          recordFilterGroupId: 'c9f4f94f-34f8-59aa-93c9-2e6de1a09a1f',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: '83d65bba-fb6e-51e0-8150-ce6ca715be26',
+          id: '820d9792-f62a-5e5f-9d12-4f3dfd8d87ce',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
-          recordFilterGroupId: '55c7aa9e-2838-570b-8fc9-3091f4e36395',
+          recordFilterGroupId: '564b10df-4216-5ab3-b6ba-f6f4ba97110c',
           positionInRecordFilterGroup: 2,
         },
       ],
       recordFilterGroups: [
         {
-          id: '55c7aa9e-2838-570b-8fc9-3091f4e36395',
+          id: '564b10df-4216-5ab3-b6ba-f6f4ba97110c',
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
         },
         {
-          id: 'bae2535a-309a-50d7-88f7-c7cc6bfdcf31',
+          id: 'c9f4f94f-34f8-59aa-93c9-2e6de1a09a1f',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: '55c7aa9e-2838-570b-8fc9-3091f4e36395',
+          parentRecordFilterGroupId: '564b10df-4216-5ab3-b6ba-f6f4ba97110c',
           positionInRecordFilterGroup: 1,
         },
       ],
@@ -3268,54 +3147,52 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Cancel`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and (everyEquals(selectedRecords, "status", "SCHEDULED") or everyEquals(selectedRecords, "status", "SENDING")) and noneDefined(selectedRecords, "deletedAt")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '0c7499f4-d076-51e5-a3f9-325d8b4d327a',
+          id: 'e17f3450-7374-53f7-a93c-5c44dda1735b',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
-          recordFilterGroupId: 'c3d465b7-af1f-5e3a-afa5-8249da8be67a',
+          recordFilterGroupId: '36008439-aeb0-5cc5-a0db-75d67e6ca57e',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '59eb35fc-5b58-5912-a095-87e081607808',
+          id: '5d20e88d-8c9b-5613-b629-3a8be250106d',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'status',
           value: '"SCHEDULED"',
-          recordFilterGroupId: '06024f9b-ab74-5f5f-b01c-7ad8841d1a7a',
+          recordFilterGroupId: 'd834766d-d5af-5055-a071-c96c79486a8b',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '6b31495f-51fb-5864-9b9f-3baebd429333',
+          id: 'dade4ec6-dd9d-5682-958b-73cf7de3648f',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'status',
           value: '"SENDING"',
-          recordFilterGroupId: '06024f9b-ab74-5f5f-b01c-7ad8841d1a7a',
+          recordFilterGroupId: 'd834766d-d5af-5055-a071-c96c79486a8b',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: '4700f0ce-7042-5b26-a27a-b24ea3fcaa3e',
+          id: 'f2f7cdbd-023c-5fcf-803e-817558f751d7',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
-          recordFilterGroupId: 'c3d465b7-af1f-5e3a-afa5-8249da8be67a',
+          recordFilterGroupId: '36008439-aeb0-5cc5-a0db-75d67e6ca57e',
           positionInRecordFilterGroup: 2,
         },
       ],
       recordFilterGroups: [
         {
-          id: 'c3d465b7-af1f-5e3a-afa5-8249da8be67a',
+          id: '36008439-aeb0-5cc5-a0db-75d67e6ca57e',
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
         },
         {
-          id: '06024f9b-ab74-5f5f-b01c-7ad8841d1a7a',
+          id: 'd834766d-d5af-5055-a071-c96c79486a8b',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: 'c3d465b7-af1f-5e3a-afa5-8249da8be67a',
+          parentRecordFilterGroupId: '36008439-aeb0-5cc5-a0db-75d67e6ca57e',
           positionInRecordFilterGroup: 1,
         },
       ],
@@ -3338,24 +3215,22 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Duplicate`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and noneDefined(selectedRecords, "deletedAt") and objectPermissions.canUpdateObjectRecords',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '8d3f71fb-3846-5a66-bd6c-7eed9162361b',
+          id: '140e6b86-2ad4-5e26-94d8-051301ca7763',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
         },
         {
-          id: '2fad89d4-22d1-5307-ae4c-c8b3c31c1925',
+          id: '43be8d79-37b6-55cf-b5a9-079a95182f8a',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: '74b3f128-cd78-5637-92bc-d633f6830fe3',
+          id: 'eaf74742-e2ad-5f89-8292-71f0b2b12844',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canUpdateObjectRecords',
@@ -3363,13 +3238,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
         },
       ],
     } satisfies ConditionalDisplay,
-    // Pinned only on sent campaigns, the ones people re-run; drafts keep it in the menu
-    conditionalPinnedExpression:
-      'everyEquals(selectedRecords, "status", "SENT")',
     conditionalPinned: {
       recordFilters: [
         {
-          id: 'bf375b02-e2c9-565c-b5a1-bac15ed6b5ba',
+          id: 'c4e43f28-f4db-5169-a74a-35897c3ace1a',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'status',
@@ -3395,31 +3267,29 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Add Block`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'pageType == "RECORD_PAGE" and numberOfSelectedRecords == 1 and everyEquals(selectedRecords, "status", "DRAFT") and noneDefined(selectedRecords, "deletedAt")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '89cf8b80-4186-549d-a89f-94871f172f76',
+          id: '8ba8f872-8c91-5b5a-92f2-b5f2e0703722',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["RECORD_PAGE"]',
         },
         {
-          id: '3582f223-88c5-5711-9ca3-f74540eb30d1',
+          id: '3ddaaf05-4f61-5521-9cac-349ace7fc7c0',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
         },
         {
-          id: 'a14fc14d-3c96-5ca7-8ec8-7483fc4015e7',
+          id: '9494b4ca-a8ab-59be-bcc1-3c133b052d1e',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'status',
           value: '"DRAFT"',
         },
         {
-          id: '061cc873-5732-57d0-9226-fd6bb0754180',
+          id: '6919beaa-4ca3-5823-b8b1-f55cf4e5af1a',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
@@ -3444,31 +3314,29 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Email Style`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'pageType == "RECORD_PAGE" and numberOfSelectedRecords == 1 and everyEquals(selectedRecords, "status", "DRAFT") and noneDefined(selectedRecords, "deletedAt")',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '89cf8b80-4186-549d-a89f-94871f172f76',
+          id: '8ba8f872-8c91-5b5a-92f2-b5f2e0703722',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["RECORD_PAGE"]',
         },
         {
-          id: '3582f223-88c5-5711-9ca3-f74540eb30d1',
+          id: '3ddaaf05-4f61-5521-9cac-349ace7fc7c0',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
         },
         {
-          id: 'a14fc14d-3c96-5ca7-8ec8-7483fc4015e7',
+          id: '9494b4ca-a8ab-59be-bcc1-3c133b052d1e',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS,
           subFieldName: 'status',
           value: '"DRAFT"',
         },
         {
-          id: '061cc873-5732-57d0-9226-fd6bb0754180',
+          id: '6919beaa-4ca3-5823-b8b1-f55cf4e5af1a',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
@@ -3493,7 +3361,6 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Settings`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: null,
     conditionalAvailability: null,
     availabilityObjectMetadataUniversalIdentifier: null,
     frontComponentUniversalIdentifier: null,
@@ -3516,7 +3383,6 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Experience`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: null,
     conditionalAvailability: null,
     availabilityObjectMetadataUniversalIdentifier: null,
     frontComponentUniversalIdentifier: null,
@@ -3539,11 +3405,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Accounts`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.CONNECTED_ACCOUNTS',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '90b8a995-600a-5ef5-b7ec-c6608be8b792',
+          id: '2418b11a-efb2-50bc-9ec0-d04fdf2c6761',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'CONNECTED_ACCOUNTS',
@@ -3572,11 +3437,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Emails`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.CONNECTED_ACCOUNTS',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '90b8a995-600a-5ef5-b7ec-c6608be8b792',
+          id: '2418b11a-efb2-50bc-9ec0-d04fdf2c6761',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'CONNECTED_ACCOUNTS',
@@ -3605,11 +3469,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Calendars`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.CONNECTED_ACCOUNTS',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '90b8a995-600a-5ef5-b7ec-c6608be8b792',
+          id: '2418b11a-efb2-50bc-9ec0-d04fdf2c6761',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'CONNECTED_ACCOUNTS',
@@ -3638,11 +3501,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `General`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.WORKSPACE',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '4d702d95-51fe-52e2-9f09-cd515d314f15',
+          id: '4c4f8494-2f30-58b7-8dbc-b3e20e719efb',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'WORKSPACE',
@@ -3671,11 +3533,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Data Model`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.DATA_MODEL',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'd598aef4-3086-58ff-a69a-7330e5489f95',
+          id: '2466f4f9-a327-562a-a536-94401e6adb49',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'DATA_MODEL',
@@ -3704,11 +3565,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Members`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.WORKSPACE_MEMBERS',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'c8766b81-74eb-5453-8ff8-8700ec50fba5',
+          id: 'b30e458e-bcae-539e-a370-9e0370e6c4f3',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'WORKSPACE_MEMBERS',
@@ -3737,11 +3597,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Roles`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.WORKSPACE_MEMBERS',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'c8766b81-74eb-5453-8ff8-8700ec50fba5',
+          id: 'b30e458e-bcae-539e-a370-9e0370e6c4f3',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'WORKSPACE_MEMBERS',
@@ -3770,11 +3629,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Domains`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.WORKSPACE',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '4d702d95-51fe-52e2-9f09-cd515d314f15',
+          id: '4c4f8494-2f30-58b7-8dbc-b3e20e719efb',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'WORKSPACE',
@@ -3803,11 +3661,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Billing`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.WORKSPACE',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '4d702d95-51fe-52e2-9f09-cd515d314f15',
+          id: '4c4f8494-2f30-58b7-8dbc-b3e20e719efb',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'WORKSPACE',
@@ -3836,11 +3693,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Developers`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.API_KEYS_AND_WEBHOOKS',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '38f3959c-0e1c-5e32-83b9-38569107506a',
+          id: 'fcb417be-139e-57aa-b746-dfe5b875a469',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'API_KEYS_AND_WEBHOOKS',
@@ -3866,11 +3722,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Apps`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.APPLICATIONS',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'cbc7f5a3-3dd7-558b-a526-21f8af5c1417',
+          id: 'e1dcbe37-7297-5f01-ad84-c6a1b53e8e71',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'APPLICATIONS',
@@ -3896,11 +3751,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `AI`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.WORKSPACE',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '4d702d95-51fe-52e2-9f09-cd515d314f15',
+          id: '4c4f8494-2f30-58b7-8dbc-b3e20e719efb',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'WORKSPACE',
@@ -3929,11 +3783,10 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Security`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: 'permissionFlags.SECURITY',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'ab2a5cc1-0c77-532b-bf4b-f5c71b37fe20',
+          id: '0ad31c95-06fc-5489-b926-8c9cd2b96e6f',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'SECURITY',
@@ -3962,30 +3815,28 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Admin Panel`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression:
-      'canImpersonate or canAccessFullAdminPanel',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '63576a44-9e7b-5692-af6a-cf150de0cc7b',
+          id: '0d28ade5-86f2-52e3-8856-89a05b11f69b',
           contextKey: 'canImpersonate',
           operand: ViewFilterOperand.IS,
           value: 'true',
-          recordFilterGroupId: 'a924bc67-6040-5706-8b18-db403f8244a3',
+          recordFilterGroupId: 'af9e1efc-69e8-5e3b-b897-8ee6e54b9ac2',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: 'ce980b89-0eed-5df8-8c51-78f477f9e11c',
+          id: '9fd88c45-7c5c-5edd-af72-704cdcdf9d7b',
           contextKey: 'canAccessFullAdminPanel',
           operand: ViewFilterOperand.IS,
           value: 'true',
-          recordFilterGroupId: 'a924bc67-6040-5706-8b18-db403f8244a3',
+          recordFilterGroupId: 'af9e1efc-69e8-5e3b-b897-8ee6e54b9ac2',
           positionInRecordFilterGroup: 1,
         },
       ],
       recordFilterGroups: [
         {
-          id: 'a924bc67-6040-5706-8b18-db403f8244a3',
+          id: 'af9e1efc-69e8-5e3b-b897-8ee6e54b9ac2',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
         },
       ],
@@ -4011,7 +3862,6 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Community`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-    conditionalAvailabilityExpression: null,
     conditionalAvailability: null,
     availabilityObjectMetadataUniversalIdentifier: null,
     frontComponentUniversalIdentifier: null,
@@ -4031,18 +3881,16 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Send Email`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords >= 1 and permissionFlags.SEND_EMAIL_TOOL',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'e3ea29ce-14f5-535d-a8bb-f85b402a71a6',
+          id: '9b55f17d-2052-598f-81d7-edf404ac8271',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
         },
         {
-          id: 'a5cf9cc4-6593-50df-83bb-99eea4d6c1a2',
+          id: '64a155db-1713-5323-86df-4a9d01b03856',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'SEND_EMAIL_TOOL',
@@ -4068,18 +3916,16 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Send Email`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and permissionFlags.SEND_EMAIL_TOOL',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'c1118103-8053-5718-9aba-15b206f1717d',
+          id: '145cbf94-8731-51b8-a1b4-489929b1c851',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
         },
         {
-          id: 'e88ccd1a-7795-569f-abbb-9baf1e013b87',
+          id: '9cc48f59-f83b-5a12-952a-6bb59c2ab0c6',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'SEND_EMAIL_TOOL',
@@ -4105,18 +3951,16 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Send Email`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and permissionFlags.SEND_EMAIL_TOOL',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: 'c1118103-8053-5718-9aba-15b206f1717d',
+          id: '145cbf94-8731-51b8-a1b4-489929b1c851',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
         },
         {
-          id: 'e88ccd1a-7795-569f-abbb-9baf1e013b87',
+          id: '9cc48f59-f83b-5a12-952a-6bb59c2ab0c6',
           contextKey: 'permissionFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'SEND_EMAIL_TOOL',
@@ -4142,24 +3986,22 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Duplicate`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'numberOfSelectedRecords == 1 and noneDefined(selectedRecords, "deletedAt") and objectPermissions.canUpdateObjectRecords',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '8d3f71fb-3846-5a66-bd6c-7eed9162361b',
+          id: '140e6b86-2ad4-5e26-94d8-051301ca7763',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.IS,
           value: '1',
         },
         {
-          id: '2fad89d4-22d1-5307-ae4c-c8b3c31c1925',
+          id: '43be8d79-37b6-55cf-b5a9-079a95182f8a',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
         },
         {
-          id: '74b3f128-cd78-5637-92bc-d633f6830fe3',
+          id: 'eaf74742-e2ad-5f89-8292-71f0b2b12844',
           contextKey: 'objectPermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'canUpdateObjectRecords',
@@ -4185,61 +4027,59 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Add to List`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.RECORD_SELECTION,
-    conditionalAvailabilityExpression:
-      'targetObjectWritePermissions.messageListMember and numberOfSelectedRecords >= 1 and not hasAnySoftDeleteFilterOnView and (isSelectAll or noneDefined(selectedRecords, "deletedAt"))',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '2845b853-9d49-595c-8901-4a5a054e9620',
+          id: 'c532027b-12d8-5099-b2b2-b46c80abc987',
           contextKey: 'targetObjectWritePermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'messageListMember',
           value: 'true',
-          recordFilterGroupId: '55f8c7f0-c8de-539b-bf9f-d3dd422d35bc',
+          recordFilterGroupId: '268d4f6d-0352-5056-9294-e51c0da1e312',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '7cc3510c-b204-5342-99df-e3b3ae814cb9',
+          id: '02df08e2-4452-5607-8017-27aaa2e14417',
           contextKey: 'numberOfSelectedRecords',
           operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
           value: '1',
-          recordFilterGroupId: '55f8c7f0-c8de-539b-bf9f-d3dd422d35bc',
+          recordFilterGroupId: '268d4f6d-0352-5056-9294-e51c0da1e312',
           positionInRecordFilterGroup: 1,
         },
         {
-          id: '733fde26-3cbc-5467-bfaf-74bbaf6febcc',
+          id: 'a6e77faf-a6e8-5d5f-9f06-2c9164ea60d2',
           contextKey: 'hasAnySoftDeleteFilterOnView',
           operand: ViewFilterOperand.IS,
           value: 'false',
-          recordFilterGroupId: '55f8c7f0-c8de-539b-bf9f-d3dd422d35bc',
+          recordFilterGroupId: '268d4f6d-0352-5056-9294-e51c0da1e312',
           positionInRecordFilterGroup: 2,
         },
         {
-          id: '86145d5a-4744-56df-9a20-a3ab5e2a8180',
+          id: '34cfa711-e765-58d2-87e5-cedb7bb1364e',
           contextKey: 'isSelectAll',
           operand: ViewFilterOperand.IS,
           value: 'true',
-          recordFilterGroupId: 'cd90534e-a969-5f0d-912b-9bd6f5266d7e',
+          recordFilterGroupId: '540fdf20-d8b9-5262-b2ef-db1746bad1a1',
           positionInRecordFilterGroup: 0,
         },
         {
-          id: '54e1f6f2-6c2b-53a5-8f7c-7a2a2a7a9740',
+          id: '1d6c199c-32e8-5b2f-9441-aefa48eb89e7',
           contextKey: 'selectedRecords',
           operand: ViewFilterOperand.IS_EMPTY,
           subFieldName: 'deletedAt',
-          recordFilterGroupId: 'cd90534e-a969-5f0d-912b-9bd6f5266d7e',
+          recordFilterGroupId: '540fdf20-d8b9-5262-b2ef-db1746bad1a1',
           positionInRecordFilterGroup: 1,
         },
       ],
       recordFilterGroups: [
         {
-          id: '55f8c7f0-c8de-539b-bf9f-d3dd422d35bc',
+          id: '268d4f6d-0352-5056-9294-e51c0da1e312',
           logicalOperator: RecordFilterGroupLogicalOperator.AND,
         },
         {
-          id: 'cd90534e-a969-5f0d-912b-9bd6f5266d7e',
+          id: '540fdf20-d8b9-5262-b2ef-db1746bad1a1',
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
-          parentRecordFilterGroupId: '55f8c7f0-c8de-539b-bf9f-d3dd422d35bc',
+          parentRecordFilterGroupId: '268d4f6d-0352-5056-9294-e51c0da1e312',
           positionInRecordFilterGroup: 3,
         },
       ],
@@ -4262,25 +4102,23 @@ export const STANDARD_COMMAND_MENU_ITEMS = {
       msg({ message: `Add to List`, context: 'commandMenuItem.shortLabel' }),
     ),
     availabilityType: CommandMenuItemAvailabilityType.GLOBAL_OBJECT_CONTEXT,
-    conditionalAvailabilityExpression:
-      'targetObjectWritePermissions.messageListMember and pageType == "INDEX_PAGE" and not hasAnySoftDeleteFilterOnView',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '41f834d1-3b3f-5e19-9df1-ad045a82cdf6',
+          id: '3c5b2250-0acf-5d82-a989-9eb111269f77',
           contextKey: 'targetObjectWritePermissions',
           operand: ViewFilterOperand.IS,
           subFieldName: 'messageListMember',
           value: 'true',
         },
         {
-          id: 'd02fb294-47ab-53ff-b0af-de8625d9e95b',
+          id: 'c57c2c2e-c1f8-5624-b9e1-7274340def58',
           contextKey: 'pageType',
           operand: ViewFilterOperand.IS,
           value: '["INDEX_PAGE"]',
         },
         {
-          id: '926e3e8c-af2a-523e-b6c0-e00980a12dc2',
+          id: '9b3ba0c7-f612-5d44-81fd-26d38e3606e4',
           contextKey: 'hasAnySoftDeleteFilterOnView',
           operand: ViewFilterOperand.IS,
           value: 'false',

@@ -20,11 +20,6 @@ export const FIND_MINIMAL_METADATA = gql`
         key
         objectMetadataId
       }
-      roles {
-        id
-        label
-        icon
-      }
       collectionHashes {
         collectionName
         hash

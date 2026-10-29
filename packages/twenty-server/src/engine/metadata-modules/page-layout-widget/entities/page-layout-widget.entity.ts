@@ -1,7 +1,7 @@
 import { ObjectType } from '@nestjs/graphql';
 
 import {
-  ConditionalDisplay,
+  type ConditionalDisplay,
   type GridPosition,
   PageLayoutWidgetPosition,
   type SerializedRelation,
@@ -21,7 +21,7 @@ import {
 } from 'typeorm';
 
 import { ADD_IS_SYSTEM_SIDE_EFFECT_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-15/is-system-side-effect-upgrade-command-name.constant';
-import { ADD_CONDITIONAL_DISPLAY_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-52/constants/add-conditional-display-upgrade-command-name.constant';
+import { ADD_CONDITIONAL_DISPLAY_COLUMNS_UPGRADE_COMMAND_NAME } from 'src/database/commands/upgrade-version-command/2-54/add-conditional-display-columns-upgrade-command-name.constant';
 import { WasIntroducedInUpgrade } from 'src/engine/core-modules/upgrade/decorators/was-introduced-in-upgrade.decorator';
 import { type WasRemovedInUpgrade } from 'src/engine/core-modules/upgrade/decorators/was-removed-in-upgrade.decorator';
 import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
@@ -93,13 +93,13 @@ export class PageLayoutWidgetEntity<
   conditionalDisplay: JsonbProperty<ConditionalDisplay | null>;
 
   @WasIntroducedInUpgrade({
-    upgradeCommandName: ADD_CONDITIONAL_DISPLAY_UPGRADE_COMMAND_NAME,
+    upgradeCommandName: ADD_CONDITIONAL_DISPLAY_COLUMNS_UPGRADE_COMMAND_NAME,
   })
   @Column({ type: 'jsonb', nullable: true })
   conditionalAvailability: JsonbProperty<ConditionalDisplay | null>;
 
   @Column({ type: 'varchar', nullable: true })
-  conditionalAvailabilityExpression: string | null;
+  conditionalAvailabilityExpression: WasRemovedInUpgrade<string> | null;
 
   @Column({ type: 'jsonb', nullable: false })
   gridPosition: WasRemovedInUpgrade<JsonbProperty<GridPosition>>;

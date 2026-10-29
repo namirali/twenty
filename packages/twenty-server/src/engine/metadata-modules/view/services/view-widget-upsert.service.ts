@@ -7,13 +7,12 @@ import {
   ViewSortDirection,
   ViewType,
 } from 'twenty-shared/types';
-import { isDefined } from 'twenty-shared/utils';
+import { fastDeepEqual, isDefined } from 'twenty-shared/utils';
 import { IsNull } from 'typeorm';
 import { v4 } from 'uuid';
 
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { fromConditionalDisplayToUniversalConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/from-conditional-display-to-universal-conditional-display.util';
-import { getConditionalDisplayUpdate } from 'src/engine/metadata-modules/flat-conditional-display/utils/get-conditional-display-update.util';
 import { normalizeConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/normalize-conditional-display.util';
 import { WorkspaceManyOrAllFlatEntityMapsCacheService } from 'src/engine/metadata-modules/flat-entity/services/workspace-many-or-all-flat-entity-maps-cache.service';
 import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
@@ -495,11 +494,6 @@ export class ViewWidgetUpsertService {
           flatEntity: existingField,
         });
 
-        const conditionalDisplayUpdate = getConditionalDisplayUpdate({
-          inputField,
-          existingField: effectiveExistingField,
-        });
-
         const hasChanged =
           effectiveExistingField.isVisible !== inputField.isVisible ||
           effectiveExistingField.position !== inputField.position ||
@@ -508,7 +502,11 @@ export class ViewWidgetUpsertService {
           (inputField.aggregateOperation !== undefined &&
             effectiveExistingField.aggregateOperation !==
               inputField.aggregateOperation) ||
-          conditionalDisplayUpdate.hasChanged;
+          (inputField.conditionalDisplay !== undefined &&
+            !fastDeepEqual(
+              effectiveExistingField.conditionalDisplay,
+              normalizeConditionalDisplay(inputField.conditionalDisplay),
+            ));
 
         if (!hasChanged) {
           continue;
@@ -534,7 +532,13 @@ export class ViewWidgetUpsertService {
               ...(inputField.aggregateOperation !== undefined
                 ? { aggregateOperation: inputField.aggregateOperation }
                 : {}),
-              ...conditionalDisplayUpdate.editableProperties,
+              ...(inputField.conditionalDisplay !== undefined
+                ? {
+                    conditionalDisplay: normalizeConditionalDisplay(
+                      inputField.conditionalDisplay,
+                    ),
+                  }
+                : {}),
             },
             shouldOverride,
             callerApplicationUniversalIdentifier:

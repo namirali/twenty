@@ -5,7 +5,6 @@ import { getSystemNavigationCommandMenuItemUniversalIdentifier } from 'twenty-sh
 import { isDefined } from 'twenty-shared/utils';
 
 import { buildNavigationConditionalAvailability } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-navigation-conditional-availability.util';
-import { buildNavigationConditionalAvailabilityExpression } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-navigation-conditional-availability-expression.util';
 import { fromConditionalDisplayToUniversalConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/from-conditional-display-to-universal-conditional-display.util';
 import { type MetadataFlatEntity } from 'src/engine/metadata-modules/flat-entity/types/metadata-flat-entity.type';
 import { type MetadataUniversalFlatEntity } from 'src/engine/metadata-modules/flat-entity/types/metadata-universal-flat-entity.type';
@@ -24,7 +23,7 @@ export class ObjectNavigationCommandOnUpdateSideEffectHandlerService extends Met
     metadataName: 'objectMetadata',
     name: 'objectNavigationCommandOnUpdate',
     description:
-      'When an object is updated, keep its navigation command menu item in sync with the fields it denormalizes: follow an isActive toggle (deactivate soft-disables rather than deletes, the correct semantics for an overridable entity), recompute conditionalAvailabilityExpression and conditionalAvailability when nameSingular changes (the condition embeds nameSingular, so a rename would otherwise leave the permission gate pointing at a name that no longer exists), and recompute hotKeys when the shortcut changes. The command is resolved by its derived (application, object) identifier, so a workspace whose rows the 2-38 re-own has not converged yet keeps the stale condition until that command runs rather than being reconciled here. Only an engine-owned command is touched. Noops when none of isActive, nameSingular or shortcut changed and when the resulting state already matches.',
+      'When an object is updated, keep its navigation command menu item in sync with the fields it denormalizes: follow an isActive toggle (deactivate soft-disables rather than deletes, the correct semantics for an overridable entity), recompute conditionalAvailability when nameSingular changes (the condition embeds nameSingular, so a rename would otherwise leave the permission gate pointing at a name that no longer exists), and recompute hotKeys when the shortcut changes. The command is resolved by its derived (application, object) identifier, so a workspace whose rows the 2-38 re-own has not converged yet keeps the stale condition until that command runs rather than being reconciled here. Only an engine-owned command is touched. Noops when none of isActive, nameSingular or shortcut changed and when the resulting state already matches.',
   },
 ) {
   buildSideEffects({
@@ -106,10 +105,6 @@ export class ObjectNavigationCommandOnUpdateSideEffectHandlerService extends Met
       ...(isActiveChanged ? { isActive: updatedIsActive } : {}),
       ...(nameSingularChanged
         ? {
-            conditionalAvailabilityExpression:
-              buildNavigationConditionalAvailabilityExpression(
-                navigationTarget,
-              ),
             conditionalAvailability: navigationConditionalAvailability,
             universalConditionalAvailability:
               fromConditionalDisplayToUniversalConditionalDisplay({
@@ -129,12 +124,7 @@ export class ObjectNavigationCommandOnUpdateSideEffectHandlerService extends Met
     };
 
     const hasChanges = (
-      [
-        'isActive',
-        'conditionalAvailabilityExpression',
-        'conditionalAvailability',
-        'hotKeys',
-      ] as const
+      ['isActive', 'conditionalAvailability', 'hotKeys'] as const
     ).some(
       (property) =>
         JSON.stringify(navigationFlatCommandMenuItemToUpdate[property]) !==

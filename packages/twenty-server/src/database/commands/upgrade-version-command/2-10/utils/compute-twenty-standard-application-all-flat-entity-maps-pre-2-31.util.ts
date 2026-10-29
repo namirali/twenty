@@ -1,3 +1,4 @@
+import { fillStandardConditionalExpressions } from 'src/database/commands/upgrade-version-command/2-10/utils/fill-standard-conditional-expressions.util';
 import { remapRecordPageUniversalIdentifiersToPre231 } from 'src/database/commands/upgrade-version-command/2-10/utils/remap-record-page-universal-identifiers-to-pre-2-31.util';
 import { type TwentyStandardAllFlatEntityMaps } from 'src/engine/workspace-manager/twenty-standard-application/types/twenty-standard-all-flat-entity-maps.type';
 import {
@@ -15,5 +16,7 @@ export const computeTwentyStandardApplicationAllFlatEntityMapsPre231 = (
   const { allFlatEntityMaps } =
     computeTwentyStandardApplicationAllFlatEntityMaps(args);
 
-  return remapRecordPageUniversalIdentifiersToPre231(allFlatEntityMaps);
+  return remapRecordPageUniversalIdentifiersToPre231(
+    fillStandardConditionalExpressions(allFlatEntityMaps),
+  );
 };

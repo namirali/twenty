@@ -5,8 +5,6 @@ import { ALL_METADATA_NAME } from 'twenty-shared/metadata';
 import { ViewType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
-import { CONDITIONAL_DISPLAY_PROPERTIES } from 'src/engine/metadata-modules/flat-conditional-display/constants/conditional-display-properties.constant';
-import { getConditionalDisplayPropertySurfaces } from 'src/engine/metadata-modules/flat-conditional-display/utils/get-conditional-display-property-surfaces.util';
 import { validateUniversalFlatEntityConditionalDisplays } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-universal-flat-entity-conditional-displays.util';
 import { type MetadataUniversalFlatEntity } from 'src/engine/metadata-modules/flat-entity/types/metadata-universal-flat-entity.type';
 import { findFlatEntityByUniversalIdentifier } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-universal-identifier.util';
@@ -332,19 +330,14 @@ export class FlatViewFieldValidatorService {
     flatFieldMetadataMaps: MetadataUniversalFlatEntityMaps<'fieldMetadata'>;
     flatRoleMaps: MetadataUniversalFlatEntityMaps<'role'>;
   }): FlatEntityValidationError[] {
-    return CONDITIONAL_DISPLAY_PROPERTIES.filter((property) =>
-      getConditionalDisplayPropertySurfaces(property).includes('viewField'),
-    ).flatMap((property) =>
-      validateUniversalFlatEntityConditionalDisplays({
-        flatEntity: flatViewField,
-        property,
-        surface: 'viewField',
-        objectMetadataUniversalIdentifier:
-          flatView.objectMetadataUniversalIdentifier,
-        invalidDataCode: ViewFieldExceptionCode.INVALID_VIEW_FIELD_DATA,
-        flatFieldMetadataMaps,
-        flatRoleMaps,
-      }),
-    );
+    return validateUniversalFlatEntityConditionalDisplays({
+      flatEntity: flatViewField,
+      surface: 'viewField',
+      objectMetadataUniversalIdentifier:
+        flatView.objectMetadataUniversalIdentifier,
+      invalidDataCode: ViewFieldExceptionCode.INVALID_VIEW_FIELD_DATA,
+      flatFieldMetadataMaps,
+      flatRoleMaps,
+    });
   }
 }

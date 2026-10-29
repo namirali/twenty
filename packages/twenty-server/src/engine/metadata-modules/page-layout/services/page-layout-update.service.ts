@@ -362,35 +362,122 @@ export class PageLayoutUpdateService {
       },
     );
 
-    const tabsToUpdate: FlatPageLayoutTab[] = entitiesToUpdate.map((tabInput) =>
-      this.buildUpdatedFlatPageLayoutTab({
-        tabInput,
-        flatPageLayoutTabMaps,
-        flatFieldMetadataMaps,
-        flatRoleMaps,
-        workspaceCustomApplicationUniversalIdentifier,
-        now,
-      }),
+    const tabsToUpdate: FlatPageLayoutTab[] = entitiesToUpdate.map(
+      (tabInput) => {
+        const existingTab = findFlatEntityByIdInFlatEntityMapsOrThrow({
+          flatEntityId: tabInput.id,
+          flatEntityMaps: flatPageLayoutTabMaps,
+        });
+
+        const shouldOverride = isCallerOverridingEntity({
+          callerApplicationUniversalIdentifier:
+            workspaceCustomApplicationUniversalIdentifier,
+          entityApplicationUniversalIdentifier:
+            existingTab.applicationUniversalIdentifier,
+          workspaceCustomApplicationUniversalIdentifier,
+          isSystemSideEffect: existingTab.isSystemSideEffect,
+        });
+
+        const editableProperties = {
+          title: tabInput.title,
+          position: tabInput.position,
+          ...(tabInput.icon !== undefined && { icon: tabInput.icon }),
+          layoutMode: tabInput.layoutMode ?? existingTab.layoutMode,
+          ...(tabInput.conditionalDisplay !== undefined && {
+            conditionalDisplay: normalizeConditionalDisplay(
+              tabInput.conditionalDisplay,
+            ),
+          }),
+        };
+
+        const { overrides, updatedEditableProperties } =
+          sanitizeOverridableEntityInput({
+            metadataName: 'pageLayoutTab',
+            existingFlatEntity: existingTab,
+            updatedEditableProperties: editableProperties,
+            shouldOverride,
+            callerApplicationUniversalIdentifier:
+              workspaceCustomApplicationUniversalIdentifier,
+            workspaceCustomApplicationUniversalIdentifier,
+          });
+
+        return {
+          ...existingTab,
+          ...updatedEditableProperties,
+          ...this.computeUniversalPageLayoutTabProperties({
+            conditionalDisplay: updatedEditableProperties.conditionalDisplay,
+            overrides,
+            flatFieldMetadataMaps,
+            flatRoleMaps,
+          }),
+          overrides,
+          updatedAt: now.toISOString(),
+        };
+      },
     );
 
     const tabsToRestoreAndUpdate: FlatPageLayoutTab[] =
-      entitiesToRestoreAndUpdate.map((tabInput) =>
-        dispatchIsActiveUpdateToAuthoredOverride({
-          metadataName: 'pageLayoutTab',
-          flatEntity: this.buildUpdatedFlatPageLayoutTab({
-            tabInput,
-            flatPageLayoutTabMaps,
-            flatFieldMetadataMaps,
-            flatRoleMaps,
+      entitiesToRestoreAndUpdate.map((tabInput) => {
+        const existingTab = findFlatEntityByIdInFlatEntityMapsOrThrow({
+          flatEntityId: tabInput.id,
+          flatEntityMaps: flatPageLayoutTabMaps,
+        });
+
+        const shouldOverride = isCallerOverridingEntity({
+          callerApplicationUniversalIdentifier:
             workspaceCustomApplicationUniversalIdentifier,
-            now,
-          }),
-          isActive: true,
-          authorUniversalIdentifier:
-            workspaceCustomApplicationUniversalIdentifier,
+          entityApplicationUniversalIdentifier:
+            existingTab.applicationUniversalIdentifier,
           workspaceCustomApplicationUniversalIdentifier,
-        }),
-      );
+          isSystemSideEffect: existingTab.isSystemSideEffect,
+        });
+
+        const editableProperties = {
+          title: tabInput.title,
+          position: tabInput.position,
+          ...(tabInput.icon !== undefined && { icon: tabInput.icon }),
+          layoutMode: tabInput.layoutMode ?? existingTab.layoutMode,
+          ...(tabInput.conditionalDisplay !== undefined && {
+            conditionalDisplay: normalizeConditionalDisplay(
+              tabInput.conditionalDisplay,
+            ),
+          }),
+        };
+
+        const { overrides, updatedEditableProperties } =
+          sanitizeOverridableEntityInput({
+            metadataName: 'pageLayoutTab',
+            existingFlatEntity: existingTab,
+            updatedEditableProperties: editableProperties,
+            shouldOverride,
+            callerApplicationUniversalIdentifier:
+              workspaceCustomApplicationUniversalIdentifier,
+            workspaceCustomApplicationUniversalIdentifier,
+          });
+
+        return {
+          ...dispatchIsActiveUpdateToAuthoredOverride({
+            metadataName: 'pageLayoutTab',
+            flatEntity: {
+              ...existingTab,
+              ...updatedEditableProperties,
+              ...this.computeUniversalPageLayoutTabProperties({
+                conditionalDisplay:
+                  updatedEditableProperties.conditionalDisplay,
+                overrides,
+                flatFieldMetadataMaps,
+                flatRoleMaps,
+              }),
+              overrides,
+            },
+            isActive: true,
+            authorUniversalIdentifier:
+              workspaceCustomApplicationUniversalIdentifier,
+            workspaceCustomApplicationUniversalIdentifier,
+          }),
+          updatedAt: now.toISOString(),
+        };
+      });
 
     const tabsToRemove = idsToRemove
       .map((tabId) =>
@@ -419,90 +506,44 @@ export class PageLayoutUpdateService {
     };
   }
 
-  private buildUpdatedFlatPageLayoutTab({
-    tabInput,
-    flatPageLayoutTabMaps,
+  private computeUniversalPageLayoutTabProperties({
+    conditionalDisplay,
+    overrides,
     flatFieldMetadataMaps,
     flatRoleMaps,
-    workspaceCustomApplicationUniversalIdentifier,
-    now,
   }: {
-    tabInput: UpdatePageLayoutTabWithWidgetsInput;
-    flatPageLayoutTabMaps: FlatPageLayoutTabMaps;
-    workspaceCustomApplicationUniversalIdentifier: string;
-    now: Date;
+    conditionalDisplay: FlatPageLayoutTab['conditionalDisplay'] | undefined;
+    overrides: FlatPageLayoutTab['overrides'];
   } & Pick<
     AllFlatEntityMaps,
     'flatFieldMetadataMaps' | 'flatRoleMaps'
-  >): FlatPageLayoutTab {
-    const existingTab = findFlatEntityByIdInFlatEntityMapsOrThrow({
-      flatEntityId: tabInput.id,
-      flatEntityMaps: flatPageLayoutTabMaps,
-    });
+  >): Partial<
+    Pick<
+      FlatPageLayoutTab,
+      'universalConditionalDisplay' | 'universalOverrides'
+    >
+  > {
+    const fieldMetadataUniversalIdentifierById =
+      flatFieldMetadataMaps.universalIdentifierById;
+    const roleUniversalIdentifierById = flatRoleMaps.universalIdentifierById;
 
-    const shouldOverride = isCallerOverridingEntity({
-      callerApplicationUniversalIdentifier:
-        workspaceCustomApplicationUniversalIdentifier,
-      entityApplicationUniversalIdentifier:
-        existingTab.applicationUniversalIdentifier,
-      workspaceCustomApplicationUniversalIdentifier,
-      isSystemSideEffect: existingTab.isSystemSideEffect,
-    });
-
-    const editableProperties: Partial<FlatPageLayoutTab> = {
-      title: tabInput.title,
-      position: tabInput.position,
-      ...(tabInput.icon !== undefined && { icon: tabInput.icon }),
-      layoutMode: tabInput.layoutMode ?? existingTab.layoutMode,
+    return {
+      ...(conditionalDisplay !== undefined && {
+        universalConditionalDisplay:
+          fromConditionalDisplayToUniversalConditionalDisplay({
+            conditionalDisplay,
+            fieldMetadataUniversalIdentifierById,
+            roleUniversalIdentifierById,
+          }),
+      }),
+      universalOverrides: isDefined(overrides)
+        ? fromPageLayoutTabOverridesToUniversalOverrides({
+            overrides,
+            fieldMetadataUniversalIdentifierById,
+            roleUniversalIdentifierById,
+          })
+        : null,
     };
-
-    if (tabInput.conditionalDisplay !== undefined) {
-      editableProperties.conditionalDisplay = normalizeConditionalDisplay(
-        tabInput.conditionalDisplay,
-      );
-    }
-
-    const { overrides, updatedEditableProperties } =
-      sanitizeOverridableEntityInput({
-        metadataName: 'pageLayoutTab',
-        existingFlatEntity: existingTab,
-        updatedEditableProperties: editableProperties,
-        shouldOverride,
-        callerApplicationUniversalIdentifier:
-          workspaceCustomApplicationUniversalIdentifier,
-        workspaceCustomApplicationUniversalIdentifier,
-      });
-
-    const updatedTab: FlatPageLayoutTab = {
-      ...existingTab,
-      ...updatedEditableProperties,
-      overrides,
-      updatedAt: now.toISOString(),
-    };
-
-    if (updatedEditableProperties.conditionalDisplay !== undefined) {
-      updatedTab.universalConditionalDisplay =
-        fromConditionalDisplayToUniversalConditionalDisplay({
-          conditionalDisplay: updatedTab.conditionalDisplay,
-          fieldMetadataUniversalIdentifierById:
-            flatFieldMetadataMaps.universalIdentifierById,
-          roleUniversalIdentifierById: flatRoleMaps.universalIdentifierById,
-        });
-    }
-
-    if (isDefined(overrides)) {
-      updatedTab.universalOverrides =
-        fromPageLayoutTabOverridesToUniversalOverrides({
-          overrides,
-          fieldMetadataUniversalIdentifierById:
-            flatFieldMetadataMaps.universalIdentifierById,
-          roleUniversalIdentifierById: flatRoleMaps.universalIdentifierById,
-        });
-    } else {
-      updatedTab.universalOverrides = null;
-    }
-
-    return updatedTab;
   }
 
   private computeWidgetOperationsForAllTabs({
@@ -689,7 +730,6 @@ export class PageLayoutUpdateService {
             }),
           conditionalAvailability: null,
           universalConditionalAvailability: null,
-          conditionalAvailabilityExpression: null,
           overrides: null,
           universalOverrides: null,
           isActive: true,

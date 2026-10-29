@@ -4,59 +4,10 @@ import {
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
-import {
-  FlatEntityMapsException,
-  FlatEntityMapsExceptionCode,
-} from 'src/engine/metadata-modules/flat-entity/exceptions/flat-entity-maps.exception';
-import { type MetadataFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/metadata-flat-entity-maps.type';
-import { findFlatEntityByUniversalIdentifier } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-universal-identifier.util';
 import { mapConditionalDisplayRoleIdsValue } from 'src/engine/metadata-modules/flat-conditional-display/utils/map-conditional-display-role-ids-value.util';
-
-const resolveFieldMetadataIdOrThrow = ({
-  fieldMetadataUniversalIdentifier,
-  flatFieldMetadataMaps,
-}: {
-  fieldMetadataUniversalIdentifier: string | null;
-  flatFieldMetadataMaps: MetadataFlatEntityMaps<'fieldMetadata'>;
-}): string => {
-  const flatFieldMetadata = isDefined(fieldMetadataUniversalIdentifier)
-    ? findFlatEntityByUniversalIdentifier({
-        flatEntityMaps: flatFieldMetadataMaps,
-        universalIdentifier: fieldMetadataUniversalIdentifier,
-      })
-    : undefined;
-
-  if (!isDefined(flatFieldMetadata)) {
-    throw new FlatEntityMapsException(
-      `Field metadata not found for universal identifier: ${fieldMetadataUniversalIdentifier}`,
-      FlatEntityMapsExceptionCode.ENTITY_NOT_FOUND,
-    );
-  }
-
-  return flatFieldMetadata.id;
-};
-
-const resolveRoleIdOrThrow = ({
-  roleUniversalIdentifier,
-  flatRoleMaps,
-}: {
-  roleUniversalIdentifier: string;
-  flatRoleMaps: MetadataFlatEntityMaps<'role'>;
-}): string => {
-  const flatRole = findFlatEntityByUniversalIdentifier({
-    flatEntityMaps: flatRoleMaps,
-    universalIdentifier: roleUniversalIdentifier,
-  });
-
-  if (!isDefined(flatRole)) {
-    throw new FlatEntityMapsException(
-      `Role not found for universal identifier: ${roleUniversalIdentifier}`,
-      FlatEntityMapsExceptionCode.ENTITY_NOT_FOUND,
-    );
-  }
-
-  return flatRole.id;
-};
+import { type MetadataFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/metadata-flat-entity-maps.type';
+import { resolveFieldMetadataIdOrThrow } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/resolve-field-metadata-id-or-throw.util';
+import { resolveRoleIdOrThrow } from 'src/engine/workspace-manager/workspace-migration/workspace-migration-runner/utils/resolve-role-id-or-throw.util';
 
 export const fromUniversalConditionalDisplayToConditionalDisplay = ({
   universalConditionalDisplay,

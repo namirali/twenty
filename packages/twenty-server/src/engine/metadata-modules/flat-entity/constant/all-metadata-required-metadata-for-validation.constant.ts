@@ -58,7 +58,13 @@ export const ALL_METADATA_REQUIRED_METADATA_FOR_VALIDATION = {
     fieldMetadata: true,
     view: true,
   },
-  role: {},
+  role: {
+    pageLayoutWidget: true,
+    pageLayoutTab: true,
+    viewField: true,
+    commandMenuItem: true,
+    navigationMenuItem: true,
+  },
   roleTarget: {
     role: true,
     agent: true,

@@ -131,7 +131,6 @@ describe('WorkspaceMigrationFlatEntityMapsService', () => {
     expect(
       validateUniversalFlatEntityConditionalDisplays({
         flatEntity: standardFlatCommandMenuItem,
-        property: 'conditionalDisplay',
         surface: 'commandMenuItem',
         objectMetadataUniversalIdentifier: null,
         invalidDataCode: 'INVALID_DATA',

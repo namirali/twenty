@@ -6,8 +6,6 @@ import {
 import { buildConditionalDisplayFromConditionNode } from 'twenty-shared/utils';
 
 import { HIDDEN_NAVIGATION_OBJECT_UNIVERSAL_IDENTIFIERS } from 'src/engine/metadata-modules/flat-command-menu-item/constants/hidden-navigation-object-universal-identifiers.constant';
-import { buildNavigationConditionalAvailabilityExpression } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-navigation-conditional-availability-expression.util';
-
 export const buildNavigationConditionalAvailability = ({
   universalIdentifier,
   nameSingular,
@@ -29,9 +27,6 @@ export const buildNavigationConditionalAvailability = ({
         value: 'true',
       },
     },
-    source: buildNavigationConditionalAvailabilityExpression({
-      universalIdentifier,
-      nameSingular,
-    }),
+    source: universalIdentifier,
   });
 };

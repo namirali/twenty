@@ -137,9 +137,6 @@ describe('buildObjectNavigationFlatCommandMenuItem', () => {
   it('should gate conditionalAvailability on the read permission of the target object', () => {
     const result = buildObjectNavigationFlatCommandMenuItem(baseArgs);
 
-    expect(result.conditionalAvailabilityExpression).toBe(
-      'targetObjectReadPermissions.person',
-    );
     expect(result.conditionalAvailability).toEqual({
       recordFilters: [
         {

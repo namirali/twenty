@@ -11,7 +11,6 @@ import {
 import { fromPageLayoutWidgetManifestToUniversalFlatPageLayoutWidget } from 'src/engine/core-modules/application/application-manifest/converters/from-page-layout-widget-manifest-to-universal-flat-page-layout-widget.util';
 import { type LegacyPageLayoutWidgetManifest } from 'src/engine/core-modules/application/application-manifest/types/legacy-page-layout-widget-manifest.type';
 import { ApplicationException } from 'src/engine/core-modules/application/application.exception';
-import { STANDARD_DEVICE_MOBILE_CONDITIONAL_DISPLAY } from 'src/engine/workspace-manager/twenty-standard-application/constants/standard-device-mobile-conditional-display.constant';
 
 const OBJECT_UNIVERSAL_IDENTIFIER = 'obj-uuid-1';
 const STAGE_FIELD_UNIVERSAL_IDENTIFIER = 'field-uuid-stage';
@@ -83,9 +82,16 @@ describe('fromPageLayoutWidgetManifestToUniversalFlatPageLayoutWidget', () => {
       and: [{ '===': [{ var: 'device' }, 'MOBILE'] }],
     });
 
-    expect(result.universalConditionalDisplay).toEqual(
-      STANDARD_DEVICE_MOBILE_CONDITIONAL_DISPLAY,
-    );
+    expect(result.universalConditionalDisplay).toEqual({
+      recordFilters: [
+        {
+          id: expect.any(String),
+          contextKey: 'device',
+          operand: ViewFilterOperand.IS,
+          value: '["MOBILE"]',
+        },
+      ],
+    });
     expect(warnSpy).toHaveBeenCalledWith(
       expect.stringContaining(OLDER_SDK_WARNING),
     );

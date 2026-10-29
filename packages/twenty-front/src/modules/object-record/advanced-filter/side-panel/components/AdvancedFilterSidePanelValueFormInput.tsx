@@ -44,7 +44,6 @@ export const AdvancedFilterSidePanelValueFormInput = ({
     VariablePicker,
     objectMetadataItem,
     isWorkflowFindRecords,
-    contextKeyRecordFilterConfig,
   } = useContext(AdvancedFilterContext);
 
   const currentRecordFilters = useAtomComponentStateValue(
@@ -109,14 +108,12 @@ export const AdvancedFilterSidePanelValueFormInput = ({
   const objectMetadataItemForValueInput =
     relationTargetObjectMetadataItem ?? objectMetadataItem;
 
-  const fieldDefinition =
-    isDefined(fieldMetadataItemForValueInput) &&
-    isDefined(objectMetadataItemForValueInput)
-      ? formatFieldMetadataItemAsFieldDefinition({
-          field: fieldMetadataItemForValueInput,
-          objectMetadataItem: objectMetadataItemForValueInput,
-        })
-      : null;
+  const fieldDefinition = fieldMetadataItemForValueInput
+    ? formatFieldMetadataItemAsFieldDefinition({
+        field: fieldMetadataItemForValueInput,
+        objectMetadataItem: objectMetadataItemForValueInput,
+      })
+    : null;
 
   if (!isDefined(recordFilter)) {
     return null;
@@ -138,20 +135,6 @@ export const AdvancedFilterSidePanelValueFormInput = ({
   const isRelativeDateFilter =
     isFilterableByDateValue &&
     recordFilter.operand === RecordFilterOperand.IS_RELATIVE;
-
-  if (isDefined(recordFilter.contextKey)) {
-    if (operandHasNoInput || !isDefined(contextKeyRecordFilterConfig)) {
-      return null;
-    }
-
-    return (
-      <contextKeyRecordFilterConfig.ValueInput
-        recordFilter={recordFilter}
-        onChange={handleChange}
-        readonly={readonly}
-      />
-    );
-  }
 
   if (isDisabled || operandHasNoInput) {
     return null;

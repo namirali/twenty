@@ -146,7 +146,6 @@ describe('ApplicationManifestMigrationService', () => {
     expect(
       validateUniversalFlatEntityConditionalDisplays({
         flatEntity: installedFlatPageLayoutWidget,
-        property: 'conditionalDisplay',
         surface: 'pageLayoutWidget',
         objectMetadataUniversalIdentifier: null,
         invalidDataCode: 'INVALID_DATA',

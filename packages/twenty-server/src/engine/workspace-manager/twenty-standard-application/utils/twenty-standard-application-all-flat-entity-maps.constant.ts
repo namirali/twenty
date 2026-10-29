@@ -144,7 +144,13 @@ export const computeTwentyStandardApplicationAllFlatEntityMaps = ({
     workspaceId,
     twentyStandardApplicationId,
     standardObjectMetadataRelatedEntityIds,
-    dependencyFlatEntityMaps: undefined,
+    dependencyFlatEntityMaps: {
+      flatPageLayoutWidgetMaps: createEmptyFlatEntityMaps(),
+      flatPageLayoutTabMaps: createEmptyFlatEntityMaps(),
+      flatViewFieldMaps: createEmptyFlatEntityMaps(),
+      flatCommandMenuItemMaps: createEmptyFlatEntityMaps(),
+      flatNavigationMenuItemMaps: createEmptyFlatEntityMaps(),
+    },
   });
 
   const flatViewFieldMaps = buildStandardFlatViewFieldMetadataMaps({

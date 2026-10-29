@@ -27,7 +27,7 @@ export const useLoadMinimalMetadata = () => {
       return null;
     }
 
-    const { objectMetadataItems, views, roles, collectionHashes } =
+    const { objectMetadataItems, views, collectionHashes } =
       result.data.minimalMetadata;
 
     const staleEntityKeys: MetadataEntityKey[] = [];
@@ -92,15 +92,6 @@ export const useLoadMinimalMetadata = () => {
         status: 'up-to-date',
         currentCollectionHash: prev.draftCollectionHash,
         draftCollectionHash: undefined,
-      }));
-    }
-
-    const rolesEntry = store.get(metadataStoreState.atomFamily('roles'));
-
-    if (rolesEntry.status === 'empty') {
-      store.set(metadataStoreState.atomFamily('roles'), (prev) => ({
-        ...prev,
-        current: roles,
       }));
     }
 

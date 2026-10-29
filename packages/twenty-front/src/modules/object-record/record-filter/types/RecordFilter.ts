@@ -26,7 +26,6 @@ export type RecordFilter = {
   subFieldName?: CompositeFieldSubFieldName | null | undefined;
   relationTargetFieldMetadataId?: string | null;
   rlsDynamicValue?: RLSDynamicValue | null;
-  contextKey?: string | null;
 };
 
 export type RecordFilterToRecordInputOperand<

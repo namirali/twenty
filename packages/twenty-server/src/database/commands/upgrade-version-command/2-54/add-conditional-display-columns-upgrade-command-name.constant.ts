@@ -1,0 +1,2 @@
+export const ADD_CONDITIONAL_DISPLAY_COLUMNS_UPGRADE_COMMAND_NAME =
+  '2.54.0_AddConditionalDisplayColumnsFastInstanceCommand_1793400000001';

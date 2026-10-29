@@ -6,9 +6,7 @@ import { AdvancedFilterAddFilterRuleSelect } from '@/object-record/advanced-filt
 import { useChildRecordFiltersAndRecordFilterGroups } from '@/object-record/advanced-filter/hooks/useChildRecordFiltersAndRecordFilterGroups';
 import { AdvancedFilterContext } from '@/object-record/advanced-filter/states/context/AdvancedFilterContext';
 import { rootLevelRecordFilterGroupComponentSelector } from '@/object-record/advanced-filter/states/rootLevelRecordFilterGroupComponentSelector';
-import { type FieldSelectLeadingSectionsComponent } from '@/object-record/advanced-filter/types/FieldSelectLeadingSectionsComponent';
 import { isRecordFilterGroupChildARecordFilterGroup } from '@/object-record/advanced-filter/utils/isRecordFilterGroupChildARecordFilterGroup';
-import { type ContextKeyRecordFilterConfig } from '@/object-record/record-filter/types/ContextKeyRecordFilterConfig';
 import { type VariablePickerComponent } from '@/ui/input/types/VariablePickerComponent';
 import { useAtomComponentSelectorValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentSelectorValue';
 import { styled } from '@linaria/react';
@@ -32,10 +30,8 @@ const StyledChildContainer = styled.div`
 export type AdvancedFilterSidePanelContainerProps = {
   readonly?: boolean;
   onUpdate?: () => void;
-  objectMetadataItem?: EnrichedObjectMetadataItem;
+  objectMetadataItem: EnrichedObjectMetadataItem;
   VariablePicker?: VariablePickerComponent;
-  FieldSelectLeadingSections?: FieldSelectLeadingSectionsComponent;
-  contextKeyRecordFilterConfig?: ContextKeyRecordFilterConfig;
   isWorkflowFindRecords?: boolean;
 };
 
@@ -44,8 +40,6 @@ export const AdvancedFilterSidePanelContainer = ({
   onUpdate,
   objectMetadataItem,
   VariablePicker,
-  FieldSelectLeadingSections,
-  contextKeyRecordFilterConfig,
   isWorkflowFindRecords,
 }: AdvancedFilterSidePanelContainerProps) => {
   const rootRecordFilterGroup = useAtomComponentSelectorValue(
@@ -64,8 +58,6 @@ export const AdvancedFilterSidePanelContainer = ({
         isWorkflowFindRecords,
         readonly,
         VariablePicker,
-        FieldSelectLeadingSections,
-        contextKeyRecordFilterConfig,
         objectMetadataItem,
       }}
     >
@@ -100,11 +92,9 @@ export const AdvancedFilterSidePanelContainer = ({
           )}
         </StyledContainer>
       ) : (
-        isDefined(objectMetadataItem) && (
-          <AdvancedFilterSidePanelCreateRootFilterButton
-            objectMetadataItem={objectMetadataItem}
-          />
-        )
+        <AdvancedFilterSidePanelCreateRootFilterButton
+          objectMetadataItem={objectMetadataItem}
+        />
       )}
     </AdvancedFilterContext.Provider>
   );

@@ -49,44 +49,9 @@ export const AdvancedFilterAddFilterRuleSelect = ({
   const { setRecordFilterUsedInAdvancedFilterDropdownRow } =
     useSetRecordFilterUsedInAdvancedFilterDropdownRow();
 
-  const { objectMetadataItem, contextKeyRecordFilterConfig } = useContext(
-    AdvancedFilterContext,
-  );
-
-  const buildDefaultContextKeyRecordFilter = ({
-    recordFilterGroupId,
-    positionInRecordFilterGroup,
-  }: {
-    recordFilterGroupId: string;
-    positionInRecordFilterGroup: number;
-  }) =>
-    contextKeyRecordFilterConfig?.buildDefaultRecordFilter({
-      id: v4(),
-      recordFilterGroupId,
-      positionInRecordFilterGroup,
-    });
-
-  const addRecordFilter = (newRecordFilter: RecordFilter) => {
-    upsertRecordFilter(newRecordFilter);
-
-    setRecordFilterUsedInAdvancedFilterDropdownRow(newRecordFilter);
-  };
+  const { objectMetadataItem } = useContext(AdvancedFilterContext);
 
   const handleAddFilter = () => {
-    const defaultContextKeyRecordFilter = buildDefaultContextKeyRecordFilter({
-      recordFilterGroupId: recordFilterGroup.id,
-      positionInRecordFilterGroup: newPositionInRecordFilterGroup,
-    });
-
-    if (isDefined(defaultContextKeyRecordFilter)) {
-      addRecordFilter(defaultContextKeyRecordFilter);
-      return;
-    }
-
-    if (!isDefined(objectMetadataItem)) {
-      return;
-    }
-
     const { defaultFieldMetadataItemForFilter } =
       getDefaultFieldMetadataItemForFilter(objectMetadataItem);
 
@@ -122,30 +87,6 @@ export const AdvancedFilterAddFilterRuleSelect = ({
   };
 
   const handleAddFilterGroup = () => {
-    const newRecordFilterGroupId = v4();
-
-    const newRecordFilterGroup: RecordFilterGroup = {
-      id: newRecordFilterGroupId,
-      logicalOperator: RecordFilterGroupLogicalOperator.AND,
-      parentRecordFilterGroupId: recordFilterGroup.id,
-      positionInRecordFilterGroup: newPositionInRecordFilterGroup,
-    };
-
-    const defaultContextKeyRecordFilter = buildDefaultContextKeyRecordFilter({
-      recordFilterGroupId: newRecordFilterGroupId,
-      positionInRecordFilterGroup: 1,
-    });
-
-    if (isDefined(defaultContextKeyRecordFilter)) {
-      upsertRecordFilterGroup(newRecordFilterGroup);
-      addRecordFilter(defaultContextKeyRecordFilter);
-      return;
-    }
-
-    if (!isDefined(objectMetadataItem)) {
-      return;
-    }
-
     const { defaultFieldMetadataItemForFilter } =
       getDefaultFieldMetadataItemForFilter(objectMetadataItem);
 
@@ -154,6 +95,15 @@ export const AdvancedFilterAddFilterRuleSelect = ({
         doNotTranslate('Missing default field metadata item for filter'),
       );
     }
+
+    const newRecordFilterGroupId = v4();
+
+    const newRecordFilterGroup: RecordFilterGroup = {
+      id: newRecordFilterGroupId,
+      logicalOperator: RecordFilterGroupLogicalOperator.AND,
+      parentRecordFilterGroupId: recordFilterGroup.id,
+      positionInRecordFilterGroup: newPositionInRecordFilterGroup,
+    };
 
     upsertRecordFilterGroup(newRecordFilterGroup);
 

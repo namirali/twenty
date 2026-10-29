@@ -26,8 +26,7 @@ export const AdvancedFilterSidePanelRecordFilterOperandSelect = ({
     (recordFilter) => recordFilter.id === recordFilterId,
   );
 
-  const isDisabled =
-    (!filter?.fieldMetadataId && !isDefined(filter?.contextKey)) || readonly;
+  const isDisabled = !filter?.fieldMetadataId || readonly;
 
   const filterType = filter?.type;
 
@@ -44,19 +43,12 @@ export const AdvancedFilterSidePanelRecordFilterOperandSelect = ({
     : undefined;
 
   if (isDisabled === true) {
-    let disabledOperandLabel = t`Select operand`;
-
-    if (isDefined(filter?.operand)) {
-      disabledOperandLabel = getOperandLabel(
-        filter.operand,
-        timeZoneAbbreviation,
-      );
-    }
-
     return (
       <SelectControl
         selectedOption={{
-          label: disabledOperandLabel,
+          label: filter?.operand
+            ? getOperandLabel(filter.operand, timeZoneAbbreviation)
+            : t`Select operand`,
           value: null,
         }}
         isDisabled

@@ -11,8 +11,6 @@ import { ApplicationService } from 'src/engine/core-modules/application/applicat
 import { WORKSPACE_CUSTOM_APPLICATION_ROLE_UNIVERSAL_IDENTIFIER } from 'src/engine/core-modules/application/constants/workspace-custom-application-role.constant';
 import { type FlatApplication } from 'src/engine/core-modules/application/types/flat-application.type';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
-import { getConditionalDisplayRoleUniversalIdentifiers } from 'src/engine/metadata-modules/flat-conditional-display/utils/get-conditional-display-role-universal-identifiers.util';
-import { getUniversalFlatEntityConditionalDisplays } from 'src/engine/metadata-modules/flat-conditional-display/utils/get-universal-flat-entity-conditional-displays.util';
 import { WorkspaceManyOrAllFlatEntityMapsCacheService } from 'src/engine/metadata-modules/flat-entity/services/workspace-many-or-all-flat-entity-maps-cache.service';
 import { type AllFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/all-flat-entity-maps.type';
 import { findFlatEntityByIdInFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-id-in-flat-entity-maps.util';
@@ -366,29 +364,11 @@ export class RoleService {
     const resolvedOwnerFlatApplication =
       ownerFlatApplication ?? workspaceCustomFlatApplication;
 
-    const {
-      flatRoleMaps,
-      flatRoleTargetMaps,
-      flatAgentMaps,
-      flatPageLayoutWidgetMaps,
-      flatPageLayoutTabMaps,
-      flatViewFieldMaps,
-      flatCommandMenuItemMaps,
-      flatNavigationMenuItemMaps,
-    } =
+    const { flatRoleMaps, flatRoleTargetMaps, flatAgentMaps } =
       await this.flatEntityMapsCacheService.getOrRecomputeManyOrAllFlatEntityMaps(
         {
           workspaceId,
-          flatMapsKeys: [
-            'flatRoleMaps',
-            'flatRoleTargetMaps',
-            'flatAgentMaps',
-            'flatPageLayoutWidgetMaps',
-            'flatPageLayoutTabMaps',
-            'flatViewFieldMaps',
-            'flatCommandMenuItemMaps',
-            'flatNavigationMenuItemMaps',
-          ],
+          flatMapsKeys: ['flatRoleMaps', 'flatRoleTargetMaps', 'flatAgentMaps'],
         },
       );
 
@@ -429,28 +409,6 @@ export class RoleService {
           PermissionsExceptionCode.DEFAULT_ROLE_CANNOT_BE_DELETED,
           {
             userFriendlyMessage: msg`The default role cannot be deleted as it is required for the workspace to function properly.`,
-          },
-        );
-      }
-
-      if (
-        !isSystemBuild &&
-        this.isRoleReferencedByConditionalDisplay({
-          roleUniversalIdentifier: flatRoleToDelete.universalIdentifier,
-          flatEntityMaps: {
-            flatPageLayoutWidgetMaps,
-            flatPageLayoutTabMaps,
-            flatViewFieldMaps,
-            flatCommandMenuItemMaps,
-            flatNavigationMenuItemMaps,
-          },
-        })
-      ) {
-        throw new PermissionsException(
-          PermissionsExceptionMessage.ROLE_REFERENCED_BY_CONDITIONAL_DISPLAY_CANNOT_BE_DELETED,
-          PermissionsExceptionCode.ROLE_REFERENCED_BY_CONDITIONAL_DISPLAY_CANNOT_BE_DELETED,
-          {
-            userFriendlyMessage: msg`This role is used by a visibility rule and cannot be deleted.`,
           },
         );
       }
@@ -706,66 +664,5 @@ export class RoleService {
     );
 
     return { flatRoleTargetsToCreate, flatRoleTargetsToDelete };
-  }
-
-  private isRoleReferencedByConditionalDisplay({
-    roleUniversalIdentifier,
-    flatEntityMaps: {
-      flatPageLayoutWidgetMaps,
-      flatPageLayoutTabMaps,
-      flatViewFieldMaps,
-      flatCommandMenuItemMaps,
-      flatNavigationMenuItemMaps,
-    },
-  }: {
-    roleUniversalIdentifier: string;
-    flatEntityMaps: Pick<
-      AllFlatEntityMaps,
-      | 'flatPageLayoutWidgetMaps'
-      | 'flatPageLayoutTabMaps'
-      | 'flatViewFieldMaps'
-      | 'flatCommandMenuItemMaps'
-      | 'flatNavigationMenuItemMaps'
-    >;
-  }): boolean {
-    const surfaceFlatEntityMaps = [
-      {
-        metadataName: 'pageLayoutWidget',
-        flatEntityMaps: flatPageLayoutWidgetMaps,
-      },
-      { metadataName: 'pageLayoutTab', flatEntityMaps: flatPageLayoutTabMaps },
-      { metadataName: 'viewField', flatEntityMaps: flatViewFieldMaps },
-      {
-        metadataName: 'commandMenuItem',
-        flatEntityMaps: flatCommandMenuItemMaps,
-      },
-      {
-        metadataName: 'navigationMenuItem',
-        flatEntityMaps: flatNavigationMenuItemMaps,
-      },
-    ] as const;
-
-    return surfaceFlatEntityMaps.some(({ metadataName, flatEntityMaps }) =>
-      Object.values<
-        | {
-            universalConditionalDisplay: unknown;
-            universalOverrides?: unknown;
-          }
-        | undefined
-      >(flatEntityMaps.byUniversalIdentifier)
-        .filter(isDefined)
-        .some(({ universalConditionalDisplay, universalOverrides }) =>
-          getUniversalFlatEntityConditionalDisplays({
-            metadataName,
-            property: 'conditionalDisplay',
-            universalConditionalDisplay,
-            universalOverrides,
-          }).some((conditionalDisplay) =>
-            getConditionalDisplayRoleUniversalIdentifiers(
-              conditionalDisplay,
-            ).includes(roleUniversalIdentifier),
-          ),
-        ),
-    );
   }
 }

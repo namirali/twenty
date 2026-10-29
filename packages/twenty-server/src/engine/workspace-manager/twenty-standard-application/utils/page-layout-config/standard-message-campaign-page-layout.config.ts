@@ -36,12 +36,10 @@ const MESSAGE_CAMPAIGN_PAGE_TABS = {
         fieldUniversalIdentifier:
           STANDARD_OBJECTS.messageCampaign.fields.recipients
             .universalIdentifier,
-        conditionalAvailabilityExpression:
-          'noneEquals(selectedRecords, "status", "DRAFT")',
         conditionalAvailability: {
           recordFilters: [
             {
-              id: '7bf58db2-b61d-5a32-bede-c2e272e38840',
+              id: 'db01bb10-8a45-5a81-a699-098a3dc06600',
               contextKey: 'selectedRecords',
               operand: ViewFilterOperand.IS_NOT,
               subFieldName: 'status',
@@ -56,12 +54,10 @@ const MESSAGE_CAMPAIGN_PAGE_TABS = {
             .tabs.home.widgets.fields.universalIdentifier,
         ...WIDGET_PROPS.fields,
         position: VERTICAL_LIST_LAYOUT_POSITIONS.SECOND,
-        conditionalAvailabilityExpression:
-          'noneEquals(selectedRecords, "status", "DRAFT")',
         conditionalAvailability: {
           recordFilters: [
             {
-              id: '7bf58db2-b61d-5a32-bede-c2e272e38840',
+              id: 'db01bb10-8a45-5a81-a699-098a3dc06600',
               contextKey: 'selectedRecords',
               operand: ViewFilterOperand.IS_NOT,
               subFieldName: 'status',

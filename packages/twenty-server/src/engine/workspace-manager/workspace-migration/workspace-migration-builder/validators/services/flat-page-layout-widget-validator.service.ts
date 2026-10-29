@@ -8,8 +8,6 @@ import {
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
-import { CONDITIONAL_DISPLAY_PROPERTIES } from 'src/engine/metadata-modules/flat-conditional-display/constants/conditional-display-properties.constant';
-import { getConditionalDisplayPropertySurfaces } from 'src/engine/metadata-modules/flat-conditional-display/utils/get-conditional-display-property-surfaces.util';
 import { validateUniversalFlatEntityConditionalDisplays } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-universal-flat-entity-conditional-displays.util';
 import { validateTabViewportConstraints } from 'src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-tab-viewport-constraints.util';
 import { findFlatEntityByUniversalIdentifier } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-universal-identifier.util';
@@ -318,23 +316,16 @@ export class FlatPageLayoutWidgetValidatorService {
         })
       : undefined;
 
-    return CONDITIONAL_DISPLAY_PROPERTIES.filter((property) =>
-      getConditionalDisplayPropertySurfaces(property).includes(
-        'pageLayoutWidget',
-      ),
-    ).flatMap((property) =>
-      validateUniversalFlatEntityConditionalDisplays({
-        flatEntity: flatPageLayoutWidget,
-        property,
-        surface: 'pageLayoutWidget',
-        objectMetadataUniversalIdentifier:
-          pageLayout?.objectMetadataUniversalIdentifier ?? null,
-        invalidDataCode:
-          PageLayoutWidgetExceptionCode.INVALID_PAGE_LAYOUT_WIDGET_DATA,
-        flatFieldMetadataMaps,
-        flatRoleMaps,
-      }),
-    );
+    return validateUniversalFlatEntityConditionalDisplays({
+      flatEntity: flatPageLayoutWidget,
+      surface: 'pageLayoutWidget',
+      objectMetadataUniversalIdentifier:
+        pageLayout?.objectMetadataUniversalIdentifier ?? null,
+      invalidDataCode:
+        PageLayoutWidgetExceptionCode.INVALID_PAGE_LAYOUT_WIDGET_DATA,
+      flatFieldMetadataMaps,
+      flatRoleMaps,
+    });
   }
 
   private getEffectiveWidget(

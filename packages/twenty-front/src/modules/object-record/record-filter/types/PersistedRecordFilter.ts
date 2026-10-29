@@ -8,7 +8,6 @@ export type PersistedRecordFilter = Pick<
   | 'positionInRecordFilterGroup'
   | 'subFieldName'
   | 'relationTargetFieldMetadataId'
-  | 'contextKey'
 > & {
   id?: string;
   value?: string;

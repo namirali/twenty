@@ -34,11 +34,9 @@ export const AdvancedFilterFieldSelectMenu = ({
   const { goToPage } = useDropdownPage();
   const { getIcon } = useIcons();
   const { t } = useLingui();
-  const { objectMetadataItem, FieldSelectLeadingSections } = useContext(
-    AdvancedFilterContext,
-  );
+  const { objectMetadataItem } = useContext(AdvancedFilterContext);
   const { filterableFieldMetadataItems } = useFilterableFieldMetadataItems(
-    objectMetadataItem?.id ?? '',
+    objectMetadataItem.id,
   );
   const visibleRecordFields = useAtomComponentSelectorValue(
     visibleRecordFieldsComponentSelector,
@@ -94,15 +92,6 @@ export const AdvancedFilterFieldSelectMenu = ({
   };
 
   const hasVisibleFields = isNonEmptyArray(visibleFieldMetadataItems);
-
-  let hiddenFieldsSectionLabel: string | undefined;
-
-  if (hasVisibleFields) {
-    hiddenFieldsSectionLabel = t`Hidden fields`;
-  } else if (isDefined(FieldSelectLeadingSections)) {
-    hiddenFieldsSectionLabel = objectMetadataItem?.labelSingular;
-  }
-
   const sections = [
     {
       id: 'visible',
@@ -111,7 +100,7 @@ export const AdvancedFilterFieldSelectMenu = ({
     },
     {
       id: 'hidden',
-      label: hiddenFieldsSectionLabel,
+      label: hasVisibleFields ? t`Hidden fields` : undefined,
       fields: hiddenFieldMetadataItems,
     },
   ].filter((section) => isNonEmptyArray(section.fields));
@@ -124,12 +113,6 @@ export const AdvancedFilterFieldSelectMenu = ({
         aria-label={t`Search fields`}
         onValueChange={onSearchInputChange}
       />
-      {isDefined(FieldSelectLeadingSections) && (
-        <FieldSelectLeadingSections
-          recordFilterId={recordFilterId}
-          searchInput={searchInput}
-        />
-      )}
       {sections.map((section) => (
         <Fragment key={section.id}>
           <Dropdown.Separator />

@@ -4,8 +4,6 @@ import { msg, t } from '@lingui/core/macro';
 import { ALL_METADATA_NAME } from 'twenty-shared/metadata';
 import { isDefined } from 'twenty-shared/utils';
 
-import { CONDITIONAL_DISPLAY_PROPERTIES } from 'src/engine/metadata-modules/flat-conditional-display/constants/conditional-display-properties.constant';
-import { getConditionalDisplayPropertySurfaces } from 'src/engine/metadata-modules/flat-conditional-display/utils/get-conditional-display-property-surfaces.util';
 import { validateUniversalFlatEntityConditionalDisplays } from 'src/engine/metadata-modules/flat-conditional-display/utils/validate-universal-flat-entity-conditional-displays.util';
 import { findFlatEntityByUniversalIdentifier } from 'src/engine/metadata-modules/flat-entity/utils/find-flat-entity-by-universal-identifier.util';
 import { PageLayoutTabExceptionCode } from 'src/engine/metadata-modules/page-layout-tab/exceptions/page-layout-tab.exception';
@@ -27,7 +25,11 @@ const PAGE_LAYOUT_TAB_EXCEPTION_CODE = {
 export class FlatPageLayoutTabValidatorService {
   public validateFlatPageLayoutTabCreation({
     flatEntityToValidate: flatPageLayoutTab,
-    optimisticFlatEntityMapsAndRelatedFlatEntityMaps,
+    optimisticFlatEntityMapsAndRelatedFlatEntityMaps: {
+      flatPageLayoutMaps,
+      flatFieldMetadataMaps,
+      flatRoleMaps,
+    },
   }: UniversalFlatEntityValidationArgs<
     typeof ALL_METADATA_NAME.pageLayoutTab
   >): FailedFlatEntityValidation<'pageLayoutTab', 'create'> {
@@ -42,8 +44,7 @@ export class FlatPageLayoutTabValidatorService {
 
     const referencedPageLayout = findFlatEntityByUniversalIdentifier({
       universalIdentifier: flatPageLayoutTab.pageLayoutUniversalIdentifier,
-      flatEntityMaps:
-        optimisticFlatEntityMapsAndRelatedFlatEntityMaps.flatPageLayoutMaps,
+      flatEntityMaps: flatPageLayoutMaps,
     });
 
     if (!isDefined(referencedPageLayout)) {
@@ -57,7 +58,9 @@ export class FlatPageLayoutTabValidatorService {
     validationResult.errors.push(
       ...this.validateConditionalDisplay({
         flatPageLayoutTab,
-        optimisticFlatEntityMapsAndRelatedFlatEntityMaps,
+        flatPageLayoutMaps,
+        flatFieldMetadataMaps,
+        flatRoleMaps,
       }),
     );
 
@@ -102,14 +105,18 @@ export class FlatPageLayoutTabValidatorService {
   public validateFlatPageLayoutTabUpdate({
     universalIdentifier,
     flatEntityUpdate,
-    optimisticFlatEntityMapsAndRelatedFlatEntityMaps,
+    optimisticFlatEntityMapsAndRelatedFlatEntityMaps: {
+      flatPageLayoutTabMaps: optimisticFlatPageLayoutTabMaps,
+      flatPageLayoutMaps,
+      flatFieldMetadataMaps,
+      flatRoleMaps,
+    },
   }: FlatEntityUpdateValidationArgs<
     typeof ALL_METADATA_NAME.pageLayoutTab
   >): FailedFlatEntityValidation<'pageLayoutTab', 'update'> {
     const fromFlatPageLayoutTab = findFlatEntityByUniversalIdentifier({
       universalIdentifier,
-      flatEntityMaps:
-        optimisticFlatEntityMapsAndRelatedFlatEntityMaps.flatPageLayoutTabMaps,
+      flatEntityMaps: optimisticFlatPageLayoutTabMaps,
     });
 
     const validationResult = getEmptyFlatEntityValidationError({
@@ -133,7 +140,9 @@ export class FlatPageLayoutTabValidatorService {
     validationResult.errors.push(
       ...this.validateConditionalDisplay({
         flatPageLayoutTab: { ...fromFlatPageLayoutTab, ...flatEntityUpdate },
-        optimisticFlatEntityMapsAndRelatedFlatEntityMaps,
+        flatPageLayoutMaps,
+        flatFieldMetadataMaps,
+        flatRoleMaps,
       }),
     );
 
@@ -142,36 +151,30 @@ export class FlatPageLayoutTabValidatorService {
 
   private validateConditionalDisplay({
     flatPageLayoutTab,
-    optimisticFlatEntityMapsAndRelatedFlatEntityMaps: {
-      flatPageLayoutMaps,
-      flatFieldMetadataMaps,
-      flatRoleMaps,
-    },
+    flatPageLayoutMaps,
+    flatFieldMetadataMaps,
+    flatRoleMaps,
   }: {
     flatPageLayoutTab: UniversalFlatPageLayoutTab;
-    optimisticFlatEntityMapsAndRelatedFlatEntityMaps: UniversalFlatEntityValidationArgs<
+  } & Pick<
+    UniversalFlatEntityValidationArgs<
       typeof ALL_METADATA_NAME.pageLayoutTab
-    >['optimisticFlatEntityMapsAndRelatedFlatEntityMaps'];
-  }): FlatEntityValidationError[] {
+    >['optimisticFlatEntityMapsAndRelatedFlatEntityMaps'],
+    'flatPageLayoutMaps' | 'flatFieldMetadataMaps' | 'flatRoleMaps'
+  >): FlatEntityValidationError[] {
     const pageLayout = findFlatEntityByUniversalIdentifier({
       universalIdentifier: flatPageLayoutTab.pageLayoutUniversalIdentifier,
       flatEntityMaps: flatPageLayoutMaps,
     });
 
-    return CONDITIONAL_DISPLAY_PROPERTIES.filter((property) =>
-      getConditionalDisplayPropertySurfaces(property).includes('pageLayoutTab'),
-    ).flatMap((property) =>
-      validateUniversalFlatEntityConditionalDisplays({
-        flatEntity: flatPageLayoutTab,
-        property,
-        surface: 'pageLayoutTab',
-        objectMetadataUniversalIdentifier:
-          pageLayout?.objectMetadataUniversalIdentifier ?? null,
-        invalidDataCode:
-          PageLayoutTabExceptionCode.INVALID_PAGE_LAYOUT_TAB_DATA,
-        flatFieldMetadataMaps,
-        flatRoleMaps,
-      }),
-    );
+    return validateUniversalFlatEntityConditionalDisplays({
+      flatEntity: flatPageLayoutTab,
+      surface: 'pageLayoutTab',
+      objectMetadataUniversalIdentifier:
+        pageLayout?.objectMetadataUniversalIdentifier ?? null,
+      invalidDataCode: PageLayoutTabExceptionCode.INVALID_PAGE_LAYOUT_TAB_DATA,
+      flatFieldMetadataMaps,
+      flatRoleMaps,
+    });
   }
 }

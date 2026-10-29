@@ -4,6 +4,7 @@ import { isDefined } from 'twenty-shared/utils';
 import { ProvisionedWorkspaceCommandRunner } from 'src/database/commands/command-runners/provisioned-workspace.command-runner';
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import { type RunOnWorkspaceArgs } from 'src/database/commands/command-runners/workspace.command-runner';
+import { getStandardCommandMenuItemConditionalAvailabilityExpression } from 'src/database/commands/upgrade-version-command/utils/get-standard-command-menu-item-conditional-availability-expression.util';
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { RegisteredWorkspaceCommand } from 'src/engine/core-modules/upgrade/decorators/registered-workspace-command.decorator';
 import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
@@ -66,7 +67,9 @@ export class SyncCreateRecordCommandAvailabilityExpressionCommand extends Provis
         if (
           !isDefined(existingItem) ||
           existingItem.conditionalAvailabilityExpression ===
-            standardItem.conditionalAvailabilityExpression
+            getStandardCommandMenuItemConditionalAvailabilityExpression(
+              standardItem.universalIdentifier,
+            )
         ) {
           return undefined;
         }
@@ -74,7 +77,9 @@ export class SyncCreateRecordCommandAvailabilityExpressionCommand extends Provis
         return {
           ...existingItem,
           conditionalAvailabilityExpression:
-            standardItem.conditionalAvailabilityExpression,
+            getStandardCommandMenuItemConditionalAvailabilityExpression(
+              standardItem.universalIdentifier,
+            ),
           updatedAt: new Date().toISOString(),
         };
       })

@@ -203,11 +203,10 @@ export const WIDGET_PROPS = {
     ),
     type: WidgetType.CHAT_THREADS,
     position: VERTICAL_LIST_LAYOUT_POSITIONS.FIRST,
-    conditionalAvailabilityExpression: 'featureFlags.IS_AI_CHAT_INBOX_ENABLED',
     conditionalAvailability: {
       recordFilters: [
         {
-          id: '01eab46a-4da2-5378-886b-95d166627167',
+          id: 'dcfd0802-eb40-5ed0-b8e9-dc486a6d79f1',
           contextKey: 'featureFlags',
           operand: ViewFilterOperand.IS,
           subFieldName: 'IS_AI_CHAT_INBOX_ENABLED',

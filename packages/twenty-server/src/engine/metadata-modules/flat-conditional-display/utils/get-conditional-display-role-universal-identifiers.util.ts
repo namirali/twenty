@@ -1,7 +1,7 @@
 import { isArray, isString } from '@sniptt/guards';
 import { isPlainObject } from 'twenty-shared/utils';
 
-import { parseConditionalDisplayRoleIds } from 'src/engine/metadata-modules/flat-conditional-display/utils/parse-conditional-display-role-ids.util';
+import { parseSelectFilterValues } from 'src/engine/metadata-modules/flat-field-metadata/utils/get-invalid-select-filter-option-values.util';
 
 export const getConditionalDisplayRoleUniversalIdentifiers = (
   conditionalDisplay: unknown,
@@ -21,7 +21,7 @@ export const getConditionalDisplayRoleUniversalIdentifiers = (
     )
     .flatMap((recordFilter) =>
       isString(recordFilter.value)
-        ? (parseConditionalDisplayRoleIds(recordFilter.value) ?? [])
+        ? (parseSelectFilterValues(recordFilter.value) ?? [])
         : [],
     );
 };

@@ -48,17 +48,6 @@ export const createStandardCommandMenuItemFlatMetadata = ({
       flatObjectMetadata.universalIdentifier;
   }
 
-  const conditionalAvailabilityExpression =
-    definition.conditionalAvailabilityExpression ?? null;
-  const conditionalPinnedExpression =
-    'conditionalPinnedExpression' in definition
-      ? definition.conditionalPinnedExpression
-      : null;
-
-  const conditionalAvailability = definition.conditionalAvailability ?? null;
-  const conditionalPinned =
-    'conditionalPinned' in definition ? definition.conditionalPinned : null;
-
   return {
     id: commandMenuItemId,
     universalIdentifier: definition.universalIdentifier,
@@ -72,21 +61,23 @@ export const createStandardCommandMenuItemFlatMetadata = ({
     position: definition.position,
     isPinned: definition.isPinned,
     availabilityType: definition.availabilityType,
-    conditionalAvailabilityExpression,
-    conditionalPinnedExpression,
     conditionalDisplay: null,
     universalConditionalDisplay: null,
-    conditionalAvailability,
+    conditionalAvailability: definition.conditionalAvailability ?? null,
     universalConditionalAvailability:
       fromConditionalDisplayToUniversalConditionalDisplay({
-        conditionalDisplay: conditionalAvailability,
+        conditionalDisplay: definition.conditionalAvailability ?? null,
         fieldMetadataUniversalIdentifierById: {},
         roleUniversalIdentifierById: {},
       }),
-    conditionalPinned,
+    conditionalPinned:
+      'conditionalPinned' in definition ? definition.conditionalPinned : null,
     universalConditionalPinned:
       fromConditionalDisplayToUniversalConditionalDisplay({
-        conditionalDisplay: conditionalPinned,
+        conditionalDisplay:
+          'conditionalPinned' in definition
+            ? definition.conditionalPinned
+            : null,
         fieldMetadataUniversalIdentifierById: {},
         roleUniversalIdentifierById: {},
       }),

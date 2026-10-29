@@ -179,7 +179,7 @@ describe('fromFlatPageLayoutWidgetToPageLayoutWidgetManifest', () => {
     ).toEqual({
       recordFilters: [
         {
-          id: '0',
+          id: expect.any(String),
           contextKey: 'device',
           operand: ViewFilterOperand.IS,
           value: '["MOBILE"]',

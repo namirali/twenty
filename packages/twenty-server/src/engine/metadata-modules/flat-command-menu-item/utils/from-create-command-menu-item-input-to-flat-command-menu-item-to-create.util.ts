@@ -108,8 +108,6 @@ export const fromCreateCommandMenuItemInputToFlatCommandMenuItemToCreate = ({
       CommandMenuItemAvailabilityType.GLOBAL,
     availabilityObjectMetadataId:
       createCommandMenuItemInput.availabilityObjectMetadataId ?? null,
-    conditionalAvailabilityExpression: null,
-    conditionalPinnedExpression: null,
     conditionalDisplay,
     universalConditionalDisplay:
       fromConditionalDisplayToUniversalConditionalDisplay({
