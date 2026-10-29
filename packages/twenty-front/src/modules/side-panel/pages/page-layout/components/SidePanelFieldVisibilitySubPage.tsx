@@ -56,7 +56,7 @@ export const SidePanelFieldVisibilitySubPage = () => {
   return (
     <ConditionalDisplaySettings
       surface="viewField"
-      surfaceId={`${widgetInEditMode.id}-${field.fieldMetadataItem.id}`}
+      surfaceId={field.viewFieldId ?? field.fieldMetadataItem.id}
       conditionalDisplay={field.conditionalDisplay}
       objectMetadataId={pageLayoutDraft.objectMetadataId}
       onConditionalDisplayChange={(conditionalDisplay) =>

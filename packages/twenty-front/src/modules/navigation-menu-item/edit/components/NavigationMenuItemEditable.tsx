@@ -8,14 +8,7 @@ import {
   isDropdownOpenComponentState as isColorPickerOpenComponentState,
 } from '@/ui/layout/dropdown/states/isDropdownOpenComponentState';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
-import {
-  lazy,
-  Suspense,
-  useCallback,
-  useRef,
-  useState,
-  type ReactNode,
-} from 'react';
+import { useCallback, useRef, useState, type ReactNode } from 'react';
 import { styled } from '@linaria/react';
 import { NavigationMenuItemType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
@@ -33,14 +26,7 @@ import { NavigationMenuItemTypeTooltip } from '@/navigation-menu-item/edit/compo
 import { NavigationMenuItemLinkEditorOpenEffect } from '@/navigation-menu-item/edit/effect-components/NavigationMenuItemLinkEditorOpenEffect';
 import { NavigationMenuItemLinkEditor } from '@/navigation-menu-item/edit/components/NavigationMenuItemLinkEditor';
 import { NavigationMenuItemInlineEditor } from '@/navigation-menu-item/edit/components/NavigationMenuItemInlineEditor';
-import { NavigationMenuItemConditionalDisplayBadge } from '@/navigation-menu-item/edit/components/NavigationMenuItemConditionalDisplayBadge';
-import { hasConditionalDisplayRule } from '@/conditional-display/utils/hasConditionalDisplayRule';
-
-const LazyNavigationMenuItemVisibilityEditor = lazy(() =>
-  import('@/navigation-menu-item/edit/components/NavigationMenuItemVisibilityEditor').then(
-    (m) => ({ default: m.NavigationMenuItemVisibilityEditor }),
-  ),
-);
+import { NavigationMenuItemVisibilityEditor } from '@/navigation-menu-item/edit/components/NavigationMenuItemVisibilityEditor';
 
 const StyledRow = styled.div`
   min-width: 0;
@@ -54,11 +40,6 @@ const StyledRow = styled.div`
   &:focus-within > [data-navigation-actions] {
     opacity: 1;
     pointer-events: auto;
-  }
-
-  &:hover > [data-navigation-conditional-display-badge],
-  &:focus-within > [data-navigation-conditional-display-badge] {
-    opacity: 0;
   }
 `;
 type NavigationMenuItemEditableProps = {
@@ -168,11 +149,7 @@ export const NavigationMenuItemEditable = ({
         }
 
         if (mode.type === 'visibility') {
-          return (
-            <Suspense fallback={null}>
-              <LazyNavigationMenuItemVisibilityEditor item={item} />
-            </Suspense>
-          );
+          return <NavigationMenuItemVisibilityEditor item={item} />;
         }
 
         return (
@@ -225,11 +202,6 @@ export const NavigationMenuItemEditable = ({
           />
         )}
         {content}
-        {canOrganize &&
-          isExpanded &&
-          hasConditionalDisplayRule(item.conditionalDisplay) && (
-            <NavigationMenuItemConditionalDisplayBadge />
-          )}
         {canOrganize && isExpanded && (
           <NavigationMenuItemRowActions
             rightOptions={rightOptions}

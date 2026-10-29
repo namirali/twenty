@@ -1,8 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import {
-  NavigationMenuItemType,
-  ViewFilterOperand,
-} from 'twenty-shared/types';
+import { NavigationMenuItemType, ViewFilterOperand } from 'twenty-shared/types';
 import { useIsMobile } from 'twenty-ui/utilities';
 import { type NavigationMenuItem } from '~/generated-metadata/graphql';
 

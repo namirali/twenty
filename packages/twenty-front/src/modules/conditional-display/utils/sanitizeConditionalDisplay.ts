@@ -1,16 +1,14 @@
-import { findConditionalDisplayAdminContextKey } from '@/conditional-display/utils/findConditionalDisplayAdminContextKey';
-import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
 import { removeEmptyRecordFilterGroups } from '@/object-record/record-filter-group/utils/removeEmptyRecordFilterGroups';
 import { type RecordFilterGroup } from '@/object-record/record-filter-group/types/RecordFilterGroup';
 import { type PersistedRecordFilter } from '@/object-record/record-filter/types/PersistedRecordFilter';
 import { sanitizeRecordFilters } from '@/object-record/record-filter/utils/sanitizeRecordFilters';
 import {
   type ConditionalDisplay,
-  type ConditionalDisplayAdminContextKey,
   type ConditionalDisplayRecordFilter,
   type ConditionalDisplaySelectedRecordsMatch,
 } from 'twenty-shared/types';
 import {
+  isConditionalDisplayAdminContextKey,
   isDefined,
   isNonEmptyArray,
   isRecordFilterValueValid,
@@ -20,37 +18,23 @@ type SanitizeConditionalDisplayParams = {
   recordFilters: PersistedRecordFilter[];
   recordFilterGroups: RecordFilterGroup[];
   selectedRecordsMatch?: ConditionalDisplaySelectedRecordsMatch;
-  availableContextKeys: ConditionalDisplayAdminContextKey[];
-  fieldMetadataItems: (Pick<FieldMetadataItem, 'id' | 'isActive'> & {
-    morphRelations?: { sourceFieldMetadata: { id: string } }[] | null;
-  })[];
+  fieldMetadataItems: Parameters<
+    typeof sanitizeRecordFilters
+  >[0]['fieldMetadataItems'];
 };
 
 export const sanitizeConditionalDisplay = ({
   recordFilters,
   recordFilterGroups,
   selectedRecordsMatch,
-  availableContextKeys,
   fieldMetadataItems,
 }: SanitizeConditionalDisplayParams): ConditionalDisplay | null => {
-  const availableRecordFilters = recordFilters.filter(
-    (recordFilter) =>
-      !isDefined(recordFilter.contextKey) ||
-      (availableContextKeys.some(
-        (availableContextKey) =>
-          availableContextKey === recordFilter.contextKey,
-      ) &&
-        isRecordFilterValueValid({
-          operand: recordFilter.operand,
-          value: recordFilter.value ?? '',
-        })),
-  );
-
   const { recordFilters: sanitizedFieldRecordFilters = [] } =
     sanitizeRecordFilters({
       recordFiltersWithGroups: {
-        recordFilters: availableRecordFilters.filter(
-          (recordFilter) => !isDefined(recordFilter.contextKey),
+        recordFilters: recordFilters.filter(
+          (recordFilter) =>
+            !isConditionalDisplayAdminContextKey(recordFilter.fieldMetadataId),
         ),
         recordFilterGroups,
       },
@@ -64,9 +48,14 @@ export const sanitizeConditionalDisplay = ({
     ]),
   );
 
-  const validRecordFilters = availableRecordFilters.flatMap((recordFilter) => {
-    if (isDefined(recordFilter.contextKey)) {
-      return [recordFilter];
+  const validRecordFilters = recordFilters.flatMap((recordFilter) => {
+    if (isConditionalDisplayAdminContextKey(recordFilter.fieldMetadataId)) {
+      return isRecordFilterValueValid({
+        operand: recordFilter.operand,
+        value: recordFilter.value ?? '',
+      })
+        ? [recordFilter]
+        : [];
     }
 
     const sanitizedRecordFilter = sanitizedFieldRecordFilterById.get(
@@ -83,12 +72,10 @@ export const sanitizeConditionalDisplay = ({
 
   const conditionalDisplayRecordFilters: ConditionalDisplayRecordFilter[] =
     validRecordFilters.map((recordFilter) =>
-      isDefined(recordFilter.contextKey)
+      isConditionalDisplayAdminContextKey(recordFilter.fieldMetadataId)
         ? {
             id: recordFilter.id ?? '',
-            contextKey: findConditionalDisplayAdminContextKey(
-              recordFilter.contextKey,
-            ),
+            contextKey: recordFilter.fieldMetadataId,
             operand: recordFilter.operand,
             value: recordFilter.value,
             recordFilterGroupId: recordFilter.recordFilterGroupId,

@@ -1,20 +1,10 @@
-import { ConditionalDisplayEditorContext } from '@/conditional-display/contexts/ConditionalDisplayEditorContext';
-import { useAddConditionalDisplayRecordFilter } from '@/conditional-display/hooks/useAddConditionalDisplayRecordFilter';
-import { type ConditionalDisplayVisibilityMode } from '@/conditional-display/types/ConditionalDisplayVisibilityMode';
-import { currentRecordFilterGroupsComponentState } from '@/object-record/record-filter-group/states/currentRecordFilterGroupsComponentState';
-import { currentRecordFiltersComponentState } from '@/object-record/record-filter/states/currentRecordFiltersComponentState';
+import { type ConditionalDisplayRuleMode } from '@/conditional-display/types/ConditionalDisplayRuleMode';
 import { Select } from '@/ui/input/components/Select';
-import { useSetAtomComponentState } from '@/ui/utilities/state/jotai/hooks/useSetAtomComponentState';
 import { styled } from '@linaria/react';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { SettingsPath } from 'twenty-shared/types';
-import {
-  assertUnreachable,
-  getSettingsPath,
-  isDefined,
-} from 'twenty-shared/utils';
+import { getSettingsPath } from 'twenty-shared/utils';
 import { themeCssVariables } from 'twenty-ui/theme';
 
 const StyledHint = styled.span`
@@ -32,72 +22,31 @@ const StyledHint = styled.span`
   }
 `;
 
-type ConditionalDisplayVisibilityModeSelectProps = {
+type ConditionalDisplayRuleModeSelectProps = {
   dropdownId: string;
   label: string;
-  visibilityMode: ConditionalDisplayVisibilityMode;
-  readonly?: boolean;
-  onEveryoneSelect: () => void;
+  ruleMode: ConditionalDisplayRuleMode;
+  onRuleModeChange: (ruleMode: ConditionalDisplayRuleMode) => void;
 };
 
-export const ConditionalDisplayVisibilityModeSelect = ({
+export const ConditionalDisplayRuleModeSelect = ({
   dropdownId,
   label,
-  visibilityMode,
-  readonly,
-  onEveryoneSelect,
-}: ConditionalDisplayVisibilityModeSelectProps) => {
+  ruleMode,
+  onRuleModeChange,
+}: ConditionalDisplayRuleModeSelectProps) => {
   const { t } = useLingui();
-
-  const { availableContextKeys } = useContext(ConditionalDisplayEditorContext);
-
-  const { addConditionalDisplayRecordFilter } =
-    useAddConditionalDisplayRecordFilter();
-
-  const setCurrentRecordFilters = useSetAtomComponentState(
-    currentRecordFiltersComponentState,
-  );
-
-  const setCurrentRecordFilterGroups = useSetAtomComponentState(
-    currentRecordFilterGroupsComponentState,
-  );
-
-  const [defaultContextKey] = availableContextKeys;
-
-  const handleVisibilityModeChange = (
-    nextVisibilityMode: ConditionalDisplayVisibilityMode,
-  ) => {
-    if (nextVisibilityMode === visibilityMode) {
-      return;
-    }
-
-    switch (nextVisibilityMode) {
-      case 'EVERYONE':
-        setCurrentRecordFilters([]);
-        setCurrentRecordFilterGroups([]);
-        onEveryoneSelect();
-        return;
-      case 'CUSTOM_RULE':
-        if (isDefined(defaultContextKey)) {
-          addConditionalDisplayRecordFilter(defaultContextKey);
-        }
-        return;
-      default:
-        assertUnreachable(nextVisibilityMode);
-    }
-  };
 
   const rolesSettingsPath = getSettingsPath(SettingsPath.Roles);
 
   return (
     <div>
-      <Select<ConditionalDisplayVisibilityMode>
+      <Select<ConditionalDisplayRuleMode>
         dropdownId={dropdownId}
         label={label}
         fullWidth
-        disabled={readonly}
-        value={visibilityMode}
-        onChange={handleVisibilityModeChange}
+        value={ruleMode}
+        onChange={onRuleModeChange}
         options={[
           { label: t`Everyone`, value: 'EVERYONE' },
           { label: t`Custom rule`, value: 'CUSTOM_RULE' },

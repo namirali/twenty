@@ -1,5 +1,4 @@
-import { ConditionalDisplaySettings } from '@/conditional-display/components/ConditionalDisplaySettings';
-import { getConditionalAvailabilitySummaryLabel } from '@/conditional-display/utils/getConditionalAvailabilitySummaryLabel';
+import { getConditionalDisplaySummaryLabel } from '@/conditional-display/utils/getConditionalDisplaySummaryLabel';
 import { Table } from '@/ui/layout/table/components/Table';
 import { TableCell } from '@/ui/layout/table/components/TableCell';
 import { TableHeader } from '@/ui/layout/table/components/TableHeader';
@@ -13,7 +12,6 @@ import { Section } from 'twenty-ui/components/layout';
 import { themeCssVariables } from 'twenty-ui/theme';
 
 type SettingsApplicationCommandMenuItemSettingsTabProps = {
-  commandMenuItemId: string;
   label: string;
   shortLabel?: string | null;
   icon?: string | null;
@@ -21,7 +19,6 @@ type SettingsApplicationCommandMenuItemSettingsTabProps = {
   availabilityType: string;
   conditionalAvailability?: ConditionalDisplay | null;
   conditionalDisplay?: ConditionalDisplay | null;
-  availabilityObjectMetadataId?: string | null;
   frontComponentName?: string | null;
   universalIdentifier?: string | null;
   createdAt: string;
@@ -48,7 +45,6 @@ const formatDateTime = (isoString: string): string => {
 const GRID_TEMPLATE = '220px 1fr';
 
 export const SettingsApplicationCommandMenuItemSettingsTab = ({
-  commandMenuItemId,
   label,
   shortLabel,
   icon,
@@ -56,7 +52,6 @@ export const SettingsApplicationCommandMenuItemSettingsTab = ({
   availabilityType,
   conditionalAvailability,
   conditionalDisplay,
-  availabilityObjectMetadataId,
   frontComponentName,
   universalIdentifier,
   createdAt,
@@ -91,20 +86,18 @@ export const SettingsApplicationCommandMenuItemSettingsTab = ({
     {
       key: 'conditionalAvailability',
       label: t`Conditional availability`,
-      value: getConditionalAvailabilitySummaryLabel(conditionalAvailability),
+      value: getConditionalDisplaySummaryLabel({
+        conditionName: 'conditionalAvailability',
+        conditionalDisplay: conditionalAvailability,
+      }),
     },
     {
       key: 'conditionalDisplay',
       label: t`Visibility`,
-      value: (
-        <ConditionalDisplaySettings
-          surface="commandMenuItem"
-          surfaceId={commandMenuItemId}
-          conditionalDisplay={conditionalDisplay}
-          objectMetadataId={availabilityObjectMetadataId}
-          readonly
-        />
-      ),
+      value: getConditionalDisplaySummaryLabel({
+        conditionName: 'conditionalDisplay',
+        conditionalDisplay,
+      }),
     },
     {
       key: 'frontComponent',

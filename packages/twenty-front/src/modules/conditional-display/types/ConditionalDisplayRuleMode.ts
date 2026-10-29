@@ -1,1 +1,1 @@
-export type ConditionalDisplayVisibilityMode = 'EVERYONE' | 'CUSTOM_RULE';
+export type ConditionalDisplayRuleMode = 'EVERYONE' | 'CUSTOM_RULE';

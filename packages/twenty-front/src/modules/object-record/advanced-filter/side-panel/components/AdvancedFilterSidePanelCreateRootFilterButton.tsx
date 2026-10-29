@@ -1,5 +1,6 @@
 import { availableFieldMetadataItemsForFilterFamilySelector } from '@/object-metadata/states/availableFieldMetadataItemsForFilterFamilySelector';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
+import { useSetRecordFilterUsedInAdvancedFilterDropdownRow } from '@/object-record/advanced-filter/hooks/useSetRecordFilterUsedInAdvancedFilterDropdownRow';
 import { AdvancedFilterContext } from '@/object-record/advanced-filter/states/context/AdvancedFilterContext';
 import { rootLevelRecordFilterGroupComponentSelector } from '@/object-record/advanced-filter/states/rootLevelRecordFilterGroupComponentSelector';
 import { useUpsertRecordFilterGroup } from '@/object-record/record-filter-group/hooks/useUpsertRecordFilterGroup';
@@ -21,9 +22,11 @@ import { v4 } from 'uuid';
 export const AdvancedFilterSidePanelCreateRootFilterButton = ({
   objectMetadataItem,
 }: {
-  objectMetadataItem: EnrichedObjectMetadataItem;
+  objectMetadataItem?: EnrichedObjectMetadataItem;
 }) => {
-  const { readonly } = useContext(AdvancedFilterContext);
+  const { readonly, fieldSelectLeadingSections } = useContext(
+    AdvancedFilterContext,
+  );
   const rootRecordFilterGroup = useAtomComponentSelectorValue(
     rootLevelRecordFilterGroupComponentSelector,
   );
@@ -31,16 +34,18 @@ export const AdvancedFilterSidePanelCreateRootFilterButton = ({
   const availableFieldMetadataItemsForFilter = useAtomFamilySelectorValue(
     availableFieldMetadataItemsForFilterFamilySelector,
     {
-      objectMetadataItemId: objectMetadataItem.id,
+      objectMetadataItemId: objectMetadataItem?.id ?? '',
     },
   );
 
   const defaultFieldMetadataItem =
+    fieldSelectLeadingSections?.[0]?.fieldMetadataItems[0] ??
     availableFieldMetadataItemsForFilter.find(
       (fieldMetadataItem) =>
         fieldMetadataItem.id ===
         objectMetadataItem?.labelIdentifierFieldMetadataId,
-    ) ?? availableFieldMetadataItemsForFilter[0];
+    ) ??
+    availableFieldMetadataItemsForFilter[0];
 
   const { upsertRecordFilterGroup } = useUpsertRecordFilterGroup();
 
@@ -48,6 +53,9 @@ export const AdvancedFilterSidePanelCreateRootFilterButton = ({
 
   const { createEmptyRecordFilterFromFieldMetadataItem } =
     useCreateEmptyRecordFilterFromFieldMetadataItem();
+
+  const { setRecordFilterUsedInAdvancedFilterDropdownRow } =
+    useSetRecordFilterUsedInAdvancedFilterDropdownRow();
 
   const setHasInitializedCurrentRecordFilters = useSetAtomComponentFamilyState(
     hasInitializedCurrentRecordFiltersComponentFamilyState,
@@ -78,6 +86,8 @@ export const AdvancedFilterSidePanelCreateRootFilterButton = ({
       newRecordFilter.recordFilterGroupId = newRecordFilterGroup.id;
 
       upsertRecordFilter(newRecordFilter);
+
+      setRecordFilterUsedInAdvancedFilterDropdownRow(newRecordFilter);
     }
   };
 

@@ -81,7 +81,8 @@ describe('sanitizeRecordFilters', () => {
   });
 
   it('should handle undefined record filters', () => {
-    const recordFiltersWithGroups: RecordFiltersWithGroups = {} as RecordFiltersWithGroups;
+    const recordFiltersWithGroups: RecordFiltersWithGroups =
+      {} as RecordFiltersWithGroups;
 
     const result = sanitizeRecordFilters({
       recordFiltersWithGroups,

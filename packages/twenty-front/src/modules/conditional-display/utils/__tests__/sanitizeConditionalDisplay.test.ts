@@ -1,15 +1,9 @@
 import { sanitizeConditionalDisplay } from '@/conditional-display/utils/sanitizeConditionalDisplay';
 import { type PersistedRecordFilter } from '@/object-record/record-filter/types/PersistedRecordFilter';
 import {
-  type ConditionalDisplayAdminContextKey,
   RecordFilterGroupLogicalOperator,
   ViewFilterOperand,
 } from 'twenty-shared/types';
-
-const AVAILABLE_CONTEXT_KEYS: ConditionalDisplayAdminContextKey[] = [
-  'currentRoleId',
-  'currentWorkspaceMemberId',
-];
 
 const FIELD_METADATA_ITEMS = [
   { id: 'name-field-id', isActive: true },
@@ -18,8 +12,7 @@ const FIELD_METADATA_ITEMS = [
 
 const roleRecordFilter: PersistedRecordFilter = {
   id: 'role-filter',
-  contextKey: 'currentRoleId',
-  fieldMetadataId: '',
+  fieldMetadataId: 'currentRoleId',
   operand: ViewFilterOperand.IS,
   value: JSON.stringify(['sales-role-id']),
 };
@@ -37,7 +30,6 @@ describe('sanitizeConditionalDisplay', () => {
       sanitizeConditionalDisplay({
         recordFilters: [],
         recordFilterGroups: [],
-        availableContextKeys: AVAILABLE_CONTEXT_KEYS,
         fieldMetadataItems: [],
       }),
     ).toBeNull();
@@ -51,34 +43,31 @@ describe('sanitizeConditionalDisplay', () => {
           {
             ...roleRecordFilter,
             id: 'member-filter',
-            contextKey: 'currentWorkspaceMemberId',
+            fieldMetadataId: 'currentWorkspaceMemberId',
             value: '',
           },
         ],
         recordFilterGroups: [],
-        availableContextKeys: AVAILABLE_CONTEXT_KEYS,
         fieldMetadataItems: [],
       }),
     ).toBeNull();
   });
 
-  it('drops rows on context keys the surface does not offer', () => {
+  it('stores context rows under their context key', () => {
     expect(
       sanitizeConditionalDisplay({
-        recordFilters: [
-          roleRecordFilter,
-          {
-            ...roleRecordFilter,
-            id: 'device-filter',
-            contextKey: 'device',
-            value: JSON.stringify(['MOBILE']),
-          },
-        ],
+        recordFilters: [roleRecordFilter],
         recordFilterGroups: [],
-        availableContextKeys: AVAILABLE_CONTEXT_KEYS,
         fieldMetadataItems: [],
       })?.recordFilters,
-    ).toEqual([expect.objectContaining({ id: 'role-filter' })]);
+    ).toEqual([
+      {
+        id: 'role-filter',
+        contextKey: 'currentRoleId',
+        operand: ViewFilterOperand.IS,
+        value: JSON.stringify(['sales-role-id']),
+      },
+    ]);
   });
 
   it('keeps field rows on active fields and drops rows on inactive or unknown fields', () => {
@@ -98,7 +87,6 @@ describe('sanitizeConditionalDisplay', () => {
           },
         ],
         recordFilterGroups: [],
-        availableContextKeys: AVAILABLE_CONTEXT_KEYS,
         fieldMetadataItems: FIELD_METADATA_ITEMS,
       })?.recordFilters,
     ).toEqual([
@@ -119,7 +107,7 @@ describe('sanitizeConditionalDisplay', () => {
           {
             ...roleRecordFilter,
             id: 'member-filter',
-            contextKey: 'currentWorkspaceMemberId',
+            fieldMetadataId: 'currentWorkspaceMemberId',
             value: '',
             recordFilterGroupId: 'nested',
           },
@@ -133,7 +121,6 @@ describe('sanitizeConditionalDisplay', () => {
           },
         ],
         selectedRecordsMatch: 'SOME',
-        availableContextKeys: AVAILABLE_CONTEXT_KEYS,
         fieldMetadataItems: [],
       }),
     ).toEqual({
@@ -166,7 +153,7 @@ describe('sanitizeConditionalDisplay', () => {
           {
             ...roleRecordFilter,
             id: 'member-filter',
-            contextKey: 'currentWorkspaceMemberId',
+            fieldMetadataId: 'currentWorkspaceMemberId',
             recordFilterGroupId: 'root',
           },
         ],
@@ -178,7 +165,6 @@ describe('sanitizeConditionalDisplay', () => {
             parentRecordFilterGroupId: 'root',
           },
         ],
-        availableContextKeys: AVAILABLE_CONTEXT_KEYS,
         fieldMetadataItems: FIELD_METADATA_ITEMS,
       }),
     ).toEqual({

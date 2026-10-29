@@ -102,9 +102,10 @@ export const NavigationMenuItemActions = ({
             id: 'visibility',
             label: t`Visibility`,
             Icon: IconEyeX,
-            contextualText: getConditionalDisplaySummaryLabel(
-              item.conditionalDisplay,
-            ),
+            contextualText: getConditionalDisplaySummaryLabel({
+              conditionName: 'conditionalDisplay',
+              conditionalDisplay: item.conditionalDisplay,
+            }),
             hasSubMenu: true,
             onClick: onOpenVisibility,
           },

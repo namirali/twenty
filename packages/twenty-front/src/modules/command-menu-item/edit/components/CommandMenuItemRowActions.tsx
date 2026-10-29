@@ -7,7 +7,7 @@ import { type CommandMenuItemFieldsFragment } from '~/generated-metadata/graphql
 
 type CommandMenuItemRowActionsProps = Pick<
   CommandMenuItemFieldsFragment,
-  'shortLabel' | 'isPinned'
+  'shortLabel' | 'isPinned' | 'conditionalDisplay'
 > & {
   itemId: string;
   serverShortLabel: string | null;
@@ -18,6 +18,7 @@ export const CommandMenuItemRowActions = ({
   itemId,
   shortLabel,
   isPinned,
+  conditionalDisplay,
   serverShortLabel,
   onTogglePin,
 }: CommandMenuItemRowActionsProps) => {
@@ -28,6 +29,7 @@ export const CommandMenuItemRowActions = ({
       <CommandMenuItemOptionsDropdown
         itemId={itemId}
         isPinned={isPinned}
+        conditionalDisplay={conditionalDisplay}
         shortLabel={shortLabel}
         serverShortLabel={serverShortLabel}
         iconButton={

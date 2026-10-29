@@ -89,7 +89,7 @@ export const SingleWidgetTabSettingsContent = ({
           >
             <CommandMenuItem
               id={TAB_SETTINGS_SELECTABLE_ITEM_IDS.VISIBILITY_RESTRICTION}
-              label={t`Visibility`}
+              label={t`Visibility restriction`}
               Icon={IconEyeX}
               hasSubMenu
               onClick={onOpenVisibility}

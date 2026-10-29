@@ -1,42 +1,32 @@
-import { ConditionalDisplaySubjectSections } from '@/conditional-display/components/ConditionalDisplaySubjectSections';
-import { ConditionalDisplayEditorContext } from '@/conditional-display/contexts/ConditionalDisplayEditorContext';
-import { buildConditionalDisplayContextKeyRecordFilterConfig } from '@/conditional-display/utils/buildConditionalDisplayContextKeyRecordFilterConfig';
-import { ConditionalDisplayVisibilityModeSelect } from '@/conditional-display/components/ConditionalDisplayVisibilityModeSelect';
-import { type ConditionalDisplayVisibilityMode } from '@/conditional-display/types/ConditionalDisplayVisibilityMode';
+import { ConditionalDisplayRuleModeSelect } from '@/conditional-display/components/ConditionalDisplayRuleModeSelect';
+import { useConditionalDisplayRoles } from '@/conditional-display/hooks/useConditionalDisplayRoles';
+import { type ConditionalDisplayRuleMode } from '@/conditional-display/types/ConditionalDisplayRuleMode';
+import { buildConditionalDisplayFieldSelectLeadingSections } from '@/conditional-display/utils/buildConditionalDisplayFieldSelectLeadingSections';
 import { getConditionalDisplaySettingsLabel } from '@/conditional-display/utils/getConditionalDisplaySettingsLabel';
-import { hasConditionalDisplayRule } from '@/conditional-display/utils/hasConditionalDisplayRule';
 import { mapConditionalDisplayToPersistedRecordFilters } from '@/conditional-display/utils/mapConditionalDisplayToPersistedRecordFilters';
 import { sanitizeConditionalDisplay } from '@/conditional-display/utils/sanitizeConditionalDisplay';
 import { objectMetadataItemsSelector } from '@/object-metadata/states/objectMetadataItemsSelector';
 import { AdvancedFilterSidePanelContainer } from '@/object-record/advanced-filter/side-panel/components/AdvancedFilterSidePanelContainer';
-import { AdvancedFilterContext } from '@/object-record/advanced-filter/states/context/AdvancedFilterContext';
 import { RecordFieldsComponentInstanceContext } from '@/object-record/record-field/states/context/RecordFieldsComponentInstanceContext';
 import { RecordFilterGroupsComponentInstanceContext } from '@/object-record/record-filter-group/states/context/RecordFilterGroupsComponentInstanceContext';
 import { currentRecordFilterGroupsComponentState } from '@/object-record/record-filter-group/states/currentRecordFilterGroupsComponentState';
+import { RecordFiltersSettingsInitializeStateEffect } from '@/object-record/record-filter/components/RecordFiltersSettingsInitializeStateEffect';
 import { RecordFiltersComponentInstanceContext } from '@/object-record/record-filter/states/context/RecordFiltersComponentInstanceContext';
 import { currentRecordFiltersComponentState } from '@/object-record/record-filter/states/currentRecordFiltersComponentState';
 import { mapRecordFiltersToPersistedRecordFilters } from '@/object-record/record-filter/utils/mapRecordFiltersToPersistedRecordFilters';
 import { SidePanelRecordFiltersDeletedFieldsWarning } from '@/side-panel/components/SidePanelRecordFiltersDeletedFieldsWarning';
-import { RecordFiltersSettingsInitializeStateEffect } from '@/object-record/record-filter/components/RecordFiltersSettingsInitializeStateEffect';
-import { hasInitializedRecordFiltersComponentState } from '@/object-record/record-filter/states/hasInitializedRecordFiltersComponentState';
 import { useAtomComponentStateCallbackState } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateCallbackState';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { useSetAtomComponentState } from '@/ui/utilities/state/jotai/hooks/useSetAtomComponentState';
 import { styled } from '@linaria/react';
 import { useStore } from 'jotai';
-import { useEffect } from 'react';
-import { CONDITIONAL_DISPLAY_CONTEXT_KEYS } from 'twenty-shared/constants';
+import { useState } from 'react';
 import {
   type ConditionalDisplay,
-  type ConditionalDisplayContextKey,
   type ConditionalDisplaySurface,
 } from 'twenty-shared/types';
-import {
-  isConditionalDisplayAdminContextKey,
-  isDefined,
-  isNonEmptyArray,
-} from 'twenty-shared/utils';
+import { assertUnreachable, isNonEmptyArray } from 'twenty-shared/utils';
 import { themeCssVariables } from 'twenty-ui/theme';
 
 const StyledConditionalDisplaySettingsContainer = styled.div`
@@ -53,7 +43,6 @@ type ConditionalDisplaySettingsProps = {
   surfaceId: string;
   conditionalDisplay: ConditionalDisplay | null | undefined;
   objectMetadataId?: string | null;
-  readonly?: boolean;
   onConditionalDisplayChange?: (
     conditionalDisplay: ConditionalDisplay | null,
   ) => void;
@@ -64,23 +53,18 @@ export const ConditionalDisplaySettings = ({
   surfaceId,
   conditionalDisplay,
   objectMetadataId,
-  readonly,
   onConditionalDisplayChange,
 }: ConditionalDisplaySettingsProps) => {
   const instanceId = `conditional-display-${surface}-${surfaceId}`;
 
-  const availableContextKeys = (
-    Object.keys(
-      CONDITIONAL_DISPLAY_CONTEXT_KEYS,
-    ) as ConditionalDisplayContextKey[]
-  )
-    .filter(isConditionalDisplayAdminContextKey)
-    .filter((contextKey) =>
-      CONDITIONAL_DISPLAY_CONTEXT_KEYS[contextKey].surfaces.includes(surface),
-    );
+  const { roles } = useConditionalDisplayRoles();
 
-  const contextKeyRecordFilterConfig =
-    buildConditionalDisplayContextKeyRecordFilterConfig(availableContextKeys);
+  const fieldSelectLeadingSections =
+    buildConditionalDisplayFieldSelectLeadingSections(roles);
+
+  const contextFieldMetadataItems = fieldSelectLeadingSections.flatMap(
+    (fieldSelectLeadingSection) => fieldSelectLeadingSection.fieldMetadataItems,
+  );
 
   const objectMetadataItem = useAtomStateValue(
     objectMetadataItemsSelector,
@@ -102,28 +86,32 @@ export const ConditionalDisplaySettings = ({
       instanceId,
     );
 
-  const store = useStore();
-
-  const setHasInitializedRecordFilters = useSetAtomComponentState(
-    hasInitializedRecordFiltersComponentState,
+  const setCurrentRecordFilters = useSetAtomComponentState(
+    currentRecordFiltersComponentState,
     instanceId,
   );
 
-  useEffect(
-    () => () => setHasInitializedRecordFilters(false),
-    [setHasInitializedRecordFilters],
+  const setCurrentRecordFilterGroups = useSetAtomComponentState(
+    currentRecordFilterGroupsComponentState,
+    instanceId,
   );
 
-  const visibilityMode: ConditionalDisplayVisibilityMode =
+  const store = useStore();
+
+  const [selectedRuleMode, setSelectedRuleMode] =
+    useState<ConditionalDisplayRuleMode>('EVERYONE');
+
+  const ruleMode: ConditionalDisplayRuleMode =
+    selectedRuleMode === 'CUSTOM_RULE' ||
     isNonEmptyArray(currentRecordFilters) ||
-    hasConditionalDisplayRule(conditionalDisplay)
+    isNonEmptyArray(conditionalDisplay?.recordFilters)
       ? 'CUSTOM_RULE'
       : 'EVERYONE';
 
   const fieldMetadataItems = objectMetadataItem?.fields ?? [];
 
   const validFieldMetadataIds = new Set(
-    fieldMetadataItems
+    [...fieldMetadataItems, ...contextFieldMetadataItems]
       .filter((fieldMetadataItem) => fieldMetadataItem.isActive)
       .map((fieldMetadataItem) => fieldMetadataItem.id),
   );
@@ -136,10 +124,25 @@ export const ConditionalDisplaySettings = ({
         ),
         recordFilterGroups: store.get(currentRecordFilterGroupsCallbackState),
         selectedRecordsMatch: conditionalDisplay?.selectedRecordsMatch,
-        availableContextKeys,
         fieldMetadataItems,
       }),
     );
+  };
+
+  const handleRuleModeChange = (nextRuleMode: ConditionalDisplayRuleMode) => {
+    setSelectedRuleMode(nextRuleMode);
+
+    switch (nextRuleMode) {
+      case 'EVERYONE':
+        setCurrentRecordFilters([]);
+        setCurrentRecordFilterGroups([]);
+        onConditionalDisplayChange?.(null);
+        return;
+      case 'CUSTOM_RULE':
+        return;
+      default:
+        assertUnreachable(nextRuleMode);
+    }
   };
 
   return (
@@ -148,50 +151,28 @@ export const ConditionalDisplaySettings = ({
         value={{ instanceId }}
       >
         <RecordFiltersComponentInstanceContext.Provider value={{ instanceId }}>
-          <ConditionalDisplayEditorContext.Provider
-            value={{ availableContextKeys }}
-          >
-            <AdvancedFilterContext.Provider
-              value={{
-                onUpdate: readonly ? undefined : handleConditionalDisplayUpdate,
-                readonly,
-                objectMetadataItem,
-                contextKeyRecordFilterConfig,
-              }}
-            >
-              <ConditionalDisplayVisibilityModeSelect
-                dropdownId={`${instanceId}-visibility-mode`}
-                label={getConditionalDisplaySettingsLabel(surface)}
-                visibilityMode={visibilityMode}
-                readonly={readonly}
-                onEveryoneSelect={() => onConditionalDisplayChange?.(null)}
+          <ConditionalDisplayRuleModeSelect
+            dropdownId={`${instanceId}-rule-mode`}
+            label={getConditionalDisplaySettingsLabel(surface)}
+            ruleMode={ruleMode}
+            onRuleModeChange={handleRuleModeChange}
+          />
+          {ruleMode === 'CUSTOM_RULE' && (
+            <>
+              <SidePanelRecordFiltersDeletedFieldsWarning
+                validFieldMetadataIds={validFieldMetadataIds}
               />
-              {visibilityMode === 'CUSTOM_RULE' && (
-                <>
-                  {isDefined(objectMetadataItem) && (
-                    <SidePanelRecordFiltersDeletedFieldsWarning
-                      validFieldMetadataIds={validFieldMetadataIds}
-                    />
-                  )}
-                  <RecordFieldsComponentInstanceContext.Provider
-                    value={{ instanceId }}
-                  >
-                    <AdvancedFilterSidePanelContainer
-                      readonly={readonly}
-                      onUpdate={handleConditionalDisplayUpdate}
-                      objectMetadataItem={objectMetadataItem}
-                      contextKeyRecordFilterConfig={
-                        contextKeyRecordFilterConfig
-                      }
-                      FieldSelectLeadingSections={
-                        ConditionalDisplaySubjectSections
-                      }
-                    />
-                  </RecordFieldsComponentInstanceContext.Provider>
-                </>
-              )}
-            </AdvancedFilterContext.Provider>
-          </ConditionalDisplayEditorContext.Provider>
+              <RecordFieldsComponentInstanceContext.Provider
+                value={{ instanceId }}
+              >
+                <AdvancedFilterSidePanelContainer
+                  onUpdate={handleConditionalDisplayUpdate}
+                  objectMetadataItem={objectMetadataItem}
+                  fieldSelectLeadingSections={fieldSelectLeadingSections}
+                />
+              </RecordFieldsComponentInstanceContext.Provider>
+            </>
+          )}
           <RecordFiltersSettingsInitializeStateEffect
             initialRecordFilters={{
               recordFilters:
@@ -200,7 +181,7 @@ export const ConditionalDisplaySettings = ({
                 ),
               recordFilterGroups: conditionalDisplay?.recordFilterGroups ?? [],
             }}
-            contextKeyRecordFilterConfig={contextKeyRecordFilterConfig}
+            additionalFieldMetadataItems={contextFieldMetadataItems}
           />
         </RecordFiltersComponentInstanceContext.Provider>
       </RecordFilterGroupsComponentInstanceContext.Provider>

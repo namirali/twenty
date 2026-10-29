@@ -61,7 +61,6 @@ export const SettingsApplicationCommandMenuItemDetail = () => {
           <SettingsSectionSkeletonLoader />
         ) : (
           <SettingsApplicationCommandMenuItemSettingsTab
-            commandMenuItemId={commandMenuItem.id}
             label={commandMenuItem.label}
             shortLabel={commandMenuItem.shortLabel}
             icon={commandMenuItem.icon}
@@ -69,9 +68,6 @@ export const SettingsApplicationCommandMenuItemDetail = () => {
             availabilityType={commandMenuItem.availabilityType}
             conditionalAvailability={commandMenuItem.conditionalAvailability}
             conditionalDisplay={commandMenuItem.conditionalDisplay}
-            availabilityObjectMetadataId={
-              commandMenuItem.availabilityObjectMetadataId
-            }
             frontComponentName={frontComponent?.name}
             universalIdentifier={commandMenuItem.universalIdentifier}
             createdAt={commandMenuItem.createdAt}

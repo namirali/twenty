@@ -130,9 +130,10 @@ export const SidePanelPageLayoutTabSettingsContent = ({
     navigateToSidePanelSubPage(SidePanelSubPages.PageLayoutTabVisibility);
   };
 
-  const visibilityLabel = getConditionalDisplaySummaryLabel(
-    tab.conditionalDisplay,
-  );
+  const visibilityLabel = getConditionalDisplaySummaryLabel({
+    conditionName: 'conditionalDisplay',
+    conditionalDisplay: tab.conditionalDisplay,
+  });
 
   const isSingleWidgetTab = getIsSingleWidgetTab({ tab });
 

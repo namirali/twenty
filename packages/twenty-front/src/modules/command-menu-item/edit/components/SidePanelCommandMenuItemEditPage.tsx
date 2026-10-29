@@ -11,7 +11,6 @@ import { commandMenuItemsSelector } from '@/command-menu-item/states/commandMenu
 import { getCommandMenuItemPlaceholderValues } from '@/command-menu-item/utils/getCommandMenuItemPlaceholderValues';
 import { groupCommandMenuItems } from '@/command-menu-item/utils/groupCommandMenuItems';
 import { COMMAND_MENU_CLICK_OUTSIDE_ID } from '@/command-menu/constants/CommandMenuClickOutsideId';
-import { hasConditionalDisplayRule } from '@/conditional-display/utils/hasConditionalDisplayRule';
 import { SidePanelGroup } from '@/side-panel/components/SidePanelGroup';
 import { SidePanelList } from '@/side-panel/components/SidePanelList';
 import { sidePanelSearchState } from '@/side-panel/states/sidePanelSearchState';
@@ -85,11 +84,6 @@ export const SidePanelCommandMenuItemEditPage = () => {
       item.label,
       getCommandMenuItemPlaceholderValues(commandMenuContextApi),
     );
-
-  const getRuleDescription = (item: CommandMenuItemFieldsFragment) =>
-    hasConditionalDisplayRule(item.conditionalDisplay)
-      ? t`Custom rule`
-      : undefined;
 
   const { pinned: allPinnedItems, other: allOtherItems } =
     groupCommandMenuItems(editableCommandMenuItems);
@@ -244,12 +238,12 @@ export const SidePanelCommandMenuItemEditPage = () => {
                           }
                           dragHandleVisibility="hover"
                           actionsVisibility="always"
-                          description={getRuleDescription(item)}
                           actions={
                             <CommandMenuItemRowActions
                               itemId={item.id}
                               shortLabel={item.shortLabel}
                               isPinned
+                              conditionalDisplay={item.conditionalDisplay}
                               serverShortLabel={
                                 serverItemsById.get(item.id)?.shortLabel ?? null
                               }
@@ -288,7 +282,6 @@ export const SidePanelCommandMenuItemEditPage = () => {
                 >
                   <ListItem
                     actionsVisibility="always"
-                    description={getRuleDescription(item)}
                     startIcon={
                       <AppMenuItemIcon
                         Icon={ItemIcon}
@@ -300,6 +293,7 @@ export const SidePanelCommandMenuItemEditPage = () => {
                         itemId={item.id}
                         shortLabel={item.shortLabel}
                         isPinned={false}
+                        conditionalDisplay={item.conditionalDisplay}
                         serverShortLabel={
                           serverItemsById.get(item.id)?.shortLabel ?? null
                         }

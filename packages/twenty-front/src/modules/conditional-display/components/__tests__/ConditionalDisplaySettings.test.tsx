@@ -6,19 +6,20 @@ import { type ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { ConditionalDisplaySettings } from '@/conditional-display/components/ConditionalDisplaySettings';
-import { metadataStoreState } from '@/metadata-store/states/metadataStoreState';
 import {
   RecordFilterGroupLogicalOperator,
   ViewFilterOperand,
 } from 'twenty-shared/types';
+import { GetRolesDocument } from '~/generated-metadata/graphql';
 import { getJestMetadataAndApolloMocksWrapper } from '~/testing/jest/getJestMetadataAndApolloMocksWrapper';
+import { mockedRoles } from '~/testing/mock-data/generated/metadata/roles/mock-roles-data';
 import { getTestEnrichedObjectMetadataItemsMock } from '~/testing/utils/getTestEnrichedObjectMetadataItemsMock';
 
 jest.mock('@/object-record/record-field/ui/components/FormFieldInput', () => ({
   FormFieldInput: () => <div data-testid="form-field-input" />,
 }));
 
-const SALES_ROLE_ID = 'sales-role-id';
+const memberRole = mockedRoles.find((role) => role.label === 'Member')!;
 
 const companyObjectMetadataItem = getTestEnrichedObjectMetadataItemsMock().find(
   (objectMetadataItem) => objectMetadataItem.nameSingular === 'company',
@@ -32,22 +33,10 @@ const remoteWorkOption = workPolicyFieldMetadataItem.options!.find(
   (option) => option.label === 'Remote Work',
 )!;
 
-const Wrapper = getJestMetadataAndApolloMocksWrapper({
-  onInitializeJotaiStore: (store) => {
-    store.set(metadataStoreState.atomFamily('roles'), {
-      current: [
-        { id: 'admin-role-id', label: 'Admin' },
-        { id: SALES_ROLE_ID, label: 'Sales' },
-      ],
-      draft: [],
-      status: 'up-to-date',
-    });
-  },
-});
-
 const renderConditionalDisplaySettings = ({
   surface = 'navigationMenuItem',
   surfaceId = 'navigation-menu-item-id',
+  conditionalDisplay = null,
   objectMetadataId,
   onConditionalDisplayChange,
 }: Pick<
@@ -57,7 +46,7 @@ const renderConditionalDisplaySettings = ({
   Partial<
     Pick<
       ComponentProps<typeof ConditionalDisplaySettings>,
-      'surface' | 'surfaceId' | 'objectMetadataId'
+      'surface' | 'surfaceId' | 'conditionalDisplay' | 'objectMetadataId'
     >
   >) =>
   render(
@@ -66,36 +55,52 @@ const renderConditionalDisplaySettings = ({
         <ConditionalDisplaySettings
           surface={surface}
           surfaceId={surfaceId}
-          conditionalDisplay={null}
+          conditionalDisplay={conditionalDisplay}
           objectMetadataId={objectMetadataId}
           onConditionalDisplayChange={onConditionalDisplayChange}
         />
       </I18nProvider>
     </MemoryRouter>,
-    { wrapper: Wrapper },
+    {
+      wrapper: getJestMetadataAndApolloMocksWrapper({
+        apolloMocks: [
+          {
+            request: { query: GetRolesDocument },
+            result: {
+              data: { getRoles: mockedRoles, getPermissionFlags: [] },
+            },
+          },
+        ],
+      }),
+    },
   );
 
+const openCustomRule = async (user: ReturnType<typeof userEvent.setup>) => {
+  await user.click(await screen.findByText('Everyone'));
+  await user.click(await screen.findByText('Custom rule'));
+  await user.click(await screen.findByRole('button', { name: 'Add filter' }));
+};
+
 describe('ConditionalDisplaySettings', () => {
-  it('stores a role rule picked in the builder', async () => {
+  it('stores a role rule picked in the builder under its context key', async () => {
     const user = userEvent.setup();
     const onConditionalDisplayChange = jest.fn();
 
     renderConditionalDisplaySettings({ onConditionalDisplayChange });
 
-    await user.click(await screen.findByText('Everyone'));
-    await user.click(await screen.findByText('Custom rule'));
+    await openCustomRule(user);
 
-    expect(await screen.findByText('Is any of')).toBeInTheDocument();
+    expect(await screen.findByText('Role')).toBeInTheDocument();
 
-    await user.click(await screen.findByText('Select roles'));
-    await user.click(await screen.findByText('Sales'));
+    await user.click(await screen.findByLabelText('Select options'));
+    await user.click(await screen.findByText(memberRole.label));
 
     expect(onConditionalDisplayChange).toHaveBeenLastCalledWith({
       recordFilters: [
         expect.objectContaining({
           contextKey: 'currentRoleId',
           operand: ViewFilterOperand.IS,
-          value: JSON.stringify([SALES_ROLE_ID]),
+          value: JSON.stringify([memberRole.id]),
         }),
       ],
       recordFilterGroups: [
@@ -106,28 +111,49 @@ describe('ConditionalDisplaySettings', () => {
     });
   });
 
-  it('shows Everyone again once the last rule row is removed', async () => {
-    const user = userEvent.setup();
-
+  it('shows a stored role rule on its role row', async () => {
     renderConditionalDisplaySettings({
+      conditionalDisplay: {
+        recordFilters: [
+          {
+            id: 'role-filter',
+            contextKey: 'currentRoleId',
+            operand: ViewFilterOperand.IS,
+            value: JSON.stringify([memberRole.id]),
+          },
+        ],
+        recordFilterGroups: [],
+      },
       onConditionalDisplayChange: jest.fn(),
     });
 
-    await user.click(await screen.findByText('Everyone'));
-    await user.click(await screen.findByText('Custom rule'));
+    expect(await screen.findByText('Custom rule')).toBeInTheDocument();
+    expect(await screen.findByText('Role')).toBeInTheDocument();
+    expect(await screen.findByText(memberRole.label)).toBeInTheDocument();
+  });
 
-    expect(await screen.findByText('Select roles')).toBeInTheDocument();
+  it('stores no rule once the last rule row is removed', async () => {
+    const user = userEvent.setup();
+    const onConditionalDisplayChange = jest.fn();
+
+    renderConditionalDisplaySettings({ onConditionalDisplayChange });
+
+    await openCustomRule(user);
+
+    expect(await screen.findByText('Role')).toBeInTheDocument();
 
     await user.click(
       await screen.findByLabelText('Record filter rule options'),
     );
     await user.click(await screen.findByText('Remove rule'));
 
-    expect(await screen.findByText('Everyone')).toBeInTheDocument();
-    expect(screen.queryByText('Select roles')).not.toBeInTheDocument();
+    expect(onConditionalDisplayChange).toHaveBeenLastCalledWith(null);
+    expect(
+      await screen.findByRole('button', { name: 'Add filter' }),
+    ).toBeInTheDocument();
   });
 
-  it('shows an empty state when the subject search matches nothing', async () => {
+  it('shows an empty state when the field search matches nothing', async () => {
     const user = userEvent.setup();
 
     renderConditionalDisplaySettings({
@@ -137,8 +163,7 @@ describe('ConditionalDisplaySettings', () => {
       onConditionalDisplayChange: jest.fn(),
     });
 
-    await user.click(await screen.findByText('Everyone'));
-    await user.click(await screen.findByText('Custom rule'));
+    await openCustomRule(user);
     await user.click(await screen.findByText('Role'));
     await user.type(await screen.findByLabelText('Search fields'), 'zzz');
 
@@ -156,8 +181,7 @@ describe('ConditionalDisplaySettings', () => {
       onConditionalDisplayChange,
     });
 
-    await user.click(await screen.findByText('Everyone'));
-    await user.click(await screen.findByText('Custom rule'));
+    await openCustomRule(user);
     await user.click(await screen.findByText('Role'));
     await user.click(await screen.findByText('Work Policy'));
     await user.click(await screen.findByText('Contains'));

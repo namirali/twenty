@@ -65,7 +65,8 @@ const THIRD_PARTY_COMMAND_MENU_ITEM: CommandMenuItemFieldsFragment = {
   payload: null,
   universalIdentifier: null,
   coreWorkflowVersionId: null,
-  conditionalPinnedExpression: null,
+  conditionalPinned: null,
+  conditionalDisplay: null,
   navigationTargetObjectMetadataId: null,
   pageLayoutId: null,
 };

@@ -83,7 +83,11 @@ export const NavigationMenuItemMenu = ({
   const isEditing = mode.type === 'edit';
   const dropdownType = DROPDOWN_TYPE_BY_MENU_MODE[mode.type];
   const isPanel = dropdownType === 'panel';
-  const menuAriaLabel = isEditing ? t`Edit link` : t`Menu item actions`;
+  const menuAriaLabel = isEditing
+    ? t`Edit link`
+    : mode.type === 'visibility'
+      ? t`Visibility`
+      : t`Menu item actions`;
   const openAddMenu = (target: NavigationMenuItemAddTarget) => {
     const { folderId } = target;
 

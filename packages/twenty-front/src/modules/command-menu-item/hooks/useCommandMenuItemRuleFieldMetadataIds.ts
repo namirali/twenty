@@ -1,6 +1,7 @@
 import { commandMenuItemsSelector } from '@/command-menu-item/states/commandMenuItemsSelector';
-import { getConditionalDisplayFieldMetadataIds } from '@/conditional-display/utils/getConditionalDisplayFieldMetadataIds';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
+import { isNonEmptyString } from '@sniptt/guards';
+import { type ConditionalDisplayRecordFilter } from 'twenty-shared/types';
 
 export const useCommandMenuItemRuleFieldMetadataIds = (
   objectMetadataItemId: string,
@@ -13,6 +14,11 @@ export const useCommandMenuItemRuleFieldMetadataIds = (
         commandMenuItem.availabilityObjectMetadataId === objectMetadataItemId,
     )
     .flatMap((commandMenuItem) =>
-      getConditionalDisplayFieldMetadataIds(commandMenuItem.conditionalDisplay),
+      (commandMenuItem.conditionalDisplay?.recordFilters ?? [])
+        .map(
+          (recordFilter: ConditionalDisplayRecordFilter) =>
+            recordFilter.fieldMetadataId,
+        )
+        .filter(isNonEmptyString),
     );
 };

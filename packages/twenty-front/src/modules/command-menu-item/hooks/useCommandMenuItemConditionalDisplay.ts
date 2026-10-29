@@ -24,9 +24,6 @@ export const useCommandMenuItemConditionalDisplay = (
   return useMemo(() => {
     const conditionalDisplayContext: ConditionalDisplayEvaluationContext = {
       ...commandMenuContextApi,
-      areAllSelectedRecordsFavorites:
-        commandMenuContextApi.favoriteRecordIds.length ===
-        commandMenuContextApi.numberOfSelectedRecords,
       currentRoleId,
       currentWorkspaceMemberId,
       device: getConditionalDisplayDevice({

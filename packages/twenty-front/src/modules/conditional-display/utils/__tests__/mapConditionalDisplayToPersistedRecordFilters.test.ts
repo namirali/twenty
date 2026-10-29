@@ -2,7 +2,7 @@ import { mapConditionalDisplayToPersistedRecordFilters } from '@/conditional-dis
 import { ViewFilterOperand } from 'twenty-shared/types';
 
 describe('mapConditionalDisplayToPersistedRecordFilters', () => {
-  it('maps admin context rows and field rows for the editor', () => {
+  it('maps context rows onto their virtual field and keeps field rows for the editor', () => {
     expect(
       mapConditionalDisplayToPersistedRecordFilters({
         recordFilters: [
@@ -24,8 +24,7 @@ describe('mapConditionalDisplayToPersistedRecordFilters', () => {
     ).toEqual([
       {
         id: 'role-filter',
-        fieldMetadataId: '',
-        contextKey: 'currentRoleId',
+        fieldMetadataId: 'currentRoleId',
         operand: ViewFilterOperand.IS,
         value: JSON.stringify(['admin-role-id']),
         recordFilterGroupId: undefined,
@@ -36,7 +35,6 @@ describe('mapConditionalDisplayToPersistedRecordFilters', () => {
       {
         id: 'name-filter',
         fieldMetadataId: 'name-field-id',
-        contextKey: undefined,
         operand: ViewFilterOperand.CONTAINS,
         value: 'Air',
         recordFilterGroupId: 'root',
@@ -45,20 +43,5 @@ describe('mapConditionalDisplayToPersistedRecordFilters', () => {
         relationTargetFieldMetadataId: undefined,
       },
     ]);
-  });
-
-  it('throws on an engine context row instead of dropping it', () => {
-    expect(() =>
-      mapConditionalDisplayToPersistedRecordFilters({
-        recordFilters: [
-          {
-            id: 'selection-filter',
-            contextKey: 'numberOfSelectedRecords',
-            operand: ViewFilterOperand.GREATER_THAN_OR_EQUAL,
-            value: JSON.stringify(1),
-          },
-        ],
-      }),
-    ).toThrow('numberOfSelectedRecords');
   });
 });

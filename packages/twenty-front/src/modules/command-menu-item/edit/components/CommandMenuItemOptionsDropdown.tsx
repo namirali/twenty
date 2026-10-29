@@ -1,6 +1,7 @@
 import { useResetCommandMenuItemToDefault } from '@/command-menu-item/edit/hooks/useResetCommandMenuItemToDefault';
 import { useUpdateCommandMenuItemInDraft } from '@/command-menu-item/edit/hooks/useUpdateCommandMenuItemInDraft';
 import { commandMenuItemVisibilityEditItemIdState } from '@/command-menu-item/edit/states/commandMenuItemVisibilityEditItemIdState';
+import { getConditionalDisplaySummaryLabel } from '@/conditional-display/utils/getConditionalDisplaySummaryLabel';
 import { useSidePanelSubPageHistory } from '@/side-panel/hooks/useSidePanelSubPageHistory';
 import { SidePanelSubPages } from '@/side-panel/types/SidePanelSubPages';
 import { DropdownContent } from '@/ui/layout/dropdown/components/DropdownContent';
@@ -16,7 +17,7 @@ import { type CommandMenuItemFieldsFragment } from '~/generated-metadata/graphql
 
 type CommandMenuItemOptionsDropdownProps = Pick<
   CommandMenuItemFieldsFragment,
-  'shortLabel' | 'isPinned'
+  'shortLabel' | 'isPinned' | 'conditionalDisplay'
 > & {
   itemId: string;
   serverShortLabel: string | null | undefined;
@@ -29,6 +30,7 @@ const getCommandMenuItemOptionsDropdownId = (itemId: string) =>
 export const CommandMenuItemOptionsDropdown = ({
   itemId,
   isPinned,
+  conditionalDisplay,
   shortLabel,
   serverShortLabel,
   iconButton,
@@ -76,6 +78,11 @@ export const CommandMenuItemOptionsDropdown = ({
           <Dropdown.ActionItem
             startIcon={<IconEyeX />}
             hasSubmenu
+            description={getConditionalDisplaySummaryLabel({
+              conditionName: 'conditionalDisplay',
+              conditionalDisplay,
+            })}
+            descriptionPlacement="end"
             onClick={handleOpenVisibility}
           >{t`Visibility`}</Dropdown.ActionItem>
           <Dropdown.ActionItem

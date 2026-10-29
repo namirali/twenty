@@ -46,7 +46,8 @@ const PINNED_COMMAND_MENU_ITEM: CommandMenuItemFieldsFragment = {
   universalIdentifier: null,
   applicationId: null,
   coreWorkflowVersionId: null,
-  conditionalPinnedExpression: null,
+  conditionalPinned: null,
+  conditionalDisplay: null,
   navigationTargetObjectMetadataId: null,
   pageLayoutId: null,
 };

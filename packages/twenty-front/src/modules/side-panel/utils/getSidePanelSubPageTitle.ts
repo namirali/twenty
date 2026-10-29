@@ -20,7 +20,7 @@ export const getSidePanelSubPageTitle = (
     case SidePanelSubPages.PageLayoutTabVisibility:
     case SidePanelSubPages.PageLayoutFieldVisibility:
     case SidePanelSubPages.CommandMenuItemVisibility:
-      return t`Visibility`;
+      return t`Visibility Restriction`;
     default:
       assertUnreachable(subPage);
   }

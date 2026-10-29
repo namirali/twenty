@@ -97,13 +97,14 @@ export const WidgetSettingsManageSection = ({
         >
           <CommandMenuItem
             id={WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.VISIBILITY_RESTRICTION}
-            label={t`Visibility`}
+            label={t`Visibility Restriction`}
             Icon={IconEyeX}
             hasSubMenu
             onClick={handleNavigateToVisibility}
-            description={getConditionalDisplaySummaryLabel(
-              widgetInEditMode?.conditionalDisplay,
-            )}
+            description={getConditionalDisplaySummaryLabel({
+              conditionName: 'conditionalDisplay',
+              conditionalDisplay: widgetInEditMode?.conditionalDisplay,
+            })}
             contextualTextPosition="right"
           />
         </SelectableListItem>
