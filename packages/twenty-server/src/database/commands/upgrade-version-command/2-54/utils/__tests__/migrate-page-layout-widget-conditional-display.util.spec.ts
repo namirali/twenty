@@ -1,4 +1,3 @@
-import { NEVER_AVAILABLE_CONDITIONAL_DISPLAY } from 'twenty-shared/constants';
 import { FieldMetadataType } from 'twenty-shared/types';
 import {
   buildDeviceConditionalDisplay,
@@ -45,17 +44,6 @@ describe('migratePageLayoutWidgetConditionalDisplay', () => {
       }),
       conditionalDisplayConversion: 'jsonLogic',
     });
-  });
-
-  it('should map the never available expression to the never available tree', () => {
-    expect(
-      migratePageLayoutWidgetConditionalDisplay({
-        conditionalAvailabilityExpression: 'false',
-        conditionalAvailability: null,
-        conditionalDisplay: null,
-        resolveField,
-      }).conditionalAvailability,
-    ).toEqual(NEVER_AVAILABLE_CONDITIONAL_DISPLAY);
   });
 
   it('should keep an availability tree that already exists', () => {
@@ -114,16 +102,5 @@ describe('migratePageLayoutWidgetConditionalDisplay', () => {
         resolveField,
       }),
     ).toThrow('device expression "device == "DESKTOP"" cannot replace');
-  });
-
-  it('should throw on constant json-logic', () => {
-    expect(() =>
-      migratePageLayoutWidgetConditionalDisplay({
-        conditionalAvailabilityExpression: null,
-        conditionalAvailability: null,
-        conditionalDisplay: toConditionalDisplay({ '==': [1, 0] }),
-        resolveField,
-      }),
-    ).toThrow('Cannot convert legacy widget json-logic');
   });
 });

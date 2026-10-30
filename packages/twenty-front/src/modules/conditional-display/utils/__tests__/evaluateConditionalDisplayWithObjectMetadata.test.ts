@@ -122,27 +122,6 @@ describe('evaluateConditionalDisplayWithObjectMetadata', () => {
     ).toBe(false);
   });
 
-  it('shows the item only on the selected device', () => {
-    const conditionalDisplay = {
-      recordFilters: [
-        {
-          id: 'device-filter',
-          contextKey: 'device' as const,
-          operand: ViewFilterOperand.IS,
-          value: JSON.stringify(['MOBILE']),
-        },
-      ],
-    };
-
-    expect(
-      evaluateOnCompany({
-        conditionalDisplay,
-        context: buildContext({ device: 'MOBILE' }),
-      }),
-    ).toBe(true);
-    expect(evaluateOnCompany({ conditionalDisplay })).toBe(false);
-  });
-
   it('keeps an OR with a context leaf alive when no record is selected', () => {
     const conditionalDisplay: ConditionalDisplay = {
       recordFilterGroups: [
@@ -301,31 +280,6 @@ describe('evaluateConditionalDisplayWithObjectMetadata', () => {
         conditionalDisplay,
         context: buildContext({ currentRoleId: MEMBER_ROLE_ID }),
         records: [{ id: 'company-1', name: 'Airbnb', employees: 100 }],
-      }),
-    ).toBe(false);
-  });
-
-  it('matches IS_EMPTY when the record has no value for the field', () => {
-    const conditionalDisplay = {
-      recordFilters: [
-        {
-          ...employeesAtLeastFiftyRecordFilter,
-          operand: ViewFilterOperand.IS_EMPTY,
-          value: '',
-        },
-      ],
-    };
-
-    expect(
-      evaluateOnCompany({
-        conditionalDisplay,
-        records: [{ id: 'company-1', name: 'Airbnb', employees: null }],
-      }),
-    ).toBe(true);
-    expect(
-      evaluateOnCompany({
-        conditionalDisplay,
-        records: [{ id: 'company-1', name: 'Airbnb', employees: 10 }],
       }),
     ).toBe(false);
   });

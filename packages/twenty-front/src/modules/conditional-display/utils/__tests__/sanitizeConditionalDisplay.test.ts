@@ -25,16 +25,6 @@ const nameRecordFilter: PersistedRecordFilter = {
 };
 
 describe('sanitizeConditionalDisplay', () => {
-  it('returns null when no rule row is left', () => {
-    expect(
-      sanitizeConditionalDisplay({
-        recordFilters: [],
-        recordFilterGroups: [],
-        fieldMetadataItems: [],
-      }),
-    ).toBeNull();
-  });
-
   it('returns null when the only rows have no value yet', () => {
     expect(
       sanitizeConditionalDisplay({

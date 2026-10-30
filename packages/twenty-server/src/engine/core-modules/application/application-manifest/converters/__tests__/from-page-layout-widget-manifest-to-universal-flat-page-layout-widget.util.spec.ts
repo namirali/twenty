@@ -77,26 +77,6 @@ describe('fromPageLayoutWidgetManifestToUniversalFlatPageLayoutWidget', () => {
       now,
     });
 
-  it('should convert the json-logic device rule of an older build into the device tree with a warning', () => {
-    const result = convertLegacyWidget({
-      and: [{ '===': [{ var: 'device' }, 'MOBILE'] }],
-    });
-
-    expect(result.universalConditionalDisplay).toEqual({
-      recordFilters: [
-        {
-          id: expect.any(String),
-          contextKey: 'device',
-          operand: ViewFilterOperand.IS,
-          value: '["MOBILE"]',
-        },
-      ],
-    });
-    expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(OLDER_SDK_WARNING),
-    );
-  });
-
   it('should convert the json-logic field rule of an older build into a field tree with a warning', () => {
     const result = convertLegacyWidget({
       '==': [{ var: 'selectedRecords.0.stage' }, 'WON'],

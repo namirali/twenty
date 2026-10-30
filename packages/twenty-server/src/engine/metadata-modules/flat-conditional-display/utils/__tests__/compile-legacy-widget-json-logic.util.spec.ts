@@ -34,13 +34,17 @@ const resolveField = (fieldName: string) => FIELDS_BY_NAME[fieldName];
 
 describe('compileLegacyWidgetJsonLogic', () => {
   it.each(LEGACY_WIDGET_JSON_LOGIC_CORPUS)(
-    'should convert %j into rows on the device or a known field',
+    'should convert %j into the same rows on the device or a known field every time',
     (jsonLogic) => {
-      const { recordFilters = [] } = compileLegacyWidgetJsonLogic({
+      const conditionalDisplay = compileLegacyWidgetJsonLogic({
         jsonLogic,
         resolveField,
       });
+      const { recordFilters = [] } = conditionalDisplay;
 
+      expect(compileLegacyWidgetJsonLogic({ jsonLogic, resolveField })).toEqual(
+        conditionalDisplay,
+      );
       expect(recordFilters.length).toBeGreaterThan(0);
       recordFilters.forEach(({ contextKey, fieldMetadataId }) => {
         expect(['device', MULTI_SELECT_FIELD_ID, SELECT_FIELD_ID]).toContain(
@@ -144,14 +148,6 @@ describe('compileLegacyWidgetJsonLogic', () => {
           logicalOperator: RecordFilterGroupLogicalOperator.OR,
         },
       ],
-    });
-  });
-
-  it('should give the same json-logic the same row ids', () => {
-    LEGACY_WIDGET_JSON_LOGIC_CORPUS.forEach((jsonLogic) => {
-      expect(compileLegacyWidgetJsonLogic({ jsonLogic, resolveField })).toEqual(
-        compileLegacyWidgetJsonLogic({ jsonLogic, resolveField }),
-      );
     });
   });
 

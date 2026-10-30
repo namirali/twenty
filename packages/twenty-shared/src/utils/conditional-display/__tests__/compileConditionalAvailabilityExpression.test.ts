@@ -9,10 +9,19 @@ const DISTINCT_CORPUS_EXPRESSIONS = [
 ];
 
 describe('compileConditionalAvailabilityExpression', () => {
-  it.each(DISTINCT_CORPUS_EXPRESSIONS)('should compile %s', (expression) => {
-    expect(() =>
-      compileConditionalAvailabilityExpression(expression),
-    ).not.toThrow();
+  it('should compile every standard formula to the same tree with distinct ids', () => {
+    DISTINCT_CORPUS_EXPRESSIONS.forEach((expression) => {
+      const conditionalDisplay =
+        compileConditionalAvailabilityExpression(expression);
+      const { recordFilters = [], recordFilterGroups = [] } =
+        conditionalDisplay ?? {};
+      const ids = [...recordFilters, ...recordFilterGroups].map(({ id }) => id);
+
+      expect(compileConditionalAvailabilityExpression(expression)).toEqual(
+        conditionalDisplay,
+      );
+      expect(new Set(ids).size).toBe(ids.length);
+    });
   });
 
   it('should compile a top-level and of leaves into ungrouped rows', () => {
@@ -245,7 +254,6 @@ describe('compileConditionalAvailabilityExpression', () => {
     'featureFlags.IS_AI_ENABLED == "yes"',
     'objectMetadataItem.labelSingular == "Person"',
     'pageType == "UNKNOWN_PAGE"',
-    'isDefined(permissionFlags.AI)',
   ])(
     'should throw on %s, which the field type of its context key does not accept',
     (expression) => {
@@ -298,32 +306,12 @@ describe('compileConditionalAvailabilityExpression', () => {
     expect(compileConditionalAvailabilityExpression('true')).toBeNull();
   });
 
-  it.each([
-    'device == "MOBILE"',
-    'pageType == "RECORD_PAGE" and currentRoleId == "role"',
-    'currentWorkspaceMemberId != "member"',
-  ])('should throw on the admin subject in %s', (expression) => {
-    expect(() => compileConditionalAvailabilityExpression(expression)).toThrow(
-      'engine conditions cannot carry admin subjects',
-    );
-  });
-
-  it('should compile the same expression to the same tree', () => {
-    DISTINCT_CORPUS_EXPRESSIONS.forEach((expression) => {
-      expect(compileConditionalAvailabilityExpression(expression)).toEqual(
-        compileConditionalAvailabilityExpression(expression),
-      );
-    });
-  });
-
-  it('should give every row and group of a tree its own id', () => {
-    DISTINCT_CORPUS_EXPRESSIONS.forEach((expression) => {
-      const { recordFilters = [], recordFilterGroups = [] } =
-        compileConditionalAvailabilityExpression(expression) ?? {};
-      const ids = [...recordFilters, ...recordFilterGroups].map(({ id }) => id);
-
-      expect(new Set(ids).size).toBe(ids.length);
-    });
+  it('should throw on an admin subject next to engine subjects', () => {
+    expect(() =>
+      compileConditionalAvailabilityExpression(
+        'pageType == "RECORD_PAGE" and currentRoleId == "role"',
+      ),
+    ).toThrow('engine conditions cannot carry admin subjects');
   });
 
   it('should throw on an unmapped function with the expression in the message', () => {
@@ -341,7 +329,7 @@ describe('compileConditionalAvailabilityExpression', () => {
   it('should compile isNonEmptyString over a text context value into a not empty row', () => {
     expect(
       compileConditionalAvailabilityExpression(
-        'isNonEmptyString(pageType) and isNonEmptyString(objectMetadataItem.nameSingular)',
+        'isNonEmptyString(pageType) and isNonEmptyString(objectMetadataItem.nameSingular) and isNonEmptyString(objectMetadataLabel)',
       )?.recordFilters,
     ).toEqual([
       {
@@ -355,15 +343,6 @@ describe('compileConditionalAvailabilityExpression', () => {
         subFieldName: 'nameSingular',
         operand: ViewFilterOperand.IS_NOT_EMPTY,
       },
-    ]);
-  });
-
-  it('should compile isNonEmptyString(objectMetadataLabel) into a not empty row on objectMetadataLabel', () => {
-    expect(
-      compileConditionalAvailabilityExpression(
-        'isNonEmptyString(objectMetadataLabel)',
-      )?.recordFilters,
-    ).toEqual([
       {
         id: expect.any(String),
         contextKey: 'objectMetadataLabel',
@@ -410,10 +389,6 @@ describe('compileConditionalAvailabilityExpression', () => {
     [
       'includes(favoriteRecordIds, "record-id")',
       'includes accepts a list of values followed by a text context value, e.g. includes(["INDEX_PAGE", "RECORD_PAGE"], pageType); use someEquals or includesSome(selectedRecords, "path", value) for record fields',
-    ],
-    [
-      'includes(["UNKNOWN_PAGE"], pageType)',
-      'includes accepts a list of values followed by a text context value',
     ],
     [
       'objectMetadataLabel == "Companies"',

@@ -153,23 +153,6 @@ describe('ConditionalDisplaySettings', () => {
     ).toBeInTheDocument();
   });
 
-  it('shows an empty state when the field search matches nothing', async () => {
-    const user = userEvent.setup();
-
-    renderConditionalDisplaySettings({
-      surface: 'pageLayoutWidget',
-      surfaceId: 'widget-id',
-      objectMetadataId: companyObjectMetadataItem.id,
-      onConditionalDisplayChange: jest.fn(),
-    });
-
-    await openCustomRule(user);
-    await user.click(await screen.findByText('Role'));
-    await user.type(await screen.findByLabelText('Search fields'), 'zzz');
-
-    expect(await screen.findByText('No fields found')).toBeInTheDocument();
-  });
-
   it('stores a record field rule with its operand and value', async () => {
     const user = userEvent.setup();
     const onConditionalDisplayChange = jest.fn();

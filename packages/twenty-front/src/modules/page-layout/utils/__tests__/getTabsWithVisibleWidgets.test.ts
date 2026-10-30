@@ -3,27 +3,14 @@ import { buildWidgetVisibilityContext } from '@/page-layout/utils/buildWidgetVis
 import { getTabsWithVisibleWidgets } from '@/page-layout/utils/getTabsWithVisibleWidgets';
 import {
   type ConditionalDisplay,
-  type ConditionalDisplayDevice,
   ViewFilterOperand,
 } from 'twenty-shared/types';
+import { buildDeviceConditionalDisplay } from 'twenty-shared/utils';
 import {
   PageLayoutTabLayoutMode,
   WidgetConfigurationType,
   WidgetType,
 } from '~/generated-metadata/graphql';
-
-const buildDeviceConditionalDisplay = (
-  device: ConditionalDisplayDevice,
-): ConditionalDisplay => ({
-  recordFilters: [
-    {
-      id: 'device-filter',
-      contextKey: 'device',
-      operand: ViewFilterOperand.IS,
-      value: JSON.stringify([device]),
-    },
-  ],
-});
 
 const MOBILE_ONLY_CONDITIONAL_DISPLAY = buildDeviceConditionalDisplay('MOBILE');
 

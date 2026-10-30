@@ -1,7 +1,5 @@
-import {
-  type ConditionalDisplay,
-  ViewFilterOperand,
-} from 'twenty-shared/types';
+import { type ConditionalDisplay } from 'twenty-shared/types';
+import { buildDeviceConditionalDisplay } from 'twenty-shared/utils';
 
 import { type PageLayoutTab } from '@/page-layout/types/PageLayoutTab';
 import { type WidgetVisibilityContext } from '@/page-layout/types/WidgetVisibilityContext';
@@ -22,19 +20,6 @@ const buildContext = (
   currentRoleId: null,
   currentWorkspaceMemberId: null,
   objectMetadataItems: [],
-});
-
-const buildDeviceConditionalDisplay = (
-  device: WidgetVisibilityContext['device'],
-): ConditionalDisplay => ({
-  recordFilters: [
-    {
-      id: 'device-filter',
-      contextKey: 'device',
-      operand: ViewFilterOperand.IS,
-      value: JSON.stringify([device]),
-    },
-  ],
 });
 
 describe('filterVisibleWidgets', () => {

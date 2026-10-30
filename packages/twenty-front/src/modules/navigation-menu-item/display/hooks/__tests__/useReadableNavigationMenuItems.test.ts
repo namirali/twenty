@@ -1,5 +1,6 @@
 import { renderHook } from '@testing-library/react';
-import { NavigationMenuItemType, ViewFilterOperand } from 'twenty-shared/types';
+import { NavigationMenuItemType } from 'twenty-shared/types';
+import { buildDeviceConditionalDisplay } from 'twenty-shared/utils';
 import { useIsMobile } from 'twenty-ui/utilities';
 import { type NavigationMenuItem } from '~/generated-metadata/graphql';
 
@@ -73,16 +74,7 @@ describe('useReadableNavigationMenuItems', () => {
       ...FOLDER,
       id: 'mobile-only-link',
       type: NavigationMenuItemType.LINK,
-      conditionalDisplay: {
-        recordFilters: [
-          {
-            id: 'device-filter',
-            contextKey: 'device',
-            operand: ViewFilterOperand.IS,
-            value: JSON.stringify(['MOBILE']),
-          },
-        ],
-      },
+      conditionalDisplay: buildDeviceConditionalDisplay('MOBILE'),
     };
 
     const renderForDevice = (isMobile: boolean) => {

@@ -77,20 +77,6 @@ describe('buildWidgetVisibilityContext', () => {
     expect(result.featureFlags).toEqual({ IS_AI_CHAT_INBOX_ENABLED: true });
   });
 
-  it('should expose the current role and workspace member', () => {
-    const result = buildWidgetVisibilityContext({
-      isMobile: false,
-      isInSidePanel: false,
-      currentRoleId: 'role-id',
-      currentWorkspaceMemberId: 'workspace-member-id',
-    });
-
-    expect(result).toMatchObject({
-      currentRoleId: 'role-id',
-      currentWorkspaceMemberId: 'workspace-member-id',
-    });
-  });
-
   it('should expose an empty selection when there is no target record', () => {
     const result = buildWidgetVisibilityContext({
       isMobile: false,

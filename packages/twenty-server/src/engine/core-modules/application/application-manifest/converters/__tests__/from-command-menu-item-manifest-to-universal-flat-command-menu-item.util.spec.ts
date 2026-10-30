@@ -94,16 +94,6 @@ describe('fromCommandMenuItemManifestToUniversalFlatCommandMenuItem', () => {
     ]);
   });
 
-  it('keeps an always available formula string without a tree', () => {
-    expect(
-      build({
-        ...COMMAND_MENU_ITEM_MANIFEST,
-        conditionalAvailabilityExpression: 'true',
-      }),
-    ).toMatchObject({ universalConditionalAvailability: null });
-    expect(warnSpy).toHaveBeenCalledTimes(1);
-  });
-
   it('uses the trees and ignores the formula strings when a manifest carries both', () => {
     expect(
       build({

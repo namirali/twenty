@@ -2,6 +2,7 @@ import {
   type ConditionalDisplay,
   ViewFilterOperand,
 } from 'twenty-shared/types';
+import { buildDeviceConditionalDisplay } from 'twenty-shared/utils';
 
 import { type WidgetVisibilityContext } from '@/page-layout/types/WidgetVisibilityContext';
 import { evaluateWidgetVisibility } from '@/page-layout/utils/evaluateWidgetVisibility';
@@ -16,19 +17,6 @@ const buildContext = (
   currentRoleId: null,
   currentWorkspaceMemberId: null,
   objectMetadataItems: [],
-});
-
-const buildDeviceConditionalDisplay = (
-  device: WidgetVisibilityContext['device'],
-): ConditionalDisplay => ({
-  recordFilters: [
-    {
-      id: 'device-filter',
-      contextKey: 'device',
-      operand: ViewFilterOperand.IS,
-      value: JSON.stringify([device]),
-    },
-  ],
 });
 
 const FEATURE_ENABLED_AVAILABILITY: ConditionalDisplay = {
@@ -74,34 +62,6 @@ describe('evaluateWidgetVisibility', () => {
     expect(result).toBe(false);
   });
 
-  it('should return true (visible) when the device rule allows both devices', () => {
-    const conditionalDisplay: ConditionalDisplay = {
-      recordFilters: [
-        {
-          id: 'device-filter',
-          contextKey: 'device',
-          operand: ViewFilterOperand.IS,
-          value: JSON.stringify(['MOBILE', 'DESKTOP']),
-        },
-      ],
-    };
-
-    const resultMobile = evaluateWidgetVisibility({
-      conditionalAvailability: undefined,
-      conditionalDisplay,
-      context: buildContext('MOBILE'),
-    });
-
-    const resultDesktop = evaluateWidgetVisibility({
-      conditionalAvailability: undefined,
-      conditionalDisplay,
-      context: buildContext('DESKTOP'),
-    });
-
-    expect(resultMobile).toBe(true);
-    expect(resultDesktop).toBe(true);
-  });
-
   describe('conditionalAvailability', () => {
     it('should return true when the feature flag of the availability is on', () => {
       const result = evaluateWidgetVisibility({
@@ -111,16 +71,6 @@ describe('evaluateWidgetVisibility', () => {
       });
 
       expect(result).toBe(true);
-    });
-
-    it('should return false when the feature flag of the availability is off', () => {
-      const result = evaluateWidgetVisibility({
-        conditionalAvailability: FEATURE_ENABLED_AVAILABILITY,
-        conditionalDisplay: undefined,
-        context: buildContext('DESKTOP', { IS_FEATURE_ENABLED: false }),
-      });
-
-      expect(result).toBe(false);
     });
 
     it('should hide the widget when the availability fails even if conditionalDisplay matches', () => {

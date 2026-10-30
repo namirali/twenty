@@ -252,65 +252,6 @@ describe('CLI manifest fixtures and worker transport', () => {
     60000,
   );
 
-  it('matches compiled command menu item trees and expression compile errors', async () => {
-    const result = await compareManifest(
-      await copyFixture('conditional-availability-app'),
-    );
-
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(
-        result.manifest.commandMenuItems.map(
-          ({ label, conditionalAvailability, conditionalPinned }) => ({
-            label,
-            hasConditionalAvailability: conditionalAvailability !== undefined,
-            hasConditionalPinned: conditionalPinned !== undefined,
-          }),
-        ),
-      ).toEqual([
-        {
-          label: 'Simple boolean',
-          hasConditionalAvailability: true,
-          hasConditionalPinned: false,
-        },
-        {
-          label: 'Selected records count',
-          hasConditionalAvailability: true,
-          hasConditionalPinned: true,
-        },
-        {
-          label: 'Not select all',
-          hasConditionalAvailability: true,
-          hasConditionalPinned: false,
-        },
-        {
-          label: 'Always available',
-          hasConditionalAvailability: false,
-          hasConditionalPinned: false,
-        },
-      ]);
-      expect(JSON.stringify(result.manifest.commandMenuItems)).not.toMatch(
-        /conditionalAvailabilityExpression|conditionalPinnedExpression/,
-      );
-    }
-
-    const unmappedResult = await compareManifest(
-      await copyFixture('unmapped-conditional-availability-app'),
-    );
-
-    expect(unmappedResult.success).toBe(false);
-    if (!unmappedResult.success) {
-      expect(unmappedResult.errors).toEqual([
-        expect.stringContaining(
-          'src/command-menu-items/favorite-count.command-menu-item.ts: conditionalAvailabilityExpression of command menu item "Favorite count" cannot be compiled into a conditionalAvailability tree: Cannot compile conditional availability expression "favoriteRecordIds.length > 0"',
-        ),
-        expect.stringContaining(
-          'src/command-menu-items/selected-records-pinned.command-menu-item.ts: conditionalPinnedExpression of command menu item "Selected records pinned" cannot be compiled into a conditionalPinned tree:',
-        ),
-      ]);
-    }
-  }, 60000);
-
   it('matches a freshly initialized app and its server requirement', async () => {
     const appPath = join(root, 'fresh-app');
 

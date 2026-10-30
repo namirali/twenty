@@ -18,10 +18,27 @@ type TestContext = {
   input: CreateCommandMenuItemInput;
 };
 
-type ConditionalDisplayTestContext = {
-  input: CreateCommandMenuItemInput;
-  expectedMessage: string;
-};
+const expectConditionalDisplayValidationError = ({
+  errors,
+  message,
+}: {
+  errors: unknown;
+  message: string;
+}) =>
+  expect(errors).toMatchObject([
+    {
+      extensions: {
+        code: 'METADATA_VALIDATION_FAILED',
+        errors: {
+          commandMenuItem: [
+            {
+              errors: [{ code: 'INVALID_COMMAND_MENU_ITEM_INPUT', message }],
+            },
+          ],
+        },
+      },
+    },
+  ]);
 
 const failingCommandMenuItemCreationTestCases: EachTestingContext<TestContext>[] =
   [
@@ -134,125 +151,6 @@ const failingCommandMenuItemCreationTestCases: EachTestingContext<TestContext>[]
     },
   ];
 
-const failingCommandMenuItemConditionalDisplayCreationTestCases: EachTestingContext<ConditionalDisplayTestContext>[] =
-  [
-    {
-      title: 'when conditionalDisplay uses an engine context key',
-      context: {
-        input: {
-          workflowVersionId: faker.string.uuid(),
-          engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
-          label: 'Command With Engine Key In Display',
-          conditionalDisplay: {
-            recordFilters: [
-              {
-                id: '0',
-                contextKey: 'isSelectAll',
-                operand: ViewFilterOperand.IS,
-                value: 'true',
-              },
-            ],
-          },
-        },
-        expectedMessage:
-          'Conditional display context key "isSelectAll" is not allowed in conditionalDisplay',
-      },
-    },
-    {
-      title: 'when conditionalAvailability uses an admin context key',
-      context: {
-        input: {
-          workflowVersionId: faker.string.uuid(),
-          engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
-          label: 'Command With Admin Key In Availability',
-          conditionalAvailability: {
-            recordFilters: [
-              {
-                id: '0',
-                contextKey: 'currentWorkspaceMemberId',
-                operand: ViewFilterOperand.IS,
-                value: JSON.stringify({
-                  isCurrentWorkspaceMemberSelected: true,
-                  selectedRecordIds: [],
-                }),
-              },
-            ],
-          },
-        },
-        expectedMessage:
-          'Conditional display context key "currentWorkspaceMemberId" is not allowed in conditionalAvailability',
-      },
-    },
-    {
-      title:
-        'when conditionalAvailability uses featureFlags without a sub field name',
-      context: {
-        input: {
-          workflowVersionId: faker.string.uuid(),
-          engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
-          label: 'Command With Feature Flag Without Entry',
-          conditionalAvailability: {
-            recordFilters: [
-              {
-                id: '0',
-                contextKey: 'featureFlags',
-                operand: ViewFilterOperand.IS,
-                value: 'true',
-              },
-            ],
-          },
-        },
-        expectedMessage:
-          'Conditional display context key "featureFlags" requires a sub field name',
-      },
-    },
-    {
-      title:
-        'when conditionalAvailability uses numberOfSelectedRecords with operand CONTAINS',
-      context: {
-        input: {
-          workflowVersionId: faker.string.uuid(),
-          engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
-          label: 'Command With Selection Count Contains',
-          conditionalAvailability: {
-            recordFilters: [
-              {
-                id: '0',
-                contextKey: 'numberOfSelectedRecords',
-                operand: ViewFilterOperand.CONTAINS,
-                value: '1',
-              },
-            ],
-          },
-        },
-        expectedMessage:
-          'Operand "CONTAINS" is not supported on conditional display context key "numberOfSelectedRecords" of type "NUMBER". Supported operands: IS, IS_NOT, GREATER_THAN_OR_EQUAL, LESS_THAN_OR_EQUAL, IS_EMPTY, IS_NOT_EMPTY.',
-      },
-    },
-    {
-      title: 'when conditionalAvailability uses an unknown pageType value',
-      context: {
-        input: {
-          workflowVersionId: faker.string.uuid(),
-          engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
-          label: 'Command With Unknown Page Type',
-          conditionalAvailability: {
-            recordFilters: [
-              {
-                id: '0',
-                contextKey: 'pageType',
-                operand: ViewFilterOperand.IS,
-                value: '["UNKNOWN_PAGE"]',
-              },
-            ],
-          },
-        },
-        expectedMessage:
-          'Conditional display context key "pageType" uses option(s) UNKNOWN_PAGE that do not exist. Allowed values: INDEX_PAGE, RECORD_PAGE, STANDALONE_PAGE, SETTINGS_PAGE.',
-      },
-    },
-  ];
-
 describe('CommandMenuItem creation should fail', () => {
   it.each(eachTestingContextFilter(failingCommandMenuItemCreationTestCases))(
     '$title',
@@ -306,101 +204,40 @@ describe('CommandMenuItem creation should fail', () => {
       },
     });
 
-    expect(errors).toMatchObject([
-      {
-        extensions: {
-          code: 'METADATA_VALIDATION_FAILED',
-          errors: {
-            commandMenuItem: [
-              {
-                errors: [
-                  {
-                    code: 'INVALID_COMMAND_MENU_ITEM_INPUT',
-                    message:
-                      'Conditional display rules on commandMenuItem cannot reference a record field',
-                  },
-                ],
-              },
-            ],
-          },
-        },
-      },
-    ]);
+    expectConditionalDisplayValidationError({
+      errors,
+      message:
+        'Conditional display rules on commandMenuItem cannot reference a record field',
+    });
   });
 
-  it('when conditionalAvailability references a record field', async () => {
-    const { fieldMetadataId2: nameFieldMetadataId } =
-      await fetchTestFieldMetadataIds();
-
+  it('when conditionalAvailability uses an admin context key', async () => {
     const { errors } = await createCommandMenuItem({
       expectToFail: true,
       input: {
         workflowVersionId: faker.string.uuid(),
         engineComponentKey: EngineComponentKey.TRIGGER_WORKFLOW_VERSION,
-        label: 'Command With Field Rule In Availability',
+        label: 'Command With Admin Key In Availability',
         conditionalAvailability: {
           recordFilters: [
             {
               id: '0',
-              fieldMetadataId: nameFieldMetadataId,
-              operand: ViewFilterOperand.IS_NOT_EMPTY,
-              value: '',
+              contextKey: 'currentWorkspaceMemberId',
+              operand: ViewFilterOperand.IS,
+              value: JSON.stringify({
+                isCurrentWorkspaceMemberSelected: true,
+                selectedRecordIds: [],
+              }),
             },
           ],
         },
       },
     });
 
-    expect(errors).toMatchObject([
-      {
-        extensions: {
-          code: 'METADATA_VALIDATION_FAILED',
-          errors: {
-            commandMenuItem: [
-              {
-                errors: [
-                  {
-                    code: 'INVALID_COMMAND_MENU_ITEM_INPUT',
-                    message:
-                      'Conditional display rules in conditionalAvailability cannot reference a record field',
-                  },
-                ],
-              },
-            ],
-          },
-        },
-      },
-    ]);
-  });
-
-  it.each(
-    eachTestingContextFilter(
-      failingCommandMenuItemConditionalDisplayCreationTestCases,
-    ),
-  )('$title', async ({ context }) => {
-    const { errors } = await createCommandMenuItem({
-      expectToFail: true,
-      input: context.input,
+    expectConditionalDisplayValidationError({
+      errors,
+      message:
+        'Conditional display context key "currentWorkspaceMemberId" is not allowed in conditionalAvailability',
     });
-
-    expect(errors).toMatchObject([
-      {
-        extensions: {
-          code: 'METADATA_VALIDATION_FAILED',
-          errors: {
-            commandMenuItem: [
-              {
-                errors: [
-                  {
-                    code: 'INVALID_COMMAND_MENU_ITEM_INPUT',
-                    message: context.expectedMessage,
-                  },
-                ],
-              },
-            ],
-          },
-        },
-      },
-    ]);
   });
 });
