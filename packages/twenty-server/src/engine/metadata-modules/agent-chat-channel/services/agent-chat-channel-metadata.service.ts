@@ -289,12 +289,11 @@ export class AgentChatChannelMetadataService {
       async (manager) => {
         const transferredChannelsResult = await manager
           .getRepository(AgentChatChannelEntity)
-          .createQueryBuilder()
-          .update()
-          .set({ applicationId: workspaceCustomFlatApplication.id })
-          .where({ workspaceId, applicationId })
-          .returning(['id'])
-          .execute();
+          .update(
+            { workspaceId, applicationId },
+            { applicationId: workspaceCustomFlatApplication.id },
+            { returning: ['id'] },
+          );
         const transferredChannels: Pick<AgentChatChannelEntity, 'id'>[] =
           transferredChannelsResult.raw;
         const channelIds = transferredChannels.map(({ id }) => id);
