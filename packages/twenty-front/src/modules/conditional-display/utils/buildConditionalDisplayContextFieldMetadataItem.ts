@@ -35,7 +35,7 @@ export const buildConditionalDisplayContextFieldMetadataItem = ({
       return {
         ...contextFieldMetadataItem,
         label: t`Role`,
-        icon: 'IconLock',
+        icon: 'IconUserCircle',
         options: roles.map((role, position) => ({
           id: role.id,
           label: role.label,
