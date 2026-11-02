@@ -5,6 +5,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { Link } from 'react-router-dom';
 import { SettingsPath } from 'twenty-shared/types';
 import { getSettingsPath } from 'twenty-shared/utils';
+import { IconEye, IconEyeX } from 'twenty-ui/icon';
 import { themeCssVariables } from 'twenty-ui/theme';
 
 const StyledHint = styled.span`
@@ -48,8 +49,8 @@ export const ConditionalDisplayRuleModeSelect = ({
         value={ruleMode}
         onChange={onRuleModeChange}
         options={[
-          { label: t`Everyone`, value: 'EVERYONE' },
-          { label: t`Custom rule`, value: 'CUSTOM_RULE' },
+          { label: t`Everyone`, value: 'EVERYONE', Icon: IconEye },
+          { label: t`Custom rule`, value: 'CUSTOM_RULE', Icon: IconEyeX },
         ]}
       />
       <StyledHint>
