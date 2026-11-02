@@ -1,6 +1,6 @@
 import { FieldMetadataType } from 'twenty-shared/types';
 
-import { migrateConditionalDisplayOverrides } from 'src/database/commands/upgrade-version-command/2-54/utils/migrate-conditional-display-overrides.util';
+import { migrateConditionalDisplayOverrides } from 'src/database/commands/upgrade-version-command/2-56/utils/migrate-conditional-display-overrides.util';
 import { compileLegacyWidgetJsonLogic } from 'src/engine/metadata-modules/flat-conditional-display/utils/compile-legacy-widget-json-logic.util';
 import { type FlatPageLayoutWidget } from 'src/engine/metadata-modules/flat-page-layout-widget/types/flat-page-layout-widget.type';
 

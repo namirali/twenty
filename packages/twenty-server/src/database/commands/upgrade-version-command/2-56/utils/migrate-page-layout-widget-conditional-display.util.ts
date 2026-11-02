@@ -1,7 +1,7 @@
 import { fastDeepEqual, isDefined } from 'twenty-shared/utils';
 
-import { compileLegacyConditionalExpression } from 'src/database/commands/upgrade-version-command/2-54/utils/compile-legacy-conditional-expression.util';
-import { findLegacyDeviceConditionalExpression } from 'src/database/commands/upgrade-version-command/2-54/utils/find-legacy-device-conditional-expression.util';
+import { compileLegacyConditionalExpression } from 'src/database/commands/upgrade-version-command/2-56/utils/compile-legacy-conditional-expression.util';
+import { findLegacyDeviceConditionalExpression } from 'src/database/commands/upgrade-version-command/2-56/utils/find-legacy-device-conditional-expression.util';
 import { type LegacyWidgetJsonLogicField } from 'src/engine/metadata-modules/flat-conditional-display/types/legacy-widget-json-logic-field.type';
 import { compileLegacyWidgetJsonLogic } from 'src/engine/metadata-modules/flat-conditional-display/utils/compile-legacy-widget-json-logic.util';
 import { isConditionalDisplay } from 'src/engine/metadata-modules/flat-conditional-display/utils/is-conditional-display.util';

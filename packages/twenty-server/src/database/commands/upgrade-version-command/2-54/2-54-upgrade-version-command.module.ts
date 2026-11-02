@@ -7,7 +7,6 @@ import { StripServerRoutesFromCustomAppLogicFunctionsCommand } from 'src/databas
 import { UpdateCrmHygieneSkillMergeGuidanceCommand } from 'src/database/commands/upgrade-version-command/2-54/2-54-workspace-command-1793206127866-update-crm-hygiene-skill-merge-guidance.command';
 import { RemoveMessageCampaignFlagCommand } from 'src/database/commands/upgrade-version-command/2-54/2-54-workspace-command-1793266150123-remove-message-campaign-flag.command';
 import { AddCampaignsNavigationFolderCommand } from 'src/database/commands/upgrade-version-command/2-54/2-54-workspace-command-1793266210456-add-campaigns-navigation-folder.command';
-import { MigrateConditionalExpressionsToConditionalDisplayCommand } from 'src/database/commands/upgrade-version-command/2-54/2-54-workspace-command-1793400000002-migrate-conditional-expressions-to-conditional-display.command';
 import { AddChatMentionResolutionCommand } from 'src/database/commands/upgrade-version-command/2-54/2-54-workspace-command-1793350721809-add-chat-mention-resolution.command';
 import { ApplicationModule } from 'src/engine/core-modules/application/application.module';
 import { WorkspaceCacheModule } from 'src/engine/workspace-cache/workspace-cache.module';
@@ -27,7 +26,6 @@ import { WorkspaceMigrationModule } from 'src/engine/workspace-manager/workspace
     UpdateCrmHygieneSkillMergeGuidanceCommand,
     RemoveMessageCampaignFlagCommand,
     AddCampaignsNavigationFolderCommand,
-    MigrateConditionalExpressionsToConditionalDisplayCommand,
     AddChatMentionResolutionCommand,
   ],
 })

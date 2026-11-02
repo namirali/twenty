@@ -8,11 +8,11 @@ import { DataSource } from 'typeorm';
 import { ProvisionedWorkspaceCommandRunner } from 'src/database/commands/command-runners/provisioned-workspace.command-runner';
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import { type RunOnWorkspaceArgs } from 'src/database/commands/command-runners/workspace.command-runner';
-import { compileLegacyConditionalExpression } from 'src/database/commands/upgrade-version-command/2-54/utils/compile-legacy-conditional-expression.util';
-import { migrateConditionalDisplayOverrides } from 'src/database/commands/upgrade-version-command/2-54/utils/migrate-conditional-display-overrides.util';
-import { migratePageLayoutWidgetConditionalDisplay } from 'src/database/commands/upgrade-version-command/2-54/utils/migrate-page-layout-widget-conditional-display.util';
-import { restoreLegacyConditionalDisplayOverrides } from 'src/database/commands/upgrade-version-command/2-54/utils/restore-legacy-conditional-display-overrides.util';
-import { restoreLegacyPageLayoutWidgetConditionalDisplay } from 'src/database/commands/upgrade-version-command/2-54/utils/restore-legacy-page-layout-widget-conditional-display.util';
+import { compileLegacyConditionalExpression } from 'src/database/commands/upgrade-version-command/2-56/utils/compile-legacy-conditional-expression.util';
+import { migrateConditionalDisplayOverrides } from 'src/database/commands/upgrade-version-command/2-56/utils/migrate-conditional-display-overrides.util';
+import { migratePageLayoutWidgetConditionalDisplay } from 'src/database/commands/upgrade-version-command/2-56/utils/migrate-page-layout-widget-conditional-display.util';
+import { restoreLegacyConditionalDisplayOverrides } from 'src/database/commands/upgrade-version-command/2-56/utils/restore-legacy-conditional-display-overrides.util';
+import { restoreLegacyPageLayoutWidgetConditionalDisplay } from 'src/database/commands/upgrade-version-command/2-56/utils/restore-legacy-page-layout-widget-conditional-display.util';
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { RegisteredWorkspaceCommand } from 'src/engine/core-modules/upgrade/decorators/registered-workspace-command.decorator';
 import { type FlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/types/flat-command-menu-item.type';
@@ -29,9 +29,9 @@ import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/works
 import { WorkspaceMigrationBuilderException } from 'src/engine/workspace-manager/workspace-migration/exceptions/workspace-migration-builder-exception';
 import { WorkspaceMigrationValidateBuildAndRunService } from 'src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service';
 
-@RegisteredWorkspaceCommand('2.54.0', 1793400000002)
+@RegisteredWorkspaceCommand('2.56.0', 1793642440811)
 @Command({
-  name: 'upgrade:2-54:migrate-conditional-expressions-to-conditional-display',
+  name: 'upgrade:2-56:migrate-conditional-expressions-to-conditional-display',
   description:
     'Compile the conditional expressions and legacy json-logic of command menu items and page layout widgets into conditional display trees, where a non-zero dry run failure count means those workspaces need a hand review before the real run; down restores device rules only, other converted json-logic stays a tree',
 })

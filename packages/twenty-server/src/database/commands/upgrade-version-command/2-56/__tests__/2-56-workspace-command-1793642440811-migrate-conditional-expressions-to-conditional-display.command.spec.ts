@@ -3,7 +3,7 @@ import { buildDeviceConditionalDisplay } from 'twenty-shared/utils';
 import { type DataSource } from 'typeorm';
 
 import { type WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
-import { MigrateConditionalExpressionsToConditionalDisplayCommand } from 'src/database/commands/upgrade-version-command/2-54/2-54-workspace-command-1793400000002-migrate-conditional-expressions-to-conditional-display.command';
+import { MigrateConditionalExpressionsToConditionalDisplayCommand } from 'src/database/commands/upgrade-version-command/2-56/2-56-workspace-command-1793642440811-migrate-conditional-expressions-to-conditional-display.command';
 import { type ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { compileLegacyWidgetJsonLogic } from 'src/engine/metadata-modules/flat-conditional-display/utils/compile-legacy-widget-json-logic.util';
 import { type WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';

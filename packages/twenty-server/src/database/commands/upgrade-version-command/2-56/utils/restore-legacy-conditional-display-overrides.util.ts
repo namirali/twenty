@@ -1,6 +1,6 @@
 import { isDefined } from 'twenty-shared/utils';
 
-import { findLegacyDeviceConditionalExpressionByConditionalDisplay } from 'src/database/commands/upgrade-version-command/2-54/utils/find-legacy-device-conditional-expression-by-conditional-display.util';
+import { findLegacyDeviceConditionalExpressionByConditionalDisplay } from 'src/database/commands/upgrade-version-command/2-56/utils/find-legacy-device-conditional-expression-by-conditional-display.util';
 import { type FlatPageLayoutWidget } from 'src/engine/metadata-modules/flat-page-layout-widget/types/flat-page-layout-widget.type';
 import { mapAuthoredOverrideEntries } from 'src/engine/metadata-modules/overrides/utils/map-authored-override-entries.util';
 

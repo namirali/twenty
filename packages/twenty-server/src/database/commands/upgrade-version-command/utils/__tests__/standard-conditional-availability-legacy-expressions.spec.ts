@@ -3,7 +3,7 @@ import {
   isDefined,
 } from 'twenty-shared/utils';
 
-import { LEGACY_DEVICE_CONDITIONAL_EXPRESSIONS } from 'src/database/commands/upgrade-version-command/2-54/constants/legacy-device-conditional-expressions.constant';
+import { LEGACY_DEVICE_CONDITIONAL_EXPRESSIONS } from 'src/database/commands/upgrade-version-command/2-56/constants/legacy-device-conditional-expressions.constant';
 import { STANDARD_COMMAND_MENU_ITEM_CONDITIONAL_EXPRESSIONS } from 'src/database/commands/upgrade-version-command/utils/standard-command-menu-item-conditional-expressions.constant';
 import { STANDARD_PAGE_LAYOUT_WIDGET_CONDITIONAL_AVAILABILITY_EXPRESSIONS } from 'src/database/commands/upgrade-version-command/utils/standard-page-layout-widget-conditional-availability-expressions.constant';
 import { STANDARD_COMMAND_MENU_ITEMS } from 'src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant';
