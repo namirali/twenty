@@ -48,7 +48,7 @@ export const buildConditionalDisplayContextFieldMetadataItem = ({
       return {
         ...contextFieldMetadataItem,
         label: t`Workspace member`,
-        icon: 'IconUsers',
+        icon: 'IconUser',
         relation: {
           type: RelationType.MANY_TO_ONE,
           sourceFieldMetadata: { id: contextKey, name: contextKey },
