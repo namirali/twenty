@@ -5,7 +5,8 @@ import { type FieldsConfigurationFieldItem } from '@/page-layout/types/FieldsCon
 import { FieldsConfigurationFieldOptionsDropdown } from '@/page-layout/widgets/fields/components/FieldsConfigurationFieldOptionsDropdown';
 import { t } from '@lingui/core/macro';
 import { LightIconButton } from 'twenty-ui/components/input';
-import { IconEye, IconEyeOff, useIcons } from 'twenty-ui/icon';
+import { IconEye, IconEyeOff } from 'twenty-ui/icon';
+import { useIcons } from 'twenty-ui/icon/provider';
 import { ButtonGroup } from 'twenty-ui/primitives/input';
 
 type FieldsConfigurationFieldEditorProps = {

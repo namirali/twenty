@@ -42,6 +42,7 @@ import {
   type CommandMenuItemManifest,
   type ConnectionProviderManifest,
   type McpServerManifest,
+  type RelatedRecordPathManifest,
   type MessagingProviderManifest,
   type FieldManifest,
   type FrontComponentManifest,
@@ -118,6 +119,7 @@ export const buildManifest = async (
   const connectionProviders: ConnectionProviderManifest[] = [];
   const messagingProviders: MessagingProviderManifest[] = [];
   const mcpServers: McpServerManifest[] = [];
+  const relatedRecordPaths: RelatedRecordPathManifest[] = [];
   const logicFunctions: LogicFunctionManifest[] = [];
   const frontComponents: FrontComponentManifest[] = [];
   const publicAssets: AssetManifest[] = [];
@@ -152,6 +154,7 @@ export const buildManifest = async (
   const connectionProvidersFilePaths: string[] = [];
   const messagingProvidersFilePaths: string[] = [];
   const mcpServersFilePaths: string[] = [];
+  const relatedRecordPathsFilePaths: string[] = [];
   const logicFunctionsFilePaths: string[] = [];
   const frontComponentsFilePaths: string[] = [];
   const publicAssetsFilePaths: string[] = [];
@@ -316,8 +319,26 @@ export const buildManifest = async (
         mcpServersFilePaths.push(relativePath);
         break;
       }
+      case 'relatedRecordPaths': {
+        const extract =
+          await extractManifestFromFile<RelatedRecordPathManifest>({
+            appPath,
+            filePath,
+          });
+        relatedRecordPaths.push(extract.config);
+        errors.push(...extract.errors);
+        warnings.push(...(extract.warnings ?? []));
+        relatedRecordPathsFilePaths.push(relativePath);
+        break;
+      }
       case 'logicFunctions': {
-        const extract = await extractManifestFromFile<LogicFunctionConfig>({
+        const extract = await extractManifestFromFile<
+          LogicFunctionConfig &
+            Pick<
+              HealthCheckLogicFunctionApplicationManifest,
+              'runOnUserPreferences'
+            >
+        >({
           appPath,
           filePath,
         });
@@ -334,8 +355,9 @@ export const buildManifest = async (
           );
         }
 
+        const { runOnUserPreferences, ...logicFunctionConfig } = extract.config;
         const config = await fromLogicFunctionConfigToLogicFunctionManifest({
-          logicFunctionConfig: extract.config,
+          logicFunctionConfig,
           sourceCode: fileContent,
           sourcePath: relativePath,
         });
@@ -376,6 +398,9 @@ export const buildManifest = async (
         if (targetFunctionName === 'defineHealthCheck') {
           healthCheckLogicFunctions.push({
             universalIdentifier: extract.config.universalIdentifier,
+            ...(isDefined(runOnUserPreferences)
+              ? { runOnUserPreferences }
+              : {}),
           });
         }
 
@@ -628,6 +653,8 @@ export const buildManifest = async (
     errors.push('Only one health check is allowed per application');
   }
 
+  const [healthCheckLogicFunction] = healthCheckLogicFunctions;
+
   if (settingsFrontComponentUniversalIdentifiers.length > 1) {
     errors.push('Only one settings front component is allowed per application');
   }
@@ -705,8 +732,8 @@ export const buildManifest = async (
             ...(uninstallLogicFunctions.length >= 1
               ? { uninstallLogicFunction: uninstallLogicFunctions[0] }
               : {}),
-            ...(healthCheckLogicFunctions.length >= 1
-              ? { healthCheckLogicFunction: healthCheckLogicFunctions[0] }
+            ...(isDefined(healthCheckLogicFunction)
+              ? { healthCheckLogicFunction }
               : {}),
             ...(settingsFrontComponentUniversalIdentifiers.length >= 1
               ? {
@@ -760,6 +787,7 @@ export const buildManifest = async (
         commandMenuItems: commandMenuItems.sort(byId),
         timelineActivityTypes: timelineActivityTypes.sort(byId),
         settingsMenuItems: settingsMenuItems.sort(byId),
+        relatedRecordPaths: relatedRecordPaths.sort(byId),
       };
 
   const entityFilePaths: EntityFilePaths = {
@@ -775,6 +803,7 @@ export const buildManifest = async (
     connectionProviders: connectionProvidersFilePaths,
     messagingProviders: messagingProvidersFilePaths,
     mcpServers: mcpServersFilePaths,
+    relatedRecordPaths: relatedRecordPathsFilePaths,
     logicFunctions: logicFunctionsFilePaths,
     frontComponents: frontComponentsFilePaths,
     publicAssets: publicAssetsFilePaths,

@@ -25,7 +25,7 @@ import { interpolateMessagePlaceholders } from 'twenty-shared/i18n';
 import { ContextStorePageType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import { ListItem } from 'twenty-ui/primitives/navigation';
-import { useIcons } from 'twenty-ui/icon';
+import { useIcons } from 'twenty-ui/icon/provider';
 import { themeCssVariables } from 'twenty-ui/theme';
 import { type CommandMenuItemFieldsFragment } from '~/generated-metadata/graphql';
 import { normalizeSearchText } from 'twenty-ui/utilities';

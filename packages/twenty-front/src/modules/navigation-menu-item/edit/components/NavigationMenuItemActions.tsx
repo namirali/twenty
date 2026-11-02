@@ -9,12 +9,12 @@ import {
   IconChevronDown,
   IconEyeX,
   IconHierarchy2,
-  useIcons,
   IconFolderSymlink,
   IconRowInsertTop,
   IconRowInsertBottom,
   IconTrash,
 } from 'twenty-ui/icon';
+import { useIcons } from 'twenty-ui/icon/provider';
 import { ColoredIcon } from '@/ui/icon/components/ColoredIcon';
 import { getConditionalDisplaySummaryLabel } from '@/conditional-display/utils/getConditionalDisplaySummaryLabel';
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';

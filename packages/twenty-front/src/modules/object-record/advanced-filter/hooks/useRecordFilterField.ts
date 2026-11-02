@@ -9,7 +9,7 @@ import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/use
 import { isNonEmptyString } from '@sniptt/guards';
 import { useContext } from 'react';
 import { isDefined } from 'twenty-shared/utils';
-import { useIcons } from 'twenty-ui/icon';
+import { useIcons } from 'twenty-ui/icon/provider';
 
 export const useRecordFilterField = (recordFilterId: string) => {
   const currentRecordFilters = useAtomComponentStateValue(
