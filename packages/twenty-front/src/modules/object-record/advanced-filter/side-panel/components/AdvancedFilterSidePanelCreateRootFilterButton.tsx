@@ -1,23 +1,10 @@
-import { availableFieldMetadataItemsForFilterFamilySelector } from '@/object-metadata/states/availableFieldMetadataItemsForFilterFamilySelector';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
-import { useSetRecordFilterUsedInAdvancedFilterDropdownRow } from '@/object-record/advanced-filter/hooks/useSetRecordFilterUsedInAdvancedFilterDropdownRow';
+import { useAddRootRecordFilterGroup } from '@/object-record/advanced-filter/hooks/useAddRootRecordFilterGroup';
 import { AdvancedFilterContext } from '@/object-record/advanced-filter/states/context/AdvancedFilterContext';
-import { rootLevelRecordFilterGroupComponentSelector } from '@/object-record/advanced-filter/states/rootLevelRecordFilterGroupComponentSelector';
-import { useUpsertRecordFilterGroup } from '@/object-record/record-filter-group/hooks/useUpsertRecordFilterGroup';
-import { useCreateEmptyRecordFilterFromFieldMetadataItem } from '@/object-record/record-filter/hooks/useCreateEmptyRecordFilterFromFieldMetadataItem';
-import { useUpsertRecordFilter } from '@/object-record/record-filter/hooks/useUpsertRecordFilter';
-import { useAtomComponentSelectorValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentSelectorValue';
-import { useSetAtomComponentFamilyState } from '@/ui/utilities/state/jotai/hooks/useSetAtomComponentFamilyState';
-import { hasInitializedCurrentRecordFiltersComponentFamilyState } from '@/views/states/hasInitializedCurrentRecordFiltersComponentFamilyState';
-import { useAtomFamilySelectorValue } from '@/ui/utilities/state/jotai/hooks/useAtomFamilySelectorValue';
 import { t } from '@lingui/core/macro';
 import { useContext } from 'react';
-import { RecordFilterGroupLogicalOperator } from 'twenty-shared/types';
-import { isDefined } from 'twenty-shared/utils';
-import { doNotTranslate } from 'twenty-shared/i18n';
 import { IconFilter } from 'twenty-ui/icon';
 import { Button } from 'twenty-ui/primitives/input';
-import { v4 } from 'uuid';
 
 export const AdvancedFilterSidePanelCreateRootFilterButton = ({
   objectMetadataItem,
@@ -27,69 +14,11 @@ export const AdvancedFilterSidePanelCreateRootFilterButton = ({
   const { readonly, fieldSelectLeadingSections } = useContext(
     AdvancedFilterContext,
   );
-  const rootRecordFilterGroup = useAtomComponentSelectorValue(
-    rootLevelRecordFilterGroupComponentSelector,
-  );
 
-  const availableFieldMetadataItemsForFilter = useAtomFamilySelectorValue(
-    availableFieldMetadataItemsForFilterFamilySelector,
-    {
-      objectMetadataItemId: objectMetadataItem?.id ?? '',
-    },
-  );
-
-  const defaultFieldMetadataItem =
-    fieldSelectLeadingSections?.[0]?.fieldMetadataItems[0] ??
-    availableFieldMetadataItemsForFilter.find(
-      (fieldMetadataItem) =>
-        fieldMetadataItem.id ===
-        objectMetadataItem?.labelIdentifierFieldMetadataId,
-    ) ??
-    availableFieldMetadataItemsForFilter[0];
-
-  const { upsertRecordFilterGroup } = useUpsertRecordFilterGroup();
-
-  const { upsertRecordFilter } = useUpsertRecordFilter();
-
-  const { createEmptyRecordFilterFromFieldMetadataItem } =
-    useCreateEmptyRecordFilterFromFieldMetadataItem();
-
-  const { setRecordFilterUsedInAdvancedFilterDropdownRow } =
-    useSetRecordFilterUsedInAdvancedFilterDropdownRow();
-
-  const setHasInitializedCurrentRecordFilters = useSetAtomComponentFamilyState(
-    hasInitializedCurrentRecordFiltersComponentFamilyState,
-    {},
-  );
-
-  const addRootRecordFilterGroup = () => {
-    const alreadyHasAdvancedFilterGroup = isDefined(rootRecordFilterGroup);
-
-    if (!alreadyHasAdvancedFilterGroup) {
-      setHasInitializedCurrentRecordFilters(false);
-
-      const newRecordFilterGroup = {
-        id: v4(),
-        logicalOperator: RecordFilterGroupLogicalOperator.AND,
-      };
-
-      upsertRecordFilterGroup(newRecordFilterGroup);
-
-      if (!isDefined(defaultFieldMetadataItem)) {
-        throw new Error(doNotTranslate('Missing default filter definition'));
-      }
-
-      const { newRecordFilter } = createEmptyRecordFilterFromFieldMetadataItem(
-        defaultFieldMetadataItem,
-      );
-
-      newRecordFilter.recordFilterGroupId = newRecordFilterGroup.id;
-
-      upsertRecordFilter(newRecordFilter);
-
-      setRecordFilterUsedInAdvancedFilterDropdownRow(newRecordFilter);
-    }
-  };
+  const { addRootRecordFilterGroup } = useAddRootRecordFilterGroup({
+    objectMetadataItem,
+    fieldSelectLeadingSections,
+  });
 
   return (
     <Button

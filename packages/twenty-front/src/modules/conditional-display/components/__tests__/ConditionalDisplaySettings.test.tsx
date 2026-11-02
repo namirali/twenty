@@ -78,11 +78,10 @@ const renderConditionalDisplaySettings = ({
 const openCustomRule = async (user: ReturnType<typeof userEvent.setup>) => {
   await user.click(await screen.findByText('Everyone'));
   await user.click(await screen.findByText('Custom rule'));
-  await user.click(await screen.findByRole('button', { name: 'Add filter' }));
 };
 
 describe('ConditionalDisplaySettings', () => {
-  it('stores a role rule picked in the builder under its context key', async () => {
+  it('opens a first role row as soon as a custom rule is chosen', async () => {
     const user = userEvent.setup();
     const onConditionalDisplayChange = jest.fn();
 
@@ -91,6 +90,9 @@ describe('ConditionalDisplaySettings', () => {
     await openCustomRule(user);
 
     expect(await screen.findByText('Role')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Add filter' }),
+    ).not.toBeInTheDocument();
 
     await user.click(await screen.findByLabelText('Select options'));
     await user.click(await screen.findByText(memberRole.label));
