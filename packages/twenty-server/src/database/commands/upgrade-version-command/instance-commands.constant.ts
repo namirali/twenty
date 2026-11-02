@@ -279,6 +279,7 @@ import { AddRelationFieldMetadataIdToRowLevelPermissionPredicateFastInstanceComm
 import { IndexTemporaryFileExpirationSlowInstanceCommand } from 'src/database/commands/upgrade-version-command/2-55/2-55-instance-command-slow-1793462047826-index-temporary-file-expiration';
 import { EnableUserHealthCheckFastInstanceCommand } from 'src/database/commands/upgrade-version-command/2-55/2-55-instance-command-fast-1793473469981-enable-user-health-check';
 import { AddSettingsMenuItemSlugFastInstanceCommand } from 'src/database/commands/upgrade-version-command/2-55/2-55-instance-command-fast-1793618487873-add-settings-menu-item-slug';
+import { AddRetainedApplicationToAgentChatChannelFastInstanceCommand } from 'src/database/commands/upgrade-version-command/2-55/2-55-instance-command-fast-1793637547364-add-retained-application-to-agent-chat-channel';
 
 export const INSTANCE_COMMANDS = [
   AddViewFieldGroupIdIndexOnViewFieldFastInstanceCommand,
@@ -560,4 +561,5 @@ export const INSTANCE_COMMANDS = [
   IndexTemporaryFileExpirationSlowInstanceCommand,
   EnableUserHealthCheckFastInstanceCommand,
   AddSettingsMenuItemSlugFastInstanceCommand,
+  AddRetainedApplicationToAgentChatChannelFastInstanceCommand,
 ];
